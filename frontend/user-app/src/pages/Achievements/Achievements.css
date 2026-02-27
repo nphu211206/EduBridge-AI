@@ -1,0 +1,197 @@
+.ach-page {
+    min-height: 100vh;
+    background: var(--bg-primary, #0f1117);
+}
+
+.ach-hero {
+    background: linear-gradient(135deg, #1a1f3a, #0d1025, #1b2947);
+    padding: 40px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.ach-hero h1 {
+    font-size: 2rem;
+    color: #e2e8f0;
+}
+
+.ach-hero p {
+    color: #94a3b8;
+    margin-top: 8px;
+}
+
+.ach-loading {
+    text-align: center;
+    padding: 60px;
+}
+
+.ach-stats {
+    max-width: 900px;
+    margin: 24px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 0 24px;
+}
+
+.ach-stat {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+}
+
+.ach-stat.streak {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.ach-stat.xp {
+    border-color: rgba(234, 179, 8, 0.2);
+}
+
+.stat-big {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #e2e8f0;
+    display: block;
+}
+
+.stat-sub {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
+.ach-check-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    text-align: center;
+}
+
+.btn-check-badges {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-check-badges:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+}
+
+.new-badges-alert {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    color: #86efac;
+}
+
+.new-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(34, 197, 94, 0.15);
+    border-radius: 8px;
+    margin: 4px;
+    font-size: 0.85rem;
+}
+
+.ach-grid-section {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 24px;
+}
+
+.ach-grid-section h3 {
+    color: #e2e8f0;
+    margin-bottom: 16px;
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.badge-card {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.badge-card.earned {
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.badge-card.locked {
+    opacity: 0.5;
+}
+
+.badge-card.earned:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.badge-icon-large {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 12px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.badge-name {
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.badge-desc {
+    color: #64748b;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.badge-meta {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.badge-rarity {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.badge-xp {
+    color: #fde68a;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-earned-date {
+    display: block;
+    color: #86efac;
+    font-size: 0.75rem;
+    margin-top: 8px;
+}

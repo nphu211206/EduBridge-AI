@@ -1,0 +1,169 @@
+.dna-page {
+    min-height: 100vh;
+    background: var(--bg-primary, #0f1117);
+}
+
+.dna-hero {
+    background: linear-gradient(135deg, #1a1f3a, #0d1025, #1b2947);
+    padding: 40px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.dna-hero h1 {
+    font-size: 2rem;
+    color: #e2e8f0;
+}
+
+.dna-hero p {
+    color: #94a3b8;
+    margin-top: 8px;
+}
+
+.dna-loading {
+    text-align: center;
+    padding: 60px;
+}
+
+.dna-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.dna-chart-container {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.dna-canvas {
+    max-width: 100%;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dna-legend {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-dot.user {
+    background: rgba(99, 102, 241, 0.8);
+}
+
+.legend-dot.avg {
+    background: rgba(148, 163, 184, 0.4);
+    border: 1px dashed #94a3b8;
+}
+
+.dna-details {
+    flex: 1;
+    min-width: 280px;
+}
+
+.dna-details h3 {
+    color: #e2e8f0;
+    margin-bottom: 16px;
+}
+
+.dna-bar-item {
+    margin-bottom: 14px;
+}
+
+.dna-bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.dna-score {
+    color: #a5b4fc;
+    font-weight: 600;
+}
+
+.dna-bar-bg {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    position: relative;
+    overflow: visible;
+}
+
+.dna-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+    position: relative;
+}
+
+.dna-bar-avg {
+    position: absolute;
+    top: -3px;
+    width: 2px;
+    height: 14px;
+    background: #94a3b8;
+    border-radius: 1px;
+}
+
+.dna-stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    flex: 1;
+    text-align: center;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #e2e8f0;
+    display: block;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .dna-content {
+        flex-direction: column;
+    }
+}

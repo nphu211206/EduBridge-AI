@@ -1,0 +1,255 @@
+.tb-page {
+    min-height: 100vh;
+    background: var(--bg-primary, #0f1117);
+}
+
+.tb-hero {
+    background: linear-gradient(135deg, #1a1f3a, #0d1025, #1b2947);
+    padding: 40px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.tb-hero h1 {
+    font-size: 2rem;
+    color: #e2e8f0;
+}
+
+.tb-hero p {
+    color: #94a3b8;
+    margin-top: 8px;
+}
+
+.tb-tabs {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0 24px;
+}
+
+.btn-create-project {
+    margin-left: auto;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.tb-create {
+    max-width: 700px;
+    margin: 24px auto;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+}
+
+.tb-create h3 {
+    color: #e2e8f0;
+    margin-bottom: 16px;
+}
+
+.tb-create h4 {
+    color: #94a3b8;
+    margin: 16px 0 8px;
+    font-size: 0.9rem;
+}
+
+.tb-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.tb-input:focus {
+    border-color: #6366f1;
+    outline: none;
+}
+
+.tb-textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #e2e8f0;
+    resize: vertical;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.role-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.role-name {
+    flex: 1;
+}
+
+.role-skills {
+    flex: 2;
+}
+
+.btn-add-role {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    color: #94a3b8;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.tb-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    transition: all 0.2s;
+}
+
+.project-card:hover {
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.project-header h3 {
+    color: #e2e8f0;
+    font-size: 1.05rem;
+}
+
+.project-status {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-recruiting {
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+}
+
+.status-active {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+}
+
+.status-completed {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+}
+
+.project-desc {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+.project-meta {
+    display: flex;
+    gap: 16px;
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.project-progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+}
+
+.project-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 2px;
+    transition: width 0.4s;
+}
+
+.invite-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.invite-role {
+    color: #a5b4fc;
+    font-size: 0.9rem;
+}
+
+.invite-by {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.invite-msg {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.invite-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-accept {
+    padding: 8px 16px;
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-decline {
+    padding: 8px 16px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-accept:hover {
+    background: #22c55e;
+    color: white;
+}
+
+.btn-decline:hover {
+    background: #ef4444;
+    color: white;
+}
