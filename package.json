@@ -9,7 +9,7 @@
     "start:user-service": "cd services/user-service && npm start",
     "start:admin-service": "cd services/admin-service && npm start",
     "start:teacher-service": "cd services/teacher-service && npm start",
-    "start:user-app": "cd frontend/user-app && npm start",
+    "start:user-app": "cd frontend/user-app && npm run dev",
     "start:admin-app": "cd frontend/admin-app && npm start",
     "start:teacher-app": "cd frontend/teacher-app && npm start",
     "start:all": "concurrently \"npm run start:user-service\" \"npm run start:admin-service\" \"npm run start:teacher-service\" \"npm run start:user-app\" \"npm run start:admin-app\" \"npm run start:teacher-app\""
