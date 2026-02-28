@@ -8,15 +8,26 @@
 const sql = require('mssql');
 require('dotenv').config();
 
+const dbHostString = process.env.DB_HOST || 'localhost';
+let serverName = dbHostString;
+let instanceName = undefined;
+
+if (dbHostString.includes('\\')) {
+  const parts = dbHostString.split('\\');
+  serverName = parts[0];
+  instanceName = parts[1];
+}
+
 const config = {
-  server: process.env.DB_HOST,
+  server: serverName,
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   options: {
     encrypt: process.env.NODE_ENV === 'production',
     trustServerCertificate: true,
-    enableArithAbort: true
+    enableArithAbort: true,
+    instanceName: instanceName
   },
   connectionTimeout: 30000,
   requestTimeout: 30000,

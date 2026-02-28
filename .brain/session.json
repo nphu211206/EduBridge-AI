@@ -1,0 +1,46 @@
+{
+    "updated_at": "2026-02-28T16:40:00Z",
+    "working_on": {
+        "feature": "Lưu trữ cấu trúc Não bộ (Brain) cho toàn hệ thống & Phân tích cấu trúc gốc Edu-Ledger-AI",
+        "task": "Tạo file session.json, trả lời thắc mắc của user về sự toàn vẹn của mã nguồn recruiter, teacher.",
+        "status": "completed",
+        "files": [
+            ".brain/brain.json",
+            ".brain/session.json"
+        ],
+        "blockers": [],
+        "notes": "User lo lắng backend và front-end nhà tuyển dụng bị mất. Đã kiểm tra list_dir và confirm chúng vẫn còn nguyên."
+    },
+    "pending_tasks": [
+        {
+            "task": "Khởi động DB SQL Server (MSSQL)",
+            "priority": "high",
+            "notes": "User cần chủ động bật DB lên để dữ liệu thực từ Campus (và bảng DNA, Teams) đổ vào frontend."
+        }
+    ],
+    "recent_changes": [
+        {
+            "timestamp": "2026-02-28T16:00:00Z",
+            "type": "refactor",
+            "description": "Tích hợp hoàn hảo 5 tính năng AI (portfolio-service & career-service) thẳng vào bảng điều khiển User App của Campus Learning.",
+            "files": [
+                "frontend/user-app/src/pages/Home/index.jsx",
+                "services/user-service/app.js",
+                "package.json"
+            ]
+        }
+    ],
+    "errors_encountered": [
+        {
+            "error": "Mất dữ liệu / Lỗi 404 Route Not Found khi gọi AI APIs từ Frontend",
+            "solution": "Đã phát hiện 5 APIs cũ thuộc edu-ledger đang sống ở cổng 3900 (portfolio-service). Đã thêm proxy middleware vào user-service (API Gateway) -> Hoàn hảo.",
+            "resolved": true
+        }
+    ],
+    "decisions_made": [
+        {
+            "decision": "Giữ nguyên cấu trúc Microservices (Monorepo) của Edu-Ledger thay vì đập bỏ.",
+            "reason": "Điều này giúp kết hợp sức mạnh tuyển dụng & phân tích của edu-ledger với lõi bán khóa học của Campus-learning mà không phá hỏng cấu trúc nào của tác giả gốc."
+        }
+    ]
+}

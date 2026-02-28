@@ -188,6 +188,7 @@ const MainLayout = ({ children }) => {
     { name: 'Khóa Học', icon: BookOpenIcon, href: '/courses' },
     { name: 'Sự Kiện', icon: CalendarIcon, href: '/events' },
     { name: 'Bài Viết', icon: ChatBubbleLeftRightIcon, href: '/posts' },
+    { name: 'Giảng viên', icon: BriefcaseIcon, href: 'http://localhost:5006', external: true },
   ];
 
   const studentNavigation = [
@@ -1000,8 +1001,22 @@ const MainLayout = ({ children }) => {
                   {isHeaderNavigation && (
                     <nav className="hidden lg:flex items-center flex-nowrap space-x-3 md:space-x-4 lg:space-x-6 ml-2 md:ml-4 max-w-full">
                       {navigation.filter(nav => !['/profile', '/settings', '/exams', '/competitions', '/chat', '/friends', '/reports', '/ai-chat', '/ai-test-local'].includes(nav.href)).map((item) => {
-                        const isActive = location.pathname === item.href || (item.href !== '/home' && location.pathname.startsWith(item.href));
+                        const isActive = item.external ? false : (location.pathname === item.href || (item.href !== '/home' && location.pathname.startsWith(item.href)));
                         const Icon = item.icon;
+
+                        if (item.external) {
+                          return (
+                            <a
+                              key={item.name}
+                              href={item.href}
+                              className={`flex items-center space-x-1 whitespace-nowrap text-sm font-medium hover:text-theme-primary transition-colors text-gray-600 dark:text-gray-300`}
+                            >
+                              <Icon className="h-5 w-5 flex-shrink-0" />
+                              <span className="hidden lg:inline">{item.name}</span>
+                            </a>
+                          );
+                        }
+
                         return (
                           <Link
                             key={item.name}
@@ -1181,6 +1196,15 @@ const MainLayout = ({ children }) => {
                               <ExclamationTriangleIcon className="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" />
                               Báo cáo
                             </Link>
+                            {isAdminUser && (
+                              <a
+                                href="http://localhost:5005"
+                                className="flex items-center px-4 py-2 text-sm text-theme-primary hover:bg-gray-50 dark:hover:bg-gray-700 font-medium border-t border-gray-100 dark:border-gray-700"
+                              >
+                                <Cog6ToothIcon className="h-5 w-5 mr-3 text-theme-primary" />
+                                Cổng Quản Trị
+                              </a>
+                            )}
                             <button
                               onClick={() => { setShowUserMenu(false); handleLogout(); }}
                               className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -1578,9 +1602,23 @@ const MainLayout = ({ children }) => {
               <div className="flex-1 overflow-y-auto p-4">
                 <nav className="space-y-2">
                   {navigation.map((item) => {
-                    const isActive = location.pathname === item.href ||
-                      (item.href !== '/home' && location.pathname.startsWith(item.href));
+                    const isActive = item.external ? false : (location.pathname === item.href ||
+                      (item.href !== '/home' && location.pathname.startsWith(item.href)));
                     const Icon = item.icon;
+
+                    if (item.external) {
+                      return (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700`}
+                        >
+                          <Icon className="h-5 w-5 flex-shrink-0" />
+                          {sidebarOpen && <span className="font-medium">{item.name}</span>}
+                        </a>
+                      );
+                    }
+
                     return (
                       <Link
                         key={item.name}
@@ -1657,6 +1695,15 @@ const MainLayout = ({ children }) => {
                             <ExclamationTriangleIcon className="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" />
                             Báo cáo
                           </Link>
+                          {isAdminUser && (
+                            <a
+                              href="http://localhost:5005"
+                              className="flex items-center px-4 py-2 text-sm text-theme-primary hover:bg-gray-50 dark:hover:bg-gray-700 font-medium border-t border-gray-100 dark:border-gray-700"
+                            >
+                              <Cog6ToothIcon className="h-5 w-5 mr-3 text-theme-primary" />
+                              Cổng Quản Trị
+                            </a>
+                          )}
                           <button
                             onClick={() => { setShowUserMenu(false); handleLogout(); }}
                             className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -1745,6 +1792,15 @@ const MainLayout = ({ children }) => {
                             <ExclamationTriangleIcon className="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" />
                             Báo cáo
                           </Link>
+                          {isAdminUser && (
+                            <a
+                              href="http://localhost:5005"
+                              className="flex items-center px-4 py-2 text-sm text-theme-primary hover:bg-gray-50 dark:hover:bg-gray-700 font-medium border-t border-gray-100 dark:border-gray-700"
+                            >
+                              <Cog6ToothIcon className="h-5 w-5 mr-3 text-theme-primary" />
+                              Cổng Quản Trị
+                            </a>
+                          )}
                           <button
                             onClick={() => { setShowUserMenu(false); handleLogout(); }}
                             className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -1877,9 +1933,23 @@ const MainLayout = ({ children }) => {
               <div className="flex-1 overflow-y-auto p-2">
                 <div className="space-y-1">
                   {navigation.map((item) => {
-                    const isActive = location.pathname === item.href ||
-                      (item.href !== '/home' && location.pathname.startsWith(item.href));
+                    const isActive = item.external ? false : (location.pathname === item.href ||
+                      (item.href !== '/home' && location.pathname.startsWith(item.href)));
                     const Icon = item.icon;
+
+                    if (item.external) {
+                      return (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700`}
+                        >
+                          <Icon className="h-5 w-5 flex-shrink-0" />
+                          <span className="font-medium">{item.name}</span>
+                        </a>
+                      );
+                    }
+
                     return (
                       <Link
                         key={item.name}

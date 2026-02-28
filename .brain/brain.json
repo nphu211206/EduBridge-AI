@@ -1,0 +1,93 @@
+{
+    "meta": {
+        "schema_version": "1.1.0",
+        "awf_version": "4.0.0"
+    },
+    "project": {
+        "name": "EduBridge AI (Hợp nhất từ Campus-Learning và Edu-Ledger-AI)",
+        "type": "Microservices Monorepo",
+        "status": "Giai đoạn tích hợp 5 Module AI cốt lõi - Đã hoàn thiện UI và API Gateway"
+    },
+    "tech_stack": {
+        "frontend": {
+            "framework": "React (Vite / CRA), TailwindCSS, Framer Motion",
+            "apps": [
+                "user-app (Học viên & Sinh viên)",
+                "admin-app (Quản trị viên)",
+                "teacher-app (Giảng viên)",
+                "recruiter-app (Nhà tuyển dụng chuyên biệt)",
+                "admin-sinhvienapp",
+                "user-sinhvienapp"
+            ]
+        },
+        "backend": {
+            "framework": "Node.js (Express API Gateway & Microservices)",
+            "services": [
+                "user-service (API Gateway chính, Port 5001)",
+                "admin-service (Port 5002)",
+                "teacher-service (Port 5003)",
+                "portfolio-service (Chứa nghiệp vụ Lộ trình AI, Skill DNA, Thành tựu, Port 3900)",
+                "career-service (Chứa nghiệp vụ Tuyển dụng, Port 3800)",
+                "admin-sinhvienservice",
+                "user-sinhvienservice"
+            ]
+        },
+        "database": {
+            "type": "SQL Server (MSSQL)",
+            "host": "localhost\\SQLEXPRESS01"
+        }
+    },
+    "database_schema": {
+        "summary": "Hệ thống kết hợp dữ liệu khóa học trực tuyến (Campus) và các tính năng AI, tuyển dụng, portfolio (EduLedger) thành một khối thống nhất.",
+        "tables": [
+            "Users",
+            "Courses",
+            "UserAiUsage",
+            "EmailVerifications",
+            "Conversations",
+            "Messages",
+            "CallParticipants"
+        ],
+        "relationships_explained": "Một hệ thống giáo dục đa người dùng nơi User có thể vừa là Học viên (mua khóa học) vừa có Portfolio AI, tương tác với Nhà Tuyển Dụng qua team-builder, và học video từ Giảng viên."
+    },
+    "api_endpoints": [
+        {
+            "path": "/api/chat, /api/auth, /api/courses",
+            "explained": "Các API lõi được xử lý trực tiếp bởi user-service."
+        },
+        {
+            "path": "/api/skill-dna, /api/learning-path, /api/teams, /api/achievements, /api/insights",
+            "explained": "Thông qua cơ chế Reverse Proxy Gateway ở user-service, các luồng này được bắn thẳng vào cổng 3900 của portfolio-service một cách mượt mà."
+        }
+    ],
+    "business_rules": [
+        "AxiosClient: Mọi App giờ đây dùng chung logic bảo mật axiosInterceptor, tự động gài Token vào request header.",
+        "Bảo vệ Endpoint AI: Limit usage 5 lần/ngày cho người dùng phổ thông (cơ chế checkAiUsageLimit + Google Gemini API).",
+        "Tuyển dụng: Vẫn được duy trì độc lập ở module recruiter-app và career-service, hướng tới nhóm doanh nghiệp B2B."
+    ],
+    "features": [
+        "Hệ thống khóa học (Campus Learning gốc)",
+        "Lộ trình học AI (Learning Path)",
+        "Bản đồ kỹ năng (Skill DNA)",
+        "Thành tích & Huy hiệu (Achievements)",
+        "Ghép đội hình dự án (Team Builder / Matching)",
+        "Phân tích thị trường công nghệ (Industry Insights)",
+        "Cổng Nhà tuyển dụng (Recruiter Portal)",
+        "Cổng Giảng viên độc lập (Teacher Portal)",
+        "Bảng điều khiển Admin tối cao"
+    ],
+    "knowledge_items": {
+        "patterns": [
+            "Kiến trúc cổng trung gian API Gateway dùng http-proxy-middleware",
+            "Sử dụng concurrently trong package.json để bật cùng lúc cả 8 cụm server."
+        ],
+        "gotchas": [
+            "Cần khởi động portfolio-service và career-service thì các trang AI mới không bị 404 Route Not Found.",
+            "Database connection string thường xuyên yêu cầu TrustServerCertificate=true đối với SQL Express local."
+        ],
+        "conventions": [
+            "UI mới 100% hướng tới TailwindCSS thay vì module CSS truyền thống để đảm bảo tính nhất quán (Utility-first).",
+            "Thống nhất mã lỗi trả về: err.response?.data?.message"
+        ]
+    }
+}

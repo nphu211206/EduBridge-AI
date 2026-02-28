@@ -25,10 +25,11 @@ const { Op } = require('sequelize');
 const { Sequelize } = require('sequelize');
 
 // Initialize VNPAY client
-const vnpayHost = new URL(process.env.VNP_URL).origin;
+const vnpayUrlStr = process.env.VNPAY_URL || process.env.VNP_URL || 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+const vnpayHost = new URL(vnpayUrlStr).origin;
 const vnpayClient = new VNPay({
-  tmnCode: process.env.VNP_TMN_CODE,
-  secureSecret: process.env.VNP_HASH_SECRET,
+  tmnCode: process.env.VNPAY_TMN_CODE || process.env.VNP_TMN_CODE || 'DUMMY_CODE',
+  secureSecret: process.env.VNPAY_HASH_SECRET || process.env.VNP_HASH_SECRET || 'DUMMY_SECRET',
   vnpayHost: vnpayHost,
   queryDrAndRefundHost: vnpayHost,
   testMode: process.env.NODE_ENV !== 'production',
@@ -36,7 +37,7 @@ const vnpayClient = new VNPay({
   enableLog: process.env.NODE_ENV !== 'production',
   loggerFn: ignoreLogger,
   endpoints: {
-    paymentEndpoint: new URL(process.env.VNP_URL).pathname.slice(1),
+    paymentEndpoint: new URL(vnpayUrlStr).pathname.slice(1),
     queryDrRefundEndpoint: 'merchant_webapi/api/transaction',
     getBankListEndpoint: 'qrpayauth/api/merchant/get_bank_list'
   }
@@ -46,7 +47,7 @@ const vnpayClient = new VNPay({
 exports.getAllCourses = async (req, res) => {
   try {
     console.log('Fetching all courses');
-    
+
     // Count published courses
     const courseCount = await Course.count({
       where: {
@@ -55,9 +56,9 @@ exports.getAllCourses = async (req, res) => {
         DeletedAt: null
       }
     });
-    
+
     console.log(`Found ${courseCount} published courses in database`);
-    
+
     // Return sample data for development/testing
     if (courseCount === 0) {
       const sampleCourses = [
@@ -92,10 +93,10 @@ exports.getAllCourses = async (req, res) => {
           ImageUrl: 'https://placehold.co/600x400?text=Java'
         }
       ];
-      
+
       return res.status(200).json({ success: true, data: sampleCourses });
     }
-    
+
     const courses = await Course.findAll({
       where: {
         IsPublished: true,
@@ -103,7 +104,7 @@ exports.getAllCourses = async (req, res) => {
         DeletedAt: null
       },
       attributes: [
-        'CourseID', 'Title', 'Slug', 'ShortDescription', 
+        'CourseID', 'Title', 'Slug', 'ShortDescription',
         'Level', 'Category', 'Duration', 'EnrolledCount',
         'Rating', 'Price', 'DiscountPrice', 'ImageUrl', 'InstructorID'
       ]
@@ -125,24 +126,24 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     const { courseIdentifier } = req.params;
-    
+
     console.log(`=== COURSE DETAILS DEBUG ===`);
     console.log(`Full URL: ${req.originalUrl}`);
     console.log(`Headers:`, JSON.stringify(req.headers));
-    
+
     if (!courseIdentifier) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Định danh khóa học không hợp lệ' 
+      return res.status(400).json({
+        success: false,
+        message: 'Định danh khóa học không hợp lệ'
       });
     }
-    
+
     // Truy vấn database thực sự thay vì trả về dữ liệu mẫu
     let query;
-    
+
     // Kiểm tra nếu identifier là số
     const isNumeric = /^\d+$/.test(courseIdentifier);
-    
+
     if (isNumeric) {
       query = `
         SELECT c.*, u.FullName as InstructorName, u.FullName as InstructorTitle, u.Bio as InstructorBio, u.Image as InstructorAvatar
@@ -158,24 +159,24 @@ exports.getCourseDetails = async (req, res) => {
         WHERE c.Slug = @courseSlug AND c.IsPublished = 1 AND c.DeletedAt IS NULL
       `;
     }
-    
+
     console.log(`Executing SQL Query: ${query}`);
     console.log(`Parameters: courseId=${isNumeric ? courseIdentifier : null}, courseSlug=${isNumeric ? null : courseIdentifier}`);
-    
+
     const result = await pool.request()
       .input('courseId', sql.BigInt, isNumeric ? courseIdentifier : null)
       .input('courseSlug', sql.NVarChar, isNumeric ? null : courseIdentifier)
       .query(query);
-    
+
     if (result.recordset.length === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Không tìm thấy khóa học' 
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy khóa học'
       });
     }
-    
+
     const course = result.recordset[0];
-    
+
     // Lấy thêm thông tin modules và lessons
     const modulesResult = await pool.request()
       .input('courseId', sql.BigInt, course.CourseID)
@@ -190,7 +191,7 @@ exports.getCourseDetails = async (req, res) => {
         WHERE CourseID = @courseId
         ORDER BY OrderIndex
       `);
-    
+
     const lessonsResult = await pool.request()
       .input('courseId', sql.BigInt, course.CourseID)
       .query(`
@@ -203,7 +204,7 @@ exports.getCourseDetails = async (req, res) => {
         WHERE m.CourseID = @courseId
         ORDER BY m.OrderIndex, l.OrderIndex
       `);
-    
+
     // Tạo cấu trúc dữ liệu đúng
     const modules = modulesResult.recordset.map(module => {
       const moduleLessons = lessonsResult.recordset
@@ -213,13 +214,13 @@ exports.getCourseDetails = async (req, res) => {
           // Chỉ hiển thị URL video cho các bài học preview
           VideoUrl: lesson.IsPreview ? lesson.VideoUrl : null
         }));
-      
+
       return {
         ...module,
         Lessons: moduleLessons
       };
     });
-    
+
     // Format instructor data
     const instructor = {
       Name: course.InstructorName || '',
@@ -227,25 +228,25 @@ exports.getCourseDetails = async (req, res) => {
       Bio: course.InstructorBio || '',
       AvatarUrl: course.InstructorAvatar || null
     };
-    
+
     // Định dạng kết quả trả về
     const formattedCourse = {
       ...course,
       Modules: modules,
       Instructor: instructor
     };
-    
+
     // Xóa các trường không cần thiết
     delete formattedCourse.InstructorName;
     delete formattedCourse.InstructorTitle;
     delete formattedCourse.InstructorBio;
     delete formattedCourse.InstructorAvatar;
-    
+
     return res.status(200).json({
       success: true,
       data: formattedCourse
     });
-    
+
   } catch (error) {
     console.error('Error fetching course details:', error);
     return res.status(500).json({
@@ -261,16 +262,16 @@ exports.checkEnrollment = async (req, res) => {
   try {
     const { courseId } = req.params;
     const userId = req.user.id;
-    
+
     console.log(`Checking enrollment for courseId: ${courseId}, userId: ${userId}`);
 
     // Đối với khóa học mẫu, luôn cho phép kiểm tra enrollment
     if (courseId === '1' || courseId === '2') {
       console.log('Demo course: Returning enrollment status');
-      
+
       // Giả lập trạng thái đã đăng ký cho khóa học 1, chưa đăng ký cho khóa học 2
       const isEnrolled = courseId === '1';
-      
+
       // Tạo dữ liệu enrollment mẫu nếu đã đăng ký
       const enrollmentData = isEnrolled ? {
         EnrollmentID: 1,
@@ -280,9 +281,9 @@ exports.checkEnrollment = async (req, res) => {
         Status: 'active',
         EnrolledAt: new Date().toISOString()
       } : null;
-      
-      return res.status(200).json({ 
-        success: true, 
+
+      return res.status(200).json({
+        success: true,
         isEnrolled,
         enrollmentData
       });
@@ -296,8 +297,8 @@ exports.checkEnrollment = async (req, res) => {
     });
 
     console.log(`Enrollment found: ${!!enrollment}`);
-    return res.status(200).json({ 
-      success: true, 
+    return res.status(200).json({
+      success: true,
       isEnrolled: !!enrollment,
       enrollmentData: enrollment || null
     });
@@ -312,13 +313,13 @@ exports.enrollFreeCourse = async (req, res) => {
   try {
     const { courseId } = req.params;
     const userId = req.user.id;
-    
+
     console.log(`Enrolling user ${userId} in course ${courseId}`);
 
     // Xử lý khóa học mẫu
     if (courseId === '1' || courseId === '2') {
       console.log('Enrolling in demo course');
-      
+
       // Loại bỏ kiểm tra khóa học có phí - cho phép đăng ký khóa học ID 2
       // Tạo dữ liệu enrollment mẫu
       const enrollment = await CourseEnrollment.create({
@@ -328,7 +329,7 @@ exports.enrollFreeCourse = async (req, res) => {
         Progress: 0,
         CertificateIssued: false
       });
-      
+
       // Tạo dữ liệu payment mẫu
       const payment = await PaymentTransaction.create({
         UserID: userId,
@@ -337,16 +338,16 @@ exports.enrollFreeCourse = async (req, res) => {
         PaymentMethod: 'free',
         TransactionCode: `FREE-${uuidv4()}`,
         PaymentStatus: 'completed',
-        PaymentDetails: JSON.stringify({ 
+        PaymentDetails: JSON.stringify({
           method: 'free',
           note: 'Automatic enrollment for free course'
         })
       });
-      
-      return res.status(200).json({ 
-        success: true, 
-        message: 'Successfully enrolled in demo course', 
-        data: { enrollment, payment } 
+
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully enrolled in demo course',
+        data: { enrollment, payment }
       });
     }
 
@@ -361,9 +362,9 @@ exports.enrollFreeCourse = async (req, res) => {
     });
 
     if (!course) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Course not found or is not free' 
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found or is not free'
       });
     }
 
@@ -376,9 +377,9 @@ exports.enrollFreeCourse = async (req, res) => {
     });
 
     if (existingEnrollment) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'You are already enrolled in this course' 
+      return res.status(400).json({
+        success: false,
+        message: 'You are already enrolled in this course'
       });
     }
 
@@ -399,7 +400,7 @@ exports.enrollFreeCourse = async (req, res) => {
       PaymentMethod: 'free',
       TransactionCode: `FREE-${uuidv4()}`,
       PaymentStatus: 'completed',
-      PaymentDetails: JSON.stringify({ 
+      PaymentDetails: JSON.stringify({
         method: 'free',
         note: 'Automatic enrollment for free course'
       })
@@ -408,13 +409,13 @@ exports.enrollFreeCourse = async (req, res) => {
     // Update course enrollment count
     await Course.update(
       { EnrolledCount: course.EnrolledCount + 1 },
-      { where: { CourseID: courseId }}
+      { where: { CourseID: courseId } }
     );
 
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Successfully enrolled in course', 
-      data: { enrollment, payment } 
+    return res.status(200).json({
+      success: true,
+      message: 'Successfully enrolled in course',
+      data: { enrollment, payment }
     });
   } catch (error) {
     console.error('Error enrolling in free course:', error);
@@ -428,18 +429,18 @@ exports.createPaymentUrl = async (req, res) => {
     console.log('Creating VNPay payment URL, params:', req.params);
     const { courseId } = req.params;
     const userId = req.user.id;
-    
+
     // Validate input
     if (!courseId) {
       console.error('Missing courseId in request params');
       return res.status(400).json({ success: false, message: 'Course ID is required' });
     }
-    
+
     if (!userId) {
       console.error('User ID not found in request');
       return res.status(401).json({ success: false, message: 'User authentication required' });
     }
-    
+
     // Get course details
     const course = await Course.findOne({
       where: {
@@ -464,20 +465,20 @@ exports.createPaymentUrl = async (req, res) => {
 
     if (existingEnrollment) {
       console.log(`User ${userId} already enrolled in course ${courseId}`);
-      return res.status(400).json({ 
-        success: false, 
-        message: 'You are already enrolled in this course' 
+      return res.status(400).json({
+        success: false,
+        message: 'You are already enrolled in this course'
       });
     }
 
     // Determine payment amount (use discount price if available)
     let amount = course.DiscountPrice || course.Price;
-    
+
     if (amount <= 0) {
       console.log(`Course ${courseId} is free, should use free enrollment endpoint`);
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Free courses should use the free enrollment endpoint' 
+      return res.status(400).json({
+        success: false,
+        message: 'Free courses should use the free enrollment endpoint'
       });
     }
 
@@ -485,14 +486,14 @@ exports.createPaymentUrl = async (req, res) => {
     if (typeof amount === 'string') {
       amount = parseFloat(amount);
     }
-    
+
     if (isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid course price' 
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid course price'
       });
     }
-    
+
     console.log('Course price:', amount);
 
     // Format dates as ISO strings for database compatibility
@@ -524,14 +525,19 @@ exports.createPaymentUrl = async (req, res) => {
       CreatedAt: createdAtStr
     });
 
+    // Validation keys
+    const tmnCode = process.env.VNPAY_TMN_CODE || process.env.VNP_TMN_CODE;
+    const hashSecret = process.env.VNPAY_HASH_SECRET || process.env.VNP_HASH_SECRET;
+    const vnpUrl = process.env.VNPAY_URL || process.env.VNP_URL;
+
     // Validate VNPay configuration
-    if (!process.env.VNP_TMN_CODE || !process.env.VNP_HASH_SECRET || !process.env.VNP_URL) {
+    if (!tmnCode || !hashSecret || !vnpUrl) {
       console.error('Missing VNPay configuration:', {
-        tmnCode: process.env.VNP_TMN_CODE ? '[SET]' : '[NOT SET]',
-        secretKey: process.env.VNP_HASH_SECRET ? '[SET]' : '[NOT SET]',
-        vnpUrl: process.env.VNP_URL ? '[SET]' : '[NOT SET]'
+        tmnCode: tmnCode ? '[SET]' : '[NOT SET]',
+        secretKey: hashSecret ? '[SET]' : '[NOT SET]',
+        vnpUrl: vnpUrl ? '[SET]' : '[NOT SET]'
       });
-      
+
       // Update transaction to failed
       await PaymentTransaction.update({
         PaymentStatus: 'failed',
@@ -540,10 +546,10 @@ exports.createPaymentUrl = async (req, res) => {
       }, {
         where: { TransactionID: transaction.TransactionID }
       });
-      
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Payment service configuration error' 
+
+      return res.status(500).json({
+        success: false,
+        message: 'Payment service configuration error'
       });
     }
 
@@ -578,7 +584,7 @@ exports.createPaymentUrl = async (req, res) => {
         bankCode = 'VNBANK';
       }
       console.log('Using bankCode for VNPay:', bankCode);
-      
+
       // Validate against supported bank codes list
       if (bankCode) {
         try {
@@ -596,9 +602,9 @@ exports.createPaymentUrl = async (req, res) => {
           bankCode = null;
         }
       }
-      
+
       // Determine return URL
-      let returnUrl = process.env.VNP_RETURN_URL;
+      let returnUrl = process.env.VNPAY_RETURN_URL || process.env.VNP_RETURN_URL;
       if (!returnUrl) {
         if (process.env.CLIENT_URL) {
           returnUrl = `${process.env.CLIENT_URL}/payment/vnpay/callback`;
@@ -640,7 +646,7 @@ exports.createPaymentUrl = async (req, res) => {
       });
     } catch (vnpError) {
       console.error('Error creating VNPay URL:', vnpError);
-      
+
       // Update transaction to failed
       await PaymentTransaction.update({
         PaymentStatus: 'failed',
@@ -649,17 +655,17 @@ exports.createPaymentUrl = async (req, res) => {
       }, {
         where: { TransactionID: transaction.TransactionID }
       });
-      
-      return res.status(500).json({ 
-        success: false, 
+
+      return res.status(500).json({
+        success: false,
         message: 'Error creating payment URL',
-        error: process.env.NODE_ENV === 'development' ? vnpError.message : undefined 
+        error: process.env.NODE_ENV === 'development' ? vnpError.message : undefined
       });
     }
   } catch (error) {
     console.error('Error creating payment URL:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       message: 'Internal server error',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -672,18 +678,18 @@ exports.createVietQRPayment = async (req, res) => {
     console.log('Creating VietQR payment, params:', req.params);
     const { courseId } = req.params;
     const userId = req.user.id;
-    
+
     // Validate input
     if (!courseId) {
       console.error('Missing courseId in request params');
       return res.status(400).json({ success: false, message: 'Course ID is required' });
     }
-    
+
     if (!userId) {
       console.error('User ID not found in request');
       return res.status(401).json({ success: false, message: 'User authentication required' });
     }
-    
+
     // Get course details
     const course = await Course.findOne({
       where: {
@@ -708,20 +714,20 @@ exports.createVietQRPayment = async (req, res) => {
 
     if (existingEnrollment) {
       console.log(`User ${userId} already enrolled in course ${courseId}`);
-      return res.status(400).json({ 
-        success: false, 
-        message: 'You are already enrolled in this course' 
+      return res.status(400).json({
+        success: false,
+        message: 'You are already enrolled in this course'
       });
     }
 
     // Determine payment amount (use discount price if available)
     let amount = course.DiscountPrice || course.Price;
-    
+
     if (amount <= 0) {
       console.log(`Course ${courseId} is free, should use free enrollment endpoint`);
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Free courses should use the free enrollment endpoint' 
+      return res.status(400).json({
+        success: false,
+        message: 'Free courses should use the free enrollment endpoint'
       });
     }
 
@@ -729,21 +735,21 @@ exports.createVietQRPayment = async (req, res) => {
     if (typeof amount === 'string') {
       amount = parseFloat(amount);
     }
-    
+
     if (isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid course price' 
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid course price'
       });
     }
-    
+
     console.log('Course price:', amount);
 
     // Format dates as ISO strings for database compatibility
     const currentTime = new Date();
     const createdAtStr = currentTime.toISOString();
     const updatedAtStr = createdAtStr;
-    
+
     // Generate a unique transaction code
     const transactionCode = `VQR${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
@@ -807,8 +813,8 @@ exports.createVietQRPayment = async (req, res) => {
     });
   } catch (err) {
     console.error('Error creating VietQR payment:', err);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Failed to create VietQR payment',
       error: err.message
     });
@@ -819,14 +825,14 @@ exports.createVietQRPayment = async (req, res) => {
 exports.verifyVietQRPayment = async (req, res) => {
   try {
     const { transactionCode } = req.body;
-    
+
     if (!transactionCode) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Transaction code is required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Transaction code is required'
       });
     }
-    
+
     // Find the transaction
     const transaction = await PaymentTransaction.findOne({
       where: {
@@ -834,31 +840,31 @@ exports.verifyVietQRPayment = async (req, res) => {
         PaymentMethod: 'vietqr'
       }
     });
-    
+
     if (!transaction) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Transaction not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Transaction not found'
       });
     }
-    
+
     if (transaction.PaymentStatus === 'completed') {
       return res.json({
         success: true,
         message: 'Payment already verified',
-        data: { 
+        data: {
           status: 'completed',
           courseId: transaction.CourseID
         }
       });
     }
-    
+
     // In a real implementation, we would check the bank's API or database
     // to confirm that the payment was received. Here, we'll simulate a check.
-    
+
     // This is where you would integrate with your banking API to verify payment
     // For demonstration, we'll assume the payment has been received
-    
+
     // Update transaction status
     await PaymentTransaction.update({
       PaymentStatus: 'completed',
@@ -867,7 +873,7 @@ exports.verifyVietQRPayment = async (req, res) => {
     }, {
       where: { TransactionID: transaction.TransactionID }
     });
-    
+
     // Add payment history record
     await PaymentHistory.create({
       TransactionID: transaction.TransactionID,
@@ -877,22 +883,22 @@ exports.verifyVietQRPayment = async (req, res) => {
       UserAgent: req.headers['user-agent'],
       CreatedAt: new Date().toISOString()
     });
-    
+
     // Enroll user in course
     await enrollUserInCourse(transaction.UserID, transaction.CourseID, transaction.TransactionID);
-    
+
     res.json({
       success: true,
       message: 'Payment verified successfully',
-      data: { 
+      data: {
         status: 'completed',
         courseId: transaction.CourseID
       }
     });
   } catch (err) {
     console.error('Error verifying VietQR payment:', err);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Failed to verify payment',
       error: err.message
     });
@@ -908,12 +914,12 @@ async function enrollUserInCourse(userId, courseId, transactionId) {
       UserID: userId
     }
   });
-  
+
   if (existingEnrollment) {
     console.log(`User ${userId} already enrolled in course ${courseId}`);
     return existingEnrollment;
   }
-  
+
   // Create enrollment
   const enrollment = await CourseEnrollment.create({
     CourseID: courseId,
@@ -922,7 +928,7 @@ async function enrollUserInCourse(userId, courseId, transactionId) {
     Status: 'active',
     Progress: 0
   });
-  
+
   console.log(`User ${userId} enrolled in course ${courseId} successfully`);
   return enrollment;
 }
@@ -988,16 +994,16 @@ exports.getUserEnrollments = async (req, res) => {
   try {
     // Handle different ways user ID might be stored based on authentication middleware
     const userId = req.user.id || req.user.userId || req.user.UserID;
-    
+
     if (!userId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'User ID not found in request' 
+      return res.status(400).json({
+        success: false,
+        message: 'User ID not found in request'
       });
     }
-    
+
     console.log(`Fetching enrollments for user ID: ${userId}`);
-    
+
     // Use a simpler query without complex associations to avoid SQL errors
     const enrollments = await CourseEnrollment.findAll({
       where: {
@@ -1006,10 +1012,10 @@ exports.getUserEnrollments = async (req, res) => {
       },
       attributes: ['EnrollmentID', 'CourseID', 'UserID', 'Status', 'Progress', 'EnrolledAt', 'CompletedAt', 'LastAccessedLessonID']
     });
-    
+
     // Get course IDs from enrollments
     let courseIds = enrollments.map(enrollment => enrollment.CourseID);
-    
+
     // Get successful payment transactions even if enrollment doesn't exist yet
     const completedTransactions = await PaymentTransaction.findAll({
       where: {
@@ -1017,12 +1023,12 @@ exports.getUserEnrollments = async (req, res) => {
         PaymentStatus: 'completed'
       }
     });
-    
+
     // Extract course IDs from completed payments
     completedTransactions.forEach(transaction => {
       if (transaction.CourseID && !courseIds.includes(transaction.CourseID)) {
         courseIds.push(transaction.CourseID);
-        
+
         // Create enrollment if it doesn't exist yet
         CourseEnrollment.findOrCreate({
           where: {
@@ -1049,7 +1055,7 @@ exports.getUserEnrollments = async (req, res) => {
         });
       }
     });
-    
+
     // Fetch courses in a separate query
     const courses = courseIds.length > 0 ? await Course.findAll({
       where: {
@@ -1057,13 +1063,13 @@ exports.getUserEnrollments = async (req, res) => {
         IsPublished: true
       }
     }) : [];
-    
+
     // Create a map of courses by ID for easy lookup
     const courseMap = {};
     courses.forEach(course => {
       courseMap[course.CourseID] = course;
     });
-    
+
     // Get payment transactions for these courses
     const transactions = await PaymentTransaction.findAll({
       where: {
@@ -1072,7 +1078,7 @@ exports.getUserEnrollments = async (req, res) => {
         PaymentStatus: 'completed'
       }
     });
-    
+
     // Create map of payment info by course ID
     const paymentMap = {};
     transactions.forEach(transaction => {
@@ -1083,10 +1089,10 @@ exports.getUserEnrollments = async (req, res) => {
         transactionId: transaction.TransactionID
       };
     });
-    
+
     // Transform the data for frontend, including courses with payments but no enrollment yet
     const transformedData = [];
-    
+
     // First add data from enrollments
     enrollments.forEach(enrollment => {
       const course = courseMap[enrollment.CourseID] || {};
@@ -1095,7 +1101,7 @@ exports.getUserEnrollments = async (req, res) => {
         amount: 0,
         date: enrollment.EnrolledAt
       };
-      
+
       transformedData.push({
         id: course.CourseID,
         title: course.Title,
@@ -1114,14 +1120,14 @@ exports.getUserEnrollments = async (req, res) => {
         paymentInfo: payment
       });
     });
-    
+
     // Add courses with payments but no enrollments yet
     completedTransactions.forEach(transaction => {
       const courseId = transaction.CourseID;
       // Only add if not already included via enrollment
       if (!transformedData.some(item => item.id === courseId)) {
         const course = courseMap[courseId] || {};
-        
+
         transformedData.push({
           id: course.CourseID,
           title: course.Title,
@@ -1146,7 +1152,7 @@ exports.getUserEnrollments = async (req, res) => {
         });
       }
     });
-    
+
     return res.status(200).json({
       success: true,
       count: transformedData.length,
@@ -1154,10 +1160,10 @@ exports.getUserEnrollments = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching user enrollments:', error);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Internal server error', 
-      error: error.message 
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
     });
   }
 };
@@ -1176,7 +1182,7 @@ exports.getPaymentHistory = async (req, res) => {
     );
 
     const userId = req.user.id;
-    
+
     const payments = await PaymentTransaction.findAll({
       where: {
         UserID: userId
@@ -1189,7 +1195,7 @@ exports.getPaymentHistory = async (req, res) => {
       ],
       order: [['CreatedAt', 'DESC']]
     });
-    
+
     return res.status(200).json({ success: true, data: payments });
   } catch (error) {
     console.error('Error fetching payment history:', error);
@@ -1200,15 +1206,15 @@ exports.getPaymentHistory = async (req, res) => {
 // Delete payment transaction (only cancelled payments can be deleted)
 exports.deletePayment = async (req, res) => {
   const t = await sequelize.transaction();
-  
+
   try {
     const userId = req.user.id;
     const paymentId = req.params.paymentId;
-    
+
     if (!paymentId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Mã giao dịch không được cung cấp' 
+      return res.status(400).json({
+        success: false,
+        message: 'Mã giao dịch không được cung cấp'
       });
     }
 
@@ -1221,17 +1227,17 @@ exports.deletePayment = async (req, res) => {
     });
 
     if (!payment) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Giao dịch không tồn tại hoặc không thuộc về người dùng hiện tại' 
+      return res.status(404).json({
+        success: false,
+        message: 'Giao dịch không tồn tại hoặc không thuộc về người dùng hiện tại'
       });
     }
 
     // Check if payment status is cancelled
     if (payment.PaymentStatus.toLowerCase() !== 'cancelled') {
-      return res.status(403).json({ 
-        success: false, 
-        message: 'Chỉ có thể xóa các giao dịch đã hủy' 
+      return res.status(403).json({
+        success: false,
+        message: 'Chỉ có thể xóa các giao dịch đã hủy'
       });
     }
 
@@ -1258,20 +1264,20 @@ exports.deletePayment = async (req, res) => {
 
     // Then delete the payment transaction
     await payment.destroy({ transaction: t });
-    
+
     // Commit transaction
     await t.commit();
-    
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Giao dịch đã được xóa thành công' 
+
+    return res.status(200).json({
+      success: true,
+      message: 'Giao dịch đã được xóa thành công'
     });
   } catch (error) {
     // Rollback transaction in case of error
     await t.rollback();
-    
+
     console.error('Error deleting payment:', error);
-    
+
     // Provide more specific error messages based on error type
     if (error.name === 'SequelizeForeignKeyConstraintError') {
       return res.status(500).json({
@@ -1280,9 +1286,9 @@ exports.deletePayment = async (req, res) => {
         error: 'ForeignKeyConstraintError'
       });
     }
-    
-    return res.status(500).json({ 
-      success: false, 
+
+    return res.status(500).json({
+      success: false,
       message: 'Đã xảy ra lỗi khi xóa giao dịch. Vui lòng thử lại sau.',
       error: error.message
     });
@@ -1292,15 +1298,15 @@ exports.deletePayment = async (req, res) => {
 // Delete multiple cancelled payments
 exports.deleteManyPayments = async (req, res) => {
   const t = await sequelize.transaction();
-  
+
   try {
     const userId = req.user.id;
     const { paymentIds } = req.body;
-    
+
     if (!paymentIds || !Array.isArray(paymentIds) || paymentIds.length === 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Danh sách giao dịch cần xóa không hợp lệ' 
+      return res.status(400).json({
+        success: false,
+        message: 'Danh sách giao dịch cần xóa không hợp lệ'
       });
     }
 
@@ -1314,15 +1320,15 @@ exports.deleteManyPayments = async (req, res) => {
     });
 
     if (payments.length === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Không tìm thấy giao dịch đã hủy nào hợp lệ để xóa' 
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy giao dịch đã hủy nào hợp lệ để xóa'
       });
     }
 
     // Get the IDs of found payments
     const validPaymentIds = payments.map(payment => payment.TransactionID);
-    
+
     // Check which payments have related records in PaymentHistory
     const paymentHistoryResult = await sequelize.query(
       `SELECT TransactionID FROM PaymentHistory WHERE TransactionID IN (:transactionIds)`,
@@ -1332,10 +1338,10 @@ exports.deleteManyPayments = async (req, res) => {
         transaction: t
       }
     );
-    
+
     if (paymentHistoryResult.length > 0) {
       const historyTransactionIds = paymentHistoryResult.map(record => record.TransactionID);
-      
+
       // Delete related records in PaymentHistory
       await sequelize.query(
         `DELETE FROM PaymentHistory WHERE TransactionID IN (:transactionIds)`,
@@ -1353,21 +1359,21 @@ exports.deleteManyPayments = async (req, res) => {
       },
       transaction: t
     });
-    
+
     // Commit transaction
     await t.commit();
-    
-    return res.status(200).json({ 
-      success: true, 
+
+    return res.status(200).json({
+      success: true,
       message: `${deleteCount} giao dịch đã được xóa thành công`,
       deletedCount: deleteCount
     });
   } catch (error) {
     // Rollback transaction in case of error
     await t.rollback();
-    
+
     console.error('Error deleting multiple payments:', error);
-    
+
     // Provide more specific error messages based on error type
     if (error.name === 'SequelizeForeignKeyConstraintError') {
       return res.status(500).json({
@@ -1376,9 +1382,9 @@ exports.deleteManyPayments = async (req, res) => {
         error: 'ForeignKeyConstraintError'
       });
     }
-    
-    return res.status(500).json({ 
-      success: false, 
+
+    return res.status(500).json({
+      success: false,
       message: 'Đã xảy ra lỗi khi xóa nhiều giao dịch. Vui lòng thử lại sau.',
       error: error.message
     });
@@ -1390,11 +1396,11 @@ exports.getCoursePaymentHistory = async (req, res) => {
   try {
     const userId = req.user.id;
     const courseId = req.params.courseId;
-    
+
     if (!courseId) {
       return res.status(400).json({ success: false, message: 'Course ID is required' });
     }
-    
+
     const payments = await PaymentTransaction.findAll({
       where: {
         UserID: userId,
@@ -1403,7 +1409,7 @@ exports.getCoursePaymentHistory = async (req, res) => {
       order: [['CreatedAt', 'DESC']],
       limit: 10 // Limit the results to the 10 most recent transactions
     });
-    
+
     return res.status(200).json({ success: true, data: payments });
   } catch (error) {
     console.error('Error fetching course payment history:', error);
@@ -1421,14 +1427,14 @@ exports.saveLessonProgress = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid lesson ID' });
     }
     const userId = req.user.id;
-    
+
     if (!lessonId || !userId) {
       return res.status(400).json({
         success: false,
         message: 'Lesson ID and User ID are required',
       });
     }
-    
+
     // Get the lesson to find the course module
     const lesson = await sequelize.query(
       `SELECT l.LessonID, l.ModuleID, m.CourseID
@@ -1440,20 +1446,20 @@ exports.saveLessonProgress = async (req, res) => {
         type: sequelize.QueryTypes.SELECT
       }
     );
-    
+
     if (!lesson || lesson.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Lesson not found',
       });
     }
-    
+
     const courseId = parseInt(lesson[0].CourseID, 10);
 
     if (isNaN(courseId)) {
       return res.status(500).json({ success: false, message: 'Invalid course ID retrieved from lesson' });
     }
-    
+
     // Find the user's enrollment
     const enrollment = await CourseEnrollment.findOne({
       where: {
@@ -1462,14 +1468,14 @@ exports.saveLessonProgress = async (req, res) => {
         Status: { [Op.in]: ['active', 'completed'] }
       }
     });
-    
+
     if (!enrollment) {
       return res.status(403).json({
         success: false,
         message: 'User is not enrolled in this course',
       });
     }
-    
+
     // Upsert lesson progress without using implicit transactions (avoid MSSQL COMMIT error)
     let lessonProgress = await LessonProgress.findOne({
       where: {
@@ -1496,11 +1502,11 @@ exports.saveLessonProgress = async (req, res) => {
       if (req.body.lastPosition) lessonProgress.LastPosition = req.body.lastPosition;
       await lessonProgress.save();
     }
-    
+
     // Update LastAccessedLessonID in enrollment
     enrollment.LastAccessedLessonID = lessonId;
     await enrollment.save();
-    
+
     // Calculate the new progress percentage
     const totalLessons = await sequelize.query(
       `SELECT COUNT(l.LessonID) as total
@@ -1512,7 +1518,7 @@ exports.saveLessonProgress = async (req, res) => {
         type: sequelize.QueryTypes.SELECT
       }
     );
-    
+
     const completedLessons = await sequelize.query(
       `SELECT COUNT(lp.ProgressID) as completed
        FROM LessonProgress lp
@@ -1527,23 +1533,23 @@ exports.saveLessonProgress = async (req, res) => {
         type: sequelize.QueryTypes.SELECT
       }
     );
-    
+
     // Calculate progress percentage
     const total = totalLessons[0].total || 0;
     const completed = completedLessons[0].completed || 0;
     const progressPercentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-    
+
     // Update the enrollment progress
     enrollment.Progress = progressPercentage;
     await enrollment.save();
-    
+
     // If all lessons are completed, mark the enrollment as completed
     if (progressPercentage === 100 && enrollment.Status !== 'completed') {
       enrollment.Status = 'completed';
       enrollment.CompletedAt = sequelize.literal('GETDATE()');
       await enrollment.save();
     }
-    
+
     // Get all completed lessons for this course
     const completedLessonsList = await sequelize.query(
       `SELECT l.LessonID
@@ -1559,7 +1565,7 @@ exports.saveLessonProgress = async (req, res) => {
         type: sequelize.QueryTypes.SELECT
       }
     );
-    
+
     return res.status(200).json({
       success: true,
       message: 'Lesson progress saved successfully',
@@ -1585,7 +1591,7 @@ exports.getCourseContent = async (req, res) => {
   try {
     const courseId = req.params.courseId;
     console.log(`Fetching course content for courseId: ${courseId}`);
-    
+
     // Validate course ID
     if (!courseId) {
       return res.status(400).json({
@@ -1594,25 +1600,25 @@ exports.getCourseContent = async (req, res) => {
         code: 'COURSE_ID_REQUIRED'
       });
     }
-    
+
     // Extract token without failing if not present
     let token = null;
     let userId = null;
     const authHeader = req.headers.authorization;
-    
+
     if (authHeader && authHeader.startsWith('Bearer ')) {
       token = authHeader.split(' ')[1];
       console.log('Token found in authorization header:', token.substring(0, 15) + '...');
-      
+
       if (token) {
         try {
           // Verify token - handle different key field names
           const decoded = jwt.verify(token, process.env.JWT_SECRET);
           console.log('Token decoded successfully:', decoded);
-          
+
           // Extract userId from different possible fields
           userId = decoded.id || decoded.userId || decoded.UserID || decoded.sub;
-          
+
           if (!userId) {
             console.warn('No user ID found in decoded token:', decoded);
             // Try to extract from another property if available
@@ -1634,14 +1640,14 @@ exports.getCourseContent = async (req, res) => {
         }
       }
     }
-    
+
     // If no token provided or userId not extracted, check if course has preview content
     if (!userId) {
       console.log('No valid token or user ID provided, checking for preview content');
-      
+
       // Get course preview content
       const previewContent = await getPreviewContent(courseId);
-      
+
       if (previewContent) {
         return res.status(200).json({
           success: true,
@@ -1658,7 +1664,7 @@ exports.getCourseContent = async (req, res) => {
         });
       }
     }
-    
+
     // If we have a valid user ID, fetch the full course content
     try {
       // First check if user is enrolled in this course
@@ -1675,7 +1681,7 @@ exports.getCourseContent = async (req, res) => {
             FROM CourseEnrollments
             WHERE CourseID = @courseId AND UserID = @userId AND Status = 'active'
           `);
-        
+
         console.log(`Enrollment check result: ${enrollmentResult.recordset.length} records found`);
         isEnrolled = enrollmentResult.recordset.length > 0;
       } catch (enrollmentError) {
@@ -1683,13 +1689,13 @@ exports.getCourseContent = async (req, res) => {
         // Continue with preview mode on enrollment check error
         isEnrolled = false;
       }
-      
+
       if (!isEnrolled) {
         // User is not enrolled, provide preview content
         console.log(`User ${userId} is not enrolled in course ${courseId}, showing preview content`);
         try {
           const previewContent = await getPreviewContent(courseId);
-          
+
           if (previewContent) {
             return res.status(200).json({
               success: true,
@@ -1714,7 +1720,7 @@ exports.getCourseContent = async (req, res) => {
           });
         }
       }
-      
+
       // User is enrolled, fetch full course content
       const courseResult = await pool.request()
         .input('courseId', sql.BigInt, courseId)
@@ -1728,7 +1734,7 @@ exports.getCourseContent = async (req, res) => {
           LEFT JOIN Users u ON c.InstructorID = u.UserID
           WHERE c.CourseID = @courseId AND c.IsPublished = 1
         `);
-      
+
       if (courseResult.recordset.length === 0) {
         return res.status(404).json({
           success: false,
@@ -1736,9 +1742,9 @@ exports.getCourseContent = async (req, res) => {
           code: 'COURSE_NOT_FOUND'
         });
       }
-      
+
       const course = courseResult.recordset[0];
-      
+
       // Fetch modules for the course
       const modulesResult = await pool.request()
         .input('courseId', sql.BigInt, courseId)
@@ -1753,7 +1759,7 @@ exports.getCourseContent = async (req, res) => {
           WHERE CourseID = @courseId
           ORDER BY OrderIndex
         `);
-      
+
       // Fetch all lessons for enrolled user
       const lessonsResult = await pool.request()
         .input('courseId', sql.BigInt, courseId)
@@ -1767,7 +1773,7 @@ exports.getCourseContent = async (req, res) => {
           WHERE m.CourseID = @courseId
           ORDER BY m.OrderIndex, l.OrderIndex
         `);
-      
+
       // Get user's progress
       const progressResult = await pool.request()
         .input('userId', sql.BigInt, userId)
@@ -1776,20 +1782,20 @@ exports.getCourseContent = async (req, res) => {
           SELECT Progress FROM CourseEnrollments 
           WHERE UserID = @userId AND CourseID = @courseId
         `);
-      
+
       const progress = progressResult.recordset.length > 0 ? progressResult.recordset[0].Progress : 0;
-      
+
       // Organize data
       const modules = modulesResult.recordset.map(module => {
         const moduleLessons = lessonsResult.recordset
           .filter(lesson => lesson.ModuleID === module.ModuleID);
-        
+
         return {
           ...module,
           Lessons: moduleLessons
         };
       });
-      
+
       // Get the user's completed lessons
       let completedLessons = [];
       if (userId) {
@@ -1806,10 +1812,10 @@ exports.getCourseContent = async (req, res) => {
             AND m.CourseID = @courseId
             AND lp.Status = 'completed'
           `);
-        
+
         completedLessons = completedResult.recordset.map(row => row.LessonID);
       }
-      
+
       // Format instructor data
       const instructor = {
         Name: course.InstructorName || '',
@@ -1817,7 +1823,7 @@ exports.getCourseContent = async (req, res) => {
         Bio: course.InstructorBio || '',
         AvatarUrl: course.InstructorAvatar || ''
       };
-      
+
       return res.status(200).json({
         success: true,
         data: {
@@ -1829,7 +1835,7 @@ exports.getCourseContent = async (req, res) => {
           IsPreview: false
         }
       });
-      
+
     } catch (dbError) {
       console.error('Database error fetching full course content:', dbError);
       return res.status(500).json({
@@ -1852,7 +1858,7 @@ exports.getCourseContent = async (req, res) => {
 async function getPreviewContent(courseId) {
   try {
     console.log(`Fetching preview content for course ${courseId}`);
-    
+
     // Fetch basic course information
     let course = null;
     try {
@@ -1867,12 +1873,12 @@ async function getPreviewContent(courseId) {
           LEFT JOIN Users u ON c.InstructorID = u.UserID
           WHERE c.CourseID = @courseId AND c.IsPublished = 1
         `);
-      
+
       if (courseResult.recordset.length === 0) {
         console.log(`No course found with ID ${courseId}`);
         return null;
       }
-      
+
       course = courseResult.recordset[0];
       console.log('Preview course data found:', course.CourseID);
     } catch (courseError) {
@@ -1894,7 +1900,7 @@ async function getPreviewContent(courseId) {
         InstructorAvatar: null
       };
     }
-    
+
     // Fetch modules for the course
     let modules = [];
     try {
@@ -1911,7 +1917,7 @@ async function getPreviewContent(courseId) {
           WHERE CourseID = @courseId
           ORDER BY OrderIndex
         `);
-      
+
       // Fetch preview lessons (3 lessons per module)
       const lessonsResult = await pool.request()
         .input('courseId', sql.BigInt, courseId)
@@ -1925,7 +1931,7 @@ async function getPreviewContent(courseId) {
           WHERE m.CourseID = @courseId AND (l.IsPreview = 1 OR l.OrderIndex <= 3)
           ORDER BY m.OrderIndex, l.OrderIndex
         `);
-      
+
       // Organize data - ensure field names are correct
       modules = modulesResult.recordset.map(module => {
         const moduleLessons = lessonsResult.recordset
@@ -1934,7 +1940,7 @@ async function getPreviewContent(courseId) {
             ...lesson,
             IsPreview: true // Mark all included lessons as preview
           }));
-        
+
         return {
           ...module,
           Lessons: moduleLessons
@@ -1963,7 +1969,7 @@ async function getPreviewContent(courseId) {
         }]
       }];
     }
-    
+
     // Format instructor data
     const instructor = {
       Name: course.InstructorName || '',
@@ -1971,7 +1977,7 @@ async function getPreviewContent(courseId) {
       Bio: course.InstructorBio || '',
       AvatarUrl: course.InstructorAvatar || ''
     };
-    
+
     return {
       course: {
         CourseID: course.CourseID,
@@ -2043,12 +2049,12 @@ exports.getDailySchedule = async (req, res) => {
     const schedule = result.recordset.map(item => ({
       courseName: item.CourseName,
       sessionTitle: item.SessionTitle,
-      startTime: new Date(item.StartTime).toLocaleTimeString('vi-VN', { 
-        hour: '2-digit', 
+      startTime: new Date(item.StartTime).toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
         minute: '2-digit'
       }),
-      endTime: new Date(item.EndTime).toLocaleTimeString('vi-VN', { 
-        hour: '2-digit', 
+      endTime: new Date(item.EndTime).toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
         minute: '2-digit'
       }),
       teacherName: item.TeacherName,
@@ -2078,7 +2084,7 @@ exports.createPayPalOrder = async (req, res) => {
   try {
     const { courseId } = req.params;
     const userId = req.user.id;
-    
+
     // Get course details
     const course = await Course.findOne({
       where: {
@@ -2101,19 +2107,19 @@ exports.createPayPalOrder = async (req, res) => {
     });
 
     if (existingEnrollment) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'You are already enrolled in this course' 
+      return res.status(400).json({
+        success: false,
+        message: 'You are already enrolled in this course'
       });
     }
 
     // Determine payment amount (use discount price if available)
     const amount = course.DiscountPrice || course.Price;
-    
+
     if (amount <= 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Free courses should use the free enrollment endpoint' 
+      return res.status(400).json({
+        success: false,
+        message: 'Free courses should use the free enrollment endpoint'
       });
     }
 
@@ -2146,32 +2152,32 @@ exports.createPayPalOrder = async (req, res) => {
     let order;
     let retryCount = 0;
     const maxRetries = 3;
-    
+
     while (retryCount < maxRetries) {
       try {
         const returnUrl = `${process.env.PAYPAL_RETURN_URL || req.headers.origin + '/payment/paypal/success'}?status=success&transactionId=${transaction.TransactionID}&courseId=${courseId}`;
         const cancelUrl = `${process.env.PAYPAL_CANCEL_URL || req.headers.origin + '/payment/paypal/cancel'}?status=cancel&transactionId=${transaction.TransactionID}&courseId=${courseId}`;
-        
+
         order = await paypalClient.createOrder(transaction, returnUrl, cancelUrl);
         break; // If successful, exit the retry loop
       } catch (paypalError) {
         retryCount++;
         console.error(`PayPal order creation failed (attempt ${retryCount}):`, paypalError);
-        
+
         if (retryCount === maxRetries) {
           // Update transaction as failed after max retries
           await PaymentTransaction.update(
-            { 
+            {
               PaymentStatus: 'failed',
-              PaymentDetails: JSON.stringify({ 
+              PaymentDetails: JSON.stringify({
                 error: 'Failed to create PayPal order after multiple attempts',
-                details: paypalError.message 
+                details: paypalError.message
               }),
               UpdatedAt: createSqlServerDate()
             },
             { where: { TransactionID: transaction.TransactionID } }
           );
-          
+
           // Update payment history
           await PaymentHistory.create({
             TransactionID: transaction.TransactionID,
@@ -2181,13 +2187,13 @@ exports.createPayPalOrder = async (req, res) => {
             Notes: paypalError.message,
             CreatedAt: createSqlServerDate()
           });
-          
-          return res.status(500).json({ 
-            success: false, 
-            message: 'Payment service error. Please try again later.' 
+
+          return res.status(500).json({
+            success: false,
+            message: 'Payment service error. Please try again later.'
           });
         }
-        
+
         // Wait before retry (exponential backoff)
         await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
       }
@@ -2195,13 +2201,13 @@ exports.createPayPalOrder = async (req, res) => {
 
     // Extract the approval URL for redirecting the user
     const approveLink = order.links.find(link => link.rel === 'approve')?.href;
-    
+
     if (!approveLink) {
       // Update transaction as failed if no approval link
       await PaymentTransaction.update(
-        { 
+        {
           PaymentStatus: 'failed',
-          PaymentDetails: JSON.stringify({ 
+          PaymentDetails: JSON.stringify({
             error: 'No approval URL found in PayPal response',
             order: order
           }),
@@ -2209,17 +2215,17 @@ exports.createPayPalOrder = async (req, res) => {
         },
         { where: { TransactionID: transaction.TransactionID } }
       );
-      
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Invalid PayPal response. Missing approval URL.' 
+
+      return res.status(500).json({
+        success: false,
+        message: 'Invalid PayPal response. Missing approval URL.'
       });
     }
-    
+
     // Update transaction with PayPal order ID
     await PaymentTransaction.update(
-      { 
-        PaymentDetails: JSON.stringify({ 
+      {
+        PaymentDetails: JSON.stringify({
           paypalOrderId: order.id,
           approvalUrl: approveLink
         }),
@@ -2237,8 +2243,8 @@ exports.createPayPalOrder = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating PayPal order:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       message: 'Internal server error',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -2248,7 +2254,7 @@ exports.createPayPalOrder = async (req, res) => {
 // Process PayPal payment success
 exports.processPayPalSuccess = async (req, res) => {
   const { transactionId, PayerID, paymentId } = req.body;
-  
+
   if (!transactionId) {
     return res.status(400).json({
       success: false,
@@ -2268,7 +2274,7 @@ exports.processPayPalSuccess = async (req, res) => {
         message: 'Transaction not found'
       });
     }
-    
+
     // Check if payment is already completed to prevent double-processing
     if (transaction.PaymentStatus === 'completed') {
       return res.status(200).json({
@@ -2280,7 +2286,7 @@ exports.processPayPalSuccess = async (req, res) => {
         }
       });
     }
-    
+
     // Verify the payment with PayPal if PayerID is provided
     if (PayerID) {
       try {
@@ -2290,22 +2296,22 @@ exports.processPayPalSuccess = async (req, res) => {
           const details = JSON.parse(transaction.PaymentDetails);
           paypalOrderId = details.paypalOrderId;
         }
-        
+
         if (!paypalOrderId && paymentId) {
           paypalOrderId = paymentId;
         }
-        
+
         if (paypalOrderId) {
           // Verify and capture the payment
           const captureResult = await paypalClient.validateAndCapturePayment(paypalOrderId);
-          
+
           if (captureResult.status !== 'COMPLETED') {
             throw new Error('PayPal capture did not complete');
           }
         }
       } catch (verifyError) {
         console.error('Error verifying PayPal payment:', verifyError);
-        
+
         await PaymentHistory.create({
           TransactionID: transactionId,
           Status: 'verification_failed',
@@ -2313,7 +2319,7 @@ exports.processPayPalSuccess = async (req, res) => {
           Notes: verifyError.message,
           CreatedAt: createSqlServerDate()
         });
-        
+
         return res.status(400).json({
           success: false,
           message: 'Payment verification failed',
@@ -2386,7 +2392,7 @@ exports.processPayPalSuccess = async (req, res) => {
     });
   } catch (error) {
     console.error('Error processing PayPal payment:', error);
-    
+
     // Record error in payment history
     try {
       await PaymentHistory.create({
@@ -2399,7 +2405,7 @@ exports.processPayPalSuccess = async (req, res) => {
     } catch (historyError) {
       console.error('Failed to record payment history:', historyError);
     }
-    
+
     return res.status(500).json({
       success: false,
       message: 'Failed to process PayPal payment',
@@ -2411,7 +2417,7 @@ exports.processPayPalSuccess = async (req, res) => {
 // Process PayPal payment cancel
 exports.processPayPalCancel = async (req, res) => {
   const { transactionId } = req.body;
-  
+
   if (!transactionId) {
     return res.status(400).json({
       success: false,
@@ -2431,7 +2437,7 @@ exports.processPayPalCancel = async (req, res) => {
         message: 'Transaction not found'
       });
     }
-    
+
     // Only update if not already completed
     if (transaction.PaymentStatus === 'completed') {
       return res.status(200).json({
@@ -2442,8 +2448,8 @@ exports.processPayPalCancel = async (req, res) => {
 
     // Update transaction status
     await PaymentTransaction.update(
-      { 
-        PaymentStatus: 'cancelled', 
+      {
+        PaymentStatus: 'cancelled',
         UpdatedAt: createSqlServerDate(),
         Notes: 'Payment cancelled by user'
       },
@@ -2476,26 +2482,26 @@ exports.processPayPalCancel = async (req, res) => {
 exports.getVNPayTransaction = async (req, res) => {
   try {
     const { transactionId } = req.params;
-    
+
     if (!transactionId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Transaction ID is required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Transaction ID is required'
       });
     }
-    
+
     // Find transaction by ID
     const transaction = await PaymentTransaction.findOne({
       where: { TransactionID: transactionId }
     });
-    
+
     if (!transaction) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Transaction not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Transaction not found'
       });
     }
-    
+
     // Get course details if transaction is for a course
     let course = null;
     if (transaction.CourseID) {
@@ -2503,7 +2509,7 @@ exports.getVNPayTransaction = async (req, res) => {
         attributes: ['CourseID', 'Title', 'ShortDescription', 'ImageUrl', 'Price', 'DiscountPrice']
       });
     }
-    
+
     // Get enrollment if exists
     let enrollment = null;
     if (transaction.CourseID && transaction.UserID) {
@@ -2514,14 +2520,14 @@ exports.getVNPayTransaction = async (req, res) => {
         }
       });
     }
-    
+
     // Get payment history
     const paymentHistory = await PaymentHistory.findAll({
       where: { TransactionID: transactionId },
       order: [['CreatedAt', 'DESC']],
       limit: 5
     });
-    
+
     return res.status(200).json({
       success: true,
       data: {
@@ -2541,31 +2547,31 @@ exports.getVNPayTransaction = async (req, res) => {
 exports.getPaypalApprovalUrl = async (req, res) => {
   try {
     const { transactionId } = req.params;
-    
+
     if (!transactionId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Transaction ID is required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Transaction ID is required'
       });
     }
-    
+
     // Check if the user owns this transaction
-    const transaction = await PaymentTransaction.findOne({ 
-      where: { 
+    const transaction = await PaymentTransaction.findOne({
+      where: {
         TransactionID: transactionId,
         UserID: req.user.id,
         PaymentMethod: 'paypal',
         PaymentStatus: 'pending'
-      } 
+      }
     });
-    
+
     if (!transaction) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Pending PayPal transaction not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Pending PayPal transaction not found'
       });
     }
-    
+
     // Check if we already have the approval URL stored
     let approvalUrl = null;
     if (transaction.PaymentDetails) {
@@ -2576,7 +2582,7 @@ exports.getPaypalApprovalUrl = async (req, res) => {
         console.error('Error parsing payment details:', parseError);
       }
     }
-    
+
     // If we have a stored URL, return it
     if (approvalUrl) {
       return res.status(200).json({
@@ -2585,25 +2591,25 @@ exports.getPaypalApprovalUrl = async (req, res) => {
         transactionId: transaction.TransactionID
       });
     }
-    
+
     // If no URL stored, create a new PayPal order
     const returnUrl = `${process.env.PAYPAL_RETURN_URL || req.headers.origin + '/payment/paypal/success'}?status=success&transactionId=${transaction.TransactionID}&courseId=${transaction.CourseID}`;
     const cancelUrl = `${process.env.PAYPAL_CANCEL_URL || req.headers.origin + '/payment/paypal/cancel'}?status=cancel&transactionId=${transaction.TransactionID}&courseId=${transaction.CourseID}`;
-    
+
     const order = await paypalClient.createOrder(transaction, returnUrl, cancelUrl);
     const newApproveUrl = order.links.find(link => link.rel === 'approve')?.href;
-    
+
     if (!newApproveUrl) {
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Could not generate PayPal approval URL' 
+      return res.status(500).json({
+        success: false,
+        message: 'Could not generate PayPal approval URL'
       });
     }
-    
+
     // Store the new PayPal order details in the transaction
     await PaymentTransaction.update(
-      { 
-        PaymentDetails: JSON.stringify({ 
+      {
+        PaymentDetails: JSON.stringify({
           paypalOrderId: order.id,
           approvalUrl: newApproveUrl
         }),
@@ -2611,7 +2617,7 @@ exports.getPaypalApprovalUrl = async (req, res) => {
       },
       { where: { TransactionID: transaction.TransactionID } }
     );
-    
+
     return res.status(200).json({
       success: true,
       approveUrl: newApproveUrl,
@@ -2619,8 +2625,8 @@ exports.getPaypalApprovalUrl = async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting PayPal approval URL:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       message: 'Failed to get PayPal approval URL',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -2648,7 +2654,7 @@ exports.testPayPalSandbox = async (req, res) => {
         message: 'PayPal test endpoint is not available in production'
       });
     }
-    
+
     // Check if PayPal client is in sandbox mode
     if (paypalClient.mode !== 'sandbox') {
       return res.status(400).json({
@@ -2656,13 +2662,13 @@ exports.testPayPalSandbox = async (req, res) => {
         message: 'PayPal client is not in sandbox mode'
       });
     }
-    
+
     // Create a test order
     const testOrder = await paypalClient.createSandboxTestOrder();
-    
+
     // Get the approval URL
     const approvalUrl = testOrder.links.find(link => link.rel === 'approve')?.href;
-    
+
     return res.status(200).json({
       success: true,
       message: 'PayPal sandbox test order created successfully',
@@ -2781,12 +2787,12 @@ exports.getCoursePrintDetails = async (req, res) => {
     // Special handling for course 7 or any course that might have been deleted
     if (courseId === '7') {
       console.log(`Special handling for course ID ${courseId} which may not exist`);
-      
+
       // Check if the course exists first
       const courseExistsResult = await pool.request()
         .input('courseId', sql.BigInt, courseId)
         .query(`SELECT COUNT(*) as count FROM Courses WHERE CourseID = @courseId AND IsPublished = 1`);
-      
+
       if (courseExistsResult.recordset[0].count === 0) {
         return res.status(404).json({
           success: false,
@@ -2810,9 +2816,9 @@ exports.getCoursePrintDetails = async (req, res) => {
       `);
 
     if (enrollmentResult.recordset.length === 0) {
-      return res.status(403).json({ 
-        success: false, 
-        message: 'You are not enrolled in this course' 
+      return res.status(403).json({
+        success: false,
+        message: 'You are not enrolled in this course'
       });
     }
 
@@ -2852,9 +2858,9 @@ exports.getCoursePrintDetails = async (req, res) => {
       `);
 
     if (courseResult.recordset.length === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Course not found or not published' 
+      return res.status(404).json({
+        success: false,
+        message: 'Course not found or not published'
       });
     }
 

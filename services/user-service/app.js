@@ -34,7 +34,7 @@ db.sequelize.authenticate()
     console.log('Connected to database');
     // Set up model associations after successful authentication
     db.setupAssociations();
-    
+
     // Run migrations
     runSSHGPGMigration()
       .then(() => console.log('SSH and GPG tables ready'))
@@ -80,7 +80,7 @@ app.locals.conversationCache = {};
 setInterval(() => {
   console.log('Running cache cleanup...');
   const now = Date.now();
-  
+
   // Clean up conversation cache
   if (app.locals.conversationCache) {
     let expiredCount = 0;
@@ -100,13 +100,13 @@ setInterval(() => {
 
 // Middleware
 app.use(cors({
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     const allowedOrigins = ['http://localhost:3000', 'http://localhost:5004', 'http://localhost:5173'];
     const isDevelopment = process.env.NODE_ENV === 'development';
-    
+
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     if (isDevelopment || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -133,10 +133,22 @@ app.use('/ide', authenticateToken, createProxyMiddleware({
   pathRewrite: { '^/ide': '' },
 }));
 
+// Proxy routes for AI Features (Portfolio Service)
+const portfolioProxy = createProxyMiddleware({
+  target: `http://127.0.0.1:${process.env.PORTFOLIO_SERVICE_PORT || 3900}`,
+  changeOrigin: true,
+});
+
+app.use('/api/learning-path', authenticateToken, portfolioProxy);
+app.use('/api/achievements', authenticateToken, portfolioProxy);
+app.use('/api/teams', authenticateToken, portfolioProxy);
+app.use('/api/skill-dna', authenticateToken, portfolioProxy);
+app.use('/api/insights', authenticateToken, portfolioProxy);
+
 // Logging middleware for all requests
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
-  
+
   // If it's a course details request, log additional information
   if (req.url.match(/^\/api\/courses\/\d+/) || req.url.match(/^\/api\/courses\/[a-zA-Z0-9-]+$/)) {
     if (req.method === 'GET' && !req.url.includes('/check-enrollment') && !req.url.includes('/content')) {
@@ -149,7 +161,7 @@ app.use((req, res, next) => {
       }));
     }
   }
-  
+
   next();
 });
 
@@ -226,7 +238,7 @@ app.get('/api/participants/:participantId/answers', (req, res) => {
 app.use((err, req, res, next) => {
   console.error('=== ERROR HANDLER CAUGHT ===');
   console.error(err.stack || err);
-  
+
   // Log full error details including SQL errors and query information
   if (err.code === 'EREQUEST') {
     console.error('=== SQL ERROR DETAILS ===');
@@ -237,11 +249,11 @@ app.use((err, req, res, next) => {
     if (err.precedingErrors) {
       console.error('SQL Preceding Errors:');
       err.precedingErrors.forEach((pe, i) => {
-        console.error(`  Error ${i+1}:`, pe.message || pe);
+        console.error(`  Error ${i + 1}:`, pe.message || pe);
       });
     }
   }
-  
+
   res.status(err.status || 500).json({
     success: false,
     message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
@@ -257,15 +269,15 @@ app.use((req, res) => {
 
 // Đảm bảo thư mục uploads tồn tại
 const uploadDirs = [
-  'uploads', 
-  'uploads/images', 
-  'uploads/videos', 
-  'uploads/chat', 
+  'uploads',
+  'uploads/images',
+  'uploads/videos',
+  'uploads/chat',
   'uploads/chat/documents',
   'uploads/chat/images',
   'uploads/chat/videos',
   'uploads/chat/audio',
-  'uploads/stories/images', 
+  'uploads/stories/images',
   'uploads/stories/videos'
 ];
 uploadDirs.forEach(dir => {

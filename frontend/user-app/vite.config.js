@@ -12,7 +12,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5004,
+    port: 5173,
     proxy: {
       '/uploads': {
         target: 'http://localhost:5001',
