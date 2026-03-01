@@ -22,9 +22,10 @@ const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   server: serverName,
+  port: parseInt(process.env.DB_PORT || '1433'),
   database: process.env.DB_NAME,
   options: {
-    encrypt: true,
+    encrypt: false,
     trustServerCertificate: true,
     instanceName: instanceName
   },

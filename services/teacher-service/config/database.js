@@ -8,7 +8,7 @@
 const sql = require('mssql');
 require('dotenv').config();
 
-const dbHostString = process.env.DB_HOST || 'localhost';
+const dbHostString = process.env.DB_SERVER || 'localhost';
 let serverName = dbHostString;
 let instanceName = undefined;
 
@@ -20,6 +20,7 @@ if (dbHostString.includes('\\')) {
 
 const config = {
   server: serverName,
+  port: parseInt(process.env.DB_PORT || '1433'),
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

@@ -12,7 +12,7 @@
         "frontend": {
             "framework": "React (Vite / CRA), TailwindCSS, Framer Motion",
             "apps": [
-                "user-app (Học viên & Sinh viên)",
+                "user-app (Học viên & Sinh viên) - Port 5173 / 3001",
                 "admin-app (Quản trị viên)",
                 "teacher-app (Giảng viên)",
                 "recruiter-app (Nhà tuyển dụng chuyên biệt)",
@@ -34,60 +34,44 @@
         },
         "database": {
             "type": "SQL Server (MSSQL)",
-            "host": "localhost\\SQLEXPRESS01"
+            "host": "localhost",
+            "port": 61654,
+            "instance": "SQLEXPRESS01",
+            "options": {
+                "encrypt": false,
+                "trustServerCertificate": true
+            }
         }
     },
     "database_schema": {
-        "summary": "Hệ thống kết hợp dữ liệu khóa học trực tuyến (Campus) và các tính năng AI, tuyển dụng, portfolio (EduLedger) thành một khối thống nhất.",
+        "summary": "Hệ thống kết hợp dữ liệu Campus và EduLedger. Cấu trúc Users đã được nâng cấp để hỗ trợ Bảo mật 2 lớp (2FA) và Trạng thái tài khoản.",
         "tables": [
-            "Users",
+            "Users (Added: AccountStatus, TwoFAEnabled, TwoFASecret, Password)",
+            "LoginAttempts (Mới)",
+            "RegistrationAttempts (Mới)",
+            "UserEmails (Blocker: Hiện đang thiếu)",
             "Courses",
             "UserAiUsage",
             "EmailVerifications",
             "Conversations",
-            "Messages",
-            "CallParticipants"
+            "Messages"
         ],
-        "relationships_explained": "Một hệ thống giáo dục đa người dùng nơi User có thể vừa là Học viên (mua khóa học) vừa có Portfolio AI, tương tác với Nhà Tuyển Dụng qua team-builder, và học video từ Giảng viên."
+        "relationships_explained": "Users đóng vai trò hạt nhân, kết nối với Profiles, Roles, và các dịch vụ Portfolio/Career."
     },
-    "api_endpoints": [
-        {
-            "path": "/api/chat, /api/auth, /api/courses",
-            "explained": "Các API lõi được xử lý trực tiếp bởi user-service."
-        },
-        {
-            "path": "/api/skill-dna, /api/learning-path, /api/teams, /api/achievements, /api/insights",
-            "explained": "Thông qua cơ chế Reverse Proxy Gateway ở user-service, các luồng này được bắn thẳng vào cổng 3900 của portfolio-service một cách mượt mà."
-        }
-    ],
-    "business_rules": [
-        "AxiosClient: Mọi App giờ đây dùng chung logic bảo mật axiosInterceptor, tự động gài Token vào request header.",
-        "Bảo vệ Endpoint AI: Limit usage 5 lần/ngày cho người dùng phổ thông (cơ chế checkAiUsageLimit + Google Gemini API).",
-        "Tuyển dụng: Vẫn được duy trì độc lập ở module recruiter-app và career-service, hướng tới nhóm doanh nghiệp B2B."
-    ],
-    "features": [
-        "Hệ thống khóa học (Campus Learning gốc)",
-        "Lộ trình học AI (Learning Path)",
-        "Bản đồ kỹ năng (Skill DNA)",
-        "Thành tích & Huy hiệu (Achievements)",
-        "Ghép đội hình dự án (Team Builder / Matching)",
-        "Phân tích thị trường công nghệ (Industry Insights)",
-        "Cổng Nhà tuyển dụng (Recruiter Portal)",
-        "Cổng Giảng viên độc lập (Teacher Portal)",
-        "Bảng điều khiển Admin tối cao"
-    ],
     "knowledge_items": {
         "patterns": [
-            "Kiến trúc cổng trung gian API Gateway dùng http-proxy-middleware",
-            "Sử dụng concurrently trong package.json để bật cùng lúc cả 8 cụm server."
+            "API Gateway: user-service đóng vai trò trung chuyển qua http-proxy-middleware.",
+            "Multi-Project: Sử dụng npm run start:all (concurrently) để chạy toàn bộ monorepo.",
+            "DB Patching: Sử dụng sqlcmd để vá schema trực tiếp khi có mismatch giữa Code và DB."
         ],
         "gotchas": [
-            "Cần khởi động portfolio-service và career-service thì các trang AI mới không bị 404 Route Not Found.",
-            "Database connection string thường xuyên yêu cầu TrustServerCertificate=true đối với SQL Express local."
+            "Lỗi 'Invalid column name': Luôn kiểm tra model Sequelize vs DB thực tế (Password vs PasswordHash).",
+            "MSSQL Port: SQL Express thường dùng port động hoặc 61654 thay vì 1433.",
+            "Bcrypt: Mock data cần hash thật của '123456' ($2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymY0.jW2Z.6E3Kjg1u9A6W) để đăng nhập thành công."
         ],
         "conventions": [
-            "UI mới 100% hướng tới TailwindCSS thay vì module CSS truyền thống để đảm bảo tính nhất quán (Utility-first).",
-            "Thống nhất mã lỗi trả về: err.response?.data?.message"
+            "Biến môi trường: Mỗi service cần file .env riêng (đã được auto-patch).",
+            "Ngôn ngữ: Tiếng Việt được ưu tiên trong thông báo lỗi và tài liệu nghiệp vụ."
         ]
     }
 }

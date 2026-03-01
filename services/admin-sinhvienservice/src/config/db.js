@@ -11,9 +11,10 @@ const sql = require('mssql');
 const dbConfig = {
   user: process.env.DB_USER || 'sa',
   password: process.env.DB_PASSWORD || '123456aA@$',
-  server: process.env.DB_SERVER || 'localhost',
+  server: (process.env.DB_SERVER || 'localhost').split('\\')[0],
   database: process.env.DB_NAME || 'CampusLearning',
   options: {
+    instanceName: (process.env.DB_SERVER || 'localhost').split('\\')[1],
     encrypt: process.env.DB_ENCRYPT === 'true',
     trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true' || true,
   },

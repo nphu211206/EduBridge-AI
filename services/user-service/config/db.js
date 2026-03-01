@@ -15,10 +15,11 @@ dotenv.config();
 const sqlConfig = {
   user: process.env.DB_USER || 'sa',
   password: process.env.DB_PASSWORD || '123456aA@$',
-  server: process.env.DB_SERVER || 'localhost',
+  server: (process.env.DB_SERVER || 'localhost').split('\\')[0],
   port: parseInt(process.env.DB_PORT || '1433'),
   database: process.env.DB_NAME || 'CampusLearning',
   options: {
+    instanceName: (process.env.DB_SERVER || 'localhost').split('\\')[1],
     encrypt: false,
     enableArithAbort: true,
     trustServerCertificate: true,
