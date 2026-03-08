@@ -35,7 +35,7 @@ const CoursesPage = () => {
   }, []);
   
   useEffect(() => {
-    if (courses.length > 0) {
+    if (courses?.length > 0) {
       handleSearch(searchText);
     }
   }, [searchText, courses]);
@@ -54,7 +54,7 @@ const CoursesPage = () => {
   };
 
   const handleSearch = (value) => {
-    const filtered = courses.filter(
+    const filtered = courses?.filter(
       (course) =>
         course.Title.toLowerCase().includes(value.toLowerCase()) ||
         course.Description.toLowerCase().includes(value.toLowerCase()) ||

@@ -106,11 +106,11 @@ const examSlice = createSlice({
       if (Array.isArray(action.payload)) {
         // Direct array of exams
         examsData = action.payload;
-        console.log("Received direct array of exams, length:", examsData.length);
+        console.log("Received direct array of exams, length:", examsData?.length);
       } else if (action.payload && action.payload.exams && Array.isArray(action.payload.exams)) {
         // Nested exams property (from API format)
         examsData = action.payload.exams;
-        console.log("Extracted exams from nested property, length:", examsData.length);
+        console.log("Extracted exams from nested property, length:", examsData?.length);
       } else if (typeof action.payload === 'object' && action.payload !== null) {
         // Convert object to array if not in expected format
         console.warn("Unexpected payload format. Converting to array:", action.payload);
@@ -124,9 +124,9 @@ const examSlice = createSlice({
       state.userExams = [...examsData];
       
       // Debug the first few items to verify structure
-      if (state.userExams.length > 0) {
+      if (state.userExams?.length > 0) {
         console.log("First exam in state:", state.userExams[0]);
-        console.log("Total exams loaded:", state.userExams.length);
+        console.log("Total exams loaded:", state.userExams?.length);
       } else {
         console.warn("No exams found in data");
       }

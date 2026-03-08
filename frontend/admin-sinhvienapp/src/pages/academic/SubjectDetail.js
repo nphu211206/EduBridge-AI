@@ -336,10 +336,10 @@ const SubjectDetail = () => {
           <Typography variant="h6" gutterBottom>
             Chương trình học có môn {subject.name}
           </Typography>
-          {programsUsingSubject.length > 0 ? (
+          {programsUsingSubject?.length > 0 ? (
             <Table size="small">
               <TableBody>
-                {programsUsingSubject.map((program) => (
+                {programsUsingSubject?.map((program) => (
                   <TableRow key={program.id}>
                     <TableCell>{program.name}</TableCell>
                     <TableCell>{program.department}</TableCell>

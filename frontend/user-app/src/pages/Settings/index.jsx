@@ -383,7 +383,7 @@ const Settings = () => {
             
             {/* Navigation Tabs */}
           <nav className="border-l-4 border-transparent">
-              {tabs.map(tab => (
+              {tabs?.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}

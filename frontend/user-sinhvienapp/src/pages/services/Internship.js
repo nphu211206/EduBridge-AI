@@ -88,7 +88,7 @@ const Internship = () => {
 
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            {internships.length > 0 ? (
+            {internships?.length > 0 ? (
               <TableContainer component={Paper} sx={styles.tableContainer}>
                 <Table>
                   <TableHead>
@@ -104,7 +104,7 @@ const Internship = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {internships.map((internship) => (
+                    {internships?.map((internship) => (
                       <TableRow key={internship.InternshipID}>
                         <TableCell>{internship.CompanyName}</TableCell>
                         <TableCell>{internship.Position}</TableCell>

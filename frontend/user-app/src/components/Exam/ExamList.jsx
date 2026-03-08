@@ -53,12 +53,12 @@ const ExamList = () => {
   }, []);
 
   useEffect(() => {
-    if (exams.length > 0) {
+    if (exams?.length > 0) {
       let filtered = [...exams];
       
       // Filter based on search term
       if (searchTerm) {
-        filtered = filtered.filter(exam => 
+        filtered = filtered?.filter(exam => 
           exam.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (exam.Description && exam.Description.toLowerCase().includes(searchTerm.toLowerCase())) ||
           (exam.CourseName && exam.CourseName.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -67,16 +67,16 @@ const ExamList = () => {
       
       // Filter based on current filter
       if (filter === 'upcoming') { // Upcoming exams
-        filtered = filtered.filter(exam => new Date(exam.StartTime) > new Date());
+        filtered = filtered?.filter(exam => new Date(exam.StartTime) > new Date());
       } else if (filter === 'ongoing') { // Ongoing exams
         const now = new Date();
-        filtered = filtered.filter(exam => 
+        filtered = filtered?.filter(exam => 
           new Date(exam.StartTime) <= now && new Date(exam.EndTime) >= now
         );
       } else if (filter === 'completed') { // Completed exams
-        filtered = filtered.filter(exam => new Date(exam.EndTime) < new Date());
+        filtered = filtered?.filter(exam => new Date(exam.EndTime) < new Date());
       } else if (filter === 'registered') { // Registered exams
-        filtered = filtered.filter(exam => exam.IsRegistered);
+        filtered = filtered?.filter(exam => exam.IsRegistered);
       }
       
       setFilteredExams(filtered);
@@ -106,7 +106,7 @@ const ExamList = () => {
       const response = await registerForExam(examId);
       
       // Update the exam with registration info and attempt counts
-      setExams(exams.map(exam => 
+      setExams(exams?.map(exam => 
         exam.ExamID === examId 
           ? { 
               ...exam, 
@@ -130,7 +130,7 @@ const ExamList = () => {
       if (err.response && err.response.status === 400) {
         if (err.response.data.message === 'Already registered for this exam and retakes are not allowed') {
           // Mark as registered but retakes not allowed
-          setExams(exams.map(exam => 
+          setExams(exams?.map(exam => 
             exam.ExamID === examId 
               ? { ...exam, IsRegistered: true, allowRetakes: false } 
               : exam
@@ -138,7 +138,7 @@ const ExamList = () => {
           alert('Bạn đã đăng ký kỳ thi này trước đó và không được phép thi lại.');
         } else if (err.response.data.message.includes('Maximum number of attempts')) {
           // Mark as registered with max attempts reached
-          setExams(exams.map(exam => 
+          setExams(exams?.map(exam => 
             exam.ExamID === examId 
               ? { ...exam, IsRegistered: true, attemptsMaxedOut: true } 
               : exam
@@ -146,7 +146,7 @@ const ExamList = () => {
           alert(err.response.data.message);
         } else if (err.response.data.message.includes('ongoing attempt')) {
           // Has an ongoing attempt
-          setExams(exams.map(exam => 
+          setExams(exams?.map(exam => 
             exam.ExamID === examId 
               ? { ...exam, IsRegistered: true, hasOngoingAttempt: true } 
               : exam
@@ -409,8 +409,8 @@ const ExamList = () => {
         <div className="bg-gray-100 text-gray-700 p-4 rounded-md">{error}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredExams.length > 0 ? (
-            filteredExams.map((exam) => {
+          {filteredExams?.length > 0 ? (
+            filteredExams?.map((exam) => {
               const status = getExamStatus(exam.StartTime, exam.EndTime);
               const difficulty = getDifficultyLevel(exam.PassingScore, exam.TotalPoints);
               

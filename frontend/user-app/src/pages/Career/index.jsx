@@ -94,7 +94,7 @@ const Career = () => {
                     >
                         🌐 Tất cả ngành
                     </button>
-                    {APP_CONFIG.fieldCategories.map(cat => (
+                    {APP_CONFIG.fieldCategories?.map(cat => (
                         <button
                             key={cat.value}
                             className={`field-chip ${filters.fieldCategory === cat.value ? 'active' : ''}`}
@@ -139,7 +139,7 @@ const Career = () => {
                         <p>❌ {error}</p>
                         <button onClick={fetchJobs} className="retry-btn">Thử lại</button>
                     </div>
-                ) : jobs.length === 0 ? (
+                ) : jobs?.length === 0 ? (
                     <div className="career-empty">
                         <span className="empty-icon">📭</span>
                         <h3>Chưa có việc làm phù hợp</h3>
@@ -147,62 +147,65 @@ const Career = () => {
                     </div>
                 ) : (
                     <div className="jobs-grid">
-                        {jobs.map(job => (
-                            <div
-                                key={job.JobID}
-                                className="job-card"
-                                onClick={() => navigate(`/career/${job.JobID}`)}
-                            >
-                                <div className="job-card-header">
-                                    <div className="job-company-logo">
-                                        {job.LogoUrl ? (
-                                            <img src={job.LogoUrl} alt={job.CompanyName} />
-                                        ) : (
-                                            <span className="logo-placeholder">{getFieldIcon(job.FieldCategory)}</span>
+                        {jobs?.map(job => {
+                            const jobId = job.JobID || job.JobId || job.id;
+                            return (
+                                <div
+                                    key={jobId}
+                                    className="job-card"
+                                    onClick={() => navigate(`/career/${jobId}`)}
+                                >
+                                    <div className="job-card-header">
+                                        <div className="job-company-logo">
+                                            {job.LogoUrl ? (
+                                                <img src={job.LogoUrl} alt={job.CompanyName} />
+                                            ) : (
+                                                <span className="logo-placeholder">{getFieldIcon(job.FieldCategory)}</span>
+                                            )}
+                                        </div>
+                                        <div className="job-badges">
+                                            <span className={`badge badge-field badge-${(job.FieldCategory || 'other').toLowerCase()}`}>
+                                                {getFieldIcon(job.FieldCategory)} {job.FieldCategory || 'Khác'}
+                                            </span>
+                                            {job.JobType && <span className="badge badge-type">{job.JobType}</span>}
+                                        </div>
+                                    </div>
+
+                                    <h3 className="job-title">{job.Title}</h3>
+                                    <p className="job-company">{job.CompanyName || 'Công ty ẩn danh'}</p>
+
+                                    <div className="job-meta">
+                                        {job.Location && <span className="meta-item">📍 {job.Location}</span>}
+                                        {job.Salary && <span className="meta-item">💰 {job.Salary}</span>}
+                                        {job.MinSalary && job.MaxSalary && (
+                                            <span className="meta-item">
+                                                💰 {(job.MinSalary / 1000000).toFixed(0)}-{(job.MaxSalary / 1000000).toFixed(0)}M {job.SalaryCurrency || 'VND'}
+                                            </span>
                                         )}
                                     </div>
-                                    <div className="job-badges">
-                                        <span className={`badge badge-field badge-${(job.FieldCategory || 'other').toLowerCase()}`}>
-                                            {getFieldIcon(job.FieldCategory)} {job.FieldCategory || 'Khác'}
+
+                                    <p className="job-description">
+                                        {job.Description ? job.Description.substring(0, 120) + '...' : 'Không có mô tả'}
+                                    </p>
+
+                                    <div className="job-skills">
+                                        {(job.Skills || []).slice(0, 4)?.map((skill, i) => (
+                                            <span key={i} className="skill-tag">{skill}</span>
+                                        ))}
+                                        {(job.Skills || [])?.length > 4 && (
+                                            <span className="skill-tag more">+{job.Skills?.length - 4}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="job-footer">
+                                        <span className="job-date">
+                                            {job.CreatedAt ? new Date(job.CreatedAt).toLocaleDateString('vi-VN') : ''}
                                         </span>
-                                        {job.JobType && <span className="badge badge-type">{job.JobType}</span>}
+                                        <button className="apply-btn-small">Xem chi tiết →</button>
                                     </div>
                                 </div>
-
-                                <h3 className="job-title">{job.Title}</h3>
-                                <p className="job-company">{job.CompanyName || 'Công ty ẩn danh'}</p>
-
-                                <div className="job-meta">
-                                    {job.Location && <span className="meta-item">📍 {job.Location}</span>}
-                                    {job.Salary && <span className="meta-item">💰 {job.Salary}</span>}
-                                    {job.MinSalary && job.MaxSalary && (
-                                        <span className="meta-item">
-                                            💰 {(job.MinSalary / 1000000).toFixed(0)}-{(job.MaxSalary / 1000000).toFixed(0)}M {job.SalaryCurrency || 'VND'}
-                                        </span>
-                                    )}
-                                </div>
-
-                                <p className="job-description">
-                                    {job.Description ? job.Description.substring(0, 120) + '...' : 'Không có mô tả'}
-                                </p>
-
-                                <div className="job-skills">
-                                    {(job.Skills || []).slice(0, 4).map((skill, i) => (
-                                        <span key={i} className="skill-tag">{skill}</span>
-                                    ))}
-                                    {(job.Skills || []).length > 4 && (
-                                        <span className="skill-tag more">+{job.Skills.length - 4}</span>
-                                    )}
-                                </div>
-
-                                <div className="job-footer">
-                                    <span className="job-date">
-                                        {job.CreatedAt ? new Date(job.CreatedAt).toLocaleDateString('vi-VN') : ''}
-                                    </span>
-                                    <button className="apply-btn-small">Xem chi tiết →</button>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>

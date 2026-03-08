@@ -764,11 +764,11 @@ const CoursePrint = () => {
             </div>
             
             {/* Requirements */}
-            {courseDetails.requirements && courseDetails.requirements.length > 0 && (
+            {courseDetails.requirements && courseDetails.requirements?.length > 0 && (
               <div className="list-section">
                 <h3 className="list-title">Yêu cầu</h3>
                 <ul className="requirements-list">
-                  {courseDetails.requirements.map((req, index) => (
+                  {courseDetails.requirements?.map((req, index) => (
                     <li key={index}>{req}</li>
                   ))}
                 </ul>
@@ -776,11 +776,11 @@ const CoursePrint = () => {
             )}
             
             {/* Objectives */}
-            {courseDetails.objectives && courseDetails.objectives.length > 0 && (
+            {courseDetails.objectives && courseDetails.objectives?.length > 0 && (
               <div className="list-section">
                 <h3 className="list-title">Mục tiêu khóa học</h3>
                 <ul className="objectives-list">
-                  {courseDetails.objectives.map((obj, index) => (
+                  {courseDetails.objectives?.map((obj, index) => (
                     <li key={index}>{obj}</li>
                   ))}
                 </ul>

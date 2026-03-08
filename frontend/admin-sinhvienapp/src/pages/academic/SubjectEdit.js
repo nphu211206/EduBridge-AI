@@ -92,9 +92,9 @@ const SubjectEdit = () => {
         
         if (response && response.data) {
           // Extract program names for the faculty dropdown
-          const programNames = response.data.map(program => program.name);
+          const programNames = response.data?.map(program => program.name);
           // Remove duplicates
-          const uniquePrograms = [...new Set(programNames)].filter(Boolean).sort();
+          const uniquePrograms = [...new Set(programNames)]?.filter(Boolean).sort();
           setFaculties(uniquePrograms);
         }
       } catch (error) {
@@ -204,7 +204,7 @@ const SubjectEdit = () => {
     }
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors)?.length === 0;
   };
   
   const handleSubmit = async (event) => {
@@ -422,7 +422,7 @@ const SubjectEdit = () => {
                   onChange={handleInputChange}
                 >
                   <MenuItem value=""><em>Không chọn</em></MenuItem>
-                  {departments.map(dept => (
+                  {departments?.map(dept => (
                     <MenuItem key={dept} value={dept}>{dept}</MenuItem>
                   ))}
                 </Select>
@@ -442,7 +442,7 @@ const SubjectEdit = () => {
                   disabled={loadingFaculties}
                 >
                   <MenuItem value=""><em>Không chọn</em></MenuItem>
-                  {faculties.map(fac => (
+                  {faculties?.map(fac => (
                     <MenuItem key={fac} value={fac}>{fac}</MenuItem>
                   ))}
                 </Select>

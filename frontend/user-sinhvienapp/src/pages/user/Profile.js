@@ -496,7 +496,7 @@ const Profile = () => {
           // If no program info in profile, try to fetch it separately
           try {
             const programResponse = await userService.getAcademicInfo(currentUser.UserID);
-            if (programResponse && Array.isArray(programResponse) && programResponse.length > 0) {
+            if (programResponse && Array.isArray(programResponse) && programResponse?.length > 0) {
               setAcademicData(programResponse[0]);
             }
           } catch (academicError) {
@@ -1453,7 +1453,7 @@ const Profile = () => {
           </Box>
         </DialogTitle>
         <DialogContent dividers>
-          {!updateHistory || updateHistory.length === 0 ? (
+          {!updateHistory || updateHistory?.length === 0 ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
               <Typography color="text.secondary">Không có thông tin cập nhật nào.</Typography>
             </Box>
@@ -1467,7 +1467,7 @@ const Profile = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {updateHistory.map((update, index) => (
+                  {updateHistory?.map((update, index) => (
                     <TableRow 
                       key={index}
                       hover

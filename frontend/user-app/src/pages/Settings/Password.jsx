@@ -75,8 +75,8 @@ const Password = () => {
   // Convert base64 string to ArrayBuffer
   const base64ToArrayBuffer = (base64) => {
     const binary = window.atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
+    const bytes = new Uint8Array(binary?.length);
+    for (let i = 0; i < binary?.length; i++) {
       bytes[i] = binary.charCodeAt(i);
     }
     return bytes.buffer;
@@ -124,7 +124,7 @@ const Password = () => {
       options.user.id = base64ToArrayBuffer(options.user.id);
       
       if (options.excludeCredentials) {
-        options.excludeCredentials.forEach(credential => {
+        options.excludeCredentials?.forEach(credential => {
           credential.id = base64ToArrayBuffer(credential.id);
         });
       }
@@ -423,7 +423,7 @@ const Password = () => {
                     {!passkeyLoading ? (
                       hasPasskey ? (
                         <button
-                          onClick={() => passkeys.length > 0 ? removePasskey(passkeys[0].id) : null}
+                          onClick={() => passkeys?.length > 0 ? removePasskey(passkeys[0].id) : null}
                           className="px-4 py-2 border border-red-300 text-red-700 bg-white rounded-md hover:bg-red-50"
                         >
                           Xóa
@@ -451,11 +451,11 @@ const Password = () => {
                   </div>
                 )}
 
-                {hasPasskey && passkeys.length > 0 && (
+                {hasPasskey && passkeys?.length > 0 && (
                   <div className="mt-4">
                     <h5 className="font-medium text-gray-900 mb-2">Thiết bị đã đăng ký</h5>
                     <ul className="space-y-2">
-                      {passkeys.map((passkey, index) => (
+                      {passkeys?.map((passkey, index) => (
                         <li key={index} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-md">
                           <div className="flex items-center">
                             <KeyIcon className="h-5 w-5 text-blue-500 mr-2" />

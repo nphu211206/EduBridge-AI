@@ -40,7 +40,7 @@ export const NotificationProvider = ({ children }) => {
 
   // Remove a notification by id
   const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+    setNotifications((prev) => prev?.filter((notification) => notification.id !== id));
   };
 
   // Convenience methods for different notification types

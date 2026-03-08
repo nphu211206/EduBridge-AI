@@ -442,7 +442,7 @@ public class Main {
                 <div className="mb-6 border-b pb-4">
                   <h3 className="text-md font-semibold mb-2">Danh sách bài tập</h3>
                   <div className="flex flex-wrap gap-2">
-                    {problemList && problemList.map((p) => (
+                    {problemList && problemList?.map((p) => (
                       <button
                         key={p.ProblemID}
                         onClick={() => p.ProblemID !== parseInt(problemId) && navigate(`/competitions/${competitionId}/problems/${p.ProblemID}`)}
@@ -512,11 +512,11 @@ public class Main {
                     </div>
                   )}
                   
-                  {problem.TestCasesVisible && problem.TestCasesVisible.length > 0 && (
+                  {problem.TestCasesVisible && problem.TestCasesVisible?.length > 0 && (
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold mb-2">Test Case</h3>
                       <div className="space-y-4">
-                        {problem.TestCasesVisible.map((testCase, index) => (
+                        {problem.TestCasesVisible?.map((testCase, index) => (
                           <div key={index} className="border rounded-md p-4">
                             <div className="grid grid-cols-1 gap-4">
                               <div>
@@ -596,7 +596,7 @@ public class Main {
                       </div>
                     )}
                   </div>
-                ) : submissions.length === 0 ? (
+                ) : submissions?.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-gray-500">Chưa có bài nộp</p>
                   </div>
@@ -629,7 +629,7 @@ public class Main {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {submissions.map((submission) => (
+                        {submissions?.map((submission) => (
                           <tr key={submission.SubmissionID} 
                               className="hover:bg-gray-50 cursor-pointer" 
                               onClick={() => handleViewSubmission(submission.SubmissionID)}>
@@ -686,7 +686,7 @@ public class Main {
                 disabled={isViewingSubmission || isCompetitionEnded}
                 className="block w-32 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
-                {languages.map((lang) => (
+                {languages?.map((lang) => (
                   <option key={lang.id} value={lang.id}>
                     {lang.name}
                   </option>

@@ -77,7 +77,7 @@ const ProtectedRoute = ({ children }) => {
       localStorage.setItem('auth_redirect', location.pathname);
     }
   }, [isLoading, isAuthenticated, location]);
-  
+
   // Listen for auth:error events from API interceptors
   useEffect(() => {
     const handleAuthError = (event) => {
@@ -85,9 +85,9 @@ const ProtectedRoute = ({ children }) => {
       // Current path is already saved by the event dispatcher
       navigate('/login');
     };
-    
+
     window.addEventListener('auth:error', handleAuthError);
-    
+
     return () => {
       window.removeEventListener('auth:error', handleAuthError);
     };
@@ -96,11 +96,11 @@ const ProtectedRoute = ({ children }) => {
   if (isLoading) {
     // Show loading spinner while checking auth status
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
       }}>
         <p>Loading...</p>
       </div>
@@ -122,7 +122,7 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
-      
+
       {/* Protected Routes */}
       <Route path="/dashboard" element={
         <ProtectedRoute>
@@ -143,7 +143,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Exams Routes */}
       <Route
         path="/exams"
@@ -155,7 +155,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/create"
         element={
@@ -166,7 +166,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Specialized Exam Creation Routes */}
       <Route
         path="/exams/create/multiple-choice"
@@ -178,7 +178,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/create/essay"
         element={
@@ -189,7 +189,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/create/coding"
         element={
@@ -200,7 +200,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/edit/:examId"
         element={
@@ -211,7 +211,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Exam Detail Routes */}
       <Route
         path="/exams/:id"
@@ -223,7 +223,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/multiple-choice/:id"
         element={
@@ -234,7 +234,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/essay/:id"
         element={
@@ -245,7 +245,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/coding/:id"
         element={
@@ -256,7 +256,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/exams/:examId/questions/:questionId/essay-edit"
         element={
@@ -267,7 +267,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Events Routes */}
       <Route
         path="/events"
@@ -279,7 +279,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/events/create"
         element={
@@ -290,7 +290,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/events/:id"
         element={
@@ -301,7 +301,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/events/:id/prizes/create"
         element={
@@ -312,7 +312,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/events/:id/schedule/create"
         element={
@@ -323,7 +323,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/events/:id/edit"
         element={
@@ -334,7 +334,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Competitions Routes */}
       <Route
         path="/competitions"
@@ -346,7 +346,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/competitions/:id"
         element={
@@ -357,7 +357,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/competitions/create"
         element={
@@ -368,7 +368,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/competitions/edit/:id"
         element={
@@ -379,7 +379,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Competition Problems Routes */}
       <Route
         path="/competitions/:id/problems/create"
@@ -391,7 +391,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/competitions/:id/problems/:problemId"
         element={
@@ -402,7 +402,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       <Route
         path="/competitions/:id/problems/:problemId/edit"
         element={
@@ -413,7 +413,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Reports Route */}
       <Route
         path="/reports"
@@ -425,7 +425,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Course Management Routes */}
       <Route
         path="/courses"
@@ -467,7 +467,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Module Management Routes */}
       <Route
         path="/courses/:id/modules/create"
@@ -555,25 +555,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
-      {/* Temporary placeholders for other protected routes */}
-      {['profile'].map((path) => (
-        <Route
-          key={path}
-          path={`/${path}`}
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <div style={{ padding: '20px' }}>
-                  <h1>{path.charAt(0).toUpperCase() + path.slice(1)} Page</h1>
-                  <p>This page is under construction.</p>
-                </div>
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
-      ))}
-      
+      {/* Temporary placeholders for other protected routes removed */}
       {/* Settings Route */}
       <Route
         path="/settings"
@@ -585,7 +567,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      
+
       {/* Root route */}
       <Route path="/" element={
         <Navigate to="/dashboard" replace />

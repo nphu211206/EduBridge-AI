@@ -94,7 +94,7 @@ export const getSupportedLanguages = async () => {
 export const runTestCases = async (code, language, testCases) => {
   try {
     // Run each test case individually
-    const results = await Promise.all(testCases.map(async (testCase, index) => {
+    const results = await Promise.all(testCases?.map(async (testCase, index) => {
       const input = JSON.stringify(testCase.input);
       const testResult = await executeCode(code, language, input);
       

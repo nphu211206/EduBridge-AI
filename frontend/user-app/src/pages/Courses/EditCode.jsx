@@ -84,22 +84,22 @@ const EditCode = () => {
             let nextId = null;
             if (course && Array.isArray(course.Modules)) {
               // store first lesson id for later redirect
-              if (course.Modules.length > 0 && course.Modules[0].Lessons && course.Modules[0].Lessons.length > 0) {
+              if (course.Modules?.length > 0 && course.Modules[0].Lessons && course.Modules[0].Lessons?.length > 0) {
                 setFirstLessonId(course.Modules[0].Lessons[0].LessonID);
               }
-              for (let mIndex = 0; mIndex < course.Modules.length && !found; mIndex++) {
+              for (let mIndex = 0; mIndex < course.Modules?.length && !found; mIndex++) {
                 const module = course.Modules[mIndex];
                 if (!module || !Array.isArray(module.Lessons)) continue;
-                for (let lIndex = 0; lIndex < module.Lessons.length; lIndex++) {
+                for (let lIndex = 0; lIndex < module.Lessons?.length; lIndex++) {
                   const l = module.Lessons[lIndex];
                   if (String(l.LessonID) === String(lessonId)) {
                     // determine next lesson within same module
-                    if (lIndex < module.Lessons.length - 1) {
+                    if (lIndex < module.Lessons?.length - 1) {
                       nextId = module.Lessons[lIndex + 1].LessonID;
-                    } else if (mIndex < course.Modules.length - 1) {
+                    } else if (mIndex < course.Modules?.length - 1) {
                       // take first lesson of next module
                       const nextModule = course.Modules[mIndex + 1];
-                      if (nextModule && Array.isArray(nextModule.Lessons) && nextModule.Lessons.length > 0) {
+                      if (nextModule && Array.isArray(nextModule.Lessons) && nextModule.Lessons?.length > 0) {
                         nextId = nextModule.Lessons[0].LessonID;
                       }
                     }
@@ -243,22 +243,22 @@ const EditCode = () => {
             </div>
           )}
           
-              {exercise.hints && exercise.hints.length > 0 && (
+              {exercise.hints && exercise.hints?.length > 0 && (
                 <div className="mb-2">
                   <h3 className="text-xs font-semibold mb-1">Gợi ý</h3>
                   <ul className="list-disc pl-3 space-y-0.5 text-xs">
-                    {exercise.hints.map((hint, index) => (
+                    {exercise.hints?.map((hint, index) => (
                       <li key={index} className="text-gray-700">{hint}</li>
                     ))}
                   </ul>
                 </div>
               )}
               
-              {exercise.testCases && exercise.testCases.length > 0 && (
+              {exercise.testCases && exercise.testCases?.length > 0 && (
                 <div className="mb-2">
                   <h3 className="text-xs font-semibold mb-1">Các test case</h3>
                   <div className="space-y-1">
-                    {exercise.testCases.map((test, index) => (
+                    {exercise.testCases?.map((test, index) => (
                       <div key={index} className="bg-gray-50 p-1.5 rounded border text-xs">
                         <p className="font-medium text-xs">Test {index + 1}:</p>
                         {test.input && (

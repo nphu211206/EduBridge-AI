@@ -19,7 +19,7 @@ const listItemVariant = { initial: { opacity: 0, x: -20 }, animate: { opacity: 1
 
 const InterviewTemplateList = memo(({ templates, isLoading }) => {
     if (isLoading) { return <LoadingSpinner text="Đang tải danh sách mẫu..." />; }
-    if (templates.length === 0) { return <EmptyState icon={BookCopy} title="Chưa có Mẫu Phỏng vấn nào" message="Hãy nhấn 'Tạo Mẫu Phỏng vấn (AI)' để AI tự động tạo bộ câu hỏi dựa trên tin tuyển dụng của bạn."/>; }
+    if (templates?.length === 0) { return <EmptyState icon={BookCopy} title="Chưa có Mẫu Phỏng vấn nào" message="Hãy nhấn 'Tạo Mẫu Phỏng vấn (AI)' để AI tự động tạo bộ câu hỏi dựa trên tin tuyển dụng của bạn."/>; }
     return (
         <div className="bg-gray-800/70 rounded-xl border border-gray-700/80 overflow-hidden shadow-lg backdrop-blur-sm">
             <table className="w-full text-sm text-left text-gray-400 min-w-[700px]">
@@ -33,7 +33,7 @@ const InterviewTemplateList = memo(({ templates, isLoading }) => {
                 </thead>
                 <motion.tbody layout>
                     <AnimatePresence>
-                        {templates.map(template => (
+                        {templates?.map(template => (
                             <motion.tr key={template.id} variants={listItemVariant} initial="initial" animate="animate" exit="exit" className="border-b border-gray-700/80 hover:bg-gray-700/50">
                                 <td className="p-4 font-semibold text-white">{template.title}</td>
                                 <td className="p-4 text-blue-400">{template.jobTitle || '(Không có)'}</td>
@@ -71,7 +71,7 @@ const InterviewResultList = memo(() => {
         setGradingId(interviewId);
         try {
             await gradeInterviewAI(interviewId);
-            setResults(prev => prev.map(r => r.studentInterviewId === interviewId ? { ...r, status: 'Grading' } : r));
+            setResults(prev => prev?.map(r => r.studentInterviewId === interviewId ? { ...r, status: 'Grading' } : r));
             alert("Đã gửi yêu cầu chấm bài cho AI. Trạng thái sẽ tự động cập nhật sau vài phút (yêu cầu làm mới danh sách).");
             setTimeout(() => fetchResults(false), 60000); 
         } catch (err) {
@@ -92,7 +92,7 @@ const InterviewResultList = memo(() => {
         }
     }, []);
     const handleCloseResultDetail = () => setViewingResult(null);
-    if (isLoading && results.length === 0) { return <LoadingSpinner text="Đang tải kết quả phỏng vấn..." />; }
+    if (isLoading && results?.length === 0) { return <LoadingSpinner text="Đang tải kết quả phỏng vấn..." />; }
     if (error) { return <ErrorDisplay message={error} onRetry={() => fetchResults(true)} />; }
     const getResultStatusClass = (status) => {
         switch (status) {
@@ -114,7 +114,7 @@ const InterviewResultList = memo(() => {
                     Làm mới Danh sách
                 </button>
             </div>
-            {results.length === 0 ? (
+            {results?.length === 0 ? (
                 <EmptyState icon={UserRoundCheck} title="Chưa có kết quả phỏng vấn" message="Khi sinh viên nộp bài phỏng vấn, kết quả sẽ xuất hiện tại đây để bạn chấm điểm."/>
             ) : (
                 <div className="bg-gray-800/70 rounded-xl border border-gray-700/80 overflow-hidden shadow-lg backdrop-blur-sm">
@@ -131,7 +131,7 @@ const InterviewResultList = memo(() => {
                         </thead>
                         <motion.tbody layout>
                             <AnimatePresence>
-                                {results.map(result => (
+                                {results?.map(result => (
                                     <motion.tr key={result.studentInterviewId} variants={listItemVariant} initial="initial" animate="animate" exit="exit" className="border-b border-gray-700/80 hover:bg-gray-700/50">
                                         <td className="p-4 font-semibold text-white flex items-center gap-3">
                                             <img src={result.studentAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(result.studentName || result.githubUsername)}&background=random&color=ffffff&size=64`} alt="avatar" className="w-8 h-8 rounded-full bg-gray-600 object-cover"/>

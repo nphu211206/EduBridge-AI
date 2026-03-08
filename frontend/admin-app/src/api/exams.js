@@ -21,7 +21,7 @@ export const getAllExams = async () => {
     
     return {
       exams: exams,
-      total: exams.length
+      total: exams?.length
     };
   } catch (error) {
     console.error('Error in getAllExams:', error);

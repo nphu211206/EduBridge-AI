@@ -27,12 +27,12 @@ const LoginHelper = () => {
   useEffect(() => {
     const updateLocalStorage = () => {
       const items = {};
-      for (let i = 0; i < localStorage.length; i++) {
+      for (let i = 0; i < localStorage?.length; i++) {
         const key = localStorage.key(i);
         let value = localStorage.getItem(key);
         
         // Truncate long values
-        if (value && value.length > 50) {
+        if (value && value?.length > 50) {
           value = value.substring(0, 50) + '...';
         }
         

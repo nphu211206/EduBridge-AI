@@ -340,7 +340,7 @@ const ReportList = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
             <CircularProgress />
           </Box>
-        ) : reports.length === 0 ? (
+        ) : reports?.length === 0 ? (
           <Box sx={{ p: 3, textAlign: 'center' }}>
             <Typography color="textSecondary">Không có báo cáo nào được tìm thấy</Typography>
           </Box>
@@ -360,7 +360,7 @@ const ReportList = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {reports.map((report) => (
+                  {reports?.map((report) => (
                     <TableRow
                       hover
                       key={report.id}

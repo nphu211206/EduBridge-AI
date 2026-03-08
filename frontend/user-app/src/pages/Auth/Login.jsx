@@ -89,7 +89,7 @@ const Login = () => {
     }
     
     // If we have a complete 6-digit code, try to auto-verify
-    if (newCode.length === 6) {
+    if (newCode?.length === 6) {
       autoVerifyTwoFa(newCode);
     }
   };
@@ -377,7 +377,7 @@ const Login = () => {
       
       // Store into previousAccounts in localStorage
       const storedAccounts = JSON.parse(localStorage.getItem('previousAccounts') || '[]');
-      const updatedAccounts = storedAccounts.filter(acc => acc.email !== (userData.email || userData.Email));
+      const updatedAccounts = storedAccounts?.filter(acc => acc.email !== (userData.email || userData.Email));
       
       // Check if we need to keep the stored password
       const hasStoredPassword = userData.hasStoredPassword === true;
@@ -441,7 +441,7 @@ const Login = () => {
       console.log(`Requesting authentication options for email: ${formData.email}`);
       try {
         // Get the API base URL from environment or use a fallback
-        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
         console.log(`Using API base URL: ${API_BASE_URL}`);
         
         const optionsResponse = await axios.post(`${API_BASE_URL}/api/passkeys/auth/options`, {
@@ -475,7 +475,7 @@ const Login = () => {
         );
 
         if (options.allowCredentials) {
-          options.allowCredentials = options.allowCredentials.map(credential => {
+          options.allowCredentials = options.allowCredentials?.map(credential => {
             return {
               ...credential,
               id: Uint8Array.from(
@@ -554,7 +554,7 @@ const Login = () => {
       let verifyResponse;
       try {
         // Get the API base URL from environment or use a fallback
-        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
         
         verifyResponse = await axios.post(`${API_BASE_URL}/api/passkeys/auth/verify`, {
           email: formData.email,
@@ -833,7 +833,7 @@ const Login = () => {
       return [];
     }
   });
-  const [showLoginForm, setShowLoginForm] = useState(previousAccounts.length === 0);
+  const [showLoginForm, setShowLoginForm] = useState(previousAccounts?.length === 0);
 
   // State for selected account that needs password input
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -1001,7 +1001,7 @@ const Login = () => {
       console.log(`Requesting authentication options for email: ${account.email}`);
       try {
         // Get the API base URL from environment or use a fallback
-        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
         console.log(`Using API base URL: ${API_BASE_URL}`);
         
         const optionsResponse = await axios.post(`${API_BASE_URL}/api/passkeys/auth/options`, {
@@ -1026,7 +1026,7 @@ const Login = () => {
         );
 
         if (options.allowCredentials) {
-          options.allowCredentials = options.allowCredentials.map(credential => {
+          options.allowCredentials = options.allowCredentials?.map(credential => {
             return {
               ...credential,
               id: Uint8Array.from(
@@ -1097,7 +1097,7 @@ const Login = () => {
       let verifyResponse;
       try {
         // Get the API base URL from environment or use a fallback
-        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
         
         verifyResponse = await axios.post(`${API_BASE_URL}/api/passkeys/auth/verify`, {
           email: account.email,
@@ -1202,7 +1202,7 @@ const Login = () => {
       
       // Then try to check with server (if available)
       try {
-        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
         const response = await axios.post(`${API_BASE_URL}/api/passkeys/check-registration`, {
           email
         });
@@ -1228,16 +1228,16 @@ const Login = () => {
   // Check passkey status for all previous accounts
   useEffect(() => {
     const checkAllAccountsPasskey = async () => {
-      if (previousAccounts.length > 0) {
+      if (previousAccounts?.length > 0) {
         const passkeyChecks = await Promise.all(
-          previousAccounts.map(async (account) => {
+          previousAccounts?.map(async (account) => {
             const hasPasskey = await checkAccountPasskeyStatus(account.email);
             return { email: account.email, hasPasskey };
           })
         );
         
         const emailsWithPasskey = new Set(
-          passkeyChecks.filter(check => check.hasPasskey).map(check => check.email)
+          passkeyChecks?.filter(check => check.hasPasskey)?.map(check => check.email)
         );
         setAccountsWithPasskey(emailsWithPasskey);
       }
@@ -1461,7 +1461,7 @@ const Login = () => {
     );
   }
 
-  if (!showLoginForm && previousAccounts.length > 0) {
+  if (!showLoginForm && previousAccounts?.length > 0) {
     return (
       <div className="flex flex-col min-h-screen">
         {/* Login Section - Keeping original width */}
@@ -1493,7 +1493,7 @@ const Login = () => {
               </motion.div>
 
               <div className="mt-8 space-y-4">
-                {previousAccounts.filter(account => account && account.email).map(account => (
+                {previousAccounts?.filter(account => account && account.email)?.map(account => (
                   <motion.div
                     key={account.email}
                     initial={{ opacity: 0, y: 10 }}
@@ -1718,7 +1718,7 @@ const Login = () => {
                 </p>
                 
                 <div className="mt-4 flex justify-center space-x-2">
-                  {Array.from({ length: 6 }).map((_, idx) => (
+                  {Array.from({ length: 6 })?.map((_, idx) => (
                     <input
                       key={idx}
                       type="text"
@@ -2011,7 +2011,7 @@ const Login = () => {
                   </span>
                 </div>
                 
-                {previousAccounts.length > 0 && (
+                {previousAccounts?.length > 0 && (
                   <div className="mt-4 text-center">
                     <button
                       type="button"

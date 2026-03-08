@@ -139,7 +139,7 @@ const ProgramDetail = () => {
         
         // Group students by entry year
         const groupedStudents = {};
-        studentsList.forEach(student => {
+        studentsList?.forEach(student => {
           // Get entry year from StudentPrograms if available, otherwise fallback to created year
           let entryYear;
           if (student.EntryYear) {
@@ -181,7 +181,7 @@ const ProgramDetail = () => {
       console.log('Program subjects response:', response);
       if (response.success) {
         // Map the data to include proper ID for DataGrid
-        const formattedSubjects = (response.data || []).map(subject => ({
+        const formattedSubjects = (response.data || [])?.map(subject => ({
           ...subject,
           id: subject.SubjectID // Ensure each row has an id for DataGrid
         }));
@@ -375,8 +375,8 @@ const ProgramDetail = () => {
       
       if (response.success) {
         // Filter out students who are already in this program
-        const existingStudentIds = students.map(s => s.UserID);
-        const filteredStudents = response.data.filter(student => 
+        const existingStudentIds = students?.map(s => s.UserID);
+        const filteredStudents = response.data?.filter(student => 
           !existingStudentIds.includes(student.UserID)
         );
         
@@ -445,12 +445,12 @@ const ProgramDetail = () => {
       // Get filtered students based on current filters
       const filteredStudents = getFilteredStudents();
       const visibleStudents = filteredStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-      const visibleIds = visibleStudents.map(s => s.UserID);
+      const visibleIds = visibleStudents?.map(s => s.UserID);
       
       // Only select visible students on the current page
       setSelectedStudents(prev => {
         const newSelection = [...prev];
-        visibleIds.forEach(id => {
+        visibleIds?.forEach(id => {
           if (!newSelection.includes(id)) {
             newSelection.push(id);
           }
@@ -461,9 +461,9 @@ const ProgramDetail = () => {
       // Deselect only visible students on the current page
       const filteredStudents = getFilteredStudents();
       const visibleStudents = filteredStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-      const visibleIds = visibleStudents.map(s => s.UserID);
+      const visibleIds = visibleStudents?.map(s => s.UserID);
       
-      setSelectedStudents(prev => prev.filter(id => !visibleIds.includes(id)));
+      setSelectedStudents(prev => prev?.filter(id => !visibleIds.includes(id)));
     }
   };
   
@@ -475,13 +475,13 @@ const ProgramDetail = () => {
       setSelectedStudents(prev => [...prev, studentId]);
     } else {
       // Remove from selection
-      setSelectedStudents(prev => prev.filter(id => id !== studentId));
+      setSelectedStudents(prev => prev?.filter(id => id !== studentId));
     }
   };
   
   // Filter students based on name and code filters
   const getFilteredStudents = () => {
-    return availableStudents.filter(student => {
+    return availableStudents?.filter(student => {
       const nameMatch = !studentNameFilter || 
         (student.FullName && student.FullName.toLowerCase().includes(studentNameFilter.toLowerCase()));
       
@@ -494,7 +494,7 @@ const ProgramDetail = () => {
   
   // Function to add multiple students at once
   const handleAddMultipleStudents = async () => {
-    if (selectedStudents.length === 0) {
+    if (selectedStudents?.length === 0) {
       setSnackbar({
         open: true,
         message: 'Vui lòng chọn ít nhất một sinh viên',
@@ -507,7 +507,7 @@ const ProgramDetail = () => {
       setBulkAddLoading(true);
       
       // Create an array of promises for adding each student
-      const addPromises = selectedStudents.map(studentId => 
+      const addPromises = selectedStudents?.map(studentId => 
         academicService.addStudentToProgram(id, studentId, studentEntryYear)
       );
       
@@ -515,11 +515,11 @@ const ProgramDetail = () => {
       const results = await Promise.all(addPromises);
       
       // Count successful additions
-      const successCount = results.filter(result => result.success).length;
+      const successCount = results?.filter(result => result.success)?.length;
       
       setSnackbar({
         open: true,
-        message: `Đã thêm thành công ${successCount}/${selectedStudents.length} sinh viên vào chương trình`,
+        message: `Đã thêm thành công ${successCount}/${selectedStudents?.length} sinh viên vào chương trình`,
         severity: successCount > 0 ? 'success' : 'warning'
       });
       
@@ -877,7 +877,7 @@ const ProgramDetail = () => {
             </Box>
           ) : (
             <Box>
-              {Object.keys(studentsByYear).length > 0 ? (
+              {Object.keys(studentsByYear)?.length > 0 ? (
                 Object.keys(studentsByYear)
                   .sort((a, b) => b - a) // Sort years in descending order
                   .map(year => (
@@ -886,7 +886,7 @@ const ProgramDetail = () => {
                         <Typography variant="subtitle1" fontWeight="bold">
                           Khóa {year} - {parseInt(year) + parseInt(program.ProgramDuration || 4)}
                           <Chip 
-                            label={`${studentsByYear[year].length} sinh viên`} 
+                            label={`${studentsByYear[year]?.length} sinh viên`} 
                             size="small" 
                             color="primary" 
                             sx={{ ml: 2 }} 
@@ -895,7 +895,7 @@ const ProgramDetail = () => {
                       </AccordionSummary>
                       <AccordionDetails>
                         <DataGrid
-                          rows={studentsByYear[year].map(s => ({...s, id: s.UserID}))}
+                          rows={studentsByYear[year]?.map(s => ({...s, id: s.UserID}))}
                           columns={studentColumns}
                           autoHeight
                           density="standard"
@@ -967,7 +967,7 @@ const ProgramDetail = () => {
                 label="Môn học"
                 onChange={(e) => setSelectedSubject(e.target.value)}
               >
-                {availableSubjects.map((subject) => (
+                {availableSubjects?.map((subject) => (
                   <MenuItem key={subject.SubjectID || subject.id} value={subject.SubjectID || subject.id}>
                     {subject.SubjectCode} - {subject.SubjectName}
                   </MenuItem>
@@ -1154,10 +1154,10 @@ const ProgramDetail = () => {
             {addStudentTabValue === 1 && (
               <>
                 <Typography variant="subtitle2" color="primary" sx={{ mb: 1 }}>
-                  {selectedStudents.length} sinh viên được chọn
+                  {selectedStudents?.length} sinh viên được chọn
                 </Typography>
                 
-                {selectedStudents.length > 0 && (
+                {selectedStudents?.length > 0 && (
                   <Paper 
                     variant="outlined" 
                     sx={{ 
@@ -1170,7 +1170,7 @@ const ProgramDetail = () => {
                       gap: 0.5
                     }}
                   >
-                    {selectedStudents.map(id => {
+                    {selectedStudents?.map(id => {
                       const student = availableStudents.find(s => s.UserID === id);
                       if (!student) return null;
                       return (
@@ -1208,7 +1208,7 @@ const ProgramDetail = () => {
                       variant="outlined"
                       onClick={() => {
                         const filteredStudents = getFilteredStudents();
-                        setSelectedStudents(filteredStudents.map(s => s.UserID));
+                        setSelectedStudents(filteredStudents?.map(s => s.UserID));
                       }}
                       sx={{ mr: 1 }}
                     >
@@ -1217,7 +1217,7 @@ const ProgramDetail = () => {
                     <Button
                       variant="outlined" 
                       onClick={() => setSelectedStudents([])}
-                      disabled={selectedStudents.length === 0}
+                      disabled={selectedStudents?.length === 0}
                     >
                       Bỏ chọn tất cả
                     </Button>
@@ -1245,17 +1245,17 @@ const ProgramDetail = () => {
                               (() => {
                                 const filteredStudents = getFilteredStudents();
                                 const visibleStudents = filteredStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-                                const visibleIds = visibleStudents.map(s => s.UserID);
-                                const selectedVisible = selectedStudents.filter(id => visibleIds.includes(id));
-                                return selectedVisible.length > 0 && selectedVisible.length < visibleIds.length;
+                                const visibleIds = visibleStudents?.map(s => s.UserID);
+                                const selectedVisible = selectedStudents?.filter(id => visibleIds.includes(id));
+                                return selectedVisible?.length > 0 && selectedVisible?.length < visibleIds?.length;
                               })()
                             }
                             checked={
                               (() => {
                                 const filteredStudents = getFilteredStudents();
                                 const visibleStudents = filteredStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-                                const visibleIds = visibleStudents.map(s => s.UserID);
-                                return visibleIds.length > 0 && 
+                                const visibleIds = visibleStudents?.map(s => s.UserID);
+                                return visibleIds?.length > 0 && 
                                   visibleIds.every(id => selectedStudents.includes(id));
                               })()
                             }
@@ -1275,7 +1275,7 @@ const ProgramDetail = () => {
                             <CircularProgress size={30} />
                           </TableCell>
                         </TableRow>
-                      ) : getFilteredStudents().length === 0 ? (
+                      ) : getFilteredStudents()?.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={5} align="center">
                             Không tìm thấy sinh viên nào
@@ -1317,7 +1317,7 @@ const ProgramDetail = () => {
                 
                 <TablePagination
                   component="div"
-                  count={getFilteredStudents().length}
+                  count={getFilteredStudents()?.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}
@@ -1343,12 +1343,12 @@ const ProgramDetail = () => {
             <Button 
               onClick={handleAddMultipleStudents} 
               variant="contained" 
-              disabled={selectedStudents.length === 0 || bulkAddLoading}
+              disabled={selectedStudents?.length === 0 || bulkAddLoading}
               startIcon={bulkAddLoading ? <CircularProgress size={20} color="inherit" /> : null}
             >
               {bulkAddLoading 
                 ? 'Đang xử lý...' 
-                : `Thêm ${selectedStudents.length} sinh viên vào chương trình`
+                : `Thêm ${selectedStudents?.length} sinh viên vào chương trình`
               }
             </Button>
           )}

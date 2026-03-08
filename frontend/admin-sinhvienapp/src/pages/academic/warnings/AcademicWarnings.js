@@ -259,7 +259,7 @@ const AcademicWarnings = () => {
                 label="Học kỳ"
               >
                 <MenuItem value="">Tất cả</MenuItem>
-                {semesters.map((sem) => (
+                {semesters?.map((sem) => (
                   <MenuItem key={sem.SemesterID || sem.id || `semester-${sem.SemesterCode}`} value={sem.id}>
                     {sem.name} - {sem.AcademicYear || ''}
                   </MenuItem>
@@ -322,7 +322,7 @@ const AcademicWarnings = () => {
                     </Typography>
                   </TableCell>
                 </TableRow>
-              ) : warnings.length === 0 ? (
+              ) : warnings?.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
                     <Typography variant="body1">
@@ -331,7 +331,7 @@ const AcademicWarnings = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                warnings.map((warning) => (
+                warnings?.map((warning) => (
                   <TableRow key={warning.WarningID} hover>
                     <TableCell>{warning.StudentID}</TableCell>
                     <TableCell>{warning.StudentName}</TableCell>

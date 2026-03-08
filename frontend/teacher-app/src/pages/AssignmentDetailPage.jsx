@@ -300,7 +300,7 @@ const AssignmentDetailPage = () => {
                   <div className="mt-6">
                     <h2 className="text-lg font-medium text-gray-900 mb-4">Tài liệu đính kèm</h2>
                     <ul className="divide-y divide-gray-200 border border-gray-200 rounded-md">
-                      {assignment.files.map((file) => (
+                      {assignment.files?.map((file) => (
                         <li key={file.FileID} className="px-4 py-3 flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2">
                             <DocumentIcon className="w-5 h-5 text-gray-400" />

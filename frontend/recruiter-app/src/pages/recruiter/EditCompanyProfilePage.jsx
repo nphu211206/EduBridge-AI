@@ -113,26 +113,26 @@ export default function EditCompanyProfilePage() {
             // So sánh giá trị đã trim (nếu là string) với giá trị gốc (xử lý null/undefined)
             const formValue = typeof formData[key] === 'string' ? formData[key].trim() : formData[key];
             const originalValue = companyData ? (companyData[key] || '') : ''; // Giá trị gốc, coi null/undefined là chuỗi rỗng
-             const originalStringValue = typeof originalValue === 'string' ? originalValue : (originalValue ?? '').toString();
+            const originalStringValue = typeof originalValue === 'string' ? originalValue : (originalValue ?? '').toString();
 
 
-             if (formValue !== originalStringValue) {
+            if (formValue !== originalStringValue) {
                 changedData[key] = formValue;
             }
         }
 
-        if (Object.keys(changedData).length === 0) {
+        if (Object.keys(changedData)?.length === 0) {
             setError("Không có thay đổi nào để lưu.");
             setIsSaving(false);
             return;
         }
 
-         // Validation cơ bản
-         if (!changedData.name?.trim() && !companyData?.name) { // Nếu tên bị xóa trắng
-             setError("Tên công ty là bắt buộc.");
-             setIsSaving(false);
-             return;
-         }
+        // Validation cơ bản
+        if (!changedData.name?.trim() && !companyData?.name) { // Nếu tên bị xóa trắng
+            setError("Tên công ty là bắt buộc.");
+            setIsSaving(false);
+            return;
+        }
 
 
         try {
@@ -140,7 +140,7 @@ export default function EditCompanyProfilePage() {
             // Thành công: có thể hiển thị thông báo thành công (Toast)
             alert("Cập nhật hồ sơ công ty thành công!"); // Tạm dùng alert
             // Tải lại dữ liệu gốc để form hiển thị đúng sau khi lưu
-             fetchCompanyData(); // Hoặc navigate('/recruiter/dashboard');
+            fetchCompanyData(); // Hoặc navigate('/recruiter/dashboard');
         } catch (err) {
             setError(err.message || "Cập nhật thất bại. Vui lòng thử lại.");
         } finally {
@@ -161,7 +161,7 @@ export default function EditCompanyProfilePage() {
 
     return (
         <>
-            <Helmet><title>Chỉnh sửa Hồ sơ Công ty | EduLedger AI</title></Helmet>
+            <Helmet><title>Chỉnh sửa Hồ sơ Công ty | EduBridge AI</title></Helmet>
             {isSaving && <LoadingIndicator />} {/* Overlay loading khi đang lưu */}
 
             <div className="bg-gray-900 min-h-screen text-white py-12 px-4 sm:px-6 lg:px-8">
@@ -184,30 +184,30 @@ export default function EditCompanyProfilePage() {
                             <FormField id="name" label="Tên Công ty *" error={/* errors.name */ null}>
                                 <TextInput id="name" name="name" value={formData.name || ''} onChange={handleChange} required />
                             </FormField>
-                             <FormField id="tagline" label="Tagline / Slogan" helperText="Câu giới thiệu ngắn gọn về công ty.">
+                            <FormField id="tagline" label="Tagline / Slogan" helperText="Câu giới thiệu ngắn gọn về công ty.">
                                 <TextInput id="tagline" name="tagline" value={formData.tagline || ''} onChange={handleChange} maxLength={200} />
                             </FormField>
                             <FormField id="description" label="Giới thiệu chi tiết" helperText="Mô tả về văn hóa, sản phẩm, môi trường làm việc...">
                                 <TextAreaInput id="description" name="description" value={formData.description || ''} onChange={handleChange} rows={6} />
                             </FormField>
-                             <FormField id="logoUrl" label="URL Logo" helperText="Dán URL ảnh logo công ty.">
+                            <FormField id="logoUrl" label="URL Logo" helperText="Dán URL ảnh logo công ty.">
                                 <TextInput type="url" id="logoUrl" name="logoUrl" value={formData.logoUrl || ''} onChange={handleChange} placeholder="https://..." />
                             </FormField>
-                             <FormField id="bannerUrl" label="URL Ảnh bìa (Banner)" helperText="Dán URL ảnh bìa cho trang công ty.">
+                            <FormField id="bannerUrl" label="URL Ảnh bìa (Banner)" helperText="Dán URL ảnh bìa cho trang công ty.">
                                 <TextInput type="url" id="bannerUrl" name="bannerUrl" value={formData.bannerUrl || ''} onChange={handleChange} placeholder="https://..." />
                             </FormField>
-                             <FormField id="website" label="Website Chính thức">
+                            <FormField id="website" label="Website Chính thức">
                                 <TextInput type="url" id="website" name="website" value={formData.website || ''} onChange={handleChange} placeholder="https://yourcompany.com" />
                             </FormField>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormField id="companySize" label="Quy mô Công ty">
-                                     <TextInput id="companySize" name="companySize" value={formData.companySize || ''} onChange={handleChange} placeholder="VD: 100-500 nhân viên" />
+                                    <TextInput id="companySize" name="companySize" value={formData.companySize || ''} onChange={handleChange} placeholder="VD: 100-500 nhân viên" />
                                 </FormField>
                                 <FormField id="country" label="Quốc gia">
-                                     <TextInput id="country" name="country" value={formData.country || ''} onChange={handleChange} placeholder="VD: Việt Nam" />
+                                    <TextInput id="country" name="country" value={formData.country || ''} onChange={handleChange} placeholder="VD: Việt Nam" />
                                 </FormField>
                             </div>
-                             <FormField id="mainLocation" label="Trụ sở chính">
+                            <FormField id="mainLocation" label="Trụ sở chính">
                                 <TextInput id="mainLocation" name="mainLocation" value={formData.mainLocation || ''} onChange={handleChange} placeholder="VD: Tầng 10, Tòa nhà ABC, Hà Nội" />
                             </FormField>
 
@@ -224,8 +224,8 @@ export default function EditCompanyProfilePage() {
                             </div>
                         </form>
                     ) : (
-                         // Hiển thị thông báo nếu không load được dữ liệu ban đầu
-                         !isLoading && <ErrorDisplay message={error || "Không thể tải dữ liệu để chỉnh sửa."} onRetry={fetchCompanyData} />
+                        // Hiển thị thông báo nếu không load được dữ liệu ban đầu
+                        !isLoading && <ErrorDisplay message={error || "Không thể tải dữ liệu để chỉnh sửa."} onRetry={fetchCompanyData} />
                     )}
                 </motion.div>
             </div>

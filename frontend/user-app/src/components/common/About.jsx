@@ -71,7 +71,7 @@ const About = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               }
-            ].map((item, index) => (
+            ]?.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 50 }}
@@ -262,7 +262,7 @@ const About = () => {
                   title: "Shopee",
                   image: "https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg"
                 }
-              ].map((item, index) => (
+              ]?.map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
@@ -282,7 +282,7 @@ const About = () => {
                 "Đối Tác Tuyển Dụng", 
                 "Đối Tác Đào Tạo", 
                 "Đối Tác Công Nghệ"
-              ].map((title, index) => (
+              ]?.map((title, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
@@ -340,7 +340,7 @@ const About = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               }
-            ].map((item, index) => (
+            ]?.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -353,7 +353,7 @@ const About = () => {
                   {item.icon}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                {item.content.map((line, i) => (
+                {item.content?.map((line, i) => (
                   <p key={i} className="text-gray-600">{line}</p>
                 ))}
               </motion.div>

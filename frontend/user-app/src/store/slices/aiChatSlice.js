@@ -12,7 +12,7 @@ import axios from 'axios';
 export const sendAIMessage = createAsyncThunk(
   'aiChat/sendMessage',
   async (message) => {
-    const response = await axios.post('http://localhost:5001/api/ai/chat', { message });
+    const response = await axios.post('http://127.0.0.1:5001/api/ai/chat', { message });
     return response.data;
   }
 );
@@ -20,7 +20,7 @@ export const sendAIMessage = createAsyncThunk(
 export const fetchChatHistory = createAsyncThunk(
   'aiChat/fetchHistory',
   async () => {
-    const response = await axios.get('http://localhost:5001/api/ai/chat/history');
+    const response = await axios.get('http://127.0.0.1:5001/api/ai/chat/history');
     return response.data;
   }
 );

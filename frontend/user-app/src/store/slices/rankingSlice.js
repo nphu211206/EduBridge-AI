@@ -10,7 +10,7 @@ import axios from 'axios';
 
 // Get the API URL from env or use a default
 // Make sure it has the trailing slash removed
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5001').replace(/\/$/, '');
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001').replace(/\/$/, '');
 
 // Fetch all rankings with optional filters
 export const fetchRankings = createAsyncThunk(

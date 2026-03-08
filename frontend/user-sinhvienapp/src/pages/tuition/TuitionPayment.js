@@ -378,7 +378,7 @@ const TuitionPayment = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tuitionData.items && tuitionData.items.map((item) => (
+                      {tuitionData.items && tuitionData.items?.map((item) => (
                         <TableRow key={item.id}>
                           <TableCell>{item.name}</TableCell>
                           <TableCell align="right">{formatCurrency(item.amount)}</TableCell>
@@ -434,7 +434,7 @@ const TuitionPayment = () => {
               <Typography variant="h6" gutterBottom>
                 Lịch sử thanh toán
               </Typography>
-              {paymentHistory.length > 0 ? (
+              {paymentHistory?.length > 0 ? (
                 <TableContainer>
                   <Table>
                     <TableHead>
@@ -447,7 +447,7 @@ const TuitionPayment = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {paymentHistory.map((payment) => (
+                      {paymentHistory?.map((payment) => (
                         <TableRow key={payment.PaymentID}>
                           <TableCell>{formatDate(payment.PaymentDate)}</TableCell>
                           <TableCell>{formatCurrency(payment.Amount)}</TableCell>

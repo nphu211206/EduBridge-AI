@@ -124,7 +124,7 @@ const UnlockAccount = () => {
     }
 
     // Auto-submit when all fields are filled
-    if (newCode.every(digit => digit !== '') && newCode.join('').length === 6) {
+    if (newCode.every(digit => digit !== '') && newCode.join('')?.length === 6) {
       setTimeout(() => verifyTwoFA(newCode.join('')), 100);
     }
   };
@@ -141,7 +141,7 @@ const UnlockAccount = () => {
   };
 
   const verifyTwoFA = async (code = twoFaCode.join('')) => {
-    if (code.length !== 6) {
+    if (code?.length !== 6) {
       toast.error('Vui lòng nhập đầy đủ 6 chữ số');
       return;
     }
@@ -275,7 +275,7 @@ const UnlockAccount = () => {
             )}
 
             <div className="flex justify-center space-x-2 mb-6">
-              {twoFaCode.map((digit, index) => (
+              {twoFaCode?.map((digit, index) => (
                 <input
                   key={index}
                   ref={el => inputRefs.current[index] = el}

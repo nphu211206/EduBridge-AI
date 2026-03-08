@@ -179,7 +179,7 @@ const SecondMajor = () => {
       // Process registrations response
       if (registrationsResponse.status === 'fulfilled' && 
           registrationsResponse.value.data.success && 
-          registrationsResponse.value.data.data.length > 0) {
+          registrationsResponse.value.data.data?.length > 0) {
         setExistingRegistrations(registrationsResponse.value.data.data);
       } else if (registrationsResponse.status === 'rejected') {
         console.error('Error fetching registrations:', registrationsResponse.reason);
@@ -249,7 +249,7 @@ const SecondMajor = () => {
           type: 'success',
           message: 'Đăng ký học ngành 2 thành công. Yêu cầu của bạn đang được xử lý.'
         });
-        setActiveStep(steps.length);
+        setActiveStep(steps?.length);
         
         // Update existing registrations
         setExistingRegistrations([response.data.data, ...existingRegistrations]);
@@ -294,7 +294,7 @@ const SecondMajor = () => {
                 onChange={handleMajorChange}
                 label="Ngành học"
               >
-                {availableMajors.map((major) => (
+                {availableMajors?.map((major) => (
                   <MenuItem key={major.ProgramID} value={major.ProgramID}>
                     {major.ProgramName} ({major.ProgramCode})
                   </MenuItem>
@@ -336,7 +336,7 @@ const SecondMajor = () => {
               </CardContent>
             </Card>
             
-            {existingRegistrations.length > 0 && (
+            {existingRegistrations?.length > 0 && (
               <Alert severity="info" sx={{ mt: 2 }}>
                 Bạn đã có đăng ký ngành 2 trước đó với trạng thái: {existingRegistrations[0].Status}
               </Alert>
@@ -503,7 +503,7 @@ const SecondMajor = () => {
   }
 
   // Show existing registrations if not eligible
-  if (!isEligible && existingRegistrations.length === 0) {
+  if (!isEligible && existingRegistrations?.length === 0) {
     return (
       <div style={styles.root}>
         <Paper sx={styles.paper}>
@@ -537,7 +537,7 @@ const SecondMajor = () => {
   }
 
   // Show list of existing registrations
-  if (existingRegistrations.length > 0) {
+  if (existingRegistrations?.length > 0) {
     return (
       <div style={styles.root}>
         <Paper sx={styles.paper}>
@@ -551,7 +551,7 @@ const SecondMajor = () => {
             <Divider sx={{ mt: 2 }} />
           </Box>
 
-          {existingRegistrations.map((registration, index) => (
+          {existingRegistrations?.map((registration, index) => (
             <Card key={index} sx={styles.card}>
               <CardContent>
                 <Grid container spacing={2}>
@@ -669,14 +669,14 @@ const SecondMajor = () => {
         </Box>
 
         <Stepper activeStep={activeStep} sx={styles.stepper}>
-          {steps.map((label) => (
+          {steps?.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
 
-        {activeStep === steps.length ? (
+        {activeStep === steps?.length ? (
           <Box>
             <Typography variant="h6" gutterBottom>
               Đăng ký hoàn tất!
@@ -702,7 +702,7 @@ const SecondMajor = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={activeStep === steps.length - 1 ? handleSubmit : handleNext}
+                onClick={activeStep === steps?.length - 1 ? handleSubmit : handleNext}
                 disabled={
                   (activeStep === 0 && !selectedMajor) || 
                   (activeStep === 1 && !reason) ||
@@ -712,7 +712,7 @@ const SecondMajor = () => {
                 {submitting ? (
                   <CircularProgress size={24} color="inherit" />
                 ) : (
-                  activeStep === steps.length - 1 ? 'Xác nhận' : 'Tiếp theo'
+                  activeStep === steps?.length - 1 ? 'Xác nhận' : 'Tiếp theo'
                 )}
               </Button>
             </Box>

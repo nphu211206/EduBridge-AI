@@ -49,11 +49,11 @@ const HeroSection = () => {
 };
 
 const TopCompaniesSection = () => {
-    const topCompanies = [ { name: "FPT Software", logo: "https://inkythuatso.com/uploads/images/2021/11/fpt-logo-inkythuatso-1-14-10-18-09.jpg" }, { name: "Viettel", logo: "https://cdn.haitrieu.com/wp-content/uploads/2021/10/Logo-Viettel-Telecom.png" }, { name: "VNG", logo: "https://vcdn-sohoa.vnecdn.net/2019/08/21/VNG-logo-8588-1566378453.png" }, { name: "CMC Corp", logo: "https://inkythuatso.com/uploads/images/2021/11/cmc-logo-inkythuatso-1-14-10-16-16.jpg" }, { name: "Momo", logo: "https://static.mservice.io/img/logo-momo.png" }, { name: "Tiki", logo: "https://vudigital.co/wp-content/uploads/2022/11/logo-tiki-inkythuatso-2-1.jpg" } ];
+    const topCompanies = [{ name: "FPT Software", logo: "https://inkythuatso.com/uploads/images/2021/11/fpt-logo-inkythuatso-1-14-10-18-09.jpg" }, { name: "Viettel", logo: "https://cdn.haitrieu.com/wp-content/uploads/2021/10/Logo-Viettel-Telecom.png" }, { name: "VNG", logo: "https://vcdn-sohoa.vnecdn.net/2019/08/21/VNG-logo-8588-1566378453.png" }, { name: "CMC Corp", logo: "https://inkythuatso.com/uploads/images/2021/11/cmc-logo-inkythuatso-1-14-10-16-16.jpg" }, { name: "Momo", logo: "https://static.mservice.io/img/logo-momo.png" }, { name: "Tiki", logo: "https://vudigital.co/wp-content/uploads/2022/11/logo-tiki-inkythuatso-2-1.jpg" }];
     return (
         <motion.div variants={sectionVariant}>
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest text-center mb-8">Các công ty hàng đầu tin tưởng</h3>
-            <div className="flex justify-center items-center gap-12 flex-wrap">{topCompanies.map(company => ( <img key={company.name} src={company.logo} alt={company.name} title={company.name} className="h-10 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" /> ))}</div>
+            <div className="flex justify-center items-center gap-12 flex-wrap">{topCompanies?.map(company => (<img key={company.name} src={company.logo} alt={company.name} title={company.name} className="h-10 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />))}</div>
         </motion.div>
     );
 };
@@ -62,9 +62,9 @@ const AIRecommendationSection = ({ user }) => {
     if (!user) return null;
     return (
         <motion.div variants={sectionVariant} className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-8 rounded-2xl border border-purple-700">
-             <h2 className="text-3xl font-bold text-white mb-4">Gợi ý Dành riêng cho bạn</h2>
-             <p className="text-gray-300 mb-8">Dựa trên hồ sơ năng lực của bạn, AI của chúng tôi tin rằng bạn sẽ phù hợp với những cơ hội này:</p>
-             {/* Logic hiển thị jobs... */}
+            <h2 className="text-3xl font-bold text-white mb-4">Gợi ý Dành riêng cho bạn</h2>
+            <p className="text-gray-300 mb-8">Dựa trên hồ sơ năng lực của bạn, AI của chúng tôi tin rằng bạn sẽ phù hợp với những cơ hội này:</p>
+            {/* Logic hiển thị jobs... */}
         </motion.div>
     );
 };
@@ -77,13 +77,13 @@ const JobFeedSection = ({ title, jobs, isLoading, icon, onApplyClick, appliedJob
             <h2 className="text-3xl font-bold text-white">{title}</h2>
         </div>
         {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{[...Array(3)].map((_, i) => <div key={i} className="h-48 bg-gray-800 rounded-xl animate-pulse"></div>)}</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{[...Array(3)]?.map((_, i) => <div key={i} className="h-48 bg-gray-800 rounded-xl animate-pulse"></div>)}</div>
         ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {jobs.map(job => 
-                    <JobCard 
-                        key={job.id} 
-                        job={job} 
+                {jobs?.map(job =>
+                    <JobCard
+                        key={job.id}
+                        job={job}
                         onApplyClick={onApplyClick}
                         isApplied={appliedJobs.has(job.id)}
                     />
@@ -149,12 +149,12 @@ export default function HomePage() {
     return (
         <>
             <Helmet>
-                <title>EduLedger AI: Nền tảng xác thực năng lực, kiến tạo sự nghiệp</title>
+                <title>EduBridge AI: Nền tảng xác thực năng lực, kiến tạo sự nghiệp</title>
                 <meta name="description" content="Hàng ngàn cơ hội việc làm IT từ các công ty hàng đầu. Năng lực của bạn, được AI của chúng tôi xác thực và bảo chứng." />
             </Helmet>
             <div className="bg-gray-900 text-white">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                    <motion.div 
+                    <motion.div
                         className="space-y-24"
                         initial="hidden"
                         animate="visible"
@@ -162,26 +162,26 @@ export default function HomePage() {
                     >
                         <HeroSection />
                         <TopCompaniesSection />
-                        
+
                         {user && <AIRecommendationSection user={user} />}
-                        
-                        <JobFeedSection 
-                            title="Việc làm Nổi bật" 
-                            jobs={featuredJobs} 
-                            isLoading={isLoading} 
+
+                        <JobFeedSection
+                            title="Việc làm Nổi bật"
+                            jobs={featuredJobs}
+                            isLoading={isLoading}
                             icon={<StarIcon className="w-8 h-8 text-yellow-400" />}
                             onApplyClick={handleApplyClick}
                             appliedJobs={appliedJobs}
                         />
-                        <JobFeedSection 
-                            title="Việc làm Lương cao" 
-                            jobs={highSalaryJobs} 
-                            isLoading={isLoading} 
+                        <JobFeedSection
+                            title="Việc làm Lương cao"
+                            jobs={highSalaryJobs}
+                            isLoading={isLoading}
                             icon={<BriefcaseIcon className="w-8 h-8 text-green-400" />}
                             onApplyClick={handleApplyClick}
                             appliedJobs={appliedJobs}
                         />
-                        
+
                         <FinalCallToActionSection />
                     </motion.div>
                 </div>

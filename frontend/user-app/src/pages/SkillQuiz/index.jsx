@@ -93,7 +93,7 @@ const SkillQuiz = () => {
                     🎯 Tạo bài kiểm tra
                 </button>
                 <button className={`qtab ${tab === 'history' ? 'active' : ''}`} onClick={() => { setTab('history'); fetchHistory(); }}>
-                    📊 Lịch sử ({history.length})
+                    📊 Lịch sử ({history?.length})
                 </button>
             </div>
 
@@ -104,10 +104,10 @@ const SkillQuiz = () => {
                     <div className="quiz-step">
                         <h3 className="step-label">1️⃣ Chọn lĩnh vực</h3>
                         <div className="field-chips">
-                            {(categories.length > 0 ? categories : [
+                            {(categories?.length > 0 ? categories : [
                                 { Category: 'Technical' }, { Category: 'Design' },
                                 { Category: 'Business' }, { Category: 'Science' }, { Category: 'Soft Skill' }
-                            ]).map(cat => (
+                            ])?.map(cat => (
                                 <button
                                     key={cat.Category}
                                     className={`field-chip ${selectedCategory === cat.Category ? 'active' : ''}`}
@@ -124,7 +124,7 @@ const SkillQuiz = () => {
                         <div className="quiz-step">
                             <h3 className="step-label">2️⃣ Chọn kỹ năng</h3>
                             <div className="skill-select-grid">
-                                {skills.map(s => (
+                                {skills?.map(s => (
                                     <button
                                         key={s.SkillID}
                                         className={`skill-select-btn ${selectedSkill?.SkillID === s.SkillID ? 'active' : ''}`}
@@ -145,7 +145,7 @@ const SkillQuiz = () => {
                                 <div className="config-group">
                                     <label>Trình độ:</label>
                                     <div className="level-buttons">
-                                        {['Beginner', 'Intermediate', 'Advanced'].map(l => (
+                                        {['Beginner', 'Intermediate', 'Advanced']?.map(l => (
                                             <button
                                                 key={l}
                                                 className={`level-btn ${level === l ? 'active' : ''}`}
@@ -159,7 +159,7 @@ const SkillQuiz = () => {
                                 <div className="config-group">
                                     <label>Số câu hỏi:</label>
                                     <div className="count-buttons">
-                                        {[5, 10, 15, 20].map(c => (
+                                        {[5, 10, 15, 20]?.map(c => (
                                             <button
                                                 key={c}
                                                 className={`count-btn ${questionCount === c ? 'active' : ''}`}
@@ -193,7 +193,7 @@ const SkillQuiz = () => {
             {/* History Tab */}
             {tab === 'history' && (
                 <div className="quiz-history">
-                    {history.length === 0 ? (
+                    {history?.length === 0 ? (
                         <div className="empty-state">
                             <span className="empty-icon-large">📊</span>
                             <h3>Chưa có lịch sử kiểm tra</h3>
@@ -201,7 +201,7 @@ const SkillQuiz = () => {
                         </div>
                     ) : (
                         <div className="history-list">
-                            {history.map(h => (
+                            {history?.map(h => (
                                 <div key={h.AttemptID} className={`history-card ${h.Passed ? 'passed' : 'failed'}`}>
                                     <div className="history-left">
                                         <span className="history-icon">{h.SkillIcon || '📌'}</span>

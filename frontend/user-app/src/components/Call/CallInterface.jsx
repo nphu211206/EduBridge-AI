@@ -90,7 +90,7 @@ const CallInterface = ({ call: propCall, onEndCall: propOnEndCall, isVideoCall =
 
   const cleanupMedia = () => {
     if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(track => track.stop());
+      localStreamRef.current.getTracks()?.forEach(track => track.stop());
     }
     if (peerConnectionRef.current) {
       peerConnectionRef.current.close();
@@ -174,7 +174,7 @@ const CallInterface = ({ call: propCall, onEndCall: propOnEndCall, isVideoCall =
   };
 
   const getParticipantName = () => {
-    if (call?.participants && call.participants.length > 0) {
+    if (call?.participants && call.participants?.length > 0) {
       const otherParticipant = call.participants.find(p => p.UserID !== call.initiatorId);
       return otherParticipant?.FullName || otherParticipant?.Username || 'Unknown';
     }
@@ -182,7 +182,7 @@ const CallInterface = ({ call: propCall, onEndCall: propOnEndCall, isVideoCall =
   };
 
   const getParticipantAvatar = () => {
-    if (call?.participants && call.participants.length > 0) {
+    if (call?.participants && call.participants?.length > 0) {
       const otherParticipant = call.participants.find(p => p.UserID !== call.initiatorId);
       return otherParticipant?.ProfilePicture;
     }

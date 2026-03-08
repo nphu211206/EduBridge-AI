@@ -1,77 +1,56 @@
 {
     "meta": {
         "schema_version": "1.1.0",
-        "awf_version": "4.0.0"
+        "awf_version": "4.0.2"
     },
     "project": {
-        "name": "EduBridge AI (Hợp nhất từ Campus-Learning và Edu-Ledger-AI)",
-        "type": "Microservices Monorepo",
-        "status": "Giai đoạn tích hợp 5 Module AI cốt lõi - Đã hoàn thiện UI và API Gateway"
+        "name": "EduBridge AI",
+        "type": "EdTech & Recruitment Platform",
+        "status": "development"
     },
     "tech_stack": {
         "frontend": {
-            "framework": "React (Vite / CRA), TailwindCSS, Framer Motion",
+            "framework": "React (Vite)",
             "apps": [
-                "user-app (Học viên & Sinh viên) - Port 5173 / 3001",
-                "admin-app (Quản trị viên)",
-                "teacher-app (Giảng viên)",
-                "recruiter-app (Nhà tuyển dụng chuyên biệt)",
-                "admin-sinhvienapp",
-                "user-sinhvienapp"
+                "portal (Port 3000)",
+                "user-app (Port 3001)",
+                "recruiter-app (Port 3002)",
+                "teacher-app (Port 3003)",
+                "admin-app (Port 3004)"
             ]
         },
         "backend": {
-            "framework": "Node.js (Express API Gateway & Microservices)",
+            "framework": "Node.js (Express)",
             "services": [
-                "user-service (API Gateway chính, Port 5001)",
-                "admin-service (Port 5002)",
-                "teacher-service (Port 5003)",
-                "portfolio-service (Chứa nghiệp vụ Lộ trình AI, Skill DNA, Thành tựu, Port 3900)",
-                "career-service (Chứa nghiệp vụ Tuyển dụng, Port 3800)",
-                "admin-sinhvienservice",
-                "user-sinhvienservice"
+                "user-service",
+                "career-service"
             ]
         },
         "database": {
-            "type": "SQL Server (MSSQL)",
-            "host": "localhost",
-            "port": 61654,
-            "instance": "SQLEXPRESS01",
-            "options": {
-                "encrypt": false,
-                "trustServerCertificate": true
-            }
+            "type": "MSSQL"
         }
     },
     "database_schema": {
-        "summary": "Hệ thống kết hợp dữ liệu Campus và EduLedger. Cấu trúc Users đã được nâng cấp để hỗ trợ Bảo mật 2 lớp (2FA) và Trạng thái tài khoản.",
-        "tables": [
-            "Users (Added: AccountStatus, TwoFAEnabled, TwoFASecret, Password)",
-            "LoginAttempts (Mới)",
-            "RegistrationAttempts (Mới)",
-            "UserEmails (Blocker: Hiện đang thiếu)",
-            "Courses",
-            "UserAiUsage",
-            "EmailVerifications",
-            "Conversations",
-            "Messages"
-        ],
-        "relationships_explained": "Users đóng vai trò hạt nhân, kết nối với Profiles, Roles, và các dịch vụ Portfolio/Career."
+        "summary": "App lưu: thông tin khóa học (Courses), việc làm (Jobs), công ty (Companies), người dùng (Users)"
     },
+    "api_endpoints": [
+        {
+            "path": "/api/courses",
+            "explained": "Lấy danh sách khóa học (Có try-catch fallback data mẫu)"
+        },
+        {
+            "path": "/api/public/jobs",
+            "explained": "Lấy danh sách việc làm (Có try-catch fallback data mẫu)"
+        }
+    ],
     "knowledge_items": {
-        "patterns": [
-            "API Gateway: user-service đóng vai trò trung chuyển qua http-proxy-middleware.",
-            "Multi-Project: Sử dụng npm run start:all (concurrently) để chạy toàn bộ monorepo.",
-            "DB Patching: Sử dụng sqlcmd để vá schema trực tiếp khi có mismatch giữa Code và DB."
-        ],
         "gotchas": [
-            "Lỗi 'Invalid column name': Luôn kiểm tra model Sequelize vs DB thực tế (Password vs PasswordHash).",
-            "MSSQL Port: SQL Express thường dùng port động hoặc 61654 thay vì 1433.",
-            "Bcrypt: Mock data cần hash thật của '123456' ($2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymY0.jW2Z.6E3Kjg1u9A6W) để đăng nhập thành công."
+            "Tránh trùng lặp BrowserRouter trong main.jsx và App.jsx",
+            "Khi DB rỗng hoặc lỗi schema MSSQL, controller dễ bị crash 500 -> cần bọc try-catch và cấp data mock",
+            "Dữ liệu API trả về có thể là flat (companyName) hoặc nested (company.name) -> Component UI phải xử lý phòng vệ cả 2 trường hợp."
         ],
-        "conventions": [
-            "Biến môi trường: Mỗi service cần file .env riêng (đã được auto-patch).",
-            "Ngôn ngữ: Tiếng Việt được ưu tiên trong thông báo lỗi và tài liệu nghiệp vụ."
+        "branding": [
+            "Tên gốc thống nhất TOÀN BỘ hệ thống là 'EduBridge AI', đã xóa toàn bộ các tên cũ như 'CampusLearning' hay 'Campus Campus Learning'."
         ]
     }
 }

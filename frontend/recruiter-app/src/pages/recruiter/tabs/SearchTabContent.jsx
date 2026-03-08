@@ -16,10 +16,10 @@ import { Search, Plus, Trash2, Github, ExternalLink, Users, Loader, Info, Filter
 const SearchPanel = memo(({ onSearch, isSearching }) => {
     const [searchCriteria, setSearchCriteria] = useState([ { id: Date.now(), name: '', minScore: '70' } ]);
     const [formError, setFormError] = useState('');
-    const handleCriteriaChange = useCallback((id, event) => { const { name, value } = event.target; setSearchCriteria(prevCriteria => prevCriteria.map(criterion => criterion.id === id ? { ...criterion, [name]: value } : criterion )); if (formError) setFormError(''); }, [formError]);
+    const handleCriteriaChange = useCallback((id, event) => { const { name, value } = event.target; setSearchCriteria(prevCriteria => prevCriteria?.map(criterion => criterion.id === id ? { ...criterion, [name]: value } : criterion )); if (formError) setFormError(''); }, [formError]);
     const handleAddCriterion = useCallback(() => { setSearchCriteria(prevCriteria => [ ...prevCriteria, { id: Date.now(), name: '', minScore: '70' } ]); if (formError) setFormError(''); }, [formError]);
-    const handleRemoveCriterion = useCallback((id) => { if (searchCriteria.length <= 1) return; setSearchCriteria(prevCriteria => prevCriteria.filter(criterion => criterion.id !== id)); if (formError) setFormError(''); }, [searchCriteria.length, formError]);
-    const handleSubmit = useCallback((event) => { event.preventDefault(); setFormError(''); const validCriteria = searchCriteria.map(c => ({ name: c.name.trim(), minScore: parseInt(c.minScore, 10) || 50 })).filter(c => c.name !== ''); if (validCriteria.length === 0) { setFormError("Vui lòng nhập ít nhất một kỹ năng hợp lệ."); return; } onSearch(validCriteria); }, [searchCriteria, onSearch]);
+    const handleRemoveCriterion = useCallback((id) => { if (searchCriteria?.length <= 1) return; setSearchCriteria(prevCriteria => prevCriteria?.filter(criterion => criterion.id !== id)); if (formError) setFormError(''); }, [searchCriteria?.length, formError]);
+    const handleSubmit = useCallback((event) => { event.preventDefault(); setFormError(''); const validCriteria = searchCriteria?.map(c => ({ name: c.name.trim(), minScore: parseInt(c.minScore, 10) || 50 }))?.filter(c => c.name !== ''); if (validCriteria?.length === 0) { setFormError("Vui lòng nhập ít nhất một kỹ năng hợp lệ."); return; } onSearch(validCriteria); }, [searchCriteria, onSearch]);
     const criterionRowVariant = { initial: { opacity: 0, x: -20, height: 0 }, animate: { opacity: 1, x: 0, height: 'auto', transition: { duration: 0.3, ease: 'easeOut' } }, exit: { opacity: 0, x: 20, height: 0, transition: { duration: 0.2, ease: 'easeIn' } } };
 
     return (
@@ -28,11 +28,11 @@ const SearchPanel = memo(({ onSearch, isSearching }) => {
             {formError && ( <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-900/40 border border-red-700 text-red-300 px-3 py-2 rounded-md text-xs mb-4 flex items-center gap-1.5"> <Info className="w-4 h-4 flex-shrink-0"/> {formError} </motion.div> )}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <AnimatePresence initial={false}>
-                    {searchCriteria.map((criterion, index) => (
+                    {searchCriteria?.map((criterion, index) => (
                         <motion.div key={criterion.id} variants={criterionRowVariant} initial="initial" animate="animate" exit="exit" layout className="flex items-end gap-2 overflow-hidden">
                             <div className="flex-grow"> {index === 0 && <label htmlFor={`skillName-${criterion.id}`} className="text-xs font-medium text-gray-400 mb-1 block">Kỹ năng</label>} <input id={`skillName-${criterion.id}`} type="text" placeholder="VD: React, Python..." name="name" value={criterion.name} onChange={e => handleCriteriaChange(criterion.id, e)} className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" aria-label={`Skill name ${index + 1}`} /> </div>
                             <div className="w-24 flex-shrink-0"> {index === 0 && <label htmlFor={`minScore-${criterion.id}`} className="text-xs font-medium text-gray-400 mb-1 block">Điểm &ge;</label>} <input id={`minScore-${criterion.id}`} type="number" name="minScore" value={criterion.minScore} onChange={e => handleCriteriaChange(criterion.id, e)} min="50" max="100" step="5" className="w-full px-2 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 text-center" aria-label={`Minimum score ${index + 1}`} /> </div>
-                            <button type="button" onClick={() => handleRemoveCriterion(criterion.id)} disabled={searchCriteria.length <= 1} className={`p-2 text-gray-500 hover:text-red-400 transition duration-200 flex-shrink-0 mb-1 ${searchCriteria.length <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`} title="Xóa tiêu chí này" aria-label={`Remove criterion ${index + 1}`}> <Trash2 className="w-4 h-4" /> </button>
+                            <button type="button" onClick={() => handleRemoveCriterion(criterion.id)} disabled={searchCriteria?.length <= 1} className={`p-2 text-gray-500 hover:text-red-400 transition duration-200 flex-shrink-0 mb-1 ${searchCriteria?.length <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`} title="Xóa tiêu chí này" aria-label={`Remove criterion ${index + 1}`}> <Trash2 className="w-4 h-4" /> </button>
                         </motion.div>
                     ))}
                 </AnimatePresence>
@@ -87,7 +87,7 @@ const SearchTabContent = () => {
             const results = await searchStudents(criteria);
             setSearchResults(results || []);
             setSearchError('');
-            setViewState(results && results.length > 0 ? 'results' : 'empty');
+            setViewState(results && results?.length > 0 ? 'results' : 'empty');
         } catch (err) {
             setSearchError(err.message || 'Tìm kiếm thất bại.');
             setSearchResults(null);

@@ -21,7 +21,7 @@ const LiveSkillFeed = () => {
         });
     }, []);
 
-    if (skills.length === 0) {
+    if (skills?.length === 0) {
         return null; // Không hiển thị gì nếu không có dữ liệu
     }
 
@@ -31,7 +31,7 @@ const LiveSkillFeed = () => {
     return (
         <div className="skill-feed-container">
             <div className="skill-feed-track">
-                {skills.map((skill, index) => (
+                {skills?.map((skill, index) => (
                     <SkillTag key={index} name={skill} animationDuration={getRandomDuration()} />
                 ))}
             </div>

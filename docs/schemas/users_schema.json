@@ -1,0 +1,202 @@
+[
+  {
+    "COLUMN_NAME": "UserID",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Username",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Email",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Password",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "PasswordSalt",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "FirstName",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LastName",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "FullName",
+    "IS_COMPUTED": true
+  },
+  {
+    "COLUMN_NAME": "PhoneNumber",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "AvatarUrl",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "CoverPhotoUrl",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "DateOfBirth",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Gender",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Bio",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Address",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "City",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Country",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Timezone",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Language",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "IsEmailVerified",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "IsPhoneVerified",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "IsActive",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "IsBanned",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "BannedReason",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "BannedUntil",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LastLoginAt",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LastActiveAt",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "OnlineStatus",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "RegistrationSource",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "ReferralCode",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "ReferredBy",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "TotalPoints",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Level",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "CreatedAt",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "UpdatedAt",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "DeletedAt",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "EduCoinsBalance",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "TwoFASecret",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "TwoFAEnabled",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "HasPasskey",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "RequireTwoFA",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "AccountStatus",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Status",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Role",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LastLoginIP",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "School",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LockDuration",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LockReason",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "LockedUntil",
+    "IS_COMPUTED": false
+  },
+  {
+    "COLUMN_NAME": "Avatar",
+    "IS_COMPUTED": false
+  }
+]

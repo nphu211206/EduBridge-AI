@@ -73,14 +73,14 @@ export const fetchEnrolledCourses = createAsyncThunk(
       
       if (response.data && response.data.success) {
         // Mark each course as enrolled for UI purposes
-        let courses = response.data.data.map(course => ({
+        let courses = response.data.data?.map(course => ({
           ...course,
           enrolled: true
         }));
         
         // Loại bỏ khóa học trùng lặp theo ID
         const uniqueMap = new Map();
-        courses.forEach(course => {
+        courses?.forEach(course => {
           const uniqueID = course.CourseID || course.id;
           if (uniqueID && !uniqueMap.has(uniqueID)) {
             uniqueMap.set(uniqueID, course);

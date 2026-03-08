@@ -1,0 +1,32 @@
+[
+  {
+    "COLUMN_NAME": "CommentID"
+  },
+  {
+    "COLUMN_NAME": "PostID"
+  },
+  {
+    "COLUMN_NAME": "ParentID"
+  },
+  {
+    "COLUMN_NAME": "AuthorID"
+  },
+  {
+    "COLUMN_NAME": "Content"
+  },
+  {
+    "COLUMN_NAME": "LikeCount"
+  },
+  {
+    "COLUMN_NAME": "ReplyCount"
+  },
+  {
+    "COLUMN_NAME": "MediaUrl"
+  },
+  {
+    "COLUMN_NAME": "CreatedAt"
+  },
+  {
+    "COLUMN_NAME": "UpdatedAt"
+  }
+]

@@ -201,7 +201,7 @@ const SemesterEdit = () => {
     }
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors)?.length === 0;
   };
   
   const handleSubmit = async (event) => {
@@ -340,7 +340,7 @@ const SemesterEdit = () => {
                   helperText={errors.academicYear}
                   disabled={submitting}
                 >
-                  {academicYears.map((year) => (
+                  {academicYears?.map((year) => (
                     <MenuItem key={year} value={year}>
                       {year}
                     </MenuItem>
@@ -359,7 +359,7 @@ const SemesterEdit = () => {
                   required
                   disabled={submitting}
                 >
-                  {statusOptions.map((option) => (
+                  {statusOptions?.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>

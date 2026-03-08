@@ -35,7 +35,7 @@ const Programs = () => {
         
         if (response && response.success) {
           // Map the academic programs to the correct field names for display
-          const formattedPrograms = (response.data || []).map(program => ({
+          const formattedPrograms = (response.data || [])?.map(program => ({
             id: program.ProgramID,
             code: program.ProgramCode,
             name: program.ProgramName,
@@ -70,7 +70,7 @@ const Programs = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredPrograms = programs.filter(program => 
+  const filteredPrograms = programs?.filter(program => 
     program.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     program.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     program.department?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -336,7 +336,7 @@ const Programs = () => {
               <Grid item xs={12} md={6}>
                 <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
                   <Typography variant="body2" color="text.secondary">
-                    {filteredPrograms.length} chương trình
+                    {filteredPrograms?.length} chương trình
                   </Typography>
                 </Box>
               </Grid>

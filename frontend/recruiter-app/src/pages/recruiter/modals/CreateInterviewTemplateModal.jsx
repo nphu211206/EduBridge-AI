@@ -81,7 +81,7 @@ const CreateInterviewTemplateModal = ({ jobs = [], onClose, onSuccess }) => {
                             <label htmlFor="jobId" className="block text-sm font-medium text-gray-300 mb-1.5">Chọn Tin Tuyển dụng (Để AI phân tích) *</label>
                             <select id="jobId" value={selectedJobId} onChange={(e) => setSelectedJobId(e.target.value)} className="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">-- Chọn một tin tuyển dụng --</option>
-                                {jobs.map(job => <option key={job.id} value={job.id}>{job.title}</option>)}
+                                {jobs?.map(job => <option key={job.id} value={job.id}>{job.title}</option>)}
                             </select>
                         </div>
                         <div>
@@ -127,7 +127,7 @@ const CreateInterviewTemplateModal = ({ jobs = [], onClose, onSuccess }) => {
                                     <p className="text-3xl font-bold text-yellow-400">{aiResult.timeLimitMinutes} phút</p>
                                 </div>
                                 <div className="space-y-4">
-                                    {aiResult.questions.map((q, index) => (
+                                    {aiResult.questions?.map((q, index) => (
                                         <div key={index} className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
                                             <p className="text-sm font-semibold text-blue-300 mb-2">Câu {index + 1}: (Loại: {q.questionType || 'Kỹ thuật'})</p>
                                             <p className="text-gray-200 mb-3">{q.questionText}</p>

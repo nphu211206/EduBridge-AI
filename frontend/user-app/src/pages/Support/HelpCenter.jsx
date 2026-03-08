@@ -95,7 +95,7 @@ const HelpCenter = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {helpSections.map((section, index) => (
+          {helpSections?.map((section, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -110,7 +110,7 @@ const HelpCenter = () => {
                 </div>
                 <p className="text-gray-600 mb-4">{section.description}</p>
                 <ul className="space-y-2">
-                  {section.items.map((item, itemIndex) => (
+                  {section.items?.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-center text-gray-600">
                       <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></span>
                       {item}

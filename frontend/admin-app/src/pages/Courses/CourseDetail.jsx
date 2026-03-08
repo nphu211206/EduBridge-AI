@@ -448,7 +448,7 @@ const CourseDetail = () => {
               <Card>
                 <Statistic
                   title="Số lượng module"
-                  value={modules.length}
+                  value={modules?.length}
                   prefix={<BookOutlined />}
                 />
               </Card>
@@ -491,7 +491,7 @@ const CourseDetail = () => {
                   children: (
                     <>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                        <Title level={4}>Modules ({modules.length})</Title>
+                        <Title level={4}>Modules ({modules?.length})</Title>
                         <Button 
                           type="primary" 
                           icon={<FileTextOutlined />}
@@ -516,7 +516,7 @@ const CourseDetail = () => {
                   children: (
                     <Card>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                        <Title level={4}>Học viên đã đăng ký ({enrolledStudents.length})</Title>
+                        <Title level={4}>Học viên đã đăng ký ({enrolledStudents?.length})</Title>
                         <Space>
                           <Button icon={<SearchOutlined />}>
                             Tìm kiếm

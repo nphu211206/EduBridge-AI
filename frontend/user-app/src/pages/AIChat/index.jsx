@@ -149,10 +149,10 @@ const AIChat = () => {
 
   // Update the active conversation with new messages
   useEffect(() => {
-    if (isTemporaryChat || !activeConversationId || !messages.length || initializing) return;
+    if (isTemporaryChat || !activeConversationId || !messages?.length || initializing) return;
 
     setConversations(prevConversations => {
-      const updatedConversations = prevConversations.map(conv => {
+      const updatedConversations = prevConversations?.map(conv => {
         if (conv.id === activeConversationId) {
           return {
             ...conv,
@@ -169,7 +169,7 @@ const AIChat = () => {
 
   // Helper to generate a title from messages
   const getConversationTitle = (msgs) => {
-    if (!msgs.length) return "New Chat";
+    if (!msgs?.length) return "New Chat";
     
     // Find the first user message
     const firstUserMessage = msgs.find(m => m.role === 'user');
@@ -177,7 +177,7 @@ const AIChat = () => {
     
     // Use first 30 chars of the message as title
     const title = firstUserMessage.content.substring(0, 30);
-    return title.length < firstUserMessage.content.length ? `${title}...` : title;
+    return title?.length < firstUserMessage.content?.length ? `${title}...` : title;
   };
 
   // Convert a temporary chat to a permanent one
@@ -186,7 +186,7 @@ const AIChat = () => {
     const messagesToSave = messagesWithUserQuery || messages;
     
     // Don't save empty chats
-    if (messagesToSave.length <= 1) return;
+    if (messagesToSave?.length <= 1) return;
     
     // Only save if user has asked something
     if (!messagesToSave.find(m => m.role === 'user')) return;
@@ -221,7 +221,7 @@ const AIChat = () => {
   // Delete a conversation
   const deleteConversation = (id) => {
     // Update conversations state - localStorage will update via useEffect
-    const updatedConversations = conversations.filter(conv => conv.id !== id);
+    const updatedConversations = conversations?.filter(conv => conv.id !== id);
     setConversations(updatedConversations);
     
     // If we deleted the active conversation, create a new one
@@ -247,7 +247,7 @@ const AIChat = () => {
     if (id === activeConversationId) return;
     
     // If we're in a temporary chat with user messages, save it first
-    if (isTemporaryChat && messages.length > 1 && messages.some(m => m.role === 'user')) {
+    if (isTemporaryChat && messages?.length > 1 && messages.some(m => m.role === 'user')) {
       saveTemporaryChat();
     }
     
@@ -330,7 +330,7 @@ const AIChat = () => {
       // Cập nhật cuộc hội thoại trong localStorage
       if (!isTemporaryChat) {
         setConversations(prevConversations => {
-          const updatedConversations = prevConversations.map(conv => {
+          const updatedConversations = prevConversations?.map(conv => {
             if (conv.id === activeConversationId) {
               return {
                 ...conv,
@@ -375,7 +375,7 @@ const AIChat = () => {
     }
   };
 
-  const isEmptyChat = messages.length === 1 && 
+  const isEmptyChat = messages?.length === 1 && 
                      messages[0].role === 'assistant' && 
                      messages[0].content === 'Xin chào! Tôi là trợ lý AI chuyên về IT của CampusLearning. Tôi sẽ giúp bạn trả lời các câu hỏi về lập trình, công nghệ và thông tin. Hãy đặt câu hỏi về lĩnh vực công nghệ thông tin để tôi có thể hỗ trợ tốt nhất.';
 
@@ -460,7 +460,7 @@ const AIChat = () => {
   useEffect(() => {
     // Skip the automatic update from messages changes
     // We'll handle updates explicitly in the handleSubmit function
-    if (isTemporaryChat || !activeConversationId || !messages.length || initializing || loading) return;
+    if (isTemporaryChat || !activeConversationId || !messages?.length || initializing || loading) return;
   }, [messages, activeConversationId, isTemporaryChat, initializing, loading]);
 
   // Restore the handleNewChat function that was removed in the previous edit
@@ -512,7 +512,7 @@ const AIChat = () => {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">Lịch sử</h3>
             <div className="flex items-center gap-2">
-              {conversations.length > 0 && (
+              {conversations?.length > 0 && (
                 <button
                   onClick={clearAllHistory}
                   className="text-xs text-red-500 hover:text-red-600"
@@ -530,10 +530,10 @@ const AIChat = () => {
             </div>
           </div>
           <div className="flex-1 overflow-y-auto space-y-0.5">
-            {conversations.length === 0 ? (
+            {conversations?.length === 0 ? (
               <p className="text-sm text-gray-500">Chưa có cuộc trò chuyện</p>
             ) : (
-              conversations.map((conv) => (
+              conversations?.map((conv) => (
                 <div
                   key={conv.id}
                   className={`flex items-center justify-between p-2 rounded hover:bg-gray-50 ${conv.id === activeConversationId ? 'bg-gray-100' : ''}`}
@@ -579,7 +579,7 @@ const AIChat = () => {
                 </div>
               ) : (
                 <div className="py-2 px-4 max-w-3xl mx-auto">
-                  {messages.map((message, index) => (
+                  {messages?.map((message, index) => (
                     <div 
                       key={index} 
                       className={`flex mb-2 px-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -664,7 +664,7 @@ const AIChat = () => {
             <div className={`flex-shrink-0 px-4 pb-3 pt-1 bg-gray-50 ${isEmptyChat ? 'absolute bottom-0 left-0 right-0' : ''}`}>
               {/* Suggestion buttons */}
               <div className="flex justify-center space-x-2 mb-1.5">
-                {suggestedActions.map((action, idx) => (
+                {suggestedActions?.map((action, idx) => (
                   <button 
                     key={idx} 
                     className="flex items-center gap-1 px-2.5 py-0.5 bg-white border border-gray-200 rounded-lg text-xs hover:bg-gray-50 transition-colors"
@@ -767,11 +767,11 @@ const AIChat = () => {
             <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">Câu hỏi gợi ý</h3>
           </div>
 
-          {suggestedQuestions.map((category, idx) => (
+          {suggestedQuestions?.map((category, idx) => (
             <div key={idx} className="mb-4">
               <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">{category.category}</h4>
               <div className="space-y-2">
-                {category.questions.map((question, qIdx) => (
+                {category.questions?.map((question, qIdx) => (
                   <button
                     key={qIdx}
                     onClick={() => handleSuggestedQuestion(question)}

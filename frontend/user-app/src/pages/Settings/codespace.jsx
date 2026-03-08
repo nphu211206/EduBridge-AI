@@ -121,7 +121,7 @@ const Codespace = () => {
   // Handle start codespace
   const handleStartCodespace = (codespaceId) => {
     // Update codespace status
-    const updatedCodespaces = codespaces.map(cs => {
+    const updatedCodespaces = codespaces?.map(cs => {
       if (cs.id === codespaceId) {
         return {
           ...cs,
@@ -141,7 +141,7 @@ const Codespace = () => {
   // Handle stop codespace
   const handleStopCodespace = (codespaceId) => {
     // Update codespace status
-    const updatedCodespaces = codespaces.map(cs => {
+    const updatedCodespaces = codespaces?.map(cs => {
       if (cs.id === codespaceId) {
         return {
           ...cs,
@@ -162,7 +162,7 @@ const Codespace = () => {
     // Confirm before deletion
     if (window.confirm('Bạn có chắc chắn muốn xóa codespace này? Tất cả dữ liệu không được commit sẽ bị mất.')) {
       // Filter out the deleted codespace
-      const updatedCodespaces = codespaces.filter(cs => cs.id !== codespaceId);
+      const updatedCodespaces = codespaces?.filter(cs => cs.id !== codespaceId);
       setCodespaces(updatedCodespaces);
       
       // Show success message
@@ -225,7 +225,7 @@ const Codespace = () => {
     // Simulate codespace starting
     setTimeout(() => {
       setCodespaces(prevCodespaces => 
-        prevCodespaces.map(cs => {
+        prevCodespaces?.map(cs => {
           if (cs.id === newCodespaceObj.id) {
             return {
               ...cs,
@@ -357,7 +357,7 @@ const Codespace = () => {
                     Cấu hình máy
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {machinePresets.map((preset) => (
+                    {machinePresets?.map((preset) => (
                       <div
                         key={preset.id}
                         className={`border rounded-lg p-4 cursor-pointer ${
@@ -414,9 +414,9 @@ const Codespace = () => {
             <h3 className="text-lg font-medium text-gray-900">Codespaces của bạn</h3>
           </div>
           
-          {codespaces.length > 0 ? (
+          {codespaces?.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {codespaces.map((cs) => (
+              {codespaces?.map((cs) => (
                 <div key={cs.id} className="p-5">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">

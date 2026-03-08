@@ -39,12 +39,12 @@ const MyApplications = () => {
                 <div className="apps-header">
                     <button onClick={() => navigate('/career')} className="back-link">← Quay lại</button>
                     <h1>📋 Đơn ứng tuyển của tôi</h1>
-                    <p className="apps-count">{apps.length} đơn</p>
+                    <p className="apps-count">{apps?.length} đơn</p>
                 </div>
 
                 {loading ? (
                     <div className="career-loading"><div className="loading-spinner"></div></div>
-                ) : apps.length === 0 ? (
+                ) : apps?.length === 0 ? (
                     <div className="career-empty">
                         <span className="empty-icon">📭</span>
                         <h3>Chưa ứng tuyển việc nào</h3>
@@ -52,7 +52,7 @@ const MyApplications = () => {
                     </div>
                 ) : (
                     <div className="apps-list">
-                        {apps.map(app => {
+                        {apps?.map(app => {
                             const statusInfo = getStatusBadge(app.Status);
                             return (
                                 <div key={app.ApplicationID} className="app-card" onClick={() => navigate(`/career/${app.JobID}`)}>

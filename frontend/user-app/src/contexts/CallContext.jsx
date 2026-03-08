@@ -227,7 +227,7 @@ export const CallProvider = ({ children }) => {
       peerConnectionRef.current = peerConnection;
 
       // Add local stream to peer connection
-      stream.getTracks().forEach(track => {
+      stream.getTracks()?.forEach(track => {
         peerConnection.addTrack(track, stream);
       });
 
@@ -349,7 +349,7 @@ export const CallProvider = ({ children }) => {
   // Stop all media tracks
   const stopMediaTracks = () => {
     if (localStream) {
-      localStream.getTracks().forEach(track => track.stop());
+      localStream.getTracks()?.forEach(track => track.stop());
       setLocalStream(null);
     }
     setRemoteStream(null);
@@ -444,7 +444,7 @@ export const CallProvider = ({ children }) => {
   const toggleAudio = () => {
     if (localStream) {
       const enabled = !isAudioEnabled;
-      localStream.getAudioTracks().forEach(track => {
+      localStream.getAudioTracks()?.forEach(track => {
         track.enabled = enabled;
       });
       setIsAudioEnabled(enabled);
@@ -467,7 +467,7 @@ export const CallProvider = ({ children }) => {
   const toggleVideo = () => {
     if (localStream) {
       const enabled = !isVideoEnabled;
-      localStream.getVideoTracks().forEach(track => {
+      localStream.getVideoTracks()?.forEach(track => {
         track.enabled = enabled;
       });
       setIsVideoEnabled(enabled);

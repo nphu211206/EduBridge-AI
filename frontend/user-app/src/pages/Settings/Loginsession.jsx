@@ -79,7 +79,7 @@ const LoginSession = () => {
     userServices.deleteSession(sessionId)
       .then(() => {
         toast.success('Phiên đăng nhập đã được kết thúc');
-        setSessions(sessions.filter(s => s.id !== sessionId));
+        setSessions(sessions?.filter(s => s.id !== sessionId));
       })
       .catch(err => {
         console.error('Error terminating session:', err);
@@ -138,7 +138,7 @@ const LoginSession = () => {
             <h3 className="text-lg font-medium text-gray-900">Phiên đăng nhập hiện tại</h3>
           </div>
           <div className="p-5">
-            {sessions.filter(session => session.isCurrent).map(session => (
+            {sessions?.filter(session => session.isCurrent)?.map(session => (
               <div key={session.id} className="flex items-start">
                 <div className="mr-4 mt-1">
                   {getDeviceIcon(session.device)}
@@ -182,8 +182,8 @@ const LoginSession = () => {
             )}
           </div>
           <div className="divide-y divide-gray-100">
-            {sessions.filter(session => !session.isCurrent).length > 0 ? (
-              sessions.filter(session => !session.isCurrent).map(session => (
+            {sessions?.filter(session => !session.isCurrent)?.length > 0 ? (
+              sessions?.filter(session => !session.isCurrent)?.map(session => (
                 <div key={session.id} className="p-5 flex items-start justify-between">
                   <div className="flex items-start flex-1">
                     <div className="mr-4 mt-1">
@@ -244,7 +244,7 @@ const LoginSession = () => {
             <h3 className="text-lg font-medium text-gray-900">Lịch sử đăng nhập</h3>
           </div>
           <div className="p-5">
-            {sessions.length > 0 ? (
+            {sessions?.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead>

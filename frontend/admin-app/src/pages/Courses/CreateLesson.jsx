@@ -44,8 +44,8 @@ const CreateLesson = () => {
         setLessons(response.lessons || []);
         
         // Set default order index to be after the last lesson
-        const nextOrderIndex = response.lessons.length > 0 
-          ? Math.max(...response.lessons.map(l => l.OrderIndex || 0)) + 1 
+        const nextOrderIndex = response.lessons?.length > 0 
+          ? Math.max(...response.lessons?.map(l => l.OrderIndex || 0)) + 1 
           : 0;
           
         form.setFieldsValue({

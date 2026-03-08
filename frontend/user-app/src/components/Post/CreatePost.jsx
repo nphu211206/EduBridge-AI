@@ -41,15 +41,15 @@ const CreatePost = ({ onPostCreated }) => {
   // IT topics for validation
   const itTopics = [
     // Từ tiếng Anh hiện có
-    "programming", "code", "software", "developer", "web", "app", 
-    "database", "cloud", "server", "frontend", "backend", "fullstack", 
-    "javascript", "python", "java", "react", "angular", "vue", "node", 
+    "programming", "code", "software", "developer", "web", "app",
+    "database", "cloud", "server", "frontend", "backend", "fullstack",
+    "javascript", "python", "java", "react", "angular", "vue", "node",
     "php", "html", "css", "api", "cybersecurity", "ai", "machine learning",
     "data science", "devops", "git", "github", "docker", "kubernetes",
     "aws", "azure", "google cloud", "algorithm", "coding", "debugging",
     "framework", "library", "testing", "deployment", "agile", "scrum",
     "network", "linux", "windows", "mac", "operating system", "mobile development",
-    
+
     // Từ tiếng Anh bổ sung
     "sql", "nosql", "mongodb", "mysql", "postgresql", "oracle", "sap",
     "flutter", "kotlin", "swift", "objective-c", "c++", "c#", ".net", "ruby",
@@ -68,7 +68,7 @@ const CreatePost = ({ onPostCreated }) => {
     "virtualization", "emulator", "compiler", "interpreter", "assembly",
     "low level", "high level", "bug", "patch", "version control", "svn",
     "mercurial", "computer vision", "natural language processing", "nlp",
-    
+
     // Thêm từ tiếng Anh mở rộng
     "hardware", "software", "firmware", "computer science", "networking",
     "router", "switch", "modem", "bandwidth", "latency", "ping", "big data",
@@ -104,7 +104,7 @@ const CreatePost = ({ onPostCreated }) => {
     "polymorphism", "inheritance", "encapsulation", "abstraction", "interface",
     "solid principles", "design patterns", "singleton", "factory", "observer",
     "strategy", "command", "decorator", "builder", "adapter", "facade", "proxy pattern",
-    
+
     // Từ tiếng Việt cơ bản
     "lập trình", "mã nguồn", "phần mềm", "phần cứng", "ứng dụng", "thiết kế web",
     "cơ sở dữ liệu", "điện toán đám mây", "máy chủ", "công nghệ thông tin",
@@ -113,7 +113,7 @@ const CreatePost = ({ onPostCreated }) => {
     "giao diện người dùng", "trải nghiệm người dùng", "chuỗi khối", "tiền điện tử",
     "hệ thống quản lý", "phần mềm nguồn mở", "lập trình viên", "đám mây", "sao lưu",
     "khôi phục dữ liệu", "kiểm thử", "tự động hóa", "tích hợp", "triển khai",
-    "máy tính", "máy tính xách tay", "điện thoại thông minh", "thiết bị di động", 
+    "máy tính", "máy tính xách tay", "điện thoại thông minh", "thiết bị di động",
     "thiết bị đeo", "thực tế ảo", "thực tế tăng cường", "internet vạn vật", "IoT",
     "kiến trúc phần mềm", "nền tảng", "máy trạm", "điều khiển từ xa", "đồ họa",
     "phát triển game", "cắt lớp", "đa nền tảng", "tương thích", "tối ưu hóa",
@@ -121,11 +121,11 @@ const CreatePost = ({ onPostCreated }) => {
     "phân tích hệ thống", "thiết kế hệ thống", "kỹ thuật hệ thống", "quản trị mạng",
     "quản trị cơ sở dữ liệu", "phân tích dữ liệu", "khai phá dữ liệu", "quản lý mã nguồn",
     "đánh giá hiệu năng", "tuân thủ bảo mật", "chứng chỉ bảo mật", "tiêu chuẩn IT",
-    "tường lửa", "mạng riêng ảo", "đám mây riêng", "mật mã", "xác thực", "phân quyền", 
+    "tường lửa", "mạng riêng ảo", "đám mây riêng", "mật mã", "xác thực", "phân quyền",
     "hệ thống tích hợp", "trung tâm dữ liệu", "hạ tầng IT", "máy ảo", "ảo hóa",
     "chuyển đổi số", "số hóa", "kỹ sư phần mềm", "kỹ sư hệ thống", "nghề IT",
     "CNTT", "an toàn thông tin", "hack", "virus", "malware", "trojan", "mã độc",
-    
+
     // Từ tiếng Việt mở rộng
     "cổng thông tin", "phát triển website", "lắp ráp máy tính", "cài đặt phần mềm",
     "máy in", "máy quét", "màn hình", "CPU", "GPU", "RAM", "ổ cứng", "ổ SSD", "VGA",
@@ -157,7 +157,7 @@ const CreatePost = ({ onPostCreated }) => {
     "nguyên tắc SOLID", "clean code", "code sạch", "mã nguồn rõ ràng", "comment code",
     "code review", "kiểm tra mã nguồn", "tài liệu kỹ thuật"
   ]
-  
+
   // Fetch current user info from localStorage or context
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -171,22 +171,22 @@ const CreatePost = ({ onPostCreated }) => {
           username: user.username,
         })
       } else {
-      fetch("/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => res.json())
-      .then(data => {
-        setCurrentUser({
-            name: data.FullName || data.username,
-            avatar: data.ProfileImage || "https://i.pravatar.cc/300",
-          username: data.username,
+        fetch("/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         })
-      })
-      .catch(err => {
-        console.error("Error fetching user:", err)
-      })
+          .then(res => res.json())
+          .then(data => {
+            setCurrentUser({
+              name: data.FullName || data.username,
+              avatar: data.ProfileImage || "https://i.pravatar.cc/300",
+              username: data.username,
+            })
+          })
+          .catch(err => {
+            console.error("Error fetching user:", err)
+          })
       }
     }
   }, [])
@@ -231,11 +231,11 @@ const CreatePost = ({ onPostCreated }) => {
     }
 
     setIsLoadingLocation(true);
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        
+
         try {
           // Reverse geocoding to get location name
           const response = await fetch(
@@ -243,7 +243,7 @@ const CreatePost = ({ onPostCreated }) => {
             { headers: { 'Accept-Language': 'vi' } }
           );
           const data = await response.json();
-          
+
           setLocation({
             latitude,
             longitude,
@@ -283,41 +283,41 @@ const CreatePost = ({ onPostCreated }) => {
   const validateITContent = (text) => {
     // Kiểm tra nếu nội dung rỗng
     if (!text.trim()) return false;
-    
+
     // Kiểm tra nếu nội dung có chứa một trong các chủ đề IT
     const lowerText = text.toLowerCase();
-    
+
     // Kiểm tra từng từ trong danh sách
     return itTopics.some(topic => lowerText.includes(topic));
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     // Reset error messages
     setContentError("")
     setMediaError("")
-    
-    // Validate media presence
-    if (media.length === 0) {
-      setMediaError("Bài viết phải có ít nhất một ảnh hoặc video")
-      return
-    }
-    
+
+    // Validate media presence (Removed requirement)
+    // if (media?.length === 0) {
+    //   setMediaError("Bài viết phải có ít nhất một ảnh hoặc video")
+    //   return
+    // }
+
     // Kiểm tra xem nội dung có liên quan đến IT không
     if (content.trim() && !validateITContent(content)) {
       setContentError("Bài viết phải liên quan đến công nghệ thông tin (IT)")
       return
     }
-    
+
     setLoading(true)
     try {
       const formData = new FormData()
       formData.append("content", content)
       formData.append("visibility", visibility)
       if (title) formData.append("title", title)
-      
-      media.forEach((file) => {
+
+      media?.forEach((file) => {
         formData.append("media", file)
       })
 
@@ -344,7 +344,7 @@ const CreatePost = ({ onPostCreated }) => {
       setMedia([])
       setLocation(null)
       localStorage.removeItem('postDraft')
-      
+
       if (onPostCreated) {
         onPostCreated()
       }
@@ -358,19 +358,19 @@ const CreatePost = ({ onPostCreated }) => {
 
   const handleMediaChange = (e) => {
     const files = Array.from(e.target.files)
-    if (files.length > 0) {
+    if (files?.length > 0) {
       setMedia([...media, ...files])
       setMediaError("") // Clear media error when files are added
     }
   }
 
   const removeMedia = (index) => {
-    const updatedMedia = media.filter((_, i) => i !== index)
+    const updatedMedia = media?.filter((_, i) => i !== index)
     setMedia(updatedMedia)
     // If all media are removed, show the error again
-    if (updatedMedia.length === 0) {
-      setMediaError("Bài viết phải có ít nhất một ảnh hoặc video")
-    }
+    // if (updatedMedia?.length === 0) {
+    //   setMediaError("Bài viết phải có ít nhất một ảnh hoặc video")
+    // }
   }
 
   const visibilityOptions = [
@@ -388,7 +388,7 @@ const CreatePost = ({ onPostCreated }) => {
             <h2 className="font-bold text-xl">Tạo bài viết mới</h2>
             <div className="text-sm text-gray-500">Chia sẻ ý tưởng, câu hỏi, hoặc kiến thức về IT của bạn</div>
           </div>
-          <button 
+          <button
             onClick={saveDraft}
             className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
@@ -399,7 +399,7 @@ const CreatePost = ({ onPostCreated }) => {
         {/* User info */}
         {currentUser && (
           <div className="flex items-center p-4 md:px-8 border-b">
-            <img 
+            <img
               src={currentUser.avatar}
               alt={currentUser.name}
               className="w-10 h-10 rounded-full mr-3"
@@ -407,8 +407,8 @@ const CreatePost = ({ onPostCreated }) => {
             <div>
               <div className="font-medium">{currentUser.name}</div>
               <div className="flex items-center text-xs text-gray-500">
-            <button
-              type="button"
+                <button
+                  type="button"
                   onClick={() => setShowVisibilityOptions(!showVisibilityOptions)}
                   className="flex items-center space-x-1 py-1 px-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
                 >
@@ -421,18 +421,17 @@ const CreatePost = ({ onPostCreated }) => {
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </button>
-                
+
                 {showVisibilityOptions && (
                   <div className="absolute mt-2 top-full left-0 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-10 w-64">
-                    {visibilityOptions.map((option) => {
+                    {visibilityOptions?.map((option) => {
                       const Icon = option.icon
                       return (
                         <button
                           key={option.id}
                           type="button"
-                          className={`w-full text-left p-2 rounded-md hover:bg-gray-50 transition-colors ${
-                            visibility === option.id ? "bg-blue-50 text-blue-600" : "text-gray-700"
-                          }`}
+                          className={`w-full text-left p-2 rounded-md hover:bg-gray-50 transition-colors ${visibility === option.id ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                            }`}
                           onClick={() => {
                             setVisibility(option.id)
                             setShowVisibilityOptions(false)
@@ -445,7 +444,7 @@ const CreatePost = ({ onPostCreated }) => {
                               <div className="text-xs text-gray-500">{option.description}</div>
                             </div>
                           </div>
-            </button>
+                        </button>
                       )
                     })}
                   </div>
@@ -469,11 +468,11 @@ const CreatePost = ({ onPostCreated }) => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
-        </div>
-        
+              </div>
+
               {/* Content */}
               <div className="mb-6">
-                  <textarea
+                <textarea
                   id="content"
                   className="w-full p-3 border-0 focus:ring-0 focus:outline-none min-h-[300px] text-gray-700 placeholder-gray-400 resize-none"
                   placeholder="Chia sẻ ý tưởng, câu hỏi, hoặc kiến thức về IT của bạn...
@@ -483,12 +482,12 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
 - **In đậm** hoặc *in nghiêng*
 - Code blocks ```
 - Và nhiều tính năng khác"
-                    value={content}
-                    onChange={(e) => {
-                      setContent(e.target.value)
-                      if (contentError) setContentError("")
-                    }}
-                  />
+                  value={content}
+                  onChange={(e) => {
+                    setContent(e.target.value)
+                    if (contentError) setContentError("")
+                  }}
+                />
                 {contentError && (
                   <div className="mt-2 text-red-500 text-sm">{contentError}</div>
                 )}
@@ -499,8 +498,7 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
                 <div className="flex justify-between items-center mb-2">
                   <div className="text-sm font-medium flex items-center">
                     <span>Hình ảnh/Video</span>
-                    <span className="text-red-500 ml-1">*</span>
-                    <span className="text-xs text-gray-500 ml-2">(Bắt buộc)</span>
+                    <span className="text-xs text-gray-500 ml-2">(Không bắt buộc)</span>
                   </div>
                   <button
                     type="button"
@@ -510,9 +508,9 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
                     Thêm file
                   </button>
                 </div>
-                
-                {media.length === 0 ? (
-                  <div 
+
+                {media?.length === 0 ? (
+                  <div
                     className={`border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 transition-colors ${mediaError ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
                     onClick={() => fileInputRef.current.click()}
                   >
@@ -527,9 +525,9 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
                   </div>
                 ) : (
                   <div className="border-t border-b py-4">
-                    <div className="text-sm font-medium mb-2">Media đính kèm ({media.length})</div>
+                    <div className="text-sm font-medium mb-2">Media đính kèm ({media?.length})</div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                      {media.map((file, index) => (
+                      {media?.map((file, index) => (
                         <div key={index} className="relative group">
                           <div className="h-32 bg-gray-100 rounded-lg overflow-hidden">
                             {file.type.startsWith("image/") ? (
@@ -577,7 +575,7 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
                   <div className="flex-1 truncate">
                     <span className="font-medium">{location.displayName}</span>
                   </div>
-                  <button 
+                  <button
                     type="button"
                     onClick={removeLocation}
                     className="ml-2 text-blue-500 hover:text-blue-700"
@@ -589,7 +587,7 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
 
               {locationError && (
                 <div className="mb-4 text-red-500 text-sm">{locationError}</div>
-                        )}
+              )}
 
               {/* Action buttons */}
               <div className="flex flex-wrap items-center border-t pt-4">
@@ -612,14 +610,14 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
                   >
                     {isLoadingLocation ? (
                       <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
                     ) : (
                       <MapPinIcon className="h-6 w-6" />
                     )}
                   </button>
-                  
+
                   <div className="text-xs text-blue-600 bg-blue-50 rounded-full px-3 py-1">
                     Hỗ trợ định dạng Markdown
                   </div>
@@ -627,12 +625,11 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
 
                 <button
                   type="submit"
-                  disabled={loading || media.length === 0}
-                  className={`px-8 py-2 rounded-full font-medium transition-all duration-300 ${
-                    loading || media.length === 0
+                  disabled={loading}
+                  className={`px-8 py-2 rounded-full font-medium transition-all duration-300 ${loading
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 text-white"
-                  }`}
+                    }`}
                 >
                   {loading ? (
                     <div className="flex items-center">
@@ -656,73 +653,73 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-medium">Xem trước</h3>
                 <div className="text-xs text-gray-500">Bài viết của bạn sẽ hiển thị như sau</div>
-            </div>
+              </div>
 
               <div className="bg-white rounded-lg border p-4">
                 {title && <h2 className="text-xl font-bold mb-4">{title}</h2>}
-                
+
                 <div className="prose prose-sm max-w-none mb-4">
-                {content ? (
+                  {content ? (
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {content}
                     </ReactMarkdown>
-                ) : (
+                  ) : (
                     <p className="text-gray-400 italic">Chưa có nội dung</p>
-                )}
-              </div>
+                  )}
+                </div>
 
-                {media.length > 0 && media.length <= 2 && (
+                {media?.length > 0 && media?.length <= 2 && (
                   <div className="mb-4">
-                    {media.map((file, index) => (
+                    {media?.map((file, index) => (
                       <div key={index} className="mb-2">
                         {file.type.startsWith("image/") ? (
-                        <img
+                          <img
                             src={URL.createObjectURL(file)}
                             alt={`Preview ${index + 1}`}
                             className="max-h-[300px] object-contain rounded-lg mx-auto"
                           />
-                      ) : (
+                        ) : (
                           <div className="flex items-center justify-center h-40 bg-gray-100 rounded-lg">
                             <VideoCameraIcon className="h-12 w-12 text-gray-400" />
-                        </div>
-                      )}
-                    </div>
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
                 )}
-                
-                {media.length > 2 && (
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                      {media.slice(0, 4).map((file, index) => (
-                      <div key={index} className={`relative rounded-lg overflow-hidden ${index === 3 && media.length > 4 ? "relative" : ""}`}>
-                          {file.type.startsWith("image/") ? (
-                            <img
-                            src={URL.createObjectURL(file)}
-                              alt={`Preview ${index + 1}`}
-                              className="w-full h-32 object-cover"
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-32 bg-gray-100">
-                            <VideoCameraIcon className="h-8 w-8 text-gray-400" />
-                            </div>
-                          )}
 
-                          {index === 3 && media.length > 4 && (
-                            <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                              <div className="text-white font-bold text-xl">+{media.length - 4}</div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                
+                {media?.length > 2 && (
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {media.slice(0, 4)?.map((file, index) => (
+                      <div key={index} className={`relative rounded-lg overflow-hidden ${index === 3 && media?.length > 4 ? "relative" : ""}`}>
+                        {file.type.startsWith("image/") ? (
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={`Preview ${index + 1}`}
+                            className="w-full h-32 object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-32 bg-gray-100">
+                            <VideoCameraIcon className="h-8 w-8 text-gray-400" />
+                          </div>
+                        )}
+
+                        {index === 3 && media?.length > 4 && (
+                          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                            <div className="text-white font-bold text-xl">+{media?.length - 4}</div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {location && (
                   <div className="flex items-center text-sm text-blue-600 mb-4">
                     <MapPinIcon className="h-4 w-4 mr-1" />
                     <span>{location.displayName}</span>
-                </div>
-              )}
+                  </div>
+                )}
 
                 {/* Action preview */}
                 <div className="flex items-center justify-between mt-4 pt-4 border-t">
@@ -730,18 +727,18 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
                     <button className="p-1 rounded-full hover:bg-gray-50">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                  </svg>
-                </button>
+                      </svg>
+                    </button>
                     <button className="p-1 rounded-full hover:bg-gray-50">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </button>
+                      </svg>
+                    </button>
                     <button className="p-1 rounded-full hover:bg-gray-50">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                  </svg>
-                </button>
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -749,7 +746,7 @@ Bạn có thể sử dụng Markdown để định dạng văn bản:
           </div>
         </div>
       </div>
-      
+
       {/* Draft saved notification */}
       {showDraftSaved && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-lg z-50">

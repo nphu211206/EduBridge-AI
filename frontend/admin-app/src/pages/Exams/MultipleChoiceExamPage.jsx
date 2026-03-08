@@ -92,7 +92,7 @@ const MultipleChoiceExamPage = () => {
       return;
     }
     
-    if (!currentQuestion.options || currentQuestion.options.length < 2) {
+    if (!currentQuestion.options || currentQuestion.options?.length < 2) {
       setError('Vui lòng nhập ít nhất 2 lựa chọn');
       return;
     }
@@ -117,7 +117,7 @@ const MultipleChoiceExamPage = () => {
       type: 'multiple_choice',
       content: '',
       points: 10,
-      orderIndex: questions.length + 2,
+      orderIndex: questions?.length + 2,
       options: [],
       correctAnswer: '',
       explanation: ''
@@ -157,7 +157,7 @@ const MultipleChoiceExamPage = () => {
       handleCreateExam();
     } else if (activeStep === 1) {
       // Validate questions
-      if (questions.length === 0) {
+      if (questions?.length === 0) {
         setError('Vui lòng thêm ít nhất một câu hỏi');
         return;
       }
@@ -251,7 +251,7 @@ const MultipleChoiceExamPage = () => {
         </Box>
         
         <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-          {steps.map((label) => (
+          {steps?.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
@@ -330,7 +330,7 @@ const MultipleChoiceExamPage = () => {
                     margin="normal"
                   >
                     <MenuItem value="">Không thuộc khóa học</MenuItem>
-                    {courses.map((course) => (
+                    {courses?.map((course) => (
                       <MenuItem key={course.CourseID} value={course.CourseID}>
                         {course.Title}
                       </MenuItem>
@@ -473,12 +473,12 @@ const MultipleChoiceExamPage = () => {
               </Typography>
               
               {/* Danh sách câu hỏi đã thêm */}
-              {questions.length > 0 && (
+              {questions?.length > 0 && (
                 <Box mb={4}>
                   <Typography variant="subtitle1" gutterBottom>
-                    Câu hỏi đã thêm: {questions.length}
+                    Câu hỏi đã thêm: {questions?.length}
                   </Typography>
-                  {questions.map((question, index) => (
+                  {questions?.map((question, index) => (
                     <Accordion key={question.id || index}>
                       <AccordionSummary expandIcon={<ExpandMore />}>
                         <Typography>
@@ -490,7 +490,7 @@ const MultipleChoiceExamPage = () => {
                         
                         <Typography gutterBottom sx={{ mt: 1 }}><strong>Các lựa chọn:</strong></Typography>
                         <ul>
-                          {question.options.map((option, i) => (
+                          {question.options?.map((option, i) => (
                             <li key={i}>
                               {option} {option === question.correctAnswer && <strong>(Đáp án đúng)</strong>}
                             </li>
@@ -571,7 +571,7 @@ const MultipleChoiceExamPage = () => {
                         multiline
                         rows={4}
                         onChange={(e) => {
-                          const options = e.target.value.split('\n').filter(option => option.trim() !== '');
+                          const options = e.target.value.split('\n')?.filter(option => option.trim() !== '');
                           setCurrentQuestion({
                             ...currentQuestion,
                             options: options
@@ -679,10 +679,10 @@ const MultipleChoiceExamPage = () => {
               </Card>
               
               <Typography variant="h6" gutterBottom>
-                Câu hỏi ({questions.length})
+                Câu hỏi ({questions?.length})
               </Typography>
               
-              {questions.map((question, index) => (
+              {questions?.map((question, index) => (
                 <Card key={index} variant="outlined" sx={{ mb: 2 }}>
                   <CardContent>
                     <Typography variant="subtitle1">
@@ -696,7 +696,7 @@ const MultipleChoiceExamPage = () => {
                       <strong>Các lựa chọn:</strong>
                     </Typography>
                     <Box component="ul" sx={{ mt: 0 }}>
-                      {question.options.map((option, i) => (
+                      {question.options?.map((option, i) => (
                         <li key={i}>
                           {option} {option === question.correctAnswer && <strong>(Đáp án đúng)</strong>}
                         </li>
@@ -729,13 +729,13 @@ const MultipleChoiceExamPage = () => {
               variant="contained"
               color="primary"
               onClick={handleNext}
-              endIcon={activeStep === steps.length - 1 ? <Save /> : <ArrowForward />}
+              endIcon={activeStep === steps?.length - 1 ? <Save /> : <ArrowForward />}
               disabled={loading}
             >
               {loading ? (
                 <CircularProgress size={24} />
               ) : (
-                activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'
+                activeStep === steps?.length - 1 ? 'Hoàn thành' : 'Tiếp tục'
               )}
             </Button>
           </Box>

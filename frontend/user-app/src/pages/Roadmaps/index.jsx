@@ -327,7 +327,7 @@ const Roadmaps = () => {
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {Object.keys(roadmaps).map((key) => (
+            {Object.keys(roadmaps)?.map((key) => (
               <motion.button
                 key={key}
                 whileHover={{ scale: 1.03 }}
@@ -367,7 +367,7 @@ const Roadmaps = () => {
                 </div>
                 <div className="flex items-center">
                   <BookOpenIcon className="w-5 h-5 mr-2 text-indigo-600" />
-                  <span>{roadmaps[selectedRoadmap].steps.length} giai đoạn</span>
+                  <span>{roadmaps[selectedRoadmap].steps?.length} giai đoạn</span>
                 </div>
               </div>
             </div>
@@ -378,7 +378,7 @@ const Roadmaps = () => {
                 {/* Vertical Line */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-200"></div>
                 
-                {roadmaps[selectedRoadmap].steps.map((step, index) => (
+                {roadmaps[selectedRoadmap].steps?.map((step, index) => (
                   <motion.div
                     key={step.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -408,7 +408,7 @@ const Roadmaps = () => {
                       <div className="bg-gray-50 rounded-lg p-4 mb-4">
                         <h4 className="font-medium text-gray-900 mb-2">Khóa học đề xuất:</h4>
                         <ul className="space-y-1">
-                          {step.courses.map((course, idx) => (
+                          {step.courses?.map((course, idx) => (
                             <li key={idx} className="flex items-start">
                               <CheckCircleIcon className="w-5 h-5 mr-2 text-indigo-600 flex-shrink-0 mt-0.5" />
                               <span>{course}</span>
@@ -548,7 +548,7 @@ const Roadmaps = () => {
                   question: "Tôi có nhận được hỗ trợ trong quá trình học không?",
                   answer: "Tất nhiên! Chúng tôi cung cấp hỗ trợ thông qua diễn đàn cộng đồng, phiên hỏi đáp trực tiếp với giảng viên, và nhóm học tập. Bạn sẽ không đơn độc trong hành trình học tập của mình."
                 },
-              ].map((faq, index) => (
+              ]?.map((faq, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}

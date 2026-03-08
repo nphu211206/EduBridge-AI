@@ -84,7 +84,7 @@ const StoriesPage = () => {
   };
 
   const handleNextStory = () => {
-    if (currentStoryIndex < storyData.length - 1) {
+    if (currentStoryIndex < storyData?.length - 1) {
       setCurrentStoryIndex(currentStoryIndex + 1);
     } else {
       handleCloseStory();
@@ -221,7 +221,7 @@ const StoriesPage = () => {
       </div>
 
       {/* Story viewer */}
-      {viewingStories && currentStoryIndex !== null && storyData.length > 0 && (
+      {viewingStories && currentStoryIndex !== null && storyData?.length > 0 && (
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
           <Story
             story={storyData[currentStoryIndex]}
@@ -413,7 +413,7 @@ const StoriesPage = () => {
                       <div>
                         <label className="block text-sm sm:text-base text-gray-600 mb-2 sm:mb-3">Màu nền</label>
                         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                          {backgroundColors.map(color => (
+                          {backgroundColors?.map(color => (
                             <button
                               key={color}
                               type="button"
@@ -430,7 +430,7 @@ const StoriesPage = () => {
                       <div>
                         <label className="block text-sm sm:text-base text-gray-600 mb-2 sm:mb-3">Phông chữ</label>
                         <div className="flex items-center gap-2 sm:gap-3">
-                          {fontStyles.map(style => (
+                          {fontStyles?.map(style => (
                             <button
                               key={style.value}
                               type="button"

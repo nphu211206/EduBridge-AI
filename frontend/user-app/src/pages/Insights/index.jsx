@@ -71,7 +71,7 @@ const Insights = () => {
                 <div className="space-y-8">
                     {/* Summary Skeleton */}
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="animate-pulse bg-slate-800/40 border border-slate-700/50 rounded-2xl h-28"></div>)}
+                        {[1, 2, 3, 4, 5, 6]?.map(i => <div key={i} className="animate-pulse bg-slate-800/40 border border-slate-700/50 rounded-2xl h-28"></div>)}
                     </div>
                     {/* Main Content Skeleton */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -97,7 +97,7 @@ const Insights = () => {
                                 { icon: '✅', value: `${summary.quizPassRate}%`, label: 'Tỷ lệ pass', color: 'text-emerald-500' },
                                 { icon: '📁', value: summary.totalPortfolios, label: 'Portfolios', color: 'text-indigo-400' },
                                 { icon: '🏆', value: summary.avgPortfolioScore, label: 'Điểm TB CV', color: 'text-purple-400' },
-                            ].map((s, i) => (
+                            ]?.map((s, i) => (
                                 <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-4 text-center hover:bg-slate-800 transition-colors shadow-lg">
                                     <div className="text-2xl mb-2 drop-shadow-md">{s.icon}</div>
                                     <div className={`text-2xl font-black mb-1 ${s.color}`}>{s.value || 0}</div>
@@ -127,7 +127,7 @@ const Insights = () => {
                                     </div>
                                 ) : (
                                     <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-4">
-                                        {trending.map((s, i) => (
+                                        {trending?.map((s, i) => (
                                             <motion.div variants={itemVariants} key={s.SkillID || i} className="bg-slate-800/60 hover:bg-slate-700/80 transition-colors rounded-2xl p-5 border border-slate-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group">
                                                 <div className="flex items-center gap-4">
                                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg shadow-inner
@@ -168,7 +168,7 @@ const Insights = () => {
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                                        {fields.map((f, i) => {
+                                        {fields?.map((f, i) => {
                                             const passRate = f.TotalQuizzes > 0 ? Math.round(((f.PassedQuizzes || 0) / f.TotalQuizzes) * 100) : 0;
                                             return (
                                                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} key={f.Field || i} className="bg-slate-800 rounded-2xl p-5 border border-slate-700/50 hover:border-indigo-500/50 transition-colors">
@@ -215,8 +215,8 @@ const Insights = () => {
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
-                                        {gap.map((g, i) => {
-                                            const maxPool = Math.max(...gap.map(x => x.TalentPool || 1), 1);
+                                        {gap?.map((g, i) => {
+                                            const maxPool = Math.max(...gap?.map(x => x.TalentPool || 1), 1);
                                             const percentage = Math.min(100, (g.TalentPool / maxPool) * 100);
                                             // Ít người học -> Cơ hội cao (Màu đỏ/cam cảnh báo thiếu người)
                                             const colorClass = percentage < 30 ? 'bg-rose-500' : percentage < 70 ? 'bg-amber-500' : 'bg-emerald-500';

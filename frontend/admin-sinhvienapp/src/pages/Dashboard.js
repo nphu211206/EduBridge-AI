@@ -398,11 +398,11 @@ const Dashboard = () => {
               <Divider />
               <CardContent>
                 <List>
-                  {recentActions.length > 0 ? (
-                    recentActions.map((action) => (
+                  {recentActions?.length > 0 ? (
+                    recentActions?.map((action) => (
                       <ListItem
                         key={action.id}
-                        divider={action.id !== recentActions[recentActions.length - 1].id}
+                        divider={action.id !== recentActions[recentActions?.length - 1].id}
                         sx={{ px: 1, py: 1.5 }}
                       >
                         <ListItemAvatar>

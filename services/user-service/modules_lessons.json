@@ -1,0 +1,34 @@
+{
+  "modules": [
+    "ModuleID",
+    "CourseID",
+    "Title",
+    "Description",
+    "SortOrder",
+    "TotalLessons",
+    "DurationMinutes",
+    "IsPublished",
+    "CreatedAt",
+    "UpdatedAt",
+    "Duration"
+  ],
+  "lessons": [
+    "LessonID",
+    "ModuleID",
+    "CourseID",
+    "Title",
+    "Slug",
+    "Type",
+    "Description",
+    "VideoUrl",
+    "VideoDuration",
+    "VideoProvider",
+    "Content",
+    "IsPreview",
+    "IsPublished",
+    "SortOrder",
+    "XpReward",
+    "CreatedAt",
+    "UpdatedAt"
+  ]
+}

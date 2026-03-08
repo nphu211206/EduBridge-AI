@@ -57,7 +57,7 @@ const Notifications = () => {
   const markAllAsRead = async () => {
     try {
       setMarkingRead(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const token = localStorage.getItem('token');
       
       await fetch(`${apiUrl}/api/notifications/read-all`, {
@@ -97,9 +97,9 @@ const Notifications = () => {
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-500">Đang tải thông báo...</p>
           </div>
-        ) : notifications && notifications.length > 0 ? (
+        ) : notifications && notifications?.length > 0 ? (
           <div className="divide-y">
-            {notifications.map((notification) => (
+            {notifications?.map((notification) => (
               <div 
                 key={notification.NotificationID} 
                 className={`p-4 hover:bg-gray-50 ${

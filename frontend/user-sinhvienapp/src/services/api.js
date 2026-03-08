@@ -254,7 +254,7 @@ export const academicService = {
       // Try profile endpoint first
       try {
         const response = await profileService.getAcademicInfo(userId);
-        if (response && (Array.isArray(response) ? response.length > 0 : true)) {
+        if (response && (Array.isArray(response) ? response?.length > 0 : true)) {
           return response;
         }
       } catch (error) {
@@ -296,7 +296,7 @@ export const academicService = {
         try {
           const data = await tryEndpoint();
           console.log('Metrics endpoint succeeded:', data);
-          if (data && (Array.isArray(data) ? data.length > 0 : true)) {
+          if (data && (Array.isArray(data) ? data?.length > 0 : true)) {
             return data;
           }
         } catch (err) {

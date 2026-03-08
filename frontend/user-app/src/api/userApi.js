@@ -9,7 +9,7 @@ import axios from 'axios';
 // import { API_BASE_URL } from '../config';
 
 // Fix the base URL to avoid duplicate /api segments
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5001/api';
 
 // Use the corrected API base URL for your user fetch function
 export const fetchUsers = async (limit = 100) => {
@@ -27,7 +27,7 @@ export const fetchUsers = async (limit = 100) => {
 
 // Search users API function
 export const searchUsers = async (query) => {
-  if (!query || query.trim().length < 2) {
+  if (!query || query.trim()?.length < 2) {
     return { users: [] };
   }
   

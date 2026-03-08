@@ -51,11 +51,11 @@ export default function Header() {
     return (
         <header className="bg-white shadow-md sticky top-0 z-50">
             <div className="container mx-auto px-6 py-3 flex justify-between items-center">
-                
+
                 {/* Logo */}
                 <Link to="/" className="text-2xl font-bold text-gray-800">
                     <span className="text-blue-600">Edu</span>
-                    <span className="text-purple-600">Ledger</span> AI
+                    <span className="text-purple-600">Bridge</span> AI
                 </Link>
 
                 {/* Navigation Links */}

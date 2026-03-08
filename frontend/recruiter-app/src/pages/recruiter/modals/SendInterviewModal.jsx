@@ -60,8 +60,8 @@ const SendInterviewModal = ({ applicant, templates, onClose, onSubmit }) => {
                             <label htmlFor="templateId" className="block text-sm font-medium text-gray-300 mb-1.5">Chọn Mẫu Phỏng vấn *</label>
                             <select id="templateId" value={selectedTemplateId} onChange={(e) => setSelectedTemplateId(e.target.value)} className="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">-- Chọn mẫu đã tạo --</option>
-                                {templates.length > 0 ? (
-                                    templates.map(t => <option key={t.id} value={t.id}>{t.title} ({t.timeLimitMinutes} phút)</option>)
+                                {templates?.length > 0 ? (
+                                    templates?.map(t => <option key={t.id} value={t.id}>{t.title} ({t.timeLimitMinutes} phút)</option>)
                                 ) : (
                                     <option disabled>Bạn chưa tạo mẫu nào (Vào tab Phỏng vấn AI)</option>
                                 )}

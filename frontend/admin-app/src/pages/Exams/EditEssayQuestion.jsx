@@ -41,7 +41,7 @@ const EditEssayQuestion = () => {
         setExam(examData);
         
         // Kiểm tra xem exam có tồn tại không
-        if (!examData || Object.keys(examData).length === 0) {
+        if (!examData || Object.keys(examData)?.length === 0) {
           throw new Error('Không thể tải thông tin bài thi');
         }
         

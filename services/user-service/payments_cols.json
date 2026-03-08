@@ -1,0 +1,38 @@
+[
+  {
+    "COLUMN_NAME": "PaymentID"
+  },
+  {
+    "COLUMN_NAME": "OrderID"
+  },
+  {
+    "COLUMN_NAME": "UserID"
+  },
+  {
+    "COLUMN_NAME": "PaymentMethod"
+  },
+  {
+    "COLUMN_NAME": "TransactionID"
+  },
+  {
+    "COLUMN_NAME": "Amount"
+  },
+  {
+    "COLUMN_NAME": "Currency"
+  },
+  {
+    "COLUMN_NAME": "Status"
+  },
+  {
+    "COLUMN_NAME": "PaymentUrl"
+  },
+  {
+    "COLUMN_NAME": "ErrorReason"
+  },
+  {
+    "COLUMN_NAME": "PaidAt"
+  },
+  {
+    "COLUMN_NAME": "CreatedAt"
+  }
+]

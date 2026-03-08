@@ -96,14 +96,14 @@ const UpcomingExams = () => {
         Kỳ thi sắp diễn ra
       </Typography>
       
-      {exams.length === 0 ? (
+      {exams?.length === 0 ? (
         <Alert severity="info" sx={{ mt: 2 }}>
           <AlertTitle>Không có kỳ thi nào sắp diễn ra</AlertTitle>
           Hiện tại chưa có kỳ thi nào được lên lịch trong thời gian tới.
         </Alert>
       ) : (
         <Grid container spacing={3} sx={{ mt: 1 }}>
-          {exams.map((exam) => (
+          {exams?.map((exam) => (
             <Grid item xs={12} key={exam.ExamID}>
               <Card 
                 sx={{ 
@@ -151,7 +151,7 @@ const UpcomingExams = () => {
                     
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
                       {exam.Description ? 
-                        (exam.Description.length > 150 ? 
+                        (exam.Description?.length > 150 ? 
                           `${exam.Description.substring(0, 150)}...` : 
                           exam.Description) : 
                         'Không có mô tả'}

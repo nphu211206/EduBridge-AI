@@ -228,7 +228,7 @@ const AddProgram = () => {
                         label="Khoa phụ trách"
                         onChange={handleChange}
                       >
-                        {departments.map(dept => (
+                        {departments?.map(dept => (
                           <MenuItem key={dept.id} value={dept.name}>
                             {dept.name}
                           </MenuItem>

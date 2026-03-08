@@ -56,7 +56,7 @@ const PageContainer = ({
 
   // Render breadcrumbs if provided
   const renderBreadcrumbs = () => {
-    if (!breadcrumbs || breadcrumbs.length === 0) return null;
+    if (!breadcrumbs || breadcrumbs?.length === 0) return null;
     
     return (
       <Breadcrumbs 
@@ -64,8 +64,8 @@ const PageContainer = ({
         aria-label="breadcrumb"
         sx={{ mb: 1 }}
       >
-        {breadcrumbs.map((crumb, index) => {
-          const isLast = index === breadcrumbs.length - 1;
+        {breadcrumbs?.map((crumb, index) => {
+          const isLast = index === breadcrumbs?.length - 1;
           
           return isLast ? (
             <Typography key={index} color="text.primary" fontWeight={500}>

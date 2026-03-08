@@ -246,9 +246,9 @@ const ServicesDashboard = () => {
               <Divider />
               <CardContent sx={{ p: 0 }}>
                 <List>
-                  {statistics && statistics.topServices && statistics.topServices.length > 0 ? (
-                    statistics.topServices.map((service, index) => (
-                      <ListItem key={service.ServiceID} divider={index < statistics.topServices.length - 1}>
+                  {statistics && statistics.topServices && statistics.topServices?.length > 0 ? (
+                    statistics.topServices?.map((service, index) => (
+                      <ListItem key={service.ServiceID} divider={index < statistics.topServices?.length - 1}>
                         <ListItemAvatar>
                           <Avatar sx={{ bgcolor: index < 3 ? 'primary.main' : 'action.disabledBackground' }}>
                             {index + 1}
@@ -291,10 +291,10 @@ const ServicesDashboard = () => {
               <Divider />
               <CardContent sx={{ p: 0 }}>
                 <List>
-                  {statistics && statistics.recentRequests && statistics.recentRequests.length > 0 ? (
-                    statistics.recentRequests.map((request, index) => (
+                  {statistics && statistics.recentRequests && statistics.recentRequests?.length > 0 ? (
+                    statistics.recentRequests?.map((request, index) => (
                       <ListItem key={request.RegistrationID} 
-                        divider={index < statistics.recentRequests.length - 1}
+                        divider={index < statistics.recentRequests?.length - 1}
                         secondaryAction={
                           <Tooltip title="Xem chi tiết">
                             <IconButton 

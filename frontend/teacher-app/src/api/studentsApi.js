@@ -14,7 +14,7 @@ export const studentsApi = apiSlice.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.students.map(({ UserID }) => ({ type: 'Student', id: UserID })),
+              ...result.students?.map(({ UserID }) => ({ type: 'Student', id: UserID })),
               { type: 'Student', id: 'LIST' },
             ]
           : [{ type: 'Student', id: 'LIST' }],

@@ -327,9 +327,9 @@ const ModuleDetailPage = () => {
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-xl font-semibold mb-4">Danh sách bài học</h2>
         
-        {lessons.length > 0 ? (
+        {lessons?.length > 0 ? (
           <div className="space-y-4">
-            {lessons.map((lesson) => (
+            {lessons?.map((lesson) => (
               <div key={lesson.LessonID} className="border border-gray-200 rounded-lg">
                 <div className="p-4 flex justify-between items-start">
                   <div className="flex items-start">

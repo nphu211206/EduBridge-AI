@@ -1,0 +1,5612 @@
+{
+  "NotificationSettings": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "emailNotifications",
+      "type": "bit"
+    },
+    {
+      "name": "newUserAlerts",
+      "type": "bit"
+    },
+    {
+      "name": "systemAlerts",
+      "type": "bit"
+    },
+    {
+      "name": "reportAlerts",
+      "type": "bit"
+    },
+    {
+      "name": "eventReminders",
+      "type": "bit"
+    },
+    {
+      "name": "examNotifications",
+      "type": "bit"
+    },
+    {
+      "name": "updatedAt",
+      "type": "datetime"
+    }
+  ],
+  "CompetitionProblems": [
+    {
+      "name": "ProblemID",
+      "type": "int"
+    },
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Statement",
+      "type": "nvarchar"
+    },
+    {
+      "name": "InputFormat",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OutputFormat",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Constraints",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Difficulty",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Points",
+      "type": "int"
+    },
+    {
+      "name": "TimeLimit",
+      "type": "int"
+    },
+    {
+      "name": "MemoryLimit",
+      "type": "int"
+    },
+    {
+      "name": "SampleInput",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SampleOutput",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Note",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "QuestionBanks": [
+    {
+      "name": "BankID",
+      "type": "int"
+    },
+    {
+      "name": "TeacherID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "BankName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "TotalQuestions",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "AIInterviewQuestions": [
+    {
+      "name": "QuestionID",
+      "type": "int"
+    },
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "QuestionText",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Category",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "CandidateAnswer",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AnswerAudioUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AiScore",
+      "type": "decimal"
+    },
+    {
+      "name": "AiFeedback",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TimeTaken",
+      "type": "int"
+    }
+  ],
+  "Comments": [
+    {
+      "name": "CommentID",
+      "type": "int"
+    },
+    {
+      "name": "PostID",
+      "type": "int"
+    },
+    {
+      "name": "ParentID",
+      "type": "int"
+    },
+    {
+      "name": "AuthorID",
+      "type": "int"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LikeCount",
+      "type": "int"
+    },
+    {
+      "name": "ReplyCount",
+      "type": "int"
+    },
+    {
+      "name": "MediaUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "JobEmbeddings": [
+    {
+      "name": "EmbeddingID",
+      "type": "bigint"
+    },
+    {
+      "name": "JobID",
+      "type": "int"
+    },
+    {
+      "name": "Vector",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ModelVersion",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LastUpdated",
+      "type": "datetime2"
+    }
+  ],
+  "AuthRefreshTokens": [
+    {
+      "name": "TokenID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Token",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DeviceInfo",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "UserAgent",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExpiresAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "IsRevoked",
+      "type": "bit"
+    },
+    {
+      "name": "RevokedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LessonProgress": [
+    {
+      "name": "ProgressID",
+      "type": "int"
+    },
+    {
+      "name": "EnrollmentID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "WatchedSeconds",
+      "type": "int"
+    },
+    {
+      "name": "CompletedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "LastAccessedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    }
+  ],
+  "UserResumes": [
+    {
+      "name": "ResumeID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FileUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ContentHtml",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsDefault",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "DataPrivacyConsents": [
+    {
+      "name": "ConsentID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "ConsentType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsGranted",
+      "type": "bit"
+    },
+    {
+      "name": "IpAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "UserAgent",
+      "type": "nvarchar"
+    },
+    {
+      "name": "GrantedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "RevokedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Questions": [
+    {
+      "name": "QuestionID",
+      "type": "int"
+    },
+    {
+      "name": "BankID",
+      "type": "int"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ContentHtml",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Difficulty",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Points",
+      "type": "decimal"
+    },
+    {
+      "name": "TimeLimit",
+      "type": "int"
+    },
+    {
+      "name": "Explanation",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TagIds",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "UsageCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseEmbeddings": [
+    {
+      "name": "EmbeddingID",
+      "type": "bigint"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "Vector",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ModelVersion",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LastUpdated",
+      "type": "datetime2"
+    }
+  ],
+  "TestCases": [
+    {
+      "name": "TestCaseID",
+      "type": "int"
+    },
+    {
+      "name": "ProblemID",
+      "type": "int"
+    },
+    {
+      "name": "Input",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExpectedOutput",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "Points",
+      "type": "decimal"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    }
+  ],
+  "PasswordResets": [
+    {
+      "name": "ResetID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Token",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExpiresAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UsedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Skills": [
+    {
+      "name": "SkillID",
+      "type": "int"
+    },
+    {
+      "name": "SkillName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Category",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IconUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Friendships": [
+    {
+      "name": "FriendshipID",
+      "type": "int"
+    },
+    {
+      "name": "RequesterID",
+      "type": "int"
+    },
+    {
+      "name": "AddresseeID",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "DeviceSessions": [
+    {
+      "name": "SessionID",
+      "type": "uniqueidentifier"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "DeviceName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DeviceType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Browser",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OS",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IpAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "Location",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "LastActiveAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseReviews": [
+    {
+      "name": "ReviewID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "Rating",
+      "type": "tinyint"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsVerified",
+      "type": "bit"
+    },
+    {
+      "name": "IsPublished",
+      "type": "bit"
+    },
+    {
+      "name": "HelpfulCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "AIPromptTemplates": [
+    {
+      "name": "TemplateID",
+      "type": "int"
+    },
+    {
+      "name": "CodeName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "Version",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "EmailVerifications": [
+    {
+      "name": "VerifID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Email",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Token",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExpiresAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "VerifiedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompetitionTeams": [
+    {
+      "name": "TeamID",
+      "type": "int"
+    },
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "TeamName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LeaderID",
+      "type": "int"
+    },
+    {
+      "name": "JoinCode",
+      "type": "varchar"
+    },
+    {
+      "name": "TotalScore",
+      "type": "decimal"
+    },
+    {
+      "name": "Rank",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserSkills": [
+    {
+      "name": "UserSkillID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "SkillID",
+      "type": "int"
+    },
+    {
+      "name": "Level",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsVerified",
+      "type": "bit"
+    },
+    {
+      "name": "YearsOfExperience",
+      "type": "int"
+    },
+    {
+      "name": "EndorsementCount",
+      "type": "int"
+    }
+  ],
+  "FeatureToggles": [
+    {
+      "name": "ToggleKey",
+      "type": "varchar"
+    },
+    {
+      "name": "IsEnabled",
+      "type": "bit"
+    },
+    {
+      "name": "TargetGroups",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RolloutPercent",
+      "type": "int"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedBy",
+      "type": "int"
+    }
+  ],
+  "TwoFactorAuth": [
+    {
+      "name": "TfaID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "IsEnabled",
+      "type": "bit"
+    },
+    {
+      "name": "Secret",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Method",
+      "type": "nvarchar"
+    },
+    {
+      "name": "BackupCodes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "EnabledAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserFollows": [
+    {
+      "name": "FollowID",
+      "type": "int"
+    },
+    {
+      "name": "FollowerID",
+      "type": "int"
+    },
+    {
+      "name": "FollowedID",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "QuestionOptions": [
+    {
+      "name": "OptionID",
+      "type": "int"
+    },
+    {
+      "name": "QuestionID",
+      "type": "int"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsCorrect",
+      "type": "bit"
+    },
+    {
+      "name": "Explanation",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    }
+  ],
+  "AITrainingLogs": [
+    {
+      "name": "LogID",
+      "type": "bigint"
+    },
+    {
+      "name": "Feature",
+      "type": "nvarchar"
+    },
+    {
+      "name": "InputData",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OutputResult",
+      "type": "nvarchar"
+    },
+    {
+      "name": "UserFeedback",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompetitionTeamMembers": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "TeamID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JoinedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseReviewHelpful": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "ReviewID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "IsHelpful",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Projects": [
+    {
+      "name": "ProjectID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ShortDescription",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ThumbnailUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "GithubUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LiveUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartDate",
+      "type": "date"
+    },
+    {
+      "name": "EndDate",
+      "type": "date"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "ViewCount",
+      "type": "int"
+    },
+    {
+      "name": "LikeCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "TalentPools": [
+    {
+      "name": "PoolID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "Name",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Exams": [
+    {
+      "name": "ExamID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Instructions",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DurationMinutes",
+      "type": "int"
+    },
+    {
+      "name": "TotalPoints",
+      "type": "decimal"
+    },
+    {
+      "name": "PassingScore",
+      "type": "decimal"
+    },
+    {
+      "name": "MaxAttempts",
+      "type": "int"
+    },
+    {
+      "name": "ShuffleQuestions",
+      "type": "bit"
+    },
+    {
+      "name": "ShuffleOptions",
+      "type": "bit"
+    },
+    {
+      "name": "ShowResults",
+      "type": "bit"
+    },
+    {
+      "name": "ShowAnswers",
+      "type": "bit"
+    },
+    {
+      "name": "RequireProctoring",
+      "type": "bit"
+    },
+    {
+      "name": "StartAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "Password",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LoginHistory": [
+    {
+      "name": "LogID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "UserAgent",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DeviceType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OS",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Browser",
+      "type": "nvarchar"
+    },
+    {
+      "name": "City",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Country",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsSuccess",
+      "type": "bit"
+    },
+    {
+      "name": "FailReason",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LoginAt",
+      "type": "datetime2"
+    }
+  ],
+  "Groups": [
+    {
+      "name": "GroupID",
+      "type": "int"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    },
+    {
+      "name": "Name",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CoverPhoto",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MemberCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "TalentPoolCandidates": [
+    {
+      "name": "PoolID",
+      "type": "int"
+    },
+    {
+      "name": "CandidateID",
+      "type": "int"
+    },
+    {
+      "name": "AddedBy",
+      "type": "int"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AddedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompetitionRegistrations": [
+    {
+      "name": "RegID",
+      "type": "int"
+    },
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "TeamID",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RegisteredAt",
+      "type": "datetime2"
+    }
+  ],
+  "CertificateTemplates": [
+    {
+      "name": "TemplateID",
+      "type": "int"
+    },
+    {
+      "name": "TemplateName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "HTMLTemplate",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PreviewUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsDefault",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Schools": [
+    {
+      "name": "SchoolID",
+      "type": "int"
+    },
+    {
+      "name": "SchoolName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ShortName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LogoUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Website",
+      "type": "nvarchar"
+    },
+    {
+      "name": "City",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Country",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsVerified",
+      "type": "bit"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Reports": [
+    {
+      "name": "ReportID",
+      "type": "bigint"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Category",
+      "type": "varchar"
+    },
+    {
+      "name": "ReporterID",
+      "type": "bigint"
+    },
+    {
+      "name": "TargetID",
+      "type": "bigint"
+    },
+    {
+      "name": "TargetType",
+      "type": "varchar"
+    },
+    {
+      "name": "Status",
+      "type": "varchar"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime"
+    },
+    {
+      "name": "ResolvedAt",
+      "type": "datetime"
+    },
+    {
+      "name": "DeletedAt",
+      "type": "datetime"
+    },
+    {
+      "name": "ActionTaken",
+      "type": "varchar"
+    }
+  ],
+  "ProjectTags": [
+    {
+      "name": "ProjectID",
+      "type": "int"
+    },
+    {
+      "name": "TagID",
+      "type": "int"
+    }
+  ],
+  "CourseCertificates": [
+    {
+      "name": "CertificateID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "TemplateID",
+      "type": "int"
+    },
+    {
+      "name": "CertificateNumber",
+      "type": "varchar"
+    },
+    {
+      "name": "IssuedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CertificateUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "VerificationHash",
+      "type": "varchar"
+    },
+    {
+      "name": "IsValid",
+      "type": "bit"
+    }
+  ],
+  "InterviewPipelines": [
+    {
+      "name": "PipelineID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "Name",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsDefault",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ProjectMedia": [
+    {
+      "name": "MediaID",
+      "type": "int"
+    },
+    {
+      "name": "ProjectID",
+      "type": "int"
+    },
+    {
+      "name": "MediaUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MediaType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Caption",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "GroupMembers": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "GroupID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JoinedAt",
+      "type": "datetime2"
+    }
+  ],
+  "EventParticipants": [
+    {
+      "name": "ParticipantID",
+      "type": "bigint"
+    },
+    {
+      "name": "EventID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "bigint"
+    },
+    {
+      "name": "RegistrationDate",
+      "type": "datetime"
+    },
+    {
+      "name": "Status",
+      "type": "varchar"
+    },
+    {
+      "name": "TeamName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PaymentStatus",
+      "type": "varchar"
+    },
+    {
+      "name": "AttendanceStatus",
+      "type": "varchar"
+    }
+  ],
+  "Departments": [
+    {
+      "name": "DepartmentID",
+      "type": "int"
+    },
+    {
+      "name": "SchoolID",
+      "type": "int"
+    },
+    {
+      "name": "DeptName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DeptCode",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompetitionSubmissions": [
+    {
+      "name": "SubmissionID",
+      "type": "int"
+    },
+    {
+      "name": "ProblemID",
+      "type": "int"
+    },
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "TeamID",
+      "type": "int"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Code",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Score",
+      "type": "decimal"
+    },
+    {
+      "name": "TestsPassed",
+      "type": "int"
+    },
+    {
+      "name": "TestsTotal",
+      "type": "int"
+    },
+    {
+      "name": "ExecutionTime",
+      "type": "int"
+    },
+    {
+      "name": "MemoryUsed",
+      "type": "int"
+    },
+    {
+      "name": "ErrorMessage",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JudgeOutput",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SubmittedAt",
+      "type": "datetime2"
+    }
+  ],
+  "PipelineStages": [
+    {
+      "name": "StageID",
+      "type": "int"
+    },
+    {
+      "name": "PipelineID",
+      "type": "int"
+    },
+    {
+      "name": "Name",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StageType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    }
+  ],
+  "RegistrationAttempts": [
+    {
+      "name": "AttemptID",
+      "type": "bigint"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "AttemptCount",
+      "type": "int"
+    },
+    {
+      "name": "LastAttemptAt",
+      "type": "datetime"
+    },
+    {
+      "name": "BlockedUntil",
+      "type": "datetime"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime"
+    }
+  ],
+  "Majors": [
+    {
+      "name": "MajorID",
+      "type": "int"
+    },
+    {
+      "name": "DepartmentID",
+      "type": "int"
+    },
+    {
+      "name": "MajorName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MajorCode",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FieldCategory",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Achievements": [
+    {
+      "name": "AchievementID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IconUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ConditionValue",
+      "type": "int"
+    },
+    {
+      "name": "PointsReward",
+      "type": "int"
+    },
+    {
+      "name": "IsSecret",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ExamQuestions": [
+    {
+      "name": "ExamQuestionID",
+      "type": "int"
+    },
+    {
+      "name": "ExamID",
+      "type": "int"
+    },
+    {
+      "name": "QuestionID",
+      "type": "int"
+    },
+    {
+      "name": "Points",
+      "type": "decimal"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    }
+  ],
+  "LessonResources": [
+    {
+      "name": "ResourceID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FileUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FileType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FileSize",
+      "type": "bigint"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "DownloadCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ExamParticipants": [
+    {
+      "name": "ParticipantID",
+      "type": "int"
+    },
+    {
+      "name": "ExamID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Score",
+      "type": "decimal"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "SubmittedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "ReviewedBy",
+      "type": "int"
+    },
+    {
+      "name": "ReviewedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Chats": [
+    {
+      "name": "ChatID",
+      "type": "int"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AvatarUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LastMessageID",
+      "type": "bigint"
+    },
+    {
+      "name": "LastMessageAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserAchievements": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "AchievementID",
+      "type": "int"
+    },
+    {
+      "name": "UnlockedAt",
+      "type": "datetime2"
+    }
+  ],
+  "JobOffers": [
+    {
+      "name": "OfferID",
+      "type": "int"
+    },
+    {
+      "name": "ApplicationID",
+      "type": "int"
+    },
+    {
+      "name": "BaseSalary",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "BonusInfo",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Benefits",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OfferDocumentUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExpiresAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "SentAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "RespondedAt",
+      "type": "datetime2"
+    }
+  ],
+  "OAuthProviders": [
+    {
+      "name": "OAuthID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Provider",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ProviderUserID",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AccessToken",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RefreshToken",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TokenExpiresAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "ProfileData",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "AITutorConversations": [
+    {
+      "name": "ConvID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AIModel",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TotalTokens",
+      "type": "int"
+    },
+    {
+      "name": "IsArchived",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "LastMessageAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompetitionLeaderboard": [
+    {
+      "name": "EntryID",
+      "type": "int"
+    },
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "TeamID",
+      "type": "int"
+    },
+    {
+      "name": "Rank",
+      "type": "int"
+    },
+    {
+      "name": "TotalScore",
+      "type": "decimal"
+    },
+    {
+      "name": "ProblemsSolved",
+      "type": "int"
+    },
+    {
+      "name": "TotalPenalty",
+      "type": "int"
+    },
+    {
+      "name": "LastSubmittedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ExamSessions": [
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "ExamID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "AttemptNumber",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "SubmittedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "TimeSpent",
+      "type": "int"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "Score",
+      "type": "decimal"
+    },
+    {
+      "name": "Percentage",
+      "type": "decimal"
+    },
+    {
+      "name": "IsPassed",
+      "type": "bit"
+    },
+    {
+      "name": "GradedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "GradedBy",
+      "type": "int"
+    },
+    {
+      "name": "FeedbackNote",
+      "type": "nvarchar"
+    }
+  ],
+  "ChatMembers": [
+    {
+      "name": "MemberID",
+      "type": "int"
+    },
+    {
+      "name": "ChatID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JoinedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "LastReadMessageID",
+      "type": "bigint"
+    }
+  ],
+  "SubscriptionPlans": [
+    {
+      "name": "PlanID",
+      "type": "int"
+    },
+    {
+      "name": "PlanName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TargetRole",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MonthlyPrice",
+      "type": "decimal"
+    },
+    {
+      "name": "YearlyPrice",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "Features",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompanyB2BSubscriptions": [
+    {
+      "name": "SubID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "PlanTier",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ActiveJobsQuota",
+      "type": "int"
+    },
+    {
+      "name": "CvViewsQuota",
+      "type": "int"
+    },
+    {
+      "name": "AiInterviewQuota",
+      "type": "int"
+    },
+    {
+      "name": "ExpiresAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "PurchasedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserPointsLog": [
+    {
+      "name": "LogID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Points",
+      "type": "int"
+    },
+    {
+      "name": "ActionType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ReferenceID",
+      "type": "int"
+    },
+    {
+      "name": "ReferenceType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Categories": [
+    {
+      "name": "CategoryID",
+      "type": "int"
+    },
+    {
+      "name": "ParentID",
+      "type": "int"
+    },
+    {
+      "name": "CategoryName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IconUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ColorCode",
+      "type": "varchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompetitionAwards": [
+    {
+      "name": "AwardID",
+      "type": "int"
+    },
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "TeamID",
+      "type": "int"
+    },
+    {
+      "name": "AwardName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AwardType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Prize",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CertificateUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IssuedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ExamAnswers": [
+    {
+      "name": "AnswerID",
+      "type": "bigint"
+    },
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "QuestionID",
+      "type": "int"
+    },
+    {
+      "name": "SelectedOptionID",
+      "type": "int"
+    },
+    {
+      "name": "TextAnswer",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CodeAnswer",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsCorrect",
+      "type": "bit"
+    },
+    {
+      "name": "PointsEarned",
+      "type": "decimal"
+    },
+    {
+      "name": "AIScore",
+      "type": "decimal"
+    },
+    {
+      "name": "TeacherScore",
+      "type": "decimal"
+    },
+    {
+      "name": "Feedback",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TimeTaken",
+      "type": "int"
+    },
+    {
+      "name": "AnsweredAt",
+      "type": "datetime2"
+    }
+  ],
+  "AITutorMessages": [
+    {
+      "name": "MessageID",
+      "type": "bigint"
+    },
+    {
+      "name": "ConvID",
+      "type": "int"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TokensUsed",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserSubscriptions": [
+    {
+      "name": "SubID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "PlanID",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PeriodStart",
+      "type": "datetime2"
+    },
+    {
+      "name": "PeriodEnd",
+      "type": "datetime2"
+    },
+    {
+      "name": "CancelAtPeriodEnd",
+      "type": "bit"
+    },
+    {
+      "name": "CanceledAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "StripeSubscriptionID",
+      "type": "varchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Messages": [
+    {
+      "name": "MessageID",
+      "type": "bigint"
+    },
+    {
+      "name": "ChatID",
+      "type": "int"
+    },
+    {
+      "name": "SenderID",
+      "type": "int"
+    },
+    {
+      "name": "ContentType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MediaUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsEdited",
+      "type": "bit"
+    },
+    {
+      "name": "IsDeleted",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "VirtualCurrencyTransactions": [
+    {
+      "name": "TxID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Amount",
+      "type": "int"
+    },
+    {
+      "name": "TxType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "BalanceAfter",
+      "type": "int"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseDiscussions": [
+    {
+      "name": "DiscussionID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "AuthorID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPinned",
+      "type": "bit"
+    },
+    {
+      "name": "IsResolved",
+      "type": "bit"
+    },
+    {
+      "name": "ViewCount",
+      "type": "int"
+    },
+    {
+      "name": "ReplyCount",
+      "type": "int"
+    },
+    {
+      "name": "UpvoteCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "JudgeQueue": [
+    {
+      "name": "QueueID",
+      "type": "bigint"
+    },
+    {
+      "name": "SubmissionID",
+      "type": "int"
+    },
+    {
+      "name": "Priority",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "WorkerID",
+      "type": "nvarchar"
+    },
+    {
+      "name": "EnqueuedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "StartedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "FinishedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ExamProctoring": [
+    {
+      "name": "ProctoringID",
+      "type": "int"
+    },
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "EventType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "EventData",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SnapshotUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Severity",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OccurredAt",
+      "type": "datetime2"
+    }
+  ],
+  "Tags": [
+    {
+      "name": "TagID",
+      "type": "int"
+    },
+    {
+      "name": "TagName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "UsageCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "VirtualStoreItems": [
+    {
+      "name": "ItemID",
+      "type": "int"
+    },
+    {
+      "name": "Name",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PriceCoins",
+      "type": "int"
+    },
+    {
+      "name": "ImageUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "MinLevelStr",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Coupons": [
+    {
+      "name": "CouponID",
+      "type": "int"
+    },
+    {
+      "name": "Code",
+      "type": "varchar"
+    },
+    {
+      "name": "DiscountType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DiscountValue",
+      "type": "decimal"
+    },
+    {
+      "name": "MinPurchase",
+      "type": "decimal"
+    },
+    {
+      "name": "MaxUseCount",
+      "type": "int"
+    },
+    {
+      "name": "CurrentUseCount",
+      "type": "int"
+    },
+    {
+      "name": "ValidFrom",
+      "type": "datetime2"
+    },
+    {
+      "name": "ValidUntil",
+      "type": "datetime2"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    }
+  ],
+  "Roles": [
+    {
+      "name": "RoleID",
+      "type": "int"
+    },
+    {
+      "name": "RoleName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RoleCode",
+      "type": "varchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Courses": [
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "TeacherID",
+      "type": "int"
+    },
+    {
+      "name": "CategoryID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ShortDescription",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ThumbnailUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PreviewVideoUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Level",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Price",
+      "type": "decimal"
+    },
+    {
+      "name": "OriginalPrice",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "IsFree",
+      "type": "bit"
+    },
+    {
+      "name": "Requirements",
+      "type": "nvarchar"
+    },
+    {
+      "name": "WhatYouLearn",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TargetAudience",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DurationMinutes",
+      "type": "int"
+    },
+    {
+      "name": "TotalLessons",
+      "type": "int"
+    },
+    {
+      "name": "TotalStudents",
+      "type": "int"
+    },
+    {
+      "name": "AverageRating",
+      "type": "decimal"
+    },
+    {
+      "name": "TotalReviews",
+      "type": "int"
+    },
+    {
+      "name": "TotalRevenue",
+      "type": "decimal"
+    },
+    {
+      "name": "CertificateEnabled",
+      "type": "bit"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "PublishedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "ArchivedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DeletedAt",
+      "type": "datetime"
+    },
+    {
+      "name": "InstructorID",
+      "type": "bigint"
+    }
+  ],
+  "Notifications": [
+    {
+      "name": "NotificationID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "ActorID",
+      "type": "int"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ReferenceID",
+      "type": "int"
+    },
+    {
+      "name": "ReferenceType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ActionUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsRead",
+      "type": "bit"
+    },
+    {
+      "name": "ReadAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CodeSnippets": [
+    {
+      "name": "SnippetID",
+      "type": "uniqueidentifier"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Code",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "ViewCount",
+      "type": "int"
+    },
+    {
+      "name": "LikeCount",
+      "type": "int"
+    },
+    {
+      "name": "ForkCount",
+      "type": "int"
+    },
+    {
+      "name": "ForkedFromID",
+      "type": "uniqueidentifier"
+    },
+    {
+      "name": "Tags",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "GradingRubrics": [
+    {
+      "name": "RubricID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "ExamID",
+      "type": "int"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TotalPoints",
+      "type": "decimal"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserInventory": [
+    {
+      "name": "InventoryID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "ItemID",
+      "type": "int"
+    },
+    {
+      "name": "IsEquipped",
+      "type": "bit"
+    },
+    {
+      "name": "PurchasedAt",
+      "type": "datetime2"
+    }
+  ],
+  "DiscussionReplies": [
+    {
+      "name": "ReplyID",
+      "type": "int"
+    },
+    {
+      "name": "DiscussionID",
+      "type": "int"
+    },
+    {
+      "name": "ParentReplyID",
+      "type": "int"
+    },
+    {
+      "name": "AuthorID",
+      "type": "int"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsAnswer",
+      "type": "bit"
+    },
+    {
+      "name": "UpvoteCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Users": [
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Username",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Email",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Password",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PasswordSalt",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FirstName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LastName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FullName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PhoneNumber",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AvatarUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CoverPhotoUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DateOfBirth",
+      "type": "date"
+    },
+    {
+      "name": "Gender",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Bio",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Address",
+      "type": "nvarchar"
+    },
+    {
+      "name": "City",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Country",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Timezone",
+      "type": "varchar"
+    },
+    {
+      "name": "Language",
+      "type": "varchar"
+    },
+    {
+      "name": "IsEmailVerified",
+      "type": "bit"
+    },
+    {
+      "name": "IsPhoneVerified",
+      "type": "bit"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "IsBanned",
+      "type": "bit"
+    },
+    {
+      "name": "BannedReason",
+      "type": "nvarchar"
+    },
+    {
+      "name": "BannedUntil",
+      "type": "datetime2"
+    },
+    {
+      "name": "LastLoginAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "LastActiveAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "OnlineStatus",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RegistrationSource",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ReferralCode",
+      "type": "varchar"
+    },
+    {
+      "name": "ReferredBy",
+      "type": "int"
+    },
+    {
+      "name": "TotalPoints",
+      "type": "int"
+    },
+    {
+      "name": "Level",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DeletedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EduCoinsBalance",
+      "type": "int"
+    },
+    {
+      "name": "TwoFASecret",
+      "type": "varchar"
+    },
+    {
+      "name": "TwoFAEnabled",
+      "type": "bit"
+    },
+    {
+      "name": "HasPasskey",
+      "type": "bit"
+    },
+    {
+      "name": "RequireTwoFA",
+      "type": "bit"
+    },
+    {
+      "name": "AccountStatus",
+      "type": "varchar"
+    },
+    {
+      "name": "Status",
+      "type": "varchar"
+    },
+    {
+      "name": "Role",
+      "type": "varchar"
+    },
+    {
+      "name": "LastLoginIP",
+      "type": "nvarchar"
+    },
+    {
+      "name": "School",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LockDuration",
+      "type": "int"
+    },
+    {
+      "name": "LockReason",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LockedUntil",
+      "type": "datetime"
+    },
+    {
+      "name": "Avatar",
+      "type": "nvarchar"
+    }
+  ],
+  "UserEmails": [
+    {
+      "name": "EmailID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Email",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPrimary",
+      "type": "bit"
+    },
+    {
+      "name": "IsVerified",
+      "type": "bit"
+    },
+    {
+      "name": "Visibility",
+      "type": "varchar"
+    },
+    {
+      "name": "VerificationToken",
+      "type": "varchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime"
+    }
+  ],
+  "Companies": [
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "CreatorID",
+      "type": "int"
+    },
+    {
+      "name": "Name",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LogoUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CoverUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Website",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Industry",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Size",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FoundedYear",
+      "type": "int"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Culture",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Benefits",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Locations",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsVerified",
+      "type": "bit"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Orders": [
+    {
+      "name": "OrderID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "OrderNumber",
+      "type": "varchar"
+    },
+    {
+      "name": "TotalAmount",
+      "type": "decimal"
+    },
+    {
+      "name": "DiscountAmount",
+      "type": "decimal"
+    },
+    {
+      "name": "FinalAmount",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CouponID",
+      "type": "int"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "RubricCriteria": [
+    {
+      "name": "CriteriaID",
+      "type": "int"
+    },
+    {
+      "name": "RubricID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MaxPoints",
+      "type": "decimal"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    }
+  ],
+  "SandboxEnvironments": [
+    {
+      "name": "EnvID",
+      "type": "int"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DockerImage",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Version",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RunCommand",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CompileCommand",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsActive",
+      "type": "bit"
+    },
+    {
+      "name": "MemoryLimit",
+      "type": "int"
+    },
+    {
+      "name": "TimeLimit",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "FinalGrades": [
+    {
+      "name": "GradeID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "Score",
+      "type": "decimal"
+    },
+    {
+      "name": "LetterGrade",
+      "type": "nvarchar"
+    },
+    {
+      "name": "GradePoint",
+      "type": "decimal"
+    },
+    {
+      "name": "IsPassed",
+      "type": "bit"
+    },
+    {
+      "name": "TeacherID",
+      "type": "int"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "GradedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LearningLeaderboardSnapshots": [
+    {
+      "name": "SnapshotID",
+      "type": "int"
+    },
+    {
+      "name": "PeriodType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartDate",
+      "type": "date"
+    },
+    {
+      "name": "EndDate",
+      "type": "date"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "PointsEarned",
+      "type": "int"
+    },
+    {
+      "name": "Rank",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "DiscussionUpvotes": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "DiscussionID",
+      "type": "int"
+    },
+    {
+      "name": "ReplyID",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CompanyRecruiters": [
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AddedAt",
+      "type": "datetime2"
+    }
+  ],
+  "OrderDetails": [
+    {
+      "name": "DetailID",
+      "type": "int"
+    },
+    {
+      "name": "OrderID",
+      "type": "int"
+    },
+    {
+      "name": "ItemType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ItemID",
+      "type": "int"
+    },
+    {
+      "name": "ItemName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "UnitPrice",
+      "type": "decimal"
+    },
+    {
+      "name": "Quantity",
+      "type": "int"
+    },
+    {
+      "name": "SubTotal",
+      "type": "decimal"
+    }
+  ],
+  "CodeExecutions": [
+    {
+      "name": "ExecID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Code",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Input",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Output",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Error",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExitCode",
+      "type": "int"
+    },
+    {
+      "name": "ExecutionTime",
+      "type": "int"
+    },
+    {
+      "name": "MemoryUsed",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "MentorshipPrograms": [
+    {
+      "name": "ProgramID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SchoolID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Assignments": [
+    {
+      "name": "AssignmentID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "TeacherID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Instructions",
+      "type": "nvarchar"
+    },
+    {
+      "name": "DueDate",
+      "type": "datetime2"
+    },
+    {
+      "name": "MaxPoints",
+      "type": "decimal"
+    },
+    {
+      "name": "AllowLateSubmission",
+      "type": "bit"
+    },
+    {
+      "name": "LatePenaltyPercent",
+      "type": "decimal"
+    },
+    {
+      "name": "SubmissionType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LiveSessions": [
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "TeacherID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ScheduledAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DurationMinutes",
+      "type": "int"
+    },
+    {
+      "name": "MeetingUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MeetingID",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Password",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RecordingUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AttendeeCount",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseTags": [
+    {
+      "name": "CourseTagID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "TagID",
+      "type": "int"
+    }
+  ],
+  "Jobs": [
+    {
+      "name": "JobID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "RecruiterID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JobType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "WorkModel",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExperienceLevel",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PositionsCount",
+      "type": "int"
+    },
+    {
+      "name": "Location",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsSalaryVisible",
+      "type": "bit"
+    },
+    {
+      "name": "MinSalary",
+      "type": "decimal"
+    },
+    {
+      "name": "MaxSalary",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "SalaryPeriod",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Requirements",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Benefits",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RequiredSkills",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ViewCount",
+      "type": "int"
+    },
+    {
+      "name": "ApplicationCount",
+      "type": "int"
+    },
+    {
+      "name": "PublishedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DeadlineAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "PipelineID",
+      "type": "int"
+    }
+  ],
+  "Payments": [
+    {
+      "name": "PaymentID",
+      "type": "int"
+    },
+    {
+      "name": "OrderID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "PaymentMethod",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TransactionID",
+      "type": "varchar"
+    },
+    {
+      "name": "Amount",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PaymentUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ErrorReason",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PaidAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CollabSessions": [
+    {
+      "name": "SessionID",
+      "type": "uniqueidentifier"
+    },
+    {
+      "name": "HostID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JoinCode",
+      "type": "varchar"
+    },
+    {
+      "name": "AllowEdit",
+      "type": "bit"
+    },
+    {
+      "name": "CurrentCode",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndedAt",
+      "type": "datetime2"
+    }
+  ],
+  "MentorshipMatches": [
+    {
+      "name": "MatchID",
+      "type": "int"
+    },
+    {
+      "name": "ProgramID",
+      "type": "int"
+    },
+    {
+      "name": "MentorID",
+      "type": "int"
+    },
+    {
+      "name": "MenteeID",
+      "type": "int"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "RequestMessage",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MatchedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CompletedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "RatingByMentee",
+      "type": "tinyint"
+    },
+    {
+      "name": "Feedback",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserRoles": [
+    {
+      "name": "UserRoleID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "RoleID",
+      "type": "int"
+    },
+    {
+      "name": "AssignedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "AssignedBy",
+      "type": "int"
+    }
+  ],
+  "CourseModules": [
+    {
+      "name": "ModuleID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "TotalLessons",
+      "type": "int"
+    },
+    {
+      "name": "DurationMinutes",
+      "type": "int"
+    },
+    {
+      "name": "IsPublished",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "Duration",
+      "type": "int"
+    }
+  ],
+  "AssignmentSubmissions": [
+    {
+      "name": "SubmissionID",
+      "type": "int"
+    },
+    {
+      "name": "AssignmentID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FileUrls",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SubmittedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "IsLate",
+      "type": "bit"
+    },
+    {
+      "name": "Score",
+      "type": "decimal"
+    },
+    {
+      "name": "Feedback",
+      "type": "nvarchar"
+    },
+    {
+      "name": "GradedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "GradedBy",
+      "type": "int"
+    }
+  ],
+  "LiveSessionAttendees": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "JoinedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "LeftAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DurationMinutes",
+      "type": "int"
+    }
+  ],
+  "AppSettings": [
+    {
+      "name": "KeyName",
+      "type": "varchar"
+    },
+    {
+      "name": "Value",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "varchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedBy",
+      "type": "int"
+    }
+  ],
+  "UserProfiles": [
+    {
+      "name": "ProfileID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Headline",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Summary",
+      "type": "nvarchar"
+    },
+    {
+      "name": "GithubUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LinkedinUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PersonalWebsite",
+      "type": "nvarchar"
+    },
+    {
+      "name": "FacebookUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TwitterUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "YearOfStudy",
+      "type": "int"
+    },
+    {
+      "name": "GPA",
+      "type": "decimal"
+    },
+    {
+      "name": "ExpectedGraduation",
+      "type": "date"
+    },
+    {
+      "name": "StudentID",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SchoolID",
+      "type": "int"
+    },
+    {
+      "name": "DepartmentID",
+      "type": "int"
+    },
+    {
+      "name": "MajorID",
+      "type": "int"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "ProfileViewCount",
+      "type": "int"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CollabParticipants": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "SessionID",
+      "type": "uniqueidentifier"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Role",
+      "type": "nvarchar"
+    },
+    {
+      "name": "JoinedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "LeftAt",
+      "type": "datetime2"
+    }
+  ],
+  "MentorshipSessions": [
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "MatchID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ScheduledAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DurationMinutes",
+      "type": "int"
+    },
+    {
+      "name": "MeetingUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseFavorites": [
+    {
+      "name": "ID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Lessons": [
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "ModuleID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "VideoUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "VideoDuration",
+      "type": "int"
+    },
+    {
+      "name": "VideoProvider",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPreview",
+      "type": "bit"
+    },
+    {
+      "name": "IsPublished",
+      "type": "bit"
+    },
+    {
+      "name": "SortOrder",
+      "type": "int"
+    },
+    {
+      "name": "XpReward",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "ExamSchedules": [
+    {
+      "name": "ScheduleID",
+      "type": "int"
+    },
+    {
+      "name": "ExamID",
+      "type": "int"
+    },
+    {
+      "name": "Room",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ScheduledAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndsAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "MaxStudents",
+      "type": "int"
+    },
+    {
+      "name": "Notes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "AuditLogs": [
+    {
+      "name": "LogID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Action",
+      "type": "nvarchar"
+    },
+    {
+      "name": "EntityType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "EntityID",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OldValues",
+      "type": "nvarchar"
+    },
+    {
+      "name": "NewValues",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "UserAgent",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "UserSettings": [
+    {
+      "name": "SettingID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "EmailNotifications",
+      "type": "bit"
+    },
+    {
+      "name": "PushNotifications",
+      "type": "bit"
+    },
+    {
+      "name": "SMSNotifications",
+      "type": "bit"
+    },
+    {
+      "name": "NotifyOnMessage",
+      "type": "bit"
+    },
+    {
+      "name": "NotifyOnCourseUpdate",
+      "type": "bit"
+    },
+    {
+      "name": "NotifyOnJobAlert",
+      "type": "bit"
+    },
+    {
+      "name": "NotifyOnAchievement",
+      "type": "bit"
+    },
+    {
+      "name": "NotifyOnFriendRequest",
+      "type": "bit"
+    },
+    {
+      "name": "ShowProfilePublic",
+      "type": "bit"
+    },
+    {
+      "name": "ShowEmailPublic",
+      "type": "bit"
+    },
+    {
+      "name": "ShowPhonePublic",
+      "type": "bit"
+    },
+    {
+      "name": "AllowFriendRequests",
+      "type": "bit"
+    },
+    {
+      "name": "AllowMessages",
+      "type": "bit"
+    },
+    {
+      "name": "DarkMode",
+      "type": "bit"
+    },
+    {
+      "name": "Language",
+      "type": "varchar"
+    },
+    {
+      "name": "Timezone",
+      "type": "varchar"
+    },
+    {
+      "name": "DailyLearningGoalMinutes",
+      "type": "int"
+    },
+    {
+      "name": "AutoplayCourseVideos",
+      "type": "bit"
+    },
+    {
+      "name": "ShowCodingHints",
+      "type": "bit"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseAnnouncements": [
+    {
+      "name": "AnnouncementID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "TeacherID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPublished",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LessonQuizAttempts": [
+    {
+      "name": "AttemptID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "Score",
+      "type": "decimal"
+    },
+    {
+      "name": "IsPassed",
+      "type": "bit"
+    },
+    {
+      "name": "Answers",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CompletedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Events": [
+    {
+      "name": "EventID",
+      "type": "int"
+    },
+    {
+      "name": "OrganizerID",
+      "type": "int"
+    },
+    {
+      "name": "SchoolID",
+      "type": "int"
+    },
+    {
+      "name": "CompanyID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "BannerUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Category",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LocationType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LocationAddress",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MeetingUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "MaxAttendees",
+      "type": "int"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "RequiresTicket",
+      "type": "bit"
+    },
+    {
+      "name": "TicketPrice",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DeletedAt",
+      "type": "datetime"
+    },
+    {
+      "name": "EventDate",
+      "type": "date"
+    },
+    {
+      "name": "EventTime",
+      "type": "time"
+    },
+    {
+      "name": "CreatedBy",
+      "type": "bigint"
+    }
+  ],
+  "Posts": [
+    {
+      "name": "PostID",
+      "type": "int"
+    },
+    {
+      "name": "AuthorID",
+      "type": "int"
+    },
+    {
+      "name": "GroupID",
+      "type": "int"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ContentHtml",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Visibility",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsPinned",
+      "type": "bit"
+    },
+    {
+      "name": "LikeCount",
+      "type": "int"
+    },
+    {
+      "name": "CommentCount",
+      "type": "int"
+    },
+    {
+      "name": "ShareCount",
+      "type": "int"
+    },
+    {
+      "name": "ViewCount",
+      "type": "int"
+    },
+    {
+      "name": "MediaFiles",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DeletedAt",
+      "type": "datetime2"
+    }
+  ],
+  "JobApplications": [
+    {
+      "name": "ApplicationID",
+      "type": "int"
+    },
+    {
+      "name": "JobID",
+      "type": "int"
+    },
+    {
+      "name": "CandidateID",
+      "type": "int"
+    },
+    {
+      "name": "CvUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CoverLetter",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AiMatchScore",
+      "type": "decimal"
+    },
+    {
+      "name": "AiFeedback",
+      "type": "nvarchar"
+    },
+    {
+      "name": "IsViewed",
+      "type": "bit"
+    },
+    {
+      "name": "RecruiterNotes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AppliedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CurrentStageID",
+      "type": "int"
+    }
+  ],
+  "ErrorLogs": [
+    {
+      "name": "ErrorID",
+      "type": "bigint"
+    },
+    {
+      "name": "Message",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StackTrace",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Source",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Url",
+      "type": "nvarchar"
+    },
+    {
+      "name": "HttpMethod",
+      "type": "varchar"
+    },
+    {
+      "name": "RequestBody",
+      "type": "nvarchar"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "IPAddress",
+      "type": "varchar"
+    },
+    {
+      "name": "IsResolved",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Competitions": [
+    {
+      "name": "CompetitionID",
+      "type": "int"
+    },
+    {
+      "name": "OrganizerID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Slug",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Description",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Rules",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ProgrammingLanguages",
+      "type": "nvarchar"
+    },
+    {
+      "name": "MaxParticipants",
+      "type": "int"
+    },
+    {
+      "name": "MaxTeamSize",
+      "type": "int"
+    },
+    {
+      "name": "RegistrationStart",
+      "type": "datetime2"
+    },
+    {
+      "name": "RegistrationEnd",
+      "type": "datetime2"
+    },
+    {
+      "name": "StartAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "PrizeDescription",
+      "type": "nvarchar"
+    },
+    {
+      "name": "BannerUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TotalPrize",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "IsPublic",
+      "type": "bit"
+    },
+    {
+      "name": "RequireApproval",
+      "type": "bit"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "DeletedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LearningStreak": [
+    {
+      "name": "StreakID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "CurrentStreak",
+      "type": "int"
+    },
+    {
+      "name": "LongestStreak",
+      "type": "int"
+    },
+    {
+      "name": "LastLearnedDate",
+      "type": "date"
+    },
+    {
+      "name": "TotalLearningDays",
+      "type": "int"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "Feedbacks": [
+    {
+      "name": "FeedbackID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Content",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AttachmentUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AdminNotes",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "UpdatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "LessonCodeContent": [
+    {
+      "name": "CodeContentID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "Language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StarterCode",
+      "type": "nvarchar"
+    },
+    {
+      "name": "SolutionCode",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TestCode",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Instructions",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ExpectedOutput",
+      "type": "nvarchar"
+    },
+    {
+      "name": "TimeLimit",
+      "type": "int"
+    },
+    {
+      "name": "MemoryLimit",
+      "type": "int"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "SystemSettings": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "siteName",
+      "type": "nvarchar"
+    },
+    {
+      "name": "siteDescription",
+      "type": "nvarchar"
+    },
+    {
+      "name": "contactEmail",
+      "type": "nvarchar"
+    },
+    {
+      "name": "maintenanceMode",
+      "type": "bit"
+    },
+    {
+      "name": "language",
+      "type": "nvarchar"
+    },
+    {
+      "name": "timezone",
+      "type": "nvarchar"
+    },
+    {
+      "name": "updatedAt",
+      "type": "datetime"
+    }
+  ],
+  "AIInterviewSessions": [
+    {
+      "name": "SessionID",
+      "type": "int"
+    },
+    {
+      "name": "CandidateID",
+      "type": "int"
+    },
+    {
+      "name": "JobID",
+      "type": "int"
+    },
+    {
+      "name": "Title",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Type",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "AudioVideoUrl",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Transcript",
+      "type": "nvarchar"
+    },
+    {
+      "name": "OverallScore",
+      "type": "decimal"
+    },
+    {
+      "name": "CommunicationScore",
+      "type": "decimal"
+    },
+    {
+      "name": "TechnicalScore",
+      "type": "decimal"
+    },
+    {
+      "name": "Feedback",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Strengths",
+      "type": "nvarchar"
+    },
+    {
+      "name": "Weaknesses",
+      "type": "nvarchar"
+    },
+    {
+      "name": "StartedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "EndedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "PostLikes": [
+    {
+      "name": "LikeID",
+      "type": "int"
+    },
+    {
+      "name": "PostID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "LikeType",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CreatedAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseWatchHistory": [
+    {
+      "name": "HistoryID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "LessonID",
+      "type": "int"
+    },
+    {
+      "name": "WatchedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "PositionSeconds",
+      "type": "int"
+    }
+  ],
+  "EventTickets": [
+    {
+      "name": "TicketID",
+      "type": "int"
+    },
+    {
+      "name": "EventID",
+      "type": "int"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "TicketCode",
+      "type": "varchar"
+    },
+    {
+      "name": "PurchasePrice",
+      "type": "decimal"
+    },
+    {
+      "name": "Currency",
+      "type": "varchar"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "PurchasedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "CheckedInAt",
+      "type": "datetime2"
+    }
+  ],
+  "CourseEnrollments": [
+    {
+      "name": "EnrollmentID",
+      "type": "int"
+    },
+    {
+      "name": "CourseID",
+      "type": "int"
+    },
+    {
+      "name": "StudentID",
+      "type": "int"
+    },
+    {
+      "name": "EnrolledAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "Status",
+      "type": "nvarchar"
+    },
+    {
+      "name": "CompletedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "ProgressPercent",
+      "type": "decimal"
+    },
+    {
+      "name": "LastAccessedAt",
+      "type": "datetime2"
+    },
+    {
+      "name": "PaymentID",
+      "type": "int"
+    },
+    {
+      "name": "AccessUntil",
+      "type": "datetime2"
+    }
+  ],
+  "UserEmbeddings": [
+    {
+      "name": "EmbeddingID",
+      "type": "bigint"
+    },
+    {
+      "name": "UserID",
+      "type": "int"
+    },
+    {
+      "name": "Vector",
+      "type": "nvarchar"
+    },
+    {
+      "name": "ModelVersion",
+      "type": "nvarchar"
+    },
+    {
+      "name": "LastUpdated",
+      "type": "datetime2"
+    }
+  ]
+}

@@ -152,8 +152,8 @@ const Students = () => {
             timeout: 120000 // 2 minute timeout for large dataset
           });
           
-          if (directResponse.data.success && Array.isArray(directResponse.data.data) && directResponse.data.data.length > 20) {
-            console.log(`Direct API successful, loaded ${directResponse.data.data.length} students`);
+          if (directResponse.data.success && Array.isArray(directResponse.data.data) && directResponse.data.data?.length > 20) {
+            console.log(`Direct API successful, loaded ${directResponse.data.data?.length} students`);
             processStudentData(directResponse.data.data, search, {});
             return;
           }
@@ -169,8 +169,8 @@ const Students = () => {
               timeout: 120000
             });
             
-            if (altResponse.data.success && Array.isArray(altResponse.data.data) && altResponse.data.data.length > 20) {
-              console.log(`Alternative endpoint successful, loaded ${altResponse.data.data.length} students`);
+            if (altResponse.data.success && Array.isArray(altResponse.data.data) && altResponse.data.data?.length > 20) {
+              console.log(`Alternative endpoint successful, loaded ${altResponse.data.data?.length} students`);
               processStudentData(altResponse.data.data, search, {});
               return;
             }
@@ -236,16 +236,16 @@ const Students = () => {
       studentsData = data.students;
     } else if (data && typeof data === 'object') {
       // Try to extract students if they're in a nested structure
-      const possibleArrays = Object.values(data).filter(val => Array.isArray(val));
-      if (possibleArrays.length > 0) {
+      const possibleArrays = Object.values(data)?.filter(val => Array.isArray(val));
+      if (possibleArrays?.length > 0) {
         // Use the largest array found (likely the students list)
-        studentsData = possibleArrays.reduce((a, b) => a.length > b.length ? a : b, []);
+        studentsData = possibleArrays.reduce((a, b) => a?.length > b?.length ? a : b, []);
       }
     }
     
     // If we got a small number of students but this wasn't a specific search, try pagination approach
-    if (studentsData.length <= 20 && !search && !allStudentsLoaded) {
-      console.log(`Initial fetch returned only ${studentsData.length} students, trying pagination approach...`);
+    if (studentsData?.length <= 20 && !search && !allStudentsLoaded) {
+      console.log(`Initial fetch returned only ${studentsData?.length} students, trying pagination approach...`);
       
       // Indicate we're still loading while we try the pagination approach
       setLoading(true);
@@ -257,17 +257,17 @@ const Students = () => {
     
     // Ensure uniqueness of students by UserID
     const uniqueStudentMap = new Map();
-    studentsData.forEach(student => {
+    studentsData?.forEach(student => {
       uniqueStudentMap.set(student.UserID, student);
     });
     
     // Convert back to array
     const uniqueStudentsData = Array.from(uniqueStudentMap.values());
     
-    console.log(`After processing: ${uniqueStudentsData.length} unique students`);
+    console.log(`After processing: ${uniqueStudentsData?.length} unique students`);
     
     // Map data to match our component needs
-    const formattedData = uniqueStudentsData.map(student => ({
+    const formattedData = uniqueStudentsData?.map(student => ({
       id: student.UserID,
       studentId: student.UserID,
       fullName: student.FullName,
@@ -279,15 +279,15 @@ const Students = () => {
     }));
     
     setStudents(formattedData);
-    setTotalCount(formattedData.length);
+    setTotalCount(formattedData?.length);
     
     // Only set allStudentsLoaded to true if this wasn't a search and we got a decent number of students
-    if (!search && formattedData.length > 20) {
+    if (!search && formattedData?.length > 20) {
       setAllStudentsLoaded(true);
-      setError(`Đã tải ${formattedData.length} sinh viên từ cơ sở dữ liệu thành công.`);
+      setError(`Đã tải ${formattedData?.length} sinh viên từ cơ sở dữ liệu thành công.`);
       setOpenSnackbar(true);
     } else if (search) {
-      if (formattedData.length === 1) {
+      if (formattedData?.length === 1) {
         setSelectedStudent(formattedData[0].fullDetails);
       }
     }
@@ -302,7 +302,7 @@ const Students = () => {
     console.log(`Attempting to fetch students in ${totalPages} batches of ${batchSize}...`);
     
     let allStudents = [...initialData]; // Start with what we have
-    const seenIds = new Set(initialData.map(student => student.UserID));
+    const seenIds = new Set(initialData?.map(student => student.UserID));
     
     // Batch requests with Promise.all for better performance
     const batchPromises = [];
@@ -333,11 +333,11 @@ const Students = () => {
     const chunkSize = 5;
     let uniqueCount = 0;
     
-    for (let i = 0; i < batchPromises.length; i += chunkSize) {
+    for (let i = 0; i < batchPromises?.length; i += chunkSize) {
       const chunkPromises = batchPromises.slice(i, i + chunkSize);
       const responses = await Promise.all(chunkPromises);
       
-      for (let j = 0; j < responses.length; j++) {
+      for (let j = 0; j < responses?.length; j++) {
         const response = responses[j];
         const currentPage = i + j;
         
@@ -351,7 +351,7 @@ const Students = () => {
           }
           
           // Filter out duplicates
-          const uniqueBatchData = batchData.filter(student => {
+          const uniqueBatchData = batchData?.filter(student => {
             if (!student.UserID || seenIds.has(student.UserID)) {
               return false;
             }
@@ -359,11 +359,11 @@ const Students = () => {
             return true;
           });
           
-          uniqueCount += uniqueBatchData.length;
+          uniqueCount += uniqueBatchData?.length;
           
-          if (uniqueBatchData.length > 0) {
+          if (uniqueBatchData?.length > 0) {
             allStudents = [...allStudents, ...uniqueBatchData];
-            console.log(`Batch ${currentPage + 1} added ${uniqueBatchData.length} unique students. Total: ${allStudents.length}`);
+            console.log(`Batch ${currentPage + 1} added ${uniqueBatchData?.length} unique students. Total: ${allStudents?.length}`);
           } else {
             console.log(`Batch ${currentPage + 1} returned no new unique students.`);
           }
@@ -377,8 +377,8 @@ const Students = () => {
       }
     }
     
-    if (allStudents.length > initialData.length) {
-      console.log(`Pagination approach successful, got ${allStudents.length} unique students vs original ${initialData.length}`);
+    if (allStudents?.length > initialData?.length) {
+      console.log(`Pagination approach successful, got ${allStudents?.length} unique students vs original ${initialData?.length}`);
       processStudentData(allStudents, '', {});
     } else {
       processStudentData(initialData, '', {});
@@ -421,10 +421,10 @@ const Students = () => {
           
           if (response.data.success && Array.isArray(response.data.data)) {
             const studentsData = response.data.data;
-            console.log(`Direct endpoint successful, loaded ${studentsData.length} students`);
+            console.log(`Direct endpoint successful, loaded ${studentsData?.length} students`);
             
             // Map data to our component format
-            const formattedData = studentsData.map(student => ({
+            const formattedData = studentsData?.map(student => ({
               id: student.UserID,
               studentId: student.UserID,
               fullName: student.FullName,
@@ -436,11 +436,11 @@ const Students = () => {
             }));
             
             setStudents(formattedData);
-            setTotalCount(formattedData.length);
+            setTotalCount(formattedData?.length);
             setAllStudentsLoaded(true);
             
             // Show success message
-            setError(`Đã tải ${formattedData.length} sinh viên từ cơ sở dữ liệu thành công.`);
+            setError(`Đã tải ${formattedData?.length} sinh viên từ cơ sở dữ liệu thành công.`);
             setOpenSnackbar(true);
             setLoading(false);
             return;
@@ -460,10 +460,10 @@ const Students = () => {
             
             if (altResponse.data.success && Array.isArray(altResponse.data.data)) {
               const studentsData = altResponse.data.data;
-              console.log(`Alternative endpoint successful, loaded ${studentsData.length} students`);
+              console.log(`Alternative endpoint successful, loaded ${studentsData?.length} students`);
               
               // Map data to our component format
-              const formattedData = studentsData.map(student => ({
+              const formattedData = studentsData?.map(student => ({
                 id: student.UserID,
                 studentId: student.UserID,
                 fullName: student.FullName,
@@ -475,11 +475,11 @@ const Students = () => {
               }));
               
               setStudents(formattedData);
-              setTotalCount(formattedData.length);
+              setTotalCount(formattedData?.length);
               setAllStudentsLoaded(true);
               
               // Show success message
-              setError(`Đã tải ${formattedData.length} sinh viên từ cơ sở dữ liệu thành công.`);
+              setError(`Đã tải ${formattedData?.length} sinh viên từ cơ sở dữ liệu thành công.`);
               setOpenSnackbar(true);
               setLoading(false);
               return;
@@ -518,17 +518,17 @@ const Students = () => {
             studentsData = response.data.data.students;
           } else if (response.data.data && typeof response.data.data === 'object') {
             // Try to extract students if they're in a nested structure
-            const possibleArrays = Object.values(response.data.data).filter(val => Array.isArray(val));
-            if (possibleArrays.length > 0) {
+            const possibleArrays = Object.values(response.data.data)?.filter(val => Array.isArray(val));
+            if (possibleArrays?.length > 0) {
               // Use the largest array found (likely the students list)
-              studentsData = possibleArrays.reduce((a, b) => a.length > b.length ? a : b, []);
+              studentsData = possibleArrays.reduce((a, b) => a?.length > b?.length ? a : b, []);
             }
           }
           
-          console.log(`Initial data loaded: ${studentsData.length} students`);
+          console.log(`Initial data loaded: ${studentsData?.length} students`);
           
           // If we got too few students, try our fallback pagination approach
-          if (studentsData.length <= 20) {
+          if (studentsData?.length <= 20) {
             console.log('Initial load returned too few students. Proceeding with pagination approach...');
             fetchStudents(0, 5000, '', false);
             return;
@@ -536,16 +536,16 @@ const Students = () => {
           
           // Process the data we got
           const uniqueStudentMap = new Map();
-          studentsData.forEach(student => {
+          studentsData?.forEach(student => {
             uniqueStudentMap.set(student.UserID, student);
           });
           
           const uniqueStudentsData = Array.from(uniqueStudentMap.values());
           
-          console.log(`Loaded ${uniqueStudentsData.length} unique students from database`);
+          console.log(`Loaded ${uniqueStudentsData?.length} unique students from database`);
           
           // Map data to our component format
-          const formattedData = uniqueStudentsData.map(student => ({
+          const formattedData = uniqueStudentsData?.map(student => ({
             id: student.UserID,
             studentId: student.UserID,
             fullName: student.FullName,
@@ -557,11 +557,11 @@ const Students = () => {
           }));
           
           setStudents(formattedData);
-          setTotalCount(formattedData.length);
+          setTotalCount(formattedData?.length);
           setAllStudentsLoaded(true);
           
           // Show success message
-          setError(`Đã tải ${formattedData.length} sinh viên từ cơ sở dữ liệu thành công.`);
+          setError(`Đã tải ${formattedData?.length} sinh viên từ cơ sở dữ liệu thành công.`);
           setOpenSnackbar(true);
         } else {
           console.error('API returned success: false', response.data);
@@ -609,7 +609,7 @@ const Students = () => {
   // Create a debounced search function
   const debouncedSearch = useCallback(
     debounce((value) => {
-      if (value.trim().length > 0) {
+      if (value.trim()?.length > 0) {
         fetchStudents(0, pageSize, value, true);
         setPage(0);
       }
@@ -622,9 +622,9 @@ const Students = () => {
     setSearchTerm(value);
     
     // Trigger search automatically after typing
-    if (value.trim().length > 2) {
+    if (value.trim()?.length > 2) {
       debouncedSearch(value);
-    } else if (value.trim().length === 0) {
+    } else if (value.trim()?.length === 0) {
       // If search is cleared, reset to show all students
       if (allStudentsLoaded) {
         setSelectedStudent(null);
@@ -637,7 +637,7 @@ const Students = () => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     // When submitting a search, perform the search regardless of length
-    if (searchTerm.trim().length > 0) {
+    if (searchTerm.trim()?.length > 0) {
       fetchStudents(0, pageSize, searchTerm, true);
       setPage(0); // Reset to first page when searching
     }
@@ -1039,23 +1039,23 @@ const Students = () => {
       </Snackbar>
 
       {/* Show loading alert when data is being fetched */}
-      {loading && students.length === 0 && (
+      {loading && students?.length === 0 && (
         <Alert severity="info" sx={{ mb: 2 }}>
           Đang tải dữ liệu sinh viên từ cơ sở dữ liệu, vui lòng đợi...
         </Alert>
       )}
 
       {/* Show success message when students are loaded */}
-      {!loading && students.length > 0 && !error && (
+      {!loading && students?.length > 0 && !error && (
         <Alert severity="success" sx={{ mb: 2 }}>
-          Đã tải {students.length} sinh viên từ cơ sở dữ liệu
+          Đã tải {students?.length} sinh viên từ cơ sở dữ liệu
         </Alert>
       )}
       
       {/* Show warning if we only got a few students */}
-      {!loading && students.length > 0 && students.length <= 20 && !error && (
+      {!loading && students?.length > 0 && students?.length <= 20 && !error && (
         <Alert severity="warning" sx={{ mb: 2 }}>
-          Chỉ hiển thị {students.length} sinh viên. Hệ thống có thể đang giới hạn kết quả. Vui lòng sử dụng tính năng tìm kiếm.
+          Chỉ hiển thị {students?.length} sinh viên. Hệ thống có thể đang giới hạn kết quả. Vui lòng sử dụng tính năng tìm kiếm.
         </Alert>
       )}
 
@@ -1134,8 +1134,8 @@ const Students = () => {
               <Box sx={{ mt: 2 }}>
                 <Typography variant="caption" color="text.secondary">
                   Nhập ít nhất 3 ký tự để tìm kiếm tự động. Ấn Enter hoặc nút Tìm kiếm để tìm ngay lập tức.
-                  {searchTerm.length === 1 || searchTerm.length === 2 ? 
-                    ' Cần nhập thêm ' + (3 - searchTerm.length) + ' ký tự nữa để bắt đầu tìm kiếm.' : ''}
+                  {searchTerm?.length === 1 || searchTerm?.length === 2 ? 
+                    ' Cần nhập thêm ' + (3 - searchTerm?.length) + ' ký tự nữa để bắt đầu tìm kiếm.' : ''}
                 </Typography>
               </Box>
             )}
@@ -1144,13 +1144,13 @@ const Students = () => {
       </Card>
 
       {/* Display search results info */}
-      {searchTerm && students.length > 0 && (
+      {searchTerm && students?.length > 0 && (
         <Alert severity="info" sx={{ mb: 2 }}>
-          Tìm thấy {students.length} sinh viên phù hợp với từ khóa "{searchTerm}"
+          Tìm thấy {students?.length} sinh viên phù hợp với từ khóa "{searchTerm}"
         </Alert>
       )}
 
-      {searchTerm && students.length === 0 && !loading && (
+      {searchTerm && students?.length === 0 && !loading && (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Không tìm thấy sinh viên nào phù hợp với từ khóa "{searchTerm}". Vui lòng thử từ khóa khác.
         </Alert>
@@ -1166,7 +1166,7 @@ const Students = () => {
               </Typography>
             </Box>
             <Typography variant="body2" color="text.secondary">
-              Hiển thị {students.length} sinh viên ({loading ? 'đang tải...' : 'đã tải xong'})
+              Hiển thị {students?.length} sinh viên ({loading ? 'đang tải...' : 'đã tải xong'})
             </Typography>
           </Box>
           <Box sx={{ height: 'calc(100vh - 320px)' }}>

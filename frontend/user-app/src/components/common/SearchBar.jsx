@@ -81,11 +81,11 @@ const SearchBar = () => {
       {show && results && (
         <div className="absolute bg-white dark:bg-gray-800 rounded-md shadow-lg z-20 max-h-64 overflow-y-auto border border-gray-100 dark:border-gray-700"
              style={{ marginTop: '12px', marginLeft: '-5px', marginRight: '-5px', width: 'calc(100% + 10px)' }}>
-          {['users','courses','posts','events','exams','competitions'].map(type => (
-            results[type] && results[type].length > 0 && (
+          {['users','courses','posts','events','exams','competitions']?.map(type => (
+            results[type] && results[type]?.length > 0 && (
               <div key={type} className="p-2">
                 <div className="text-xs font-semibold text-gray-500 uppercase px-2 mb-1">{type}</div>
-                {results[type].map(item => (
+                {results[type]?.map(item => (
                   <div
                     key={item.id}
                     className="px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm"

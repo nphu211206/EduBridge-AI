@@ -2,7 +2,7 @@
 * File: index.jsx
 * Author: Quyen Nguyen Duc
 * Date: 2025-01-27
-* Description: Simple, clean educational homepage for Campus Learning platform
+* Description: Simple, clean educational homepage for EduBridge AI platform
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
 "use client"
@@ -39,7 +39,7 @@ const Home = () => {
   useEffect(() => {
     if (location.state?.fromVerification && location.state?.verified) {
       // Show welcome message
-      toast.success(`Chào mừng ${currentUser?.fullName || currentUser?.username || 'bạn'} đã tham gia Campus Learning!`, {
+      toast.success(`Chào mừng ${currentUser?.fullName || currentUser?.username || 'bạn'} đã đến với EduBridge AI!`, {
         autoClose: 6000,
         position: "top-center",
         className: "welcome-toast",
@@ -55,12 +55,12 @@ const Home = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Campus Learning - Trang chủ",
+    "name": "EduBridge AI - Trang chủ",
     "description": "Nền tảng học lập trình trực tuyến hàng đầu Việt Nam với 500+ khóa học chất lượng cao",
     "url": "https://campuslearning.online/",
     "isPartOf": {
       "@type": "WebSite",
-      "name": "Campus Learning",
+      "name": "EduBridge AI",
       "url": "https://campuslearning.online"
     },
     "about": {
@@ -73,7 +73,7 @@ const Home = () => {
     },
     "provider": {
       "@type": "EducationalOrganization",
-      "name": "Campus Learning",
+      "name": "EduBridge AI",
       "url": "https://campuslearning.online"
     }
   };
@@ -84,12 +84,12 @@ const Home = () => {
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content',
-        'Campus Learning - Nền tảng học lập trình trực tuyến hàng đầu với 500+ khóa học từ cơ bản đến nâng cao. AI cá nhân hóa, thực hành trực tuyến, mentor 1-1. Tham gia 50,000+ học viên thành công!'
+        'EduBridge AI - Nền tảng học hỏi hàng đầu. AI cá nhân hóa, thực hành trực tuyến, mentor 1-1. Tham gia 50,000+ học viên thành công!'
       );
     }
 
     // Update page title
-    document.title = 'Campus Learning - Nền tảng học lập trình hàng đầu Việt Nam | 500+ khóa học chất lượng';
+    document.title = 'EduBridge AI - Nền tảng Công nghệ Giáo dục hàng đầu | 500+ khóa học chất lượng';
 
     // Add breadcrumb structured data
     const breadcrumbData = {
@@ -113,26 +113,26 @@ const Home = () => {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Campus Learning có miễn phí không?",
+          "name": "EduBridge AI có miễn phí không?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Campus Learning cung cấp nhiều khóa học miễn phí và có phí. Bạn có thể đăng ký miễn phí để truy cập các khóa học cơ bản và nâng cấp để học các khóa học premium."
+            "text": "EduBridge AI cung cấp nhiều khóa học miễn phí và có phí. Bạn có thể đăng ký miễn phí để truy cập các khóa học cơ bản và nâng cấp để học các khóa học premium."
           }
         },
         {
           "@type": "Question",
-          "name": "Tôi có thể học lập trình từ đầu tại Campus Learning không?",
+          "name": "Tôi có thể học kỹ năng mới từ đầu tại EduBridge AI không?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Hoàn toàn có thể! Campus Learning có các khóa học từ cơ bản đến nâng cao, phù hợp cho người mới bắt đầu với lộ trình học cá nhân hóa và mentor hỗ trợ 1-1."
+            "text": "Hoàn toàn có thể! EduBridge AI có các khóa học từ cơ bản đến nâng cao, phù hợp cho người mới bắt đầu với lộ trình học cá nhân hóa và mentor hỗ trợ 1-1."
           }
         },
         {
           "@type": "Question",
-          "name": "Campus Learning có cấp chứng chỉ không?",
+          "name": "EduBridge AI có cấp chứng chỉ không?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Có, Campus Learning cấp chứng chỉ hoàn thành khóa học được công nhận bởi các công ty công nghệ hàng đầu như Google, Microsoft, Amazon."
+            "text": "Có, EduBridge AI cấp chứng chỉ hoàn thành khóa học được công nhận bởi các công ty công nghệ hàng đầu như Google, Microsoft, Amazon."
           }
         }
       ]
@@ -148,7 +148,7 @@ const Home = () => {
 
   // Load user data from localStorage if not in Redux - only once
   useEffect(() => {
-    if (!userFromRedux || Object.keys(userFromRedux).length === 0) {
+    if (!userFromRedux || Object.keys(userFromRedux)?.length === 0) {
       const userDataString = localStorage.getItem('user');
       if (userDataString) {
         try {
@@ -186,7 +186,7 @@ const Home = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentQuoteIndex((prevIndex) => (prevIndex === famousQuotes.length - 1 ? 0 : prevIndex + 1))
+      setCurrentQuoteIndex((prevIndex) => (prevIndex === famousQuotes?.length - 1 ? 0 : prevIndex + 1))
     }, 5000)
 
     return () => clearInterval(interval)
@@ -228,8 +228,7 @@ const Home = () => {
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
         }
-
-        const response = await fetch('https://campuslearning.onrender.com/api/posts?limit=3', {
+        const response = await fetch('/api/posts?limit=3', {
           headers
         });
 
@@ -252,7 +251,7 @@ const Home = () => {
           throw new Error('Server returned non-JSON response');
         }
 
-        const postsWithDefaults = (data.posts || []).map(post => ({
+        const postsWithDefaults = (data.posts || [])?.map(post => ({
           ...post,
           IsLiked: post.IsLiked !== undefined ? post.IsLiked : false,
           IsBookmarked: post.IsBookmarked !== undefined ? post.IsBookmarked : false,
@@ -279,7 +278,7 @@ const Home = () => {
     fetchBlogPosts()
   }, [])
 
-  // Educational categories for Campus Learning
+  // Educational categories for EduBridge AI
   const educationalCategories = [
     {
       title: "Frontend",
@@ -348,9 +347,9 @@ const Home = () => {
   return (
     <>
       <SEOHelmet
-        title="Campus Learning - Nền tảng học lập trình hàng đầu Việt Nam | 500+ khóa học chất lượng"
-        description="Campus Learning - Nền tảng học lập trình trực tuyến hàng đầu với 500+ khóa học từ cơ bản đến nâng cao. AI cá nhân hóa, thực hành trực tuyến, mentor 1-1. Tham gia 50,000+ học viên thành công!"
-        keywords="học lập trình, khóa học online, frontend, backend, mobile app, AI machine learning, campus learning, học code, khoá học IT, lập trình viên, React, JavaScript, Python, Java"
+        title="EduBridge AI - Nền tảng Công nghệ Giáo dục hàng đầu | 500+ khóa học chất lượng"
+        description="EduBridge AI - Nền tảng đào tạo công nghệ trực tuyến. AI cá nhân hóa, thực hành trực tuyến, mentor 1-1."
+        keywords="học online, khóa học công nghệ, frontend, backend, mobile app, AI machine learning, edubridge ai"
         image="https://campuslearning.online/images/campus-learning-homepage.jpg"
         url="https://campuslearning.online/"
         type="website"
@@ -473,7 +472,7 @@ const Home = () => {
                 { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/200px-Postgresql_elephant.svg.png", alt: "PostgreSQL" },
                 { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Docker_%28container_engine%29_logo.svg/200px-Docker_%28container_engine%29_logo.svg.png", alt: "Docker" },
                 { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/200px-Jupyter_logo.svg.png", alt: "Jupyter" }
-              ].map((logo, index) => (
+              ]?.map((logo, index) => (
                 <motion.img
                   key={index}
                   src={logo.src}
@@ -503,7 +502,7 @@ const Home = () => {
               Chọn vai trò của bạn
             </motion.h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {educationalCategories.slice(0, 3).map((category, index) => (
+              {educationalCategories.slice(0, 3)?.map((category, index) => (
                 <motion.div
                   key={index}
                   className="bg-white border cursor-pointer hover:shadow-md rounded-lg overflow-hidden"
@@ -567,7 +566,7 @@ const Home = () => {
                 { text: "Sơ cấp", active: false },
                 { text: "Phổ biến", active: false },
                 { text: "Công cụ", active: false }
-              ].map((button, index) => (
+              ]?.map((button, index) => (
                 <motion.button
                   key={index}
                   className={`px-6 py-2 rounded-full text-sm font-medium ${button.active
@@ -1002,7 +1001,7 @@ const Home = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {loading ? (
-                Array(4).fill(0).map((_, index) => (
+                Array(4).fill(0)?.map((_, index) => (
                   <div key={index} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                     <div className="bg-gray-200 h-40"></div>
                     <div className="p-4">
@@ -1013,7 +1012,7 @@ const Home = () => {
                   </div>
                 ))
               ) : (
-                popularCourses.slice(0, 4).map((course, index) => (
+                popularCourses.slice(0, 4)?.map((course, index) => (
                   <div
                     key={course.CourseID || index}
                     className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
@@ -1101,7 +1100,7 @@ const Home = () => {
                 { number: "500+", label: "Khóa học" },
                 { number: "98%", label: "Hài lòng" },
                 { number: "24/7", label: "Hỗ trợ" }
-              ].map((stat, index) => (
+              ]?.map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
@@ -1144,7 +1143,7 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {educationalCategories.map((category, index) => (
+              {educationalCategories?.map((category, index) => (
                 <motion.div
                   key={index}
                   className="bg-white border cursor-pointer hover:shadow-lg rounded-lg overflow-hidden transition-shadow duration-300 min-h-[280px] flex flex-col"
@@ -1231,7 +1230,7 @@ const Home = () => {
                   { src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop", alt: "Programming workspace" },
                   { src: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop", alt: "Team collaboration" },
                   { src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop", alt: "Success celebration" }
-                ].map((image, index) => (
+                ]?.map((image, index) => (
                   <motion.img
                     key={index}
                     src={image.src}
@@ -1280,7 +1279,7 @@ const Home = () => {
               className="flex gap-3 sm:gap-6"
               style={{ width: 'max-content' }}
             >
-              {[...Array(2)].map((_, setIndex) => (
+              {[...Array(2)]?.map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   {[
                     {
@@ -1313,7 +1312,7 @@ const Home = () => {
                       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
                       review: "Community hỗ trợ tuyệt vời, không bao giờ cảm thấy cô đơn trong hành trình học."
                     },
-                  ].map((testimonial, index) => (
+                  ]?.map((testimonial, index) => (
                     <div
                       key={`${setIndex}-${index}`}
                       className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300 relative flex-shrink-0 w-[320px] sm:w-[400px] shadow-sm"
@@ -1363,7 +1362,7 @@ const Home = () => {
               className="flex gap-3 sm:gap-6"
               style={{ width: 'max-content' }}
             >
-              {[...Array(2)].map((_, setIndex) => (
+              {[...Array(2)]?.map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   {[
                     {
@@ -1396,7 +1395,7 @@ const Home = () => {
                       avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
                       review: "Đội ngũ hỗ trợ nhiệt tình, luôn sẵn sàng giải đáp mọi thắc mắc."
                     },
-                  ].map((testimonial, index) => (
+                  ]?.map((testimonial, index) => (
                     <div
                       key={`${setIndex}-${index}`}
                       className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300 relative flex-shrink-0 w-[320px] sm:w-[400px] shadow-sm"
@@ -1445,7 +1444,7 @@ const Home = () => {
               className="flex gap-3 sm:gap-6"
               style={{ width: 'max-content' }}
             >
-              {[...Array(2)].map((_, setIndex) => (
+              {[...Array(2)]?.map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   {[
                     {
@@ -1478,7 +1477,7 @@ const Home = () => {
                       avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
                       review: "Đầu tư vào học tập tại CampusLearning là quyết định đúng đắn nhất."
                     },
-                  ].map((testimonial, index) => (
+                  ]?.map((testimonial, index) => (
                     <div
                       key={`${setIndex}-${index}`}
                       className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300 relative flex-shrink-0 w-[320px] sm:w-[400px] shadow-sm"

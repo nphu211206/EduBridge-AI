@@ -24,7 +24,7 @@ const findAllJobs = async (page, limit, filters) => {
             request.input('jobType', sql.NVarChar, filters.jobType);
         }
         
-        const whereCondition = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+        const whereCondition = whereClauses?.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
 
         const countQuery = `SELECT COUNT(DISTINCT j.id) as total FROM Jobs j ${whereCondition};`;
         const countResult = await request.query(countQuery);
@@ -55,7 +55,7 @@ const findAllJobs = async (page, limit, filters) => {
         
         const jobsResult = await request.query(jobsQuery);
         
-        const jobs = jobsResult.recordset.map(job => ({
+        const jobs = jobsResult.recordset?.map(job => ({
             id: job.id,
             title: job.title,
             location: job.location,
@@ -66,7 +66,7 @@ const findAllJobs = async (page, limit, filters) => {
                 name: job.companyName,
                 logoUrl: job.companyLogoUrl,
             },
-            skills: job.skills ? JSON.parse(job.skills).map(s => s.name) : []
+            skills: job.skills ? JSON.parse(job.skills)?.map(s => s.name) : []
         }));
 
         return {
@@ -83,7 +83,7 @@ const findAllJobs = async (page, limit, filters) => {
 };
 const createJob = async (recruiterId, jobData) => {
     const { title, description, location, salary, jobType, skills } = jobData;
-    if (!title || !description || !skills || !Array.isArray(skills) || skills.length === 0) {
+    if (!title || !description || !skills || !Array.isArray(skills) || skills?.length === 0) {
         throw new Error('Dữ liệu không hợp lệ: Vui lòng cung cấp đầy đủ Tiêu đề, Mô tả và ít nhất một Kỹ năng.');
     }
     const pool = await poolPromise;
@@ -96,7 +96,7 @@ const createJob = async (recruiterId, jobData) => {
         userCompanyRequest.input('recruiterId', sql.Int, recruiterId);
         const userCompanyResult = await userCompanyRequest.query('SELECT companyId FROM Users WHERE id = @recruiterId');
         
-        if (userCompanyResult.recordset.length === 0 || !userCompanyResult.recordset[0].companyId) {
+        if (userCompanyResult.recordset?.length === 0 || !userCompanyResult.recordset[0].companyId) {
             // ĐÂY CHÍNH LÀ LỚP PHÒNG THỦ NGĂN CHẶN LỖI 500
             throw new Error('Tài khoản nhà tuyển dụng không hợp lệ hoặc chưa được liên kết với một công ty.');
         }

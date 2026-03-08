@@ -238,7 +238,7 @@ export const chatApi = {
       const formData = new FormData();
       
       // Add files to form data
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0; i < files?.length; i++) {
         formData.append('files', files[i]);
       }
 

@@ -32,13 +32,13 @@ const markdownStyles = {
 
 // Components mapping for ReactMarkdown
 const markdownComponents = {
-  table: ({node, ...props}) => <table className={markdownStyles.table} {...props} />,
-  thead: ({node, ...props}) => <thead className={markdownStyles.thead} {...props} />,
-  th: ({node, ...props}) => <th className={markdownStyles.th} {...props} />,
-  td: ({node, ...props}) => <td className={markdownStyles.td} {...props} />,
-  ul: ({node, ...props}) => <ul className={markdownStyles.ul} {...props} />,
-  ol: ({node, ...props}) => <ol className={markdownStyles.ol} {...props} />,
-  li: ({node, ...props}) => <li className={markdownStyles.li} {...props} />,
+  table: ({ node, ...props }) => <table className={markdownStyles.table} {...props} />,
+  thead: ({ node, ...props }) => <thead className={markdownStyles.thead} {...props} />,
+  th: ({ node, ...props }) => <th className={markdownStyles.th} {...props} />,
+  td: ({ node, ...props }) => <td className={markdownStyles.td} {...props} />,
+  ul: ({ node, ...props }) => <ul className={markdownStyles.ul} {...props} />,
+  ol: ({ node, ...props }) => <ol className={markdownStyles.ol} {...props} />,
+  li: ({ node, ...props }) => <li className={markdownStyles.li} {...props} />,
 };
 
 const Posts = () => {
@@ -63,16 +63,16 @@ const Posts = () => {
   const [submittingComment, setSubmittingComment] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [reportSuccess, setReportSuccess] = useState(false);
-  
+
   // Report dialog state
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [reportContent, setReportContent] = useState('');
   const [reportCategory, setReportCategory] = useState('CONTENT');
   const [reportTargetId, setReportTargetId] = useState(null);
   const [submittingReport, setSubmittingReport] = useState(false);
-  
+
   const [videoThumbnails, setVideoThumbnails] = useState({});
-  
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -81,14 +81,14 @@ const Posts = () => {
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get('postId');
     const commentId = queryParams.get('commentId');
-    
+
     if (postId) {
       setSelectedPost(postId);
       if (commentId) {
         setSelectedComment(commentId);
       }
     }
-    
+
     fetchPosts();
   }, [activeFilter, location.search]);
 
@@ -98,14 +98,14 @@ const Posts = () => {
       setFilteredPosts(posts);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = posts.filter(post => {
+      const filtered = posts?.filter(post => {
         const content = post?.Content || '';
         const title = post?.Title || '';
         const authorName = post?.AuthorName || '';
-        
+
         return content.toLowerCase().includes(query) ||
-               title.toLowerCase().includes(query) ||
-               authorName.toLowerCase().includes(query);
+          title.toLowerCase().includes(query) ||
+          authorName.toLowerCase().includes(query);
       });
       setFilteredPosts(filtered);
     }
@@ -117,27 +117,27 @@ const Posts = () => {
     const now = new Date().getTime();
     const postDate = new Date(post.CreatedAt).getTime();
     const postAgeInDays = (now - postDate) / (1000 * 60 * 60 * 24);
-    
+
     // Base weight factors - can be adjusted for different importance
     const likeWeight = 1;
     const commentWeight = 1.5;
     const bookmarkWeight = 2;
     const shareWeight = 1.2;
-    
+
     // Time decay factor (older posts get lower scores)
     // Logarithmic decay to keep older but highly engaged posts relevant
     const timeDecayFactor = 1 / (Math.log(postAgeInDays + 2));
-    
+
     // Engagement score combines different interactions with their weights
-    const engagementScore = 
+    const engagementScore =
       (post.LikesCount || 0) * likeWeight +
       (post.CommentsCount || 0) * commentWeight +
       (post.BookmarksCount || 0) * bookmarkWeight +
       (post.SharesCount || 0) * shareWeight;
-    
+
     // Add a small random factor (±10% variation) for diversity
     const randomFactor = 0.9 + Math.random() * 0.2;
-    
+
     // Final score combining engagement, time decay and randomness
     return engagementScore * timeDecayFactor * randomFactor;
   };
@@ -145,10 +145,10 @@ const Posts = () => {
   const fetchPosts = async () => {
     try {
       console.log('Fetching posts from API server...');
-      
+
       // Use the correct port (5001 instead of 5004)
       try {
-        const pingResponse = await fetch('http://localhost:5001/api/posts', {
+        const pingResponse = await fetch('http://127.0.0.1:5001/api/posts', {
           method: 'HEAD',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -158,15 +158,15 @@ const Posts = () => {
       } catch (pingError) {
         console.warn('API server ping failed:', pingError);
       }
-      
-      const response = await fetch('http://localhost:5001/api/posts?limit=1000', {
+
+      const response = await fetch('/api/posts?limit=1000', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      
+
       console.log('API response status:', response.status);
-      
+
       if (!response.ok) {
         console.error('API Error:', response.status, response.statusText);
         throw new Error('Không thể tải bài viết');
@@ -174,22 +174,22 @@ const Posts = () => {
 
       const data = await response.json();
       console.log('Posts data received:', data);
-      
+
       const postsWithFullMediaPaths = data.posts || [];
-      
+
       // Sắp xếp bài viết theo filter đang chọn
       let sortedPosts = [...postsWithFullMediaPaths];
-      
+
       if (activeFilter === 'trending') {
         // Enhanced trending algorithm that considers likes, comments, bookmarks, and recency
-        sortedPosts.forEach(post => post._score = calculatePostScore(post));
+        sortedPosts?.forEach(post => post._score = calculatePostScore(post));
         sortedPosts.sort((a, b) => b._score - a._score);
       } else if (activeFilter === 'latest') {
         // Sort by date but add a small random factor for posts from the same day
         sortedPosts.sort((a, b) => {
           const dateA = new Date(a.CreatedAt).setHours(0, 0, 0, 0);
           const dateB = new Date(b.CreatedAt).setHours(0, 0, 0, 0);
-          
+
           if (dateA === dateB) {
             // For posts from the same day, use engagement score with randomization
             return calculatePostScore(b) - calculatePostScore(a);
@@ -198,21 +198,21 @@ const Posts = () => {
           return new Date(b.CreatedAt) - new Date(a.CreatedAt);
         });
       }
-      
+
       setPosts(sortedPosts);
       setFilteredPosts(sortedPosts);
-      
+
       // If we have a selected post, fetch its details if not in the list
       if (selectedPost) {
         const postExists = postsWithFullMediaPaths.some(post => post.PostID.toString() === selectedPost.toString());
-        
+
         if (!postExists) {
           fetchSinglePost(selectedPost);
         }
       }
 
       // Set the first post as selected for main view if none is selected
-      if (!selectedVideo && sortedPosts.length > 0) {
+      if (!selectedVideo && sortedPosts?.length > 0) {
         setSelectedVideo(sortedPosts[0]);
       }
     } catch (error) {
@@ -221,7 +221,7 @@ const Posts = () => {
       setLoading(false);
     }
   };
-  
+
   const fetchSinglePost = async (postId) => {
     try {
       const response = await fetch(`/api/posts/${postId}`, {
@@ -229,13 +229,13 @@ const Posts = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Không thể tải bài viết');
       }
-      
+
       const data = await response.json();
-      
+
       if (data.post) {
         // Add this post to our posts list if it's not already there
         setPosts(prevPosts => {
@@ -280,7 +280,7 @@ const Posts = () => {
   const handleComment = async (postId, change = 1) => {
     try {
       // Update the UI immediately to reflect comment count change
-      setPosts(posts.map(post => {
+      setPosts(posts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -289,7 +289,7 @@ const Posts = () => {
         }
         return post;
       }));
-      
+
       // We're not actually making an API call here because the count 
       // has already been updated on the server by the comment endpoints
     } catch (error) {
@@ -298,7 +298,7 @@ const Posts = () => {
       fetchPosts();
     }
   };
-  
+
   // Clear selected post and comment and update URL
   const clearSelection = () => {
     setSelectedPost(null);
@@ -318,7 +318,7 @@ const Posts = () => {
 
   const handleNextStory = () => {
     const nextIndex = currentStoryIndex + 1;
-    if (nextIndex < posts.length) {
+    if (nextIndex < posts?.length) {
       setCurrentStoryIndex(nextIndex);
     } else {
       setShowStoryModal(false);
@@ -349,7 +349,7 @@ const Posts = () => {
         setCoursesLoading(false);
       }
     };
-    
+
     fetchFeaturedCourses();
   }, []);
 
@@ -377,7 +377,7 @@ const Posts = () => {
 
   const handleShareComplete = (postId) => {
     // Cập nhật số lượt chia sẻ trong state
-    setPosts(posts.map(post => {
+    setPosts(posts?.map(post => {
       if (post.PostID === postId) {
         return {
           ...post,
@@ -404,13 +404,13 @@ const Posts = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to bookmark post');
       }
-      
+
       // Update bookmarked status in state
-      setPosts(prevPosts => prevPosts.map(post => {
+      setPosts(prevPosts => prevPosts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -427,7 +427,7 @@ const Posts = () => {
   // Function to fetch comments for the selected post
   const fetchComments = async (postId) => {
     if (!postId) return;
-    
+
     setIsLoadingComments(true);
     setCommentError(null);
     try {
@@ -437,11 +437,11 @@ const Posts = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Could not load comments');
       }
-      
+
       const data = await response.json();
       setComments(data.comments || []);
     } catch (error) {
@@ -462,9 +462,9 @@ const Posts = () => {
   // Handle comment submission
   const handleSubmitComment = async (e) => {
     e.preventDefault();
-    
+
     if (!newComment.trim() || !selectedVideo) return;
-    
+
     setSubmittingComment(true);
     try {
       const token = localStorage.getItem('token');
@@ -476,15 +476,15 @@ const Posts = () => {
         },
         body: JSON.stringify({ content: newComment })
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to add comment');
       }
-      
+
       const data = await response.json();
       setComments([data.comment, ...comments]);
       setNewComment('');
-      
+
       // Update comment count
       handleComment(selectedVideo.PostID);
     } catch (error) {
@@ -505,19 +505,19 @@ const Posts = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to like comment');
       }
-      
+
       // Update comment in state
-      setComments(comments.map(comment => 
-        comment.CommentID === commentId 
-          ? { 
-              ...comment, 
-              LikesCount: comment.IsLiked ? comment.LikesCount - 1 : comment.LikesCount + 1,
-              IsLiked: !comment.IsLiked 
-            } 
+      setComments(comments?.map(comment =>
+        comment.CommentID === commentId
+          ? {
+            ...comment,
+            LikesCount: comment.IsLiked ? comment.LikesCount - 1 : comment.LikesCount + 1,
+            IsLiked: !comment.IsLiked
+          }
           : comment
       ));
     } catch (error) {
@@ -535,14 +535,14 @@ const Posts = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to delete comment');
       }
-      
+
       // Remove comment from state
-      setComments(comments.filter(comment => comment.CommentID !== commentId));
-      
+      setComments(comments?.filter(comment => comment.CommentID !== commentId));
+
       // Update comment count in the post
       if (selectedVideo) {
         handleComment(selectedVideo.PostID, -1);
@@ -557,26 +557,26 @@ const Posts = () => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
-    
+
     if (diffInSeconds < 60) {
       return 'Vừa xong';
     }
-    
+
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     if (diffInMinutes < 60) {
       return `${diffInMinutes} phút trước`;
     }
-    
+
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) {
       return `${diffInHours} giờ trước`;
     }
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays < 7) {
       return `${diffInDays} ngày trước`;
     }
-    
+
     return date.toLocaleDateString('vi-VN', {
       day: '2-digit',
       month: '2-digit',
@@ -599,11 +599,11 @@ const Posts = () => {
           ...reportData
         })
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to report post');
       }
-      
+
       // Show success message
       setReportSuccess(true);
       setTimeout(() => setReportSuccess(false), 3000);
@@ -618,32 +618,32 @@ const Posts = () => {
   const generateVideoThumbnail = (videoUrl, postId) => {
     const video = document.createElement('video');
     video.crossOrigin = 'anonymous';
-    
+
     // Format the URL correctly
-    const formattedUrl = videoUrl.startsWith('http') 
-      ? videoUrl 
+    const formattedUrl = videoUrl.startsWith('http')
+      ? videoUrl
       : `/uploads/${videoUrl.replace(/^\/uploads\//, '').replace(/^uploads\//, '')}`;
-      
+
     video.src = formattedUrl;
     video.muted = true;
     video.playsInline = true;
-    
+
     // Capture a frame after 1 second
     video.addEventListener('loadeddata', () => {
       // Seek to 1 second (or to the duration if less than 1 second)
       video.currentTime = Math.min(1, video.duration || 1);
     });
-    
+
     video.addEventListener('seeked', () => {
       // Create a canvas to capture the frame
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      
+
       // Draw the video frame to the canvas
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
+
       // Convert canvas to data URL
       try {
         const dataUrl = canvas.toDataURL('image/jpeg');
@@ -655,22 +655,22 @@ const Posts = () => {
       } catch (error) {
         console.error('Error generating thumbnail:', error);
       }
-      
+
       // Clean up
       video.remove();
     });
-    
+
     // Start loading the video
     video.load();
   };
-  
+
   // Generate thumbnails for videos when posts are loaded
   useEffect(() => {
-    if (posts.length > 0) {
-      posts.forEach(post => {
-        if (post.media && post.media.length > 0 && 
-            post.media[0].MediaType === 'video' && 
-            !videoThumbnails[post.PostID]) {
+    if (posts?.length > 0) {
+      posts?.forEach(post => {
+        if (post.media && post.media?.length > 0 &&
+          post.media[0].MediaType === 'video' &&
+          !videoThumbnails[post.PostID]) {
           generateVideoThumbnail(post.media[0].MediaUrl, post.PostID);
         }
       });
@@ -698,21 +698,21 @@ const Posts = () => {
           </button>
         </div>
       )}
-      
+
       {/* Fixed Create Post Button */}
-      <button 
+      <button
         onClick={() => setShowCreateForm(true)}
         className="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-colors z-30"
       >
         <PencilIcon className="h-6 w-6" />
       </button>
-      
+
       {/* Create Post Modal */}
       {showCreateForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4 md:p-0">
           <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setShowCreateForm(false)}
                 className="absolute -top-4 -right-4 bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-md z-10"
               >
@@ -723,10 +723,10 @@ const Posts = () => {
           </div>
         </div>
       )}
-      
+
       {/* Story Modal */}
       {showStoryModal && (
-        <div 
+        <div
           className="fixed inset-0 bg-black z-50 flex items-center justify-center"
           onClick={(e) => {
             // Kiểm tra nếu click vào phần nền (không phải nội dung story)
@@ -736,7 +736,7 @@ const Posts = () => {
           }}
         >
           {/* Close Button */}
-          <button 
+          <button
             className="absolute top-4 right-4 text-white z-10"
             onClick={() => setShowStoryModal(false)}
           >
@@ -746,7 +746,7 @@ const Posts = () => {
           </button>
 
           {/* Navigation Buttons */}
-          <button 
+          <button
             className="absolute left-4 top-1/2 -translate-y-1/2 text-white z-10"
             onClick={handlePrevStory}
           >
@@ -754,7 +754,7 @@ const Posts = () => {
               <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </button>
-          <button 
+          <button
             className="absolute right-4 top-1/2 -translate-y-1/2 text-white z-10"
             onClick={handleNextStory}
           >
@@ -764,32 +764,32 @@ const Posts = () => {
           </button>
 
           {/* Story Content */}
-          <div 
+          <div
             className="w-full h-full flex items-center justify-center"
             onClick={(e) => e.stopPropagation()} // Ngăn chặn event bubbling
           >
             <div className="relative w-full max-w-2xl h-full">
               {/* Progress Bar */}
               <div className="absolute top-4 left-4 right-4 h-1 bg-gray-700 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-white transition-all duration-300"
-                  style={{ width: `${(currentStoryIndex + 1) * 100 / posts.length}%` }}
+                  style={{ width: `${(currentStoryIndex + 1) * 100 / posts?.length}%` }}
                 />
               </div>
 
               {/* Story Media */}
-              <img 
-                src={posts[currentStoryIndex]?.media} 
-                alt="Story" 
+              <img
+                src={posts[currentStoryIndex]?.media}
+                alt="Story"
                 className="w-full h-full object-contain"
               />
 
               {/* Story Info */}
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <div className="flex items-center gap-2">
-                  <img 
-                    src={posts[currentStoryIndex]?.avatar} 
-                    alt="Avatar" 
+                  <img
+                    src={posts[currentStoryIndex]?.avatar}
+                    alt="Avatar"
                     className="w-8 h-8 rounded-full"
                   />
                   <span className="font-semibold">{posts[currentStoryIndex]?.username}</span>
@@ -800,7 +800,7 @@ const Posts = () => {
           </div>
         </div>
       )}
-      
+
       {/* Share Post Modal */}
       {selectedPostForShare && (
         <SharePostModal
@@ -812,23 +812,22 @@ const Posts = () => {
           onShare={handleShareComplete}
         />
       )}
-      
+
       <div className="w-full mx-auto py-6 px-4">
         {/* Filter tabs */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              {filters.map(filter => {
+              {filters?.map(filter => {
                 const Icon = filter.icon;
                 return (
                   <button
                     key={filter.id}
                     onClick={() => setActiveFilter(filter.id)}
-                    className={`flex items-center space-x-1 px-4 py-2 rounded-lg ${
-                      activeFilter === filter.id
+                    className={`flex items-center space-x-1 px-4 py-2 rounded-lg ${activeFilter === filter.id
                         ? 'bg-blue-100 text-blue-700 border border-blue-300'
                         : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{filter.name}</span>
@@ -850,7 +849,7 @@ const Posts = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Main YouTube-like layout */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left side - Main video/post display */}
@@ -862,23 +861,23 @@ const Posts = () => {
             ) : selectedVideo ? (
               <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 {/* Video/Media display */}
-                {selectedVideo.media && selectedVideo.media.length > 0 && (
+                {selectedVideo.media && selectedVideo.media?.length > 0 && (
                   <div className="w-full bg-black flex items-center justify-center">
                     {selectedVideo.media[0].MediaType === 'video' ? (
-                      <video 
+                      <video
                         className="w-full max-h-[500px] object-contain"
-                        src={selectedVideo.media[0].MediaUrl.startsWith('http') 
-                          ? selectedVideo.media[0].MediaUrl 
+                        src={selectedVideo.media[0].MediaUrl.startsWith('http')
+                          ? selectedVideo.media[0].MediaUrl
                           : `/uploads/${selectedVideo.media[0].MediaUrl.replace(/^\/uploads\//, '').replace(/^uploads\//, '')}`
                         }
                         controls
                         autoPlay
                       />
                     ) : (
-                      <img 
+                      <img
                         className="w-full max-h-[500px] object-contain"
-                        src={selectedVideo.media[0].MediaUrl.startsWith('http') 
-                          ? selectedVideo.media[0].MediaUrl 
+                        src={selectedVideo.media[0].MediaUrl.startsWith('http')
+                          ? selectedVideo.media[0].MediaUrl
                           : `/uploads/${selectedVideo.media[0].MediaUrl.replace(/^\/uploads\//, '').replace(/^uploads\//, '')}`
                         }
                         alt={selectedVideo.Title || "Post media"}
@@ -886,9 +885,9 @@ const Posts = () => {
                     )}
                   </div>
                 )}
-                
+
                 {/* Post details */}
-                <div className="p-4">                  
+                <div className="p-4">
                   <div className="flex justify-between items-center mt-4">
                     <div className="flex items-center space-x-3">
                       <Avatar
@@ -902,13 +901,12 @@ const Posts = () => {
                         <p className="text-sm text-gray-500">{selectedVideo.CreatedAt && formatDate(selectedVideo.CreatedAt)}</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
-                      <button 
+                      <button
                         onClick={() => handleLike(selectedVideo.PostID)}
-                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-full ${
-                          selectedVideo.IsLiked ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
+                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-full ${selectedVideo.IsLiked ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
                         title={selectedVideo.IsLiked ? "Bỏ thích" : "Thích"}
                       >
                         {selectedVideo.IsLiked ? (
@@ -918,8 +916,8 @@ const Posts = () => {
                         )}
                         <span>{selectedVideo.LikesCount || 0}</span>
                       </button>
-                      
-                      <button 
+
+                      <button
                         onClick={() => handleShare(selectedVideo.PostID)}
                         className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200"
                         title="Chia sẻ"
@@ -927,12 +925,11 @@ const Posts = () => {
                         <ShareIcon className="h-5 w-5" />
                         <span>Chia sẻ</span>
                       </button>
-                      
+
                       <button
                         onClick={() => handleBookmark(selectedVideo.PostID)}
-                        className={`flex items-center justify-center p-2 rounded-full ${
-                          selectedVideo.IsBookmarked ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
+                        className={`flex items-center justify-center p-2 rounded-full ${selectedVideo.IsBookmarked ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
                         title={selectedVideo.IsBookmarked ? "Bỏ lưu bài viết" : "Lưu bài viết"}
                       >
                         {selectedVideo.IsBookmarked ? (
@@ -941,12 +938,12 @@ const Posts = () => {
                           <BookmarkIcon className="h-5 w-5" />
                         )}
                       </button>
-                      
+
                       {/* Report Button - Only show for posts not owned by the current user */}
                       {(() => {
                         const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
                         const isOwner = currentUser.UserID === selectedVideo.UserID || currentUser.id === selectedVideo.UserID;
-                        
+
                         return !isOwner && (
                           <button
                             onClick={() => handleReportPost(selectedVideo.PostID, {
@@ -967,7 +964,7 @@ const Posts = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="border-t border-gray-100 p-4">
                   <div className="prose prose-sm max-w-none overflow-x-auto">
                     <ReactMarkdown
@@ -978,11 +975,11 @@ const Posts = () => {
                     </ReactMarkdown>
                   </div>
                 </div>
-                
+
                 {/* Comments section */}
                 <div className="border-t border-gray-100 p-4">
                   <h3 className="font-medium mb-4">{selectedVideo.CommentsCount || 0} bình luận</h3>
-                  
+
                   {/* Comment Form */}
                   <form onSubmit={handleSubmitComment} className="flex items-center space-x-2 mb-6">
                     <Avatar
@@ -1015,7 +1012,7 @@ const Posts = () => {
                       </button>
                     </div>
                   </form>
-                  
+
                   {/* Comments List */}
                   {isLoadingComments ? (
                     <div className="flex justify-center py-4">
@@ -1023,11 +1020,11 @@ const Posts = () => {
                     </div>
                   ) : commentError ? (
                     <div className="text-center py-4 text-red-500 text-sm">{commentError}</div>
-                  ) : comments.length === 0 ? (
+                  ) : comments?.length === 0 ? (
                     <div className="text-center py-4 text-gray-500 text-sm">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</div>
                   ) : (
                     <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                      {comments.map((comment) => (
+                      {comments?.map((comment) => (
                         <div key={comment.CommentID} className="flex space-x-2">
                           <Avatar
                             src={comment.UserImage}
@@ -1049,14 +1046,14 @@ const Posts = () => {
                             </div>
                             <div className="flex items-center mt-1 text-xs text-gray-500 space-x-3">
                               <span>{formatDate(comment.CreatedAt)}</span>
-                              <button 
+                              <button
                                 className={`font-medium ${comment.IsLiked ? 'text-blue-500' : ''}`}
                                 onClick={() => handleLikeComment(comment.CommentID)}
                               >
                                 Thích ({comment.LikesCount || 0})
                               </button>
                               {comment.UserID === JSON.parse(localStorage.getItem('user') || '{}').UserID && (
-                                <button 
+                                <button
                                   className="font-medium text-red-500"
                                   onClick={() => handleDeleteComment(comment.CommentID)}
                                 >
@@ -1077,7 +1074,7 @@ const Posts = () => {
               </div>
             )}
           </div>
-          
+
           {/* Right side - Related/playlist videos */}
           <div className="lg:w-1/3">
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -1085,13 +1082,13 @@ const Posts = () => {
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-medium">Bài viết gợi ý</h2>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       className={`px-3 py-1 rounded ${activeFilter === 'latest' ? 'bg-blue-100 text-blue-600' : 'text-gray-500 hover:bg-gray-100'}`}
                       onClick={() => setActiveFilter('latest')}
                     >
                       Mới nhất
                     </button>
-                    <button 
+                    <button
                       className={`px-3 py-1 rounded ${activeFilter === 'trending' ? 'bg-blue-100 text-blue-600' : 'text-gray-500 hover:bg-gray-100'}`}
                       onClick={() => setActiveFilter('trending')}
                     >
@@ -1100,22 +1097,22 @@ const Posts = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="overflow-y-auto max-h-[600px]">
-                {filteredPosts.map(post => (
-                  <div 
-                    key={post.PostID} 
+                {filteredPosts?.map(post => (
+                  <div
+                    key={post.PostID}
                     className={`p-3 flex gap-3 cursor-pointer hover:bg-gray-50 ${selectedVideo?.PostID === post.PostID ? 'bg-blue-50' : ''}`}
                     onClick={() => handleVideoSelect(post)}
                   >
                     <div className="w-1/3">
-                      {post.media && post.media.length > 0 ? (
+                      {post.media && post.media?.length > 0 ? (
                         <div className="relative pb-[56.25%] h-0">
                           {post.media[0].MediaType === 'video' ? (
                             <div className="absolute inset-0 flex items-center justify-center bg-black">
-                              <img 
-                                src={videoThumbnails[post.PostID] || post.media[0].ThumbnailUrl || post.media[0].MediaUrl.startsWith('http') 
-                                  ? videoThumbnails[post.PostID] || post.media[0].ThumbnailUrl || post.media[0].MediaUrl 
+                              <img
+                                src={videoThumbnails[post.PostID] || post.media[0].ThumbnailUrl || post.media[0].MediaUrl.startsWith('http')
+                                  ? videoThumbnails[post.PostID] || post.media[0].ThumbnailUrl || post.media[0].MediaUrl
                                   : `/uploads/${post.media[0].MediaUrl.replace(/^\/uploads\//, '').replace(/^uploads\//, '')}`
                                 }
                                 alt="Video thumbnail"
@@ -1134,9 +1131,9 @@ const Posts = () => {
                               </div>
                             </div>
                           ) : (
-                            <img 
-                              src={post.media[0].MediaUrl.startsWith('http') 
-                                ? post.media[0].MediaUrl 
+                            <img
+                              src={post.media[0].MediaUrl.startsWith('http')
+                                ? post.media[0].MediaUrl
                                 : `/uploads/${post.media[0].MediaUrl.replace(/^\/uploads\//, '').replace(/^uploads\//, '')}`
                               }
                               alt="Post media"
@@ -1158,7 +1155,7 @@ const Posts = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="w-2/3">
                       <p className="text-xs text-gray-500">{post.FullName || "Unknown User"}</p>
                       <div className="font-medium text-sm line-clamp-2 mb-1 prose prose-sm">
@@ -1168,7 +1165,7 @@ const Posts = () => {
                       </div>
                       <div className="flex items-center text-xs text-gray-500 mt-1">
                         <div className="flex items-center mr-2">
-                          <button 
+                          <button
                             onClick={(e) => {
                               e.stopPropagation(); // Prevent post selection when clicking like button
                               handleLike(post.PostID);
@@ -1189,7 +1186,7 @@ const Posts = () => {
                           <ChatBubbleLeftIcon className="h-4 w-4 mr-1 text-gray-500" />
                           <span>{post.CommentsCount || 0}</span>
                         </div>
-                        
+
                         <div className="flex items-center mx-2">
                           <button
                             onClick={(e) => {
@@ -1207,7 +1204,7 @@ const Posts = () => {
                             <span className={post.IsBookmarked ? "text-blue-600" : ""}>{post.BookmarksCount || 0}</span>
                           </button>
                         </div>
-                        
+
                         <span className="mx-2 text-gray-400">•</span>
                         <span>{new Date(post.CreatedAt).toLocaleDateString()}</span>
                       </div>

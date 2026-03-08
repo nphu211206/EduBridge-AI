@@ -346,7 +346,7 @@ const Feedback = () => {
                 label="Loại góp ý"
                 disabled={loading}
               >
-                {feedbackCategories.map((cat) => (
+                {feedbackCategories?.map((cat) => (
                   <MenuItem key={cat.id} value={cat.id}>
                     {cat.name}
                   </MenuItem>
@@ -363,7 +363,7 @@ const Feedback = () => {
                 label="Phòng ban"
                 disabled={loading}
               >
-                {departments.map((dept, index) => (
+                {departments?.map((dept, index) => (
                   <MenuItem key={index} value={dept.name}>
                     {dept.name}
                   </MenuItem>
@@ -420,7 +420,7 @@ const Feedback = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
             <CircularProgress />
           </Box>
-        ) : history.length > 0 ? (
+        ) : history?.length > 0 ? (
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -434,7 +434,7 @@ const Feedback = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {history.map((feedback) => (
+                {history?.map((feedback) => (
                   <TableRow key={feedback.id}>
                     <TableCell>{feedback.title}</TableCell>
                     <TableCell>

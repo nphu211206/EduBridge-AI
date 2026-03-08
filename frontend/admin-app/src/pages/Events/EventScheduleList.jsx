@@ -182,7 +182,7 @@ const EventScheduleList = ({ eventId, refresh }) => {
     );
   }
 
-  if (scheduleItems.length === 0) {
+  if (scheduleItems?.length === 0) {
     return (
       <Empty
         description="Chưa có lịch trình nào được thêm"

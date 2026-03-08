@@ -21,8 +21,8 @@ const createCustomIcon = (isHovered) => {
 const MapEffect = ({ jobsWithCoords }) => {
     const map = useMap();
     useEffect(() => {
-        if (jobsWithCoords.length > 0) {
-            const bounds = L.latLngBounds(jobsWithCoords.map(job => job.coordinates));
+        if (jobsWithCoords?.length > 0) {
+            const bounds = L.latLngBounds(jobsWithCoords?.map(job => job.coordinates));
             map.fitBounds(bounds, { padding: [50, 50] });
         }
     }, [jobsWithCoords, map]);
@@ -30,7 +30,7 @@ const MapEffect = ({ jobsWithCoords }) => {
 };
 
 const InteractiveJobMap = ({ jobs, hoveredJobId, onMarkerClick }) => {
-    const jobsWithCoords = jobs.filter(job => job.coordinates && job.coordinates.length === 2);
+    const jobsWithCoords = jobs?.filter(job => job.coordinates && job.coordinates?.length === 2);
 
     return (
         <div className="h-[500px] w-full rounded-xl overflow-hidden border-2 border-gray-700 shadow-2xl relative">
@@ -39,7 +39,7 @@ const InteractiveJobMap = ({ jobs, hoveredJobId, onMarkerClick }) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
-                {jobsWithCoords.map(job => (
+                {jobsWithCoords?.map(job => (
                     <Marker 
                         key={job.id} 
                         position={job.coordinates} 

@@ -190,7 +190,7 @@ const TeacherEvaluation = () => {
     setDialogOpen(false);
     
     // Update UI to show the evaluation as submitted
-    setClassesToEvaluate(classesToEvaluate.filter(c => c.id !== selectedClass.id));
+    setClassesToEvaluate(classesToEvaluate?.filter(c => c.id !== selectedClass.id));
     
     // Add to submitted evaluations
     const newEvaluation = {
@@ -225,7 +225,7 @@ const TeacherEvaluation = () => {
               Lớp học chưa đánh giá
             </Typography>
             
-            {classesToEvaluate.length > 0 ? (
+            {classesToEvaluate?.length > 0 ? (
               <TableContainer component={Paper} sx={styles.tableContainer}>
                 <Table>
                   <TableHead>
@@ -238,7 +238,7 @@ const TeacherEvaluation = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {classesToEvaluate.map((classItem) => (
+                    {classesToEvaluate?.map((classItem) => (
                       <TableRow key={classItem.id}>
                         <TableCell>{classItem.courseCode}</TableCell>
                         <TableCell>{classItem.courseName}</TableCell>
@@ -273,7 +273,7 @@ const TeacherEvaluation = () => {
               Đánh giá đã gửi
             </Typography>
             
-            {submittedEvaluations.length > 0 ? (
+            {submittedEvaluations?.length > 0 ? (
               <TableContainer component={Paper} sx={styles.tableContainer}>
                 <Table>
                   <TableHead>
@@ -287,7 +287,7 @@ const TeacherEvaluation = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {submittedEvaluations.map((evaluation) => (
+                    {submittedEvaluations?.map((evaluation) => (
                       <TableRow key={evaluation.id}>
                         <TableCell>{evaluation.courseCode}</TableCell>
                         <TableCell>{evaluation.courseName}</TableCell>

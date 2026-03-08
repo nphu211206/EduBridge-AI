@@ -39,7 +39,7 @@ const OtpLogin = () => {
     setLoading(true);
     setError('');
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const response = await axios.post(
         `${API_BASE_URL}/api/auth/login-otp/verify`,
         { email, otp: code }
@@ -89,7 +89,7 @@ const OtpLogin = () => {
     const newOtp = codeArr.join('').slice(0, 6);
     setOtp(newOtp);
     if (inputsRef.current[idx + 1]) inputsRef.current[idx + 1].focus();
-    if (newOtp.length === 6) verifyOtp(newOtp);
+    if (newOtp?.length === 6) verifyOtp(newOtp);
   };
   const handleVerifyOtp = (e) => {
     e.preventDefault();
@@ -110,7 +110,7 @@ const OtpLogin = () => {
     }
     try {
       setLoading(true);
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
       await axios.post(`${API_BASE_URL}/api/auth/login-otp`, { email });
       toast.success('OTP đã được gửi đến email của bạn');
       setStage(2);
@@ -163,7 +163,7 @@ const OtpLogin = () => {
               <div className="mt-8">
                 <label className="block text-sm font-semibold text-gray-700 text-center">OTP</label>
                 <div className="mt-2 flex justify-center space-x-2">
-                  {Array.from({ length: 6 }).map((_, idx) => (
+                  {Array.from({ length: 6 })?.map((_, idx) => (
                     <input
                       key={idx}
                       type="text"

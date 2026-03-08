@@ -57,7 +57,7 @@ const InterviewSession = () => {
         if (timerRef.current) clearInterval(timerRef.current);
         setSubmitting(true);
         try {
-            const answerArray = (interview.Questions || []).map((q, i) => ({
+            const answerArray = (interview.Questions || [])?.map((q, i) => ({
                 questionId: q.QuestionID || i,
                 answer: answers[i] || '',
             }));
@@ -122,11 +122,11 @@ const InterviewSession = () => {
         <div className="career-page">
             <div className="interview-session">
                 <div className="session-topbar">
-                    <span className="topbar-skill">🎤 Phỏng vấn — Câu {currentQ + 1}/{questions.length}</span>
+                    <span className="topbar-skill">🎤 Phỏng vấn — Câu {currentQ + 1}/{questions?.length}</span>
                     <span className={`topbar-timer ${timeLeft < 60 ? 'urgent' : ''}`}>⏱️ {formatTime(timeLeft)}</span>
                 </div>
                 <div className="session-progress">
-                    <div className="progress-bar" style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}></div>
+                    <div className="progress-bar" style={{ width: `${((currentQ + 1) / questions?.length) * 100}%` }}></div>
                 </div>
 
                 <div className="question-card">
@@ -143,8 +143,8 @@ const InterviewSession = () => {
 
                 <div className="session-nav">
                     <button onClick={() => setCurrentQ(Math.max(0, currentQ - 1))} disabled={currentQ === 0} className="btn-nav">← Trước</button>
-                    <span className="nav-answered">{Object.keys(answers).length}/{questions.length} đã trả lời</span>
-                    {currentQ < questions.length - 1 ? (
+                    <span className="nav-answered">{Object.keys(answers)?.length}/{questions?.length} đã trả lời</span>
+                    {currentQ < questions?.length - 1 ? (
                         <button onClick={() => setCurrentQ(currentQ + 1)} className="btn-nav btn-next">Tiếp →</button>
                     ) : (
                         <button onClick={handleSubmit} disabled={submitting} className="btn-submit-quiz">

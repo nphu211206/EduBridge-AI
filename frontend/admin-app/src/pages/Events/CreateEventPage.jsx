@@ -178,7 +178,7 @@ const CreateEventPage = () => {
 
   // Thêm giải thưởng mới
   const addPrize = () => {
-    const newRank = prizes.length + 1;
+    const newRank = prizes?.length + 1;
     let prizeName = '';
     
     switch (newRank) {
@@ -204,7 +204,7 @@ const CreateEventPage = () => {
     newPrizes.splice(index, 1);
     
     // Cập nhật thứ hạng cho các giải thưởng còn lại
-    newPrizes.forEach((prize, idx) => {
+    newPrizes?.forEach((prize, idx) => {
       prize.rank = idx + 1;
     });
     
@@ -215,7 +215,7 @@ const CreateEventPage = () => {
   const handleNext = () => {
     if (!validateStep()) return;
     
-    if (activeStep === steps.length - 1) {
+    if (activeStep === steps?.length - 1) {
       handleSubmitEvent();
     } else {
       setActiveStep(prevStep => prevStep + 1);
@@ -308,14 +308,14 @@ const CreateEventPage = () => {
       // Sau khi tạo event thành công, thêm các dữ liệu liên quan
       try {
         // Thêm ngôn ngữ lập trình
-        if (eventData.languages && eventData.languages.length > 0) {
+        if (eventData.languages && eventData.languages?.length > 0) {
           for (const language of eventData.languages) {
             await addEventLanguage(eventId, { language });
           }
         }
 
         // Thêm công nghệ
-        if (eventData.technologies && eventData.technologies.length > 0) {
+        if (eventData.technologies && eventData.technologies?.length > 0) {
           for (const technology of eventData.technologies) {
             await addEventTechnology(eventId, { technology });
           }
@@ -323,7 +323,7 @@ const CreateEventPage = () => {
 
         // Thêm lịch trình
         if (scheduleItems && scheduleItems.some(item => item.title)) {
-          for (const item of scheduleItems.filter(item => item.title)) {
+          for (const item of scheduleItems?.filter(item => item.title)) {
             const scheduleData = {
               eventId,
               activityName: item.title,
@@ -338,8 +338,8 @@ const CreateEventPage = () => {
         }
 
         // Thêm giải thưởng
-        if (prizes && prizes.length > 0) {
-          for (const prize of prizes.filter(p => p.name)) {
+        if (prizes && prizes?.length > 0) {
+          for (const prize of prizes?.filter(p => p.name)) {
             const prizeData = {
               eventId,
               rank: prize.rank,
@@ -428,7 +428,7 @@ const CreateEventPage = () => {
                         label="Danh mục"
                         onChange={handleEventDataChange}
                       >
-                        {categories.map((category) => (
+                        {categories?.map((category) => (
                           <MenuItem key={category.value} value={category.value}>
                             {category.label}
                           </MenuItem>
@@ -445,7 +445,7 @@ const CreateEventPage = () => {
                         label="Cấp độ khó"
                         onChange={handleEventDataChange}
                       >
-                        {difficulties.map((difficulty) => (
+                        {difficulties?.map((difficulty) => (
                           <MenuItem key={difficulty.value} value={difficulty.value}>
                             {difficulty.label}
                           </MenuItem>
@@ -584,13 +584,13 @@ const CreateEventPage = () => {
                         onChange={handleLanguagesChange}
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {selected.map((value) => (
+                            {selected?.map((value) => (
                               <Chip key={value} label={value} size="small" color="primary" variant="outlined" />
                             ))}
                           </Box>
                         )}
                       >
-                        {programmingLanguages.map((language) => (
+                        {programmingLanguages?.map((language) => (
                           <MenuItem key={language} value={language}>
                             {language}
                           </MenuItem>
@@ -610,13 +610,13 @@ const CreateEventPage = () => {
                         onChange={handleTechnologiesChange}
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {selected.map((value) => (
+                            {selected?.map((value) => (
                               <Chip key={value} label={value} size="small" color="secondary" variant="outlined" />
                             ))}
                           </Box>
                         )}
                       >
-                        {technologiesList.map((tech) => (
+                        {technologiesList?.map((tech) => (
                           <MenuItem key={tech} value={tech}>
                             {tech}
                           </MenuItem>
@@ -725,7 +725,7 @@ const CreateEventPage = () => {
                     Thêm hoạt động
                   </Button>
                 </Box>
-                {scheduleItems.map((item, index) => (
+                {scheduleItems?.map((item, index) => (
                   <Card key={index} variant="outlined" sx={{ mb: 3 }}>
                     <CardContent>
                       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -735,7 +735,7 @@ const CreateEventPage = () => {
                         <IconButton 
                           color="error" 
                           onClick={() => removeScheduleItem(index)}
-                          disabled={scheduleItems.length <= 1}
+                          disabled={scheduleItems?.length <= 1}
                           size="small"
                         >
                           <Delete />
@@ -830,7 +830,7 @@ const CreateEventPage = () => {
                     Thêm giải thưởng
                   </Button>
                 </Box>
-                {prizes.map((prize, index) => (
+                {prizes?.map((prize, index) => (
                   <Card key={index} variant="outlined" sx={{ 
                     mb: 3,
                     borderLeft: `4px solid ${theme.palette.secondary.main}`
@@ -945,8 +945,8 @@ const CreateEventPage = () => {
                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mt: 3, mb: 2 }}>
                   Lịch trình
                 </Typography>
-                {scheduleItems.filter(item => item.title).length > 0 ? (
-                  scheduleItems.filter(item => item.title).map((item, index) => (
+                {scheduleItems?.filter(item => item.title)?.length > 0 ? (
+                  scheduleItems?.filter(item => item.title)?.map((item, index) => (
                     <Card key={index} variant="outlined" sx={{ mb: 2 }}>
                       <CardContent>
                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{item.title}</Typography>
@@ -991,8 +991,8 @@ const CreateEventPage = () => {
                       <Grid item xs={12}>
                         <Typography variant="subtitle2" color="textSecondary">Ngôn ngữ lập trình</Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
-                          {eventData.languages && eventData.languages.length > 0 ? 
-                            eventData.languages.map((lang) => (
+                          {eventData.languages && eventData.languages?.length > 0 ? 
+                            eventData.languages?.map((lang) => (
                               <Chip key={lang} label={lang} size="small" color="primary" variant="outlined" />
                             )) : 
                             <Typography variant="body2">Chưa chọn</Typography>
@@ -1002,8 +1002,8 @@ const CreateEventPage = () => {
                       <Grid item xs={12}>
                         <Typography variant="subtitle2" color="textSecondary">Công nghệ</Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
-                          {eventData.technologies && eventData.technologies.length > 0 ? 
-                            eventData.technologies.map((tech) => (
+                          {eventData.technologies && eventData.technologies?.length > 0 ? 
+                            eventData.technologies?.map((tech) => (
                               <Chip key={tech} label={tech} size="small" color="secondary" variant="outlined" />
                             )) : 
                             <Typography variant="body2">Chưa chọn</Typography>
@@ -1017,8 +1017,8 @@ const CreateEventPage = () => {
                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mt: 3, mb: 2 }}>
                   Giải thưởng
                 </Typography>
-                {prizes.filter(prize => prize.name).length > 0 ? (
-                  prizes.filter(prize => prize.name).map((prize, index) => (
+                {prizes?.filter(prize => prize.name)?.length > 0 ? (
+                  prizes?.filter(prize => prize.name)?.map((prize, index) => (
                     <Card key={index} variant="outlined" sx={{ mb: 2 }}>
                       <CardContent>
                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{prize.name}</Typography>
@@ -1069,7 +1069,7 @@ const CreateEventPage = () => {
           </Box>
 
           <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-            {steps.map((label) => (
+            {steps?.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
               </Step>
@@ -1108,12 +1108,12 @@ const CreateEventPage = () => {
               variant="contained"
               color="primary"
               onClick={handleNext}
-              endIcon={activeStep === steps.length - 1 ? <Save /> : <ArrowForward />}
+              endIcon={activeStep === steps?.length - 1 ? <Save /> : <ArrowForward />}
               disabled={loading}
             >
               {loading ? (
                 <CircularProgress size={24} />
-              ) : activeStep === steps.length - 1 ? (
+              ) : activeStep === steps?.length - 1 ? (
                 'Tạo sự kiện'
               ) : (
                 'Tiếp theo'

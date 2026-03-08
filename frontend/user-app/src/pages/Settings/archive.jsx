@@ -97,7 +97,7 @@ const Archive = () => {
   // Handle restore item
   const handleRestoreItem = (itemId) => {
     // Filter out the restored item
-    const updatedItems = archivedItems.filter(item => item.id !== itemId);
+    const updatedItems = archivedItems?.filter(item => item.id !== itemId);
     setArchivedItems(updatedItems);
     
     // Show success message
@@ -109,7 +109,7 @@ const Archive = () => {
     // Confirm before deletion
     if (window.confirm('Bạn có chắc chắn muốn xóa vĩnh viễn mục này? Hành động này không thể hoàn tác.')) {
       // Filter out the deleted item
-      const updatedItems = archivedItems.filter(item => item.id !== itemId);
+      const updatedItems = archivedItems?.filter(item => item.id !== itemId);
       setArchivedItems(updatedItems);
       
       // Show success message
@@ -118,7 +118,7 @@ const Archive = () => {
   };
   
   // Filter items by type and search query
-  const filteredItems = archivedItems.filter(item => {
+  const filteredItems = archivedItems?.filter(item => {
     const matchesType = activeFilter === 'all' || item.type === activeFilter;
     const matchesSearch = searchQuery === '' || 
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -257,9 +257,9 @@ const Archive = () => {
             <h3 className="text-lg font-medium text-gray-900">Các mục đã lưu trữ</h3>
           </div>
           
-          {sortedItems.length > 0 ? (
+          {sortedItems?.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {sortedItems.map((item) => (
+              {sortedItems?.map((item) => (
                 <div key={item.id} className="p-5">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -292,7 +292,7 @@ const Archive = () => {
                       </div>
                       
                       <div className="mt-2 flex flex-wrap gap-1 ml-8">
-                        {item.tags.map((tag, index) => (
+                        {item.tags?.map((tag, index) => (
                           <span key={index} className="inline-flex items-center bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded">
                             #{tag}
                           </span>

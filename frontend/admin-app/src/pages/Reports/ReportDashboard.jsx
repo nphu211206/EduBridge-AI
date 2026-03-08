@@ -121,9 +121,9 @@ const ReportDashboard = () => {
             <CardHeader title="Phân loại báo cáo" />
             <Divider />
             <CardContent>
-              {stats.categoryStats && stats.categoryStats.length > 0 ? (
+              {stats.categoryStats && stats.categoryStats?.length > 0 ? (
                 <Box sx={{ height: 300 }}>
-                  {stats.categoryStats.map((category, index) => (
+                  {stats.categoryStats?.map((category, index) => (
                     <Box key={index} sx={{ mb: 2 }}>
                       <Typography variant="body1">
                         {category.category || 'Chưa phân loại'}: {category.count}
@@ -267,10 +267,10 @@ const ReportDashboard = () => {
             <CardHeader title="Báo cáo gần đây" />
             <Divider />
             <CardContent>
-              {stats.lastWeekReports && stats.lastWeekReports.length > 0 ? (
+              {stats.lastWeekReports && stats.lastWeekReports?.length > 0 ? (
                 <Box sx={{ height: 300 }}>
                   <Grid container spacing={2}>
-                    {stats.lastWeekReports.map((item, index) => (
+                    {stats.lastWeekReports?.map((item, index) => (
                       <Grid item xs={12} sm={6} md={3} key={index}>
                         <Card variant="outlined" sx={{ p: 2 }}>
                           <Typography variant="h6" gutterBottom>{item.date}</Typography>

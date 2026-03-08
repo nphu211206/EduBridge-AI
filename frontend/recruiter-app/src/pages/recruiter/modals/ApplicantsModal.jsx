@@ -114,9 +114,9 @@ const ApplicantCard = memo(({ applicant, getStatusInfo, onStatusUpdate, onOpenSe
                 </span>
                 <div className="flex items-center gap-1.5 w-full sm:w-auto">
                     <AnimatePresence>
-                        {possibleActions.length > 0 && (
+                        {possibleActions?.length > 0 && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5 w-full sm:w-auto">
-                                {possibleActions.map(action => (
+                                {possibleActions?.map(action => (
                                     <motion.button
                                         key={action.label} whileTap={{ scale: 0.95 }}
                                         onClick={action.onClick}
@@ -172,7 +172,7 @@ const ApplicantsModal = ({ job, onClose, applicants: applicantsProp, isLoading: 
     }, [job, applicantsProp]);
 
     const handleStatusUpdate = useCallback((applicationId, newStatus) => {
-        const updateFunction = (prevApplicants) => prevApplicants.map(app => app.id === applicationId ? { ...app, status: newStatus } : app);
+        const updateFunction = (prevApplicants) => prevApplicants?.map(app => app.id === applicationId ? { ...app, status: newStatus } : app);
         if (setApplicantsProp) { setApplicantsProp(updateFunction); } else { setInternalApplicants(updateFunction); }
     }, [setApplicantsProp]);
 
@@ -219,10 +219,10 @@ const ApplicantsModal = ({ job, onClose, applicants: applicantsProp, isLoading: 
                 <div className="p-3 sm:p-6 overflow-y-auto flex-grow bg-gray-800/50 styled-scrollbar">
                     {isLoading ? <div className="py-16"><LoadingSpinner text="Đang tải danh sách ứng viên..." /></div> :
                         error ? <div className="py-10"><ErrorDisplay message={error} /></div> :
-                            applicants.length === 0 ? (<EmptyState icon={Users} title="Chưa có ứng viên nào" message="Hiện tại chưa có sinh viên nào ứng tuyển vào vị trí này." />) : (
+                            applicants?.length === 0 ? (<EmptyState icon={Users} title="Chưa có ứng viên nào" message="Hiện tại chưa có sinh viên nào ứng tuyển vào vị trí này." />) : (
                                 <motion.div layout className="space-y-3">
                                     <AnimatePresence>
-                                        {applicants.map(applicant => (
+                                        {applicants?.map(applicant => (
                                             <ApplicantCard
                                                 key={applicant.id}
                                                 applicant={applicant}

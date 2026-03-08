@@ -17,7 +17,7 @@ export const assignmentApi = apiSlice.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.assignments.map(({ AssignmentID }) => ({
+              ...result.assignments?.map(({ AssignmentID }) => ({
                 type: 'Assignment',
                 id: AssignmentID,
               })),
@@ -48,8 +48,8 @@ export const assignmentApi = apiSlice.injectEndpoints({
         formData.append('dueDate', data.dueDate || '');
         formData.append('totalPoints', data.totalPoints || 100);
         
-        if (data.files && data.files.length > 0) {
-          for (let i = 0; i < data.files.length; i++) {
+        if (data.files && data.files?.length > 0) {
+          for (let i = 0; i < data.files?.length; i++) {
             formData.append('files', data.files[i]);
           }
         }
@@ -75,8 +75,8 @@ export const assignmentApi = apiSlice.injectEndpoints({
         formData.append('dueDate', rest.dueDate || '');
         formData.append('totalPoints', rest.totalPoints || 100);
         
-        if (rest.files && rest.files.length > 0) {
-          for (let i = 0; i < rest.files.length; i++) {
+        if (rest.files && rest.files?.length > 0) {
+          for (let i = 0; i < rest.files?.length; i++) {
             formData.append('files', rest.files[i]);
           }
         }

@@ -43,7 +43,7 @@ const ExamTimer = ({ duration, onExpire }) => {
       hours > 0 ? hours.toString().padStart(2, '0') : null,
       minutes.toString().padStart(2, '0'),
       secs.toString().padStart(2, '0')
-    ].filter(Boolean).join(':');
+    ]?.filter(Boolean).join(':');
   };
   
   // Calculate progress percentage (inverted so it goes down)

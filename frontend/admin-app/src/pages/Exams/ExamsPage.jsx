@@ -52,7 +52,7 @@ const ExamsPage = () => {
   }, []);
   
   useEffect(() => {
-    if (exams.length > 0) {
+    if (exams?.length > 0) {
       applyFilters();
       calculateStats();
     }
@@ -64,7 +64,7 @@ const ExamsPage = () => {
       const response = await getAllExams();
       
       if (response && response.exams) {
-        const formattedExams = response.exams.map(exam => ({
+        const formattedExams = response.exams?.map(exam => ({
           ExamID: exam.ExamID,
           Title: exam.Title,
           Description: exam.Description,
@@ -98,23 +98,23 @@ const ExamsPage = () => {
   };
 
   const calculateStats = () => {
-    if (!exams.length) return;
+    if (!exams?.length) return;
 
     const newStats = {
-      total: exams.length,
-      multipleChoice: exams.filter(exam => exam.Type === 'multiple_choice').length,
-      essay: exams.filter(exam => exam.Type === 'essay').length,
-      coding: exams.filter(exam => exam.Type === 'coding').length,
-      upcoming: exams.filter(exam => exam.Status === 'upcoming').length,
-      ongoing: exams.filter(exam => exam.Status === 'ongoing').length,
-      completed: exams.filter(exam => exam.Status === 'completed').length
+      total: exams?.length,
+      multipleChoice: exams?.filter(exam => exam.Type === 'multiple_choice')?.length,
+      essay: exams?.filter(exam => exam.Type === 'essay')?.length,
+      coding: exams?.filter(exam => exam.Type === 'coding')?.length,
+      upcoming: exams?.filter(exam => exam.Status === 'upcoming')?.length,
+      ongoing: exams?.filter(exam => exam.Status === 'ongoing')?.length,
+      completed: exams?.filter(exam => exam.Status === 'completed')?.length
     };
     
     setStats(newStats);
   };
 
   const applyFilters = () => {
-    const filtered = exams.filter(exam => {
+    const filtered = exams?.filter(exam => {
       // Search text filter
       const matchesSearch = 
         exam.Title.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -312,7 +312,7 @@ const ExamsPage = () => {
             <Text strong>{text}</Text>
             {record.Description && (
               <Text type="secondary" style={{ display: 'block' }}>
-                {record.Description.length > 50 
+                {record.Description?.length > 50 
                   ? `${record.Description.substring(0, 50)}...` 
                   : record.Description}
               </Text>

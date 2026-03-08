@@ -73,7 +73,7 @@ const CallHistory = () => {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
-      {callHistory.map((call) => (
+      {callHistory?.map((call) => (
         <div key={call.CallID} className="p-4 flex justify-between items-center">
           <div className="flex items-center">
             <div className="mr-3">

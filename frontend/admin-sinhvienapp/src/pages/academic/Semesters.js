@@ -65,7 +65,7 @@ const Semesters = () => {
       if (response.success) {
         // Map the response data to our component's expected format
         // Based on the Semesters table schema in datasinhvien.sql
-        const semestersData = response.data ? response.data.map(semester => ({
+        const semestersData = response.data ? response.data?.map(semester => ({
           id: semester.SemesterID,
           code: semester.SemesterCode,
           name: semester.SemesterName,
@@ -100,7 +100,7 @@ const Semesters = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = semesters.filter(semester => 
+      const filtered = semesters?.filter(semester => 
         semester.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         semester.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
         semester.academicYear.toLowerCase().includes(searchTerm.toLowerCase())
@@ -125,12 +125,12 @@ const Semesters = () => {
       
       if (response && response.success) {
         // Update local state on success
-    const updatedSemesters = semesters.filter(
+    const updatedSemesters = semesters?.filter(
       semester => semester.id !== selectedSemester.id
     );
     setSemesters(updatedSemesters);
         setFilteredSemesters(
-          filteredSemesters.filter(semester => semester.id !== selectedSemester.id)
+          filteredSemesters?.filter(semester => semester.id !== selectedSemester.id)
         );
         
         setError({
@@ -250,14 +250,14 @@ const Semesters = () => {
                   </Box>
                 </TableCell>
               </TableRow>
-            ) : filteredSemesters.length === 0 ? (
+            ) : filteredSemesters?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center">
                   Không tìm thấy học kỳ nào
                 </TableCell>
               </TableRow>
             ) : (
-              filteredSemesters.map((semester) => (
+              filteredSemesters?.map((semester) => (
                 <TableRow key={semester.id}>
                   <TableCell>{semester.code}</TableCell>
                   <TableCell>{semester.name}</TableCell>

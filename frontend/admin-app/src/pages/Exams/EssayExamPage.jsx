@@ -117,7 +117,7 @@ const EssayExamPage = () => {
       type: 'essay',
       content: '',
       points: 10,
-      orderIndex: questions.length + 2,
+      orderIndex: questions?.length + 2,
       essayData: {
         content: '',
         keywords: [],
@@ -159,7 +159,7 @@ const EssayExamPage = () => {
       handleCreateExam();
     } else if (activeStep === 1) {
       // Validate questions
-      if (questions.length === 0) {
+      if (questions?.length === 0) {
         setError('Vui lòng thêm ít nhất một câu hỏi');
         return;
       }
@@ -327,7 +327,7 @@ const EssayExamPage = () => {
         </Box>
         
         <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-          {steps.map((label) => (
+          {steps?.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
@@ -411,7 +411,7 @@ const EssayExamPage = () => {
                     margin="normal"
                   >
                     <MenuItem value="">Không thuộc khóa học</MenuItem>
-                    {courses.map((course) => (
+                    {courses?.map((course) => (
                       <MenuItem key={course.CourseID} value={course.CourseID}>
                         {course.Title}
                       </MenuItem>
@@ -554,12 +554,12 @@ const EssayExamPage = () => {
               </Typography>
               
               {/* Danh sách câu hỏi đã thêm */}
-              {questions.length > 0 && (
+              {questions?.length > 0 && (
                 <Box mb={4}>
                   <Typography variant="subtitle1" gutterBottom>
-                    Câu hỏi đã thêm: {questions.length}
+                    Câu hỏi đã thêm: {questions?.length}
                   </Typography>
-                  {questions.map((question, index) => (
+                  {questions?.map((question, index) => (
                     <Accordion key={question.id || index}>
                       <AccordionSummary expandIcon={<ExpandMore />}>
                         <Typography>
@@ -577,7 +577,7 @@ const EssayExamPage = () => {
                               </Typography>
                             )}
                             
-                            {question.essayData.keywords && question.essayData.keywords.length > 0 && (
+                            {question.essayData.keywords && question.essayData.keywords?.length > 0 && (
                               <Typography gutterBottom>
                                 <strong>Từ khóa:</strong> {question.essayData.keywords.join(', ')}
                               </Typography>
@@ -671,7 +671,7 @@ const EssayExamPage = () => {
                         fullWidth
                         label="Từ khóa (phân cách bằng dấu phẩy)"
                         value={Array.isArray(currentQuestion.essayData.keywords) ? currentQuestion.essayData.keywords.join(', ') : ''}
-                        onChange={(e) => handleEssayDataChange('keywords', e.target.value.split(',').map(k => k.trim()))}
+                        onChange={(e) => handleEssayDataChange('keywords', e.target.value.split(',')?.map(k => k.trim()))}
                         margin="normal"
                         placeholder="Ví dụ: thuật toán, mô hình dữ liệu, phân tích"
                         helperText="Các từ khóa quan trọng cần xuất hiện trong bài làm"
@@ -790,10 +790,10 @@ const EssayExamPage = () => {
               </Card>
               
               <Typography variant="h6" gutterBottom>
-                Câu hỏi ({questions.length})
+                Câu hỏi ({questions?.length})
               </Typography>
               
-              {questions.map((question, index) => (
+              {questions?.map((question, index) => (
                 <Card key={index} variant="outlined" sx={{ mb: 2 }}>
                   <CardContent>
                     <Typography variant="subtitle1">
@@ -805,12 +805,12 @@ const EssayExamPage = () => {
                     
                     <Box mt={2}>
                       <Typography variant="body2">
-                        <strong>Nội dung mẫu:</strong> {question.essayData.content.length > 200 
+                        <strong>Nội dung mẫu:</strong> {question.essayData.content?.length > 200 
                           ? `${question.essayData.content.substring(0, 200)}...` 
                           : question.essayData.content || 'Không có nội dung mẫu'}
                       </Typography>
                       
-                      {question.essayData.keywords && question.essayData.keywords.length > 0 && (
+                      {question.essayData.keywords && question.essayData.keywords?.length > 0 && (
                         <Typography variant="body2" sx={{ mt: 1 }}>
                           <strong>Từ khóa:</strong> {question.essayData.keywords.join(', ')}
                         </Typography>
@@ -841,13 +841,13 @@ const EssayExamPage = () => {
               variant="contained"
               color="primary"
               onClick={handleNext}
-              endIcon={activeStep === steps.length - 1 ? <Save /> : <ArrowForward />}
+              endIcon={activeStep === steps?.length - 1 ? <Save /> : <ArrowForward />}
               disabled={loading}
             >
               {loading ? (
                 <CircularProgress size={24} />
               ) : (
-                activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'
+                activeStep === steps?.length - 1 ? 'Hoàn thành' : 'Tiếp tục'
               )}
             </Button>
           </Box>

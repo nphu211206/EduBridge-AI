@@ -7,12 +7,12 @@
 -----------------------------------------------------------------*/
 import React, { useState, useEffect } from 'react';
 import {
-  Card, Table, Space, Button, Dropdown, Modal, 
+  Card, Table, Space, Button, Dropdown, Modal,
   Tag, Typography, Input, message, Tooltip, Divider,
   Row, Col, Statistic, Select, Form, DatePicker
 } from 'antd';
 import {
-  PlusOutlined, EditOutlined, DeleteOutlined, 
+  PlusOutlined, EditOutlined, DeleteOutlined,
   EyeOutlined, MoreOutlined, SearchOutlined,
   FilterOutlined, ExclamationCircleOutlined,
   BookOutlined, UserOutlined, FlagOutlined,
@@ -155,13 +155,13 @@ const ReportsPage = () => {
     resolved: 0,
     rejected: 0,
   });
-  
+
   // UI states
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
-  
+
   // Detail and action states
   const [selectedReport, setSelectedReport] = useState(null);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
@@ -169,19 +169,19 @@ const ReportsPage = () => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [newStatus, setNewStatus] = useState('');
   const [statusNotes, setStatusNotes] = useState('');
-  
+
   // Load reports on component mount
   useEffect(() => {
     fetchReports();
   }, []);
-  
+
   // Apply filters when data or search/filters change
   useEffect(() => {
-    if (reports.length > 0) {
+    if (reports?.length > 0) {
       handleFiltering();
     }
   }, [searchText, filterStatus, filterCategory, reports]);
-  
+
   // Fetch reports data from API
   const fetchReports = async () => {
     setLoading(true);
@@ -193,21 +193,21 @@ const ReportsPage = () => {
         sortBy: 'createdAt',
         sortOrder: 'desc'
       });
-      
+
       // Ensure we're handling the response correctly - API might return different structure
       let reportData = [];
       if (reportsResponse && reportsResponse.data) {
         // Handle various API response formats
-        reportData = Array.isArray(reportsResponse.data) 
-          ? reportsResponse.data 
-          : Array.isArray(reportsResponse.data.items) 
-            ? reportsResponse.data.items 
-            : Array.isArray(reportsResponse.data.reports) 
-              ? reportsResponse.data.reports 
+        reportData = Array.isArray(reportsResponse.data)
+          ? reportsResponse.data
+          : Array.isArray(reportsResponse.data.items)
+            ? reportsResponse.data.items
+            : Array.isArray(reportsResponse.data.reports)
+              ? reportsResponse.data.reports
               : reportsResponse.data.data || [];
-            
+
         // Normalize data to ensure all required fields are present
-        reportData = reportData.map(report => ({
+        reportData = reportData?.map(report => ({
           id: report.id || report.reportId || report.ReportID || 0,
           title: report.title || report.Title || report.subject || report.Subject || 'Báo cáo không tiêu đề',
           content: report.content || report.Content || report.description || report.Description || '',
@@ -222,16 +222,16 @@ const ReportsPage = () => {
           notes: report.notes || report.Notes || report.adminNotes || null
         }));
       }
-      
+
       console.log('Normalized report data:', reportData);
       setReports(reportData);
       setFilteredReports(reportData);
-      
+
       // Get statistics
-          const statsResponse = await reportsAPI.getReportStats();
+      const statsResponse = await reportsAPI.getReportStats();
       // Handle various stats response formats
       let statsData = {};
-          if (statsResponse && statsResponse.data) {
+      if (statsResponse && statsResponse.data) {
         if (typeof statsResponse.data === 'object') {
           statsData = {
             total: statsResponse.data.total || statsResponse.data.totalReports || 0,
@@ -241,7 +241,7 @@ const ReportsPage = () => {
           };
         }
       }
-      
+
       setStats(statsData);
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -257,43 +257,43 @@ const ReportsPage = () => {
 
   // Handle combined filtering
   const handleFiltering = () => {
-    if (!Array.isArray(reports) || reports.length === 0) {
+    if (!Array.isArray(reports) || reports?.length === 0) {
       setFilteredReports([]);
       return;
     }
-    
+
     let filtered = [...reports];
-    
+
     // Apply search text filter
     if (searchText) {
-      filtered = filtered.filter(
+      filtered = filtered?.filter(
         (report) =>
           (report.title && report.title.toLowerCase().includes(searchText.toLowerCase())) ||
           (report.content && report.content.toLowerCase().includes(searchText.toLowerCase())) ||
           (report.reporterName && report.reporterName.toLowerCase().includes(searchText.toLowerCase()))
       );
     }
-    
+
     // Apply status filter
     if (filterStatus !== 'all') {
-      filtered = filtered.filter(report => report.status === filterStatus);
+      filtered = filtered?.filter(report => report.status === filterStatus);
     }
-    
+
     // Apply category filter
     if (filterCategory !== 'all') {
-      filtered = filtered.filter(report => report.category === filterCategory);
+      filtered = filtered?.filter(report => report.category === filterCategory);
     }
-    
+
     setFilteredReports(filtered);
   };
-  
+
   // Reset all filters
   const resetFilters = () => {
     setSearchText('');
     setFilterStatus('all');
     setFilterCategory('all');
   };
-  
+
   // Show report details
   const showReportDetails = (report) => {
     setSelectedReport(report);
@@ -313,7 +313,7 @@ const ReportsPage = () => {
     setSelectedReport(report);
     setDeleteModalVisible(true);
   };
-  
+
   // Update report status
   const handleUpdateStatus = async () => {
     try {
@@ -323,37 +323,27 @@ const ReportsPage = () => {
         status: newStatus,
         notes: statusNotes
       };
-      
+
       // Try different API request formats if needed
-      try {
-        await reportsAPI.updateReportStatus(selectedReport.id, {
-          status: newStatus,
-          notes: statusNotes
-        });
-      } catch (firstError) {
-        console.log('First update format failed, trying alternative:', firstError);
-        
-        // Alternative format: some APIs expect different parameter structure
-        await reportsAPI.updateReportStatus(selectedReport.id, newStatus, statusNotes);
-      }
-      
+      await reportsAPI.updateReportStatus(selectedReport.id, newStatus, statusNotes);
+
       message.success('Cập nhật trạng thái báo cáo thành công');
       setStatusModalVisible(false);
-      
+
       // Update local state for immediate UI feedback
-      setReports(prevReports => 
-        prevReports.map(report => 
+      setReports(prevReports =>
+        prevReports?.map(report =>
           report.id === selectedReport.id
             ? {
-            ...report,
-            status: newStatus,
-            notes: statusNotes,
-                resolvedAt: newStatus !== 'PENDING' ? new Date().toISOString() : report.resolvedAt
-              }
+              ...report,
+              status: newStatus,
+              notes: statusNotes,
+              resolvedAt: newStatus !== 'PENDING' ? new Date().toISOString() : report.resolvedAt
+            }
             : report
         )
       );
-      
+
       // Refresh data from server after a short delay
       setTimeout(() => {
         fetchReports();
@@ -370,11 +360,11 @@ const ReportsPage = () => {
       await reportsAPI.deleteReport(selectedReport.id);
       message.success('Xóa báo cáo thành công');
       setDeleteModalVisible(false);
-      
+
       // Update local state first for immediate UI feedback
-      setReports(prevReports => prevReports.filter(report => report.id !== selectedReport.id));
-      setFilteredReports(prevReports => prevReports.filter(report => report.id !== selectedReport.id));
-      
+      setReports(prevReports => prevReports?.filter(report => report.id !== selectedReport.id));
+      setFilteredReports(prevReports => prevReports?.filter(report => report.id !== selectedReport.id));
+
       // Then refresh data from server after a short delay
       setTimeout(() => {
         fetchReports();
@@ -390,7 +380,7 @@ const ReportsPage = () => {
     try {
       await reportsAPI.exportReportsAsCsv();
       message.success('Xuất báo cáo thành công');
-      } catch (error) {
+    } catch (error) {
       message.error('Không thể xuất báo cáo');
     }
   };
@@ -403,7 +393,7 @@ const ReportsPage = () => {
       return dateString;
     }
   };
-  
+
   // Generate actions dropdown menu
   const getActionMenu = (report) => {
     const items = [
@@ -413,7 +403,7 @@ const ReportsPage = () => {
         icon: <EyeOutlined />
       }
     ];
-    
+
     // Add status actions for pending reports
     if (report.status === 'PENDING') {
       items.push(
@@ -429,7 +419,7 @@ const ReportsPage = () => {
         }
       );
     }
-    
+
     // Add delete action
     items.push(
       {
@@ -442,7 +432,7 @@ const ReportsPage = () => {
         danger: true
       }
     );
-    
+
     return {
       items,
       onClick: ({ key }) => {
@@ -458,7 +448,7 @@ const ReportsPage = () => {
       }
     };
   };
-  
+
   // Table columns configuration with safe rendering
   const columns = [
     {
@@ -514,9 +504,9 @@ const ReportsPage = () => {
           'PENDING': 'Đang xử lý',
           'RESOLVED': 'Đã xử lý',
           'REJECTED': 'Từ chối'
-  };
+        };
 
-  return (
+        return (
           <Tag color={getStatusColor(text)}>
             {statusMap[text] || text || 'Không xác định'}
           </Tag>
@@ -529,8 +519,8 @@ const ReportsPage = () => {
       render: (_, record) => (
         <Space size="middle">
           <Tooltip title="Xem chi tiết">
-          <Button
-              icon={<EyeOutlined />} 
+            <Button
+              icon={<EyeOutlined />}
               size="small"
               onClick={() => showReportDetails(record)}
             />
@@ -542,7 +532,7 @@ const ReportsPage = () => {
       )
     }
   ];
-  
+
   return (
     <MainCard title="Quản lý báo cáo">
       {/* Stats Row */}
@@ -587,7 +577,7 @@ const ReportsPage = () => {
           </Card>
         </Col>
       </Row>
-      
+
       {/* Filters Row */}
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={8}>
@@ -600,7 +590,7 @@ const ReportsPage = () => {
           />
         </Col>
         <Col span={5}>
-              <Select
+          <Select
             style={{ width: '100%' }}
             placeholder="Trạng thái"
             value={filterStatus}
@@ -610,10 +600,10 @@ const ReportsPage = () => {
             <Option value="PENDING">Đang xử lý</Option>
             <Option value="RESOLVED">Đã xử lý</Option>
             <Option value="REJECTED">Từ chối</Option>
-              </Select>
+          </Select>
         </Col>
         <Col span={5}>
-              <Select
+          <Select
             style={{ width: '100%' }}
             placeholder="Danh mục"
             value={filterCategory}
@@ -625,18 +615,18 @@ const ReportsPage = () => {
             <Option value="COURSE">Khóa học</Option>
             <Option value="EVENT">Sự kiện</Option>
             <Option value="COMMENT">Bình luận</Option>
-              </Select>
+          </Select>
         </Col>
         <Col span={6} style={{ textAlign: 'right' }}>
-                            <Button
-            icon={<ReloadOutlined />} 
+          <Button
+            icon={<ReloadOutlined />}
             onClick={resetFilters}
             style={{ marginRight: 8 }}
           >
             Đặt lại
-                            </Button>
-          <Button 
-            type="primary" 
+          </Button>
+          <Button
+            type="primary"
             icon={<DownloadOutlined />}
             onClick={handleExportReports}
           >
@@ -644,7 +634,7 @@ const ReportsPage = () => {
           </Button>
         </Col>
       </Row>
-      
+
       {/* Reports Table */}
       <Table
         columns={columns}
@@ -657,7 +647,7 @@ const ReportsPage = () => {
           showTotal: (total) => `Tổng cộng ${total} báo cáo`,
         }}
       />
-      
+
       {/* Detail Modal with improved error handling */}
       <Modal
         title="Chi tiết báo cáo"
@@ -668,28 +658,28 @@ const ReportsPage = () => {
             Đóng
           </Button>,
           selectedReport && selectedReport.status === 'PENDING' && (
-                  <Button
+            <Button
               key="resolve"
               type="primary"
-                    onClick={() => {
+              onClick={() => {
                 setDetailModalVisible(false);
                 showStatusModal(selectedReport, 'RESOLVED');
-                    }}
-                  >
-                    Đánh dấu đã xử lý
-                  </Button>
+              }}
+            >
+              Đánh dấu đã xử lý
+            </Button>
           ),
           selectedReport && selectedReport.status === 'PENDING' && (
-                  <Button
+            <Button
               key="reject"
               danger
-                    onClick={() => {
+              onClick={() => {
                 setDetailModalVisible(false);
                 showStatusModal(selectedReport, 'REJECTED');
-                    }}
-                  >
-                    Từ chối
-                  </Button>
+              }}
+            >
+              Từ chối
+            </Button>
           )
         ]}
         width={700}
@@ -699,8 +689,8 @@ const ReportsPage = () => {
             <Row gutter={[16, 16]}>
               <Col span={24}>
                 <Tag color={getStatusColor(selectedReport.status)}>
-                  {selectedReport.status === 'PENDING' ? 'Đang xử lý' : 
-                   selectedReport.status === 'RESOLVED' ? 'Đã xử lý' : 'Từ chối'}
+                  {selectedReport.status === 'PENDING' ? 'Đang xử lý' :
+                    selectedReport.status === 'RESOLVED' ? 'Đã xử lý' : 'Từ chối'}
                 </Tag>
                 <Tag icon={getCategoryIcon(selectedReport.category)} color="blue">
                   {selectedReport.category || 'Khác'}
@@ -722,7 +712,7 @@ const ReportsPage = () => {
                 <Title level={5}>Ngày báo cáo</Title>
                 <Text>{formatDate(selectedReport.createdAt) || 'Không xác định'}</Text>
               </Col>
-              
+
               {selectedReport.status !== 'PENDING' && (
                 <>
                   <Col span={24}>
@@ -744,40 +734,40 @@ const ReportsPage = () => {
           </div>
         )}
       </Modal>
-      
+
       {/* Status Update Modal */}
       <Modal
         title={newStatus === 'RESOLVED' ? 'Xác nhận xử lý báo cáo' : 'Xác nhận từ chối báo cáo'}
         open={statusModalVisible}
         onCancel={() => setStatusModalVisible(false)}
         onOk={handleUpdateStatus}
-        okButtonProps={{ 
-          style: { 
-            backgroundColor: newStatus === 'RESOLVED' ? '#52c41a' : '#ff4d4f', 
-            borderColor: newStatus === 'RESOLVED' ? '#52c41a' : '#ff4d4f' 
-          } 
+        okButtonProps={{
+          style: {
+            backgroundColor: newStatus === 'RESOLVED' ? '#52c41a' : '#ff4d4f',
+            borderColor: newStatus === 'RESOLVED' ? '#52c41a' : '#ff4d4f'
+          }
         }}
         okText="Xác nhận"
       >
         <Form layout="vertical">
-          <Form.Item 
+          <Form.Item
             label="Ghi chú xử lý"
-            extra={newStatus === 'RESOLVED' ? 
-              'Mô tả cách bạn đã xử lý báo cáo này' : 
+            extra={newStatus === 'RESOLVED' ?
+              'Mô tả cách bạn đã xử lý báo cáo này' :
               'Cung cấp lý do từ chối báo cáo này'}
           >
-            <Input.TextArea 
-            rows={4}
-            value={statusNotes}
-            onChange={(e) => setStatusNotes(e.target.value)}
-              placeholder={newStatus === 'RESOLVED' ? 
-                'Ví dụ: Đã xóa nội dung vi phạm và cảnh cáo người dùng...' : 
+            <Input.TextArea
+              rows={4}
+              value={statusNotes}
+              onChange={(e) => setStatusNotes(e.target.value)}
+              placeholder={newStatus === 'RESOLVED' ?
+                'Ví dụ: Đã xóa nội dung vi phạm và cảnh cáo người dùng...' :
                 'Ví dụ: Báo cáo không đủ thông tin để xác minh...'}
             />
           </Form.Item>
         </Form>
       </Modal>
-      
+
       {/* Delete Confirmation Modal */}
       <Modal
         title="Xác nhận xóa báo cáo"

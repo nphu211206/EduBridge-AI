@@ -116,7 +116,7 @@ const TuitionFees = () => {
         setTuitionHistory(tuitionData);
         
         // Select current semester (most recent) by default
-        if (tuitionData.length > 0) {
+        if (tuitionData?.length > 0) {
           setCurrentTuition(tuitionData[0]);
           setSelectedSemester(tuitionData[0].SemesterID.toString());
         }
@@ -336,7 +336,7 @@ Liên hệ phòng Tài chính - Kế toán nếu có thắc mắc.
             onChange={handleSemesterChange}
             label="Chọn học kỳ"
           >
-            {tuitionHistory.map((item) => (
+            {tuitionHistory?.map((item) => (
               <MenuItem key={item.SemesterID} value={item.SemesterID.toString()}>
                 {item.SemesterName} {item.AcademicYear}
               </MenuItem>

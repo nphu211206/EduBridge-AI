@@ -135,12 +135,12 @@ const ProblemDetail = () => {
     if (!tags) return null;
     
     const tagList = typeof tags === 'string' 
-      ? tags.split(',').map(tag => tag.trim()) 
+      ? tags.split(',')?.map(tag => tag.trim()) 
       : tags;
       
     return (
       <Space wrap>
-        {tagList.map((tag, index) => (
+        {tagList?.map((tag, index) => (
           <Tag key={index} color="blue">{tag}</Tag>
         ))}
       </Space>

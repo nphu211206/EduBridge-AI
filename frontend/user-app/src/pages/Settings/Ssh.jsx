@@ -274,7 +274,7 @@ const Ssh = () => {
        trimmedKey.startsWith('ssh-ed25519 ') || 
        trimmedKey.startsWith('ssh-dss ') ||
        trimmedKey.startsWith('ecdsa-sha2-nistp')) && 
-      trimmedKey.length > 50
+      trimmedKey?.length > 50
     );
   };
   
@@ -479,8 +479,8 @@ const Ssh = () => {
               <div className="p-5 text-center text-gray-500">
                 Đang tải khóa SSH...
               </div>
-            ) : sshKeys.length > 0 ? (
-              sshKeys.map((sshKey) => renderSSHKey(sshKey))
+            ) : sshKeys?.length > 0 ? (
+              sshKeys?.map((sshKey) => renderSSHKey(sshKey))
             ) : (
               <div className="p-5 text-center text-gray-500">
                 {showAddSSHForm 
@@ -572,8 +572,8 @@ const Ssh = () => {
               <div className="p-5 text-center text-gray-500">
                 Đang tải khóa GPG...
               </div>
-            ) : gpgKeys.length > 0 ? (
-              gpgKeys.map((gpgKey) => renderGPGKey(gpgKey))
+            ) : gpgKeys?.length > 0 ? (
+              gpgKeys?.map((gpgKey) => renderGPGKey(gpgKey))
             ) : (
               <div className="p-5">
                 {showAddGPGForm ? (

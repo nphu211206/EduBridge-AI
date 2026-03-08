@@ -288,8 +288,8 @@ const AcademicProgram = () => {
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 
-                {programStructure && programStructure.length > 0 ? (
-                  programStructure.map((category, index) => (
+                {programStructure && programStructure?.length > 0 ? (
+                  programStructure?.map((category, index) => (
                     <ProgramStructureAccordion 
                       key={index}
                       title={category.title}
@@ -422,8 +422,8 @@ const ProgramStructureAccordion = ({ title, subjects, defaultExpanded = false })
               </TableRow>
             </TableHead>
             <TableBody>
-              {subjects && subjects.length > 0 ? (
-                subjects.map((subject, index) => (
+              {subjects && subjects?.length > 0 ? (
+                subjects?.map((subject, index) => (
                   <TableRow key={index} hover>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{subject.code}</TableCell>

@@ -91,7 +91,7 @@ const Header = ({ drawerWidth, drawerWidthPercentage = 20, open, handleDrawerTog
   ]);
   
   // Count unread notifications
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications?.filter(n => !n.read)?.length;
   
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,14 +120,14 @@ const Header = ({ drawerWidth, drawerWidthPercentage = 20, open, handleDrawerTog
   // Mark all notifications as read
   const markAllAsRead = () => {
     setNotifications(prevNotifications => 
-      prevNotifications.map(notif => ({...notif, read: true}))
+      prevNotifications?.map(notif => ({...notif, read: true}))
     );
   };
   
   // Mark a single notification as read
   const markAsRead = (id) => {
     setNotifications(prevNotifications => 
-      prevNotifications.map(notif => 
+      prevNotifications?.map(notif => 
         notif.id === id ? {...notif, read: true} : notif
       )
     );
@@ -391,7 +391,7 @@ const Header = ({ drawerWidth, drawerWidthPercentage = 20, open, handleDrawerTog
           </Box>
           <Divider />
           
-          {notifications.length === 0 ? (
+          {notifications?.length === 0 ? (
             <Box sx={{ p: 4, textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary">
                 Không có thông báo mới
@@ -410,7 +410,7 @@ const Header = ({ drawerWidth, drawerWidthPercentage = 20, open, handleDrawerTog
                   borderRadius: '10px',
                 },
               }}>
-                {notifications.map(notification => (
+                {notifications?.map(notification => (
                   <ListItem 
                     key={notification.id}
                     alignItems="flex-start"
@@ -845,7 +845,7 @@ const Header = ({ drawerWidth, drawerWidthPercentage = 20, open, handleDrawerTog
           </Box>
           <Divider />
           
-          {notifications.length === 0 ? (
+          {notifications?.length === 0 ? (
             <Box sx={{ p: 4, textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary">
                 Không có thông báo mới
@@ -864,7 +864,7 @@ const Header = ({ drawerWidth, drawerWidthPercentage = 20, open, handleDrawerTog
                   borderRadius: '10px',
                 },
               }}>
-                {notifications.map(notification => (
+                {notifications?.map(notification => (
                   <ListItem 
                     key={notification.id}
                     alignItems="flex-start"

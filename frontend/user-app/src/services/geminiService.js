@@ -78,7 +78,7 @@ export const initGeminiChat = async () => {
 export const sendMessageToGemini = async (message, prevMessages = []) => {
   try {
     // Format conversation history for the Gemini API
-    const formattedPrevMessages = prevMessages.map(msg => ({
+    const formattedPrevMessages = prevMessages?.map(msg => ({
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }]
     }));
@@ -90,7 +90,7 @@ export const sendMessageToGemini = async (message, prevMessages = []) => {
           role: 'user',
           parts: [
             {
-              text: `${DEFAULT_SYSTEM_PROMPT}\n\nConversation History:\n${prevMessages.map(msg => `${msg.role}: ${msg.content}`).join('\n')}\n\nUser: ${message}`
+              text: `${DEFAULT_SYSTEM_PROMPT}\n\nConversation History:\n${prevMessages?.map(msg => `${msg.role}: ${msg.content}`).join('\n')}\n\nUser: ${message}`
             }
           ]
         }
@@ -108,9 +108,9 @@ export const sendMessageToGemini = async (message, prevMessages = []) => {
     const response = await axios.post(GEMINI_API_URL, requestData);
     
     // Extract and return the response text
-    if (response.data.candidates && response.data.candidates.length > 0) {
+    if (response.data.candidates && response.data.candidates?.length > 0) {
       const candidate = response.data.candidates[0];
-      if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+      if (candidate.content && candidate.content.parts && candidate.content.parts?.length > 0) {
         return candidate.content.parts[0].text;
       }
     }
@@ -143,7 +143,7 @@ export const generateTestCases = async (problemDescription) => {
     const testCasesRegex = /```(json|javascript)?\s*\[{[\s\S]*?\}\]\s*```/g;
     const matches = response.match(testCasesRegex);
     
-    if (matches && matches.length > 0) {
+    if (matches && matches?.length > 0) {
       try {
         // Extract the JSON content from the markdown code block
         const jsonString = matches[0].replace(/```(json|javascript)?\s*|\s*```/g, '');
@@ -151,7 +151,7 @@ export const generateTestCases = async (problemDescription) => {
         
         // Validate that it's an array of test cases with input and expected output
         if (Array.isArray(parsedTestCases) && 
-            parsedTestCases.length > 0 && 
+            parsedTestCases?.length > 0 && 
             parsedTestCases[0].hasOwnProperty('input') && 
             parsedTestCases[0].hasOwnProperty('expected')) {
           return parsedTestCases;

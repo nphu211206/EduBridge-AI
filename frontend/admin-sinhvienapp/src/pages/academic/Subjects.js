@@ -44,7 +44,7 @@ const Subjects = () => {
         
         if (response.success) {
           // Format the data for the DataGrid
-          const formattedData = (response.data || []).map(subject => ({
+          const formattedData = (response.data || [])?.map(subject => ({
             id: subject.SubjectID,
             code: subject.SubjectCode,
             name: subject.SubjectName,
@@ -91,7 +91,7 @@ const Subjects = () => {
     setDepartmentFilter(event.target.value);
   };
 
-  const filteredSubjects = subjects.filter(subject => {
+  const filteredSubjects = subjects?.filter(subject => {
     // Filter by search term
     const matchesSearch = 
       subject.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -111,7 +111,7 @@ const Subjects = () => {
         
         if (response.success) {
           // Remove the subject from the state
-          setSubjects(subjects.filter(subject => subject.id !== id));
+          setSubjects(subjects?.filter(subject => subject.id !== id));
           setError('Xóa môn học thành công');
           setOpenSnackbar(true);
         } else {
@@ -356,7 +356,7 @@ const Subjects = () => {
                     label="Lọc theo Khoa"
                   >
                     <MenuItem value="">Tất cả các Khoa</MenuItem>
-                    {departments.map((dept) => (
+                    {departments?.map((dept) => (
                       <MenuItem key={dept} value={dept}>
                         {dept}
                       </MenuItem>
@@ -367,7 +367,7 @@ const Subjects = () => {
               <Grid item xs={12} md={3}>
                 <Box sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
                   <Typography variant="body2" color="text.secondary">
-                    {filteredSubjects.length} môn học
+                    {filteredSubjects?.length} môn học
                   </Typography>
                 </Box>
               </Grid>

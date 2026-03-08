@@ -98,7 +98,7 @@ const SkillInput = React.memo(({ skills = [], setSkills, error }) => {
 
     /** Xử lý xóa một skill tag */
     const removeSkill = useCallback((skillToRemove) => {
-        setSkills(prevSkills => prevSkills.filter(skill => skill !== skillToRemove));
+        setSkills(prevSkills => prevSkills?.filter(skill => skill !== skillToRemove));
     }, [setSkills]);
 
     /** Xử lý khi nội dung input thay đổi */
@@ -117,7 +117,7 @@ const SkillInput = React.memo(({ skills = [], setSkills, error }) => {
             }`}>
                 {/* Hiển thị các skill tag đã có */}
                 <AnimatePresence> {/* Animation khi xóa tag */}
-                    {skills.map(skill => (
+                    {skills?.map(skill => (
                         <motion.div
                             key={skill}
                             initial={{ opacity: 0, scale: 0.8, x: -10 }} animate={{ opacity: 1, scale: 1, x: 0 }} exit={{ opacity: 0, scale: 0.8, x: 10 }}
@@ -145,7 +145,7 @@ const SkillInput = React.memo(({ skills = [], setSkills, error }) => {
                     value={inputValue}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
-                    placeholder={skills.length === 0 ? "Nhập kỹ năng (VD: React) rồi nhấn Enter..." : "Thêm kỹ năng..."}
+                    placeholder={skills?.length === 0 ? "Nhập kỹ năng (VD: React) rồi nhấn Enter..." : "Thêm kỹ năng..."}
                     className="flex-grow bg-transparent text-white outline-none p-1 text-sm min-w-[150px]" // min-w để input không quá nhỏ
                     aria-describedby={error ? "skill-input-error" : undefined}
                 />
@@ -308,7 +308,7 @@ const EditJobModal = ({ job, onClose, onSaveSuccess }) => {
         // --- Kiểm tra các trường bắt buộc ---
         if (!formData.title?.trim()) newErrors.title = requiredMsg;
         if (!formData.description?.trim()) newErrors.description = requiredMsg;
-        if (!Array.isArray(skills) || skills.length === 0) newErrors.skills = "Vui lòng nhập ít nhất một kỹ năng yêu cầu.";
+        if (!Array.isArray(skills) || skills?.length === 0) newErrors.skills = "Vui lòng nhập ít nhất một kỹ năng yêu cầu.";
 
         // --- Kiểm tra logic lương ---
         const minSalary = parseFloat(formData.minSalary);
@@ -331,7 +331,7 @@ const EditJobModal = ({ job, onClose, onSaveSuccess }) => {
 
         setErrors(newErrors); // Cập nhật state errors
         console.log("[EditJobModal] Validation results:", newErrors);
-        return Object.keys(newErrors).length === 0; // Trả về true nếu không có lỗi
+        return Object.keys(newErrors)?.length === 0; // Trả về true nếu không có lỗi
     }, [formData, skills]); // Dependency là formData và skills
 
     /**

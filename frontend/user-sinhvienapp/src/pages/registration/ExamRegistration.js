@@ -105,7 +105,7 @@ const ExamRegistration = () => {
         setPageLoading(true);
         const data = await examRegistrationService.getActiveSemesters();
         
-        if (!data || data.length === 0) {
+        if (!data || data?.length === 0) {
           setError('Không có học kỳ nào đang mở đăng ký. Vui lòng kiểm tra lại sau.');
           setSemesters([]);
           return;
@@ -114,7 +114,7 @@ const ExamRegistration = () => {
         setSemesters(data);
         
         // Set first semester as default if available
-        if (data && data.length > 0) {
+        if (data && data?.length > 0) {
           setSemesterId(data[0].SemesterID);
         }
       } catch (err) {
@@ -167,13 +167,13 @@ const ExamRegistration = () => {
 
   // Calculate total fee
   useEffect(() => {
-    const fee = selectedExams.length * (feeInfo?.feePerExam || 200000);
+    const fee = selectedExams?.length * (feeInfo?.feePerExam || 200000);
     setTotalFee(fee);
   }, [selectedExams, feeInfo]);
 
   const handleExamSelect = (examId) => {
     if (selectedExams.includes(examId)) {
-      setSelectedExams(selectedExams.filter(id => id !== examId));
+      setSelectedExams(selectedExams?.filter(id => id !== examId));
     } else {
       setSelectedExams([...selectedExams, examId]);
     }
@@ -188,7 +188,7 @@ const ExamRegistration = () => {
   };
 
   const handleRegistration = async () => {
-    if (selectedExams.length === 0) {
+    if (selectedExams?.length === 0) {
       setSnackbar({
         open: true,
         message: 'Vui lòng chọn ít nhất một môn thi cải thiện trước khi đăng ký.',
@@ -277,7 +277,7 @@ const ExamRegistration = () => {
           </Typography>
           <Typography variant="body2" component="ul">
             <li>Chi phí đăng ký mỗi môn thi cải thiện: {formatCurrency(feeInfo?.feePerExam || 200000)}</li>
-            {feeInfo.notes && feeInfo.notes.map((note, index) => (
+            {feeInfo.notes && feeInfo.notes?.map((note, index) => (
               <li key={index}>{note}</li>
             ))}
             {feeInfo.paymentDeadline && (
@@ -301,8 +301,8 @@ const ExamRegistration = () => {
                 onChange={handleSemesterChange}
                 label="Học kỳ"
               >
-                {semesters.length > 0 ? (
-                  semesters.map(semester => (
+                {semesters?.length > 0 ? (
+                  semesters?.map(semester => (
                     <MenuItem key={semester.SemesterID} value={semester.SemesterID}>
                       {semester.SemesterName} - {semester.AcademicYear}
                     </MenuItem>
@@ -337,7 +337,7 @@ const ExamRegistration = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {availableExams.map((exam) => (
+                  {availableExams?.map((exam) => (
                     <TableRow 
                       key={exam.ExamID}
                       hover
@@ -391,7 +391,7 @@ const ExamRegistration = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {availableExams.length === 0 && (
+                  {availableExams?.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={10} align="center">
                         <Typography variant="body1">
@@ -414,7 +414,7 @@ const ExamRegistration = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleRegistration}
-                disabled={selectedExams.length === 0 || loading}
+                disabled={selectedExams?.length === 0 || loading}
               >
                 {loading ? 'Đang xử lý...' : 'Đăng ký thi'}
               </Button>

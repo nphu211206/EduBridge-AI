@@ -402,7 +402,7 @@ const EventDetail = () => {
               {event.programmingLanguages?.length > 0 && (
                 <Descriptions.Item label="Ngôn ngữ lập trình">
                   <Space wrap>
-                    {event.programmingLanguages.map((lang, index) => (
+                    {event.programmingLanguages?.map((lang, index) => (
                       <Tag key={index} color="blue">{lang}</Tag>
                     ))}
                   </Space>
@@ -411,7 +411,7 @@ const EventDetail = () => {
               {event.technologies?.length > 0 && (
                 <Descriptions.Item label="Công nghệ">
                   <Space wrap>
-                    {event.technologies.map((tech, index) => (
+                    {event.technologies?.map((tech, index) => (
                       <Tag key={index} color="green">{tech}</Tag>
                     ))}
                   </Space>
@@ -501,7 +501,7 @@ const EventDetail = () => {
                   children: (
                     <>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                        <Title level={4}>Giải thưởng ({prizes.length})</Title>
+                        <Title level={4}>Giải thưởng ({prizes?.length})</Title>
                         <Button 
                           type="primary" 
                           icon={<TrophyOutlined />}
@@ -526,7 +526,7 @@ const EventDetail = () => {
                   children: (
                     <>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                        <Title level={4}>Người tham gia ({participants.length})</Title>
+                        <Title level={4}>Người tham gia ({participants?.length})</Title>
                       </div>
                       
                       <Table

@@ -152,7 +152,7 @@ const ProblemForm = () => {
 
   const uploadProps = {
     name: 'image',
-    action: `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:5002'}/api/upload`,
+    action: `${process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:5002'}/api/upload`,
     headers: {
       authorization: `Bearer ${localStorage.getItem('token') || localStorage.getItem('admin_token')}`,
     },

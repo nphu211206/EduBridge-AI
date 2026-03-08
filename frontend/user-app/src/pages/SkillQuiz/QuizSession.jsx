@@ -51,7 +51,7 @@ const QuizSession = () => {
 
     // Auto-submit when time runs out
     useEffect(() => {
-        if (timeLeft === 0 && questions.length > 0 && !results) {
+        if (timeLeft === 0 && questions?.length > 0 && !results) {
             handleSubmit();
         }
     }, [timeLeft]);
@@ -66,7 +66,7 @@ const QuizSession = () => {
         setSubmitting(true);
 
         try {
-            const answerArray = questions.map(q => ({
+            const answerArray = questions?.map(q => ({
                 questionId: q.QuestionID,
                 answer: answers[q.QuestionID] || '',
             }));
@@ -141,7 +141,7 @@ const QuizSession = () => {
 
     // QUIZ-TAKING VIEW
     const q = questions[currentQ];
-    const answeredCount = Object.keys(answers).length;
+    const answeredCount = Object.keys(answers)?.length;
 
     return (
         <div className="quiz-page">
@@ -150,7 +150,7 @@ const QuizSession = () => {
                 <div className="session-topbar">
                     <div className="topbar-info">
                         <span className="topbar-skill">{quiz.SkillName} — {quiz.Level}</span>
-                        <span className="topbar-progress">Câu {currentQ + 1}/{questions.length}</span>
+                        <span className="topbar-progress">Câu {currentQ + 1}/{questions?.length}</span>
                     </div>
                     <div className={`topbar-timer ${timeLeft < 60 ? 'urgent' : ''}`}>
                         ⏱️ {formatTime(timeLeft)}
@@ -159,7 +159,7 @@ const QuizSession = () => {
 
                 {/* Progress Bar */}
                 <div className="session-progress">
-                    <div className="progress-bar" style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}></div>
+                    <div className="progress-bar" style={{ width: `${((currentQ + 1) / questions?.length) * 100}%` }}></div>
                 </div>
 
                 {/* Question */}
@@ -171,7 +171,7 @@ const QuizSession = () => {
                     {/* Answer Input */}
                     {q.QuestionType === 'multiple_choice' && q.Options ? (
                         <div className="mc-options">
-                            {q.Options.map((opt, i) => (
+                            {q.Options?.map((opt, i) => (
                                 <button
                                     key={i}
                                     className={`mc-option ${answers[q.QuestionID] === opt ? 'selected' : ''}`}
@@ -195,7 +195,7 @@ const QuizSession = () => {
 
                 {/* Question Nav */}
                 <div className="question-dots">
-                    {questions.map((_, i) => (
+                    {questions?.map((_, i) => (
                         <button
                             key={i}
                             className={`q-dot ${i === currentQ ? 'current' : ''} ${answers[questions[i].QuestionID] ? 'answered' : ''}`}
@@ -209,8 +209,8 @@ const QuizSession = () => {
                 {/* Bottom Nav */}
                 <div className="session-nav">
                     <button onClick={() => setCurrentQ(Math.max(0, currentQ - 1))} disabled={currentQ === 0} className="btn-nav">← Trước</button>
-                    <span className="nav-answered">{answeredCount}/{questions.length} đã trả lời</span>
-                    {currentQ < questions.length - 1 ? (
+                    <span className="nav-answered">{answeredCount}/{questions?.length} đã trả lời</span>
+                    {currentQ < questions?.length - 1 ? (
                         <button onClick={() => setCurrentQ(currentQ + 1)} className="btn-nav btn-next">Tiếp →</button>
                     ) : (
                         <button onClick={handleSubmit} disabled={submitting} className="btn-submit-quiz">

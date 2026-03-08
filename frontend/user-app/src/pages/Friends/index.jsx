@@ -200,7 +200,7 @@ const Friends = () => {
 
   // Search users functionality
   const searchUsers = useCallback(async (query) => {
-    if (!query.trim() || query.length < 2) {
+    if (!query.trim() || query?.length < 2) {
       setSearchResults([]);
       return;
     }
@@ -242,16 +242,16 @@ const Friends = () => {
         const data = await response.json();
         
         // Filter out users already in friends/requests lists
-        const friendIds = new Set(friends.map(f => f.UserID));
-        const pendingIds = new Set(pendingRequests.map(p => p.UserID));
-        const sentIds = new Set(sentRequests.map(s => s.UserID));
+        const friendIds = new Set(friends?.map(f => f.UserID));
+        const pendingIds = new Set(pendingRequests?.map(p => p.UserID));
+        const sentIds = new Set(sentRequests?.map(s => s.UserID));
         
         // Get current user ID
         const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
         const currentUserId = currentUser.id;
         
         // Filter out current user and users with existing relationships
-        const filteredResults = data.filter(user => 
+        const filteredResults = data?.filter(user => 
           user.UserID !== currentUserId && 
           !friendIds.has(user.UserID) && 
           !pendingIds.has(user.UserID) &&
@@ -261,7 +261,7 @@ const Friends = () => {
         setSearchResults(filteredResults);
         
         // Auto switch to search tab if there are results
-        if (filteredResults.length > 0) {
+        if (filteredResults?.length > 0) {
           setActiveTab('search');
         }
       }, 500); // 500ms debounce
@@ -295,7 +295,7 @@ const Friends = () => {
 
   useEffect(() => {
     // Only fetch suggestions when on the suggestions tab and it's the user's own friends page
-    if (activeTab === 'suggestions' && isOwnFriends && suggestions.length === 0) {
+    if (activeTab === 'suggestions' && isOwnFriends && suggestions?.length === 0) {
       fetchSuggestions();
     }
   }, [activeTab, isOwnFriends]);
@@ -552,7 +552,7 @@ const Friends = () => {
       const updatedUser = pendingRequests.find(user => user.UserID === userId);
       if (updatedUser) {
         const newFriends = [...friends, updatedUser];
-        const newPendingRequests = pendingRequests.filter(user => user.UserID !== userId);
+        const newPendingRequests = pendingRequests?.filter(user => user.UserID !== userId);
         
         setFriends(newFriends);
         setPendingRequests(newPendingRequests);
@@ -598,7 +598,7 @@ const Friends = () => {
       }
 
       // Update local state
-      const newPendingRequests = pendingRequests.filter(user => user.UserID !== userId);
+      const newPendingRequests = pendingRequests?.filter(user => user.UserID !== userId);
       setPendingRequests(newPendingRequests);
       
       // Cập nhật sessionStorage
@@ -640,7 +640,7 @@ const Friends = () => {
       }
 
       // Update local state
-      const newSentRequests = sentRequests.filter(user => user.UserID !== userId);
+      const newSentRequests = sentRequests?.filter(user => user.UserID !== userId);
       setSentRequests(newSentRequests);
       
       // Cập nhật sessionStorage
@@ -675,7 +675,7 @@ const Friends = () => {
       }
 
       // Update local state
-      const newFriends = friends.filter(user => user.UserID !== userId);
+      const newFriends = friends?.filter(user => user.UserID !== userId);
       setFriends(newFriends);
       
       // Cập nhật sessionStorage
@@ -736,7 +736,7 @@ const Friends = () => {
         console.log('Adding to sent requests:', newSentRequests);
         setSentRequests(newSentRequests);
         // Remove from suggestions
-        const newSuggestions = suggestions.filter(user => user.UserID !== userId);
+        const newSuggestions = suggestions?.filter(user => user.UserID !== userId);
         setSuggestions(newSuggestions);
         
         // Cập nhật sessionStorage
@@ -751,7 +751,7 @@ const Friends = () => {
           const updatedSentRequests = await fetchSentRequestsOnly();
           console.log('Updated sent requests after direct API call:', updatedSentRequests);
           
-          if (updatedSentRequests && updatedSentRequests.length > 0) {
+          if (updatedSentRequests && updatedSentRequests?.length > 0) {
             setSentRequests(updatedSentRequests);
             sessionStorage.setItem('sentRequests', JSON.stringify(updatedSentRequests));
           }
@@ -839,7 +839,7 @@ const Friends = () => {
   // New function for filtering users based on search term
   const filterUsers = (users) => {
     if (!searchTerm.trim()) return users;
-    return users.filter(user => 
+    return users?.filter(user => 
       (user.FullName && user.FullName.toLowerCase().includes(searchTerm.toLowerCase())) || 
       (user.Username && user.Username.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.School && user.School.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -951,13 +951,13 @@ const Friends = () => {
         const newPendingRequests = data.pendingRequests || [];
         
         // So sánh với danh sách hiện tại để tìm lời mời mới
-        if (newPendingRequests.length > pendingRequests.length) {
+        if (newPendingRequests?.length > pendingRequests?.length) {
           // Có lời mời mới
           setPendingRequests(newPendingRequests);
           sessionStorage.setItem('pendingRequests', JSON.stringify(newPendingRequests));
           
           // Hiển thị thông báo nếu có lời mời mới
-          const newRequestsCount = newPendingRequests.length - pendingRequests.length;
+          const newRequestsCount = newPendingRequests?.length - pendingRequests?.length;
           if (newRequestsCount > 0) {
             showNotification('success', `Bạn có ${newRequestsCount} lời mời kết bạn mới`);
           }
@@ -972,7 +972,7 @@ const Friends = () => {
     const intervalId = setInterval(checkNewRequests, 30000);
     
     return () => clearInterval(intervalId);
-  }, [activeTab, isOwnFriends, isOnline, pendingRequests.length]);
+  }, [activeTab, isOwnFriends, isOnline, pendingRequests?.length]);
 
   // Hiển thị trạng thái kết nối mạng
   const renderNetworkStatus = () => {
@@ -996,7 +996,7 @@ const Friends = () => {
   }, [activeTab]);
 
   // Show full-screen spinner only if no cached data exists
-  if (loading && friends.length === 0 && pendingRequests.length === 0 && sentRequests.length === 0) {
+  if (loading && friends?.length === 0 && pendingRequests?.length === 0 && sentRequests?.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="flex flex-col items-center space-y-4">
@@ -1183,12 +1183,12 @@ const Friends = () => {
             <div className="p-2 md:p-3 overflow-auto">
               <nav className="space-y-1">
                 {[
-                  { id: 'all', icon: UsersIcon, label: 'Tất cả bạn bè', count: friends.length },
-                  { id: 'pending', icon: ClockIcon, label: 'Lời mời nhận', count: pendingRequests.length },
-                  { id: 'sent', icon: UserPlusIcon, label: 'Đã gửi', count: sentRequests.length },
+                  { id: 'all', icon: UsersIcon, label: 'Tất cả bạn bè', count: friends?.length },
+                  { id: 'pending', icon: ClockIcon, label: 'Lời mời nhận', count: pendingRequests?.length },
+                  { id: 'sent', icon: UserPlusIcon, label: 'Đã gửi', count: sentRequests?.length },
                   { id: 'suggestions', icon: SparklesIcon, label: 'Gợi ý', count: null },
-                  { id: 'search', icon: MagnifyingGlassIcon, label: 'Tìm kiếm', count: searchResults.length > 0 ? searchResults.length : null }
-                ].map(tab => (
+                  { id: 'search', icon: MagnifyingGlassIcon, label: 'Tìm kiếm', count: searchResults?.length > 0 ? searchResults?.length : null }
+                ]?.map(tab => (
                   <button
                     key={tab.id}
                     className={`w-full px-3 md:px-4 py-3 rounded-xl font-medium flex items-center justify-between ${
@@ -1286,11 +1286,11 @@ const Friends = () => {
             )}
 
             {/* User Grid */}
-            {!showTabLoading && !showSentLoading && filteredUsers.length > 0 && (
+            {!showTabLoading && !showSentLoading && filteredUsers?.length > 0 && (
               <>
                 {/* Mobile layout: dọc, card đơn giản, nút full width */}
                 <div className="grid grid-cols-1 gap-2 sm:hidden px-2">
-                  {activeTab === 'sent' && filteredUsers.map(user => (
+                  {activeTab === 'sent' && filteredUsers?.map(user => (
                     <div key={user.UserID} className="w-full max-w-sm mx-auto bg-white rounded-xl p-3 border border-gray-200 flex flex-col gap-2">
                       <Avatar 
                         src={user.Image || user.Avatar} 
@@ -1318,7 +1318,7 @@ const Friends = () => {
                 </div>
                 {/* Desktop layout giữ nguyên */}
                 <div className={`hidden sm:grid ${activeTab === 'sent' ? 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'} gap-2 md:gap-4`}>
-                  {filteredUsers.map(user => (
+                  {filteredUsers?.map(user => (
                     <div 
                       key={user.UserID}
                       className={`bg-white rounded-xl ${activeTab === 'sent' ? 'p-4 md:p-5' : 'p-3 md:p-4'} border border-gray-200 hover:shadow-md transition-all group`}
@@ -1428,7 +1428,7 @@ const Friends = () => {
             )}
 
             {/* Empty State */}
-            {!showTabLoading && !showSentLoading && filteredUsers.length === 0 && (
+            {!showTabLoading && !showSentLoading && filteredUsers?.length === 0 && (
               <div className="text-center py-8 md:py-12">
                 <div className="bg-gray-50 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
                   <UserCircleIcon className="h-6 w-6 md:h-8 md:w-8 text-gray-400" />
@@ -1473,10 +1473,10 @@ const Friends = () => {
         <div className="flex items-center justify-around py-2">
           {[
             { id: 'all', icon: UsersIcon, label: 'Bạn bè' },
-            { id: 'pending', icon: ClockIcon, label: 'Lời mời', badge: pendingRequests.length },
+            { id: 'pending', icon: ClockIcon, label: 'Lời mời', badge: pendingRequests?.length },
             { id: 'suggestions', icon: SparklesIcon, label: 'Gợi ý' },
-            { id: 'sent', icon: UserPlusIcon, label: 'Đã gửi', badge: sentRequests.length }
-          ].map(tab => (
+            { id: 'sent', icon: UserPlusIcon, label: 'Đã gửi', badge: sentRequests?.length }
+          ]?.map(tab => (
             <button
               key={tab.id}
               className={`flex flex-col items-center justify-center px-2 py-1 ${

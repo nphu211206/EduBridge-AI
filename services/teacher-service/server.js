@@ -12,7 +12,7 @@ const helmet = require('helmet');
 const routes = require('./routes');
 const { poolPromise } = require('./config/database');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 // Import routes
 const authRoutes = require('./routes/auth.routes');
@@ -53,7 +53,7 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With']
-})); 
+}));
 app.use(morgan('dev')); // Logging
 app.use(express.json()); // Parse JSON request body
 app.use(express.urlencoded({ extended: true }));
@@ -100,18 +100,18 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'teacher-service' });
 });
 
-// Error handling middleware
+// 404 handler - must come before error handler
+app.use((req, res) => {
+  res.status(404).json({ message: 'Resource not found' });
+});
+
+// Error handling middleware (4 args = Express error handler)
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',
     stack: process.env.NODE_ENV === 'production' ? undefined : err.stack
   });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ message: 'Resource not found' });
 });
 
 // Start server

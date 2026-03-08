@@ -243,7 +243,7 @@ const Interface = () => {
               Màu chủ đạo
             </label>
             <div className="grid grid-cols-6 gap-3">
-              {availableColors.filter(color => color !== 'custom').map((color) => (
+              {availableColors?.filter(color => color !== 'custom')?.map((color) => (
                 <button
                   key={color}
                   type="button"
@@ -297,7 +297,7 @@ const Interface = () => {
                     </button>
                   </div>
                   <div className="flex space-x-3 mb-4">
-                    {['primary', 'secondary', 'accent', 'hover', 'active'].map((type) => (
+                    {['primary', 'secondary', 'accent', 'hover', 'active']?.map((type) => (
                       <button
                         key={type}
                         type="button"

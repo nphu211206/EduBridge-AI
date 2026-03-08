@@ -40,8 +40,8 @@ const CreateModule = () => {
         setModules(response.modules || []);
         
         // Set default order index to be after the last module
-        const nextOrderIndex = response.modules.length > 0 
-          ? Math.max(...response.modules.map(m => m.OrderIndex || 0)) + 1 
+        const nextOrderIndex = response.modules?.length > 0 
+          ? Math.max(...response.modules?.map(m => m.OrderIndex || 0)) + 1 
           : 0;
           
         form.setFieldsValue({

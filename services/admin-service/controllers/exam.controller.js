@@ -17,10 +17,10 @@ const examController = {
           SELECT e.*, u.FullName as CreatorName,
                  (SELECT COUNT(*) FROM ExamQuestions WHERE ExamID = e.ExamID) as QuestionCount
           FROM Exams e
-          LEFT JOIN Users u ON e.CreatedBy = u.UserID
+          LEFT JOIN Users u ON e.CreatorID = u.UserID
           ORDER BY e.CreatedAt DESC
         `);
-      
+
       res.json(result.recordset);
     } catch (error) {
       console.error('Error getting exams:', error);
@@ -38,7 +38,7 @@ const examController = {
         .query(`
           SELECT e.*, u.FullName as CreatorName
           FROM Exams e
-          LEFT JOIN Users u ON e.CreatedBy = u.UserID
+          LEFT JOIN Users u ON e.CreatorID = u.UserID
           WHERE e.ExamID = @examId
         `);
 
@@ -99,10 +99,10 @@ const examController = {
         .input('status', sql.VarChar(20), examStatus)
         .query(`
           INSERT INTO Exams (
-            Title, Description, Type, Duration,
-            TotalPoints, PassingScore, StartTime,
-            EndTime, Instructions, AllowReview,
-            ShuffleQuestions, CourseID, CreatedBy,
+            Title, Description, Type, DurationMinutes,
+            TotalPoints, PassingScore, StartAt,
+            EndAt, Instructions, ShowResults,
+            ShuffleQuestions, CourseID, CreatorID,
             Status
           )
           VALUES (
@@ -111,6 +111,7 @@ const examController = {
             @endTime, @instructions, @allowReview,
             @shuffleQuestions, @courseId, @createdBy,
             @status
+
           );
           SELECT SCOPE_IDENTITY() as ExamID;
         `);
@@ -171,13 +172,13 @@ const examController = {
           SET Title = @title,
               Description = @description,
               Type = @type,
-              Duration = @duration,
+              DurationMinutes = @duration,
               TotalPoints = @totalPoints,
               PassingScore = @passingScore,
-              StartTime = @startTime,
-              EndTime = @endTime,
+              StartAt = @startTime,
+              EndAt = @endTime,
               Instructions = @instructions,
-              AllowReview = @allowReview,
+              ShowResults = @allowReview,
               ShuffleQuestions = @shuffleQuestions,
               CourseID = @courseId,
               Status = @status,
@@ -270,7 +271,7 @@ const examController = {
       const questionType = validTypes.includes(type) ? type : 'multiple_choice';
 
       const pool = await poolPromise;
-      
+
       // Bắt đầu transaction
       const transaction = new sql.Transaction(pool);
       await transaction.begin();

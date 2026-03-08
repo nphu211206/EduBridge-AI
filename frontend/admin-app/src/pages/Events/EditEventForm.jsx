@@ -73,7 +73,7 @@ const EditEventForm = () => {
         try {
           const languagesResponse = await getEventLanguages(id);
           if (languagesResponse.data && Array.isArray(languagesResponse.data)) {
-            setEventLanguages(languagesResponse.data.map(item => item.Language));
+            setEventLanguages(languagesResponse.data?.map(item => item.Language));
           }
         } catch (error) {
           console.error('Error fetching event languages:', error);
@@ -82,7 +82,7 @@ const EditEventForm = () => {
         try {
           const technologiesResponse = await getEventTechnologies(id);
           if (technologiesResponse.data && Array.isArray(technologiesResponse.data)) {
-            setEventTechnologies(technologiesResponse.data.map(item => item.Technology));
+            setEventTechnologies(technologiesResponse.data?.map(item => item.Technology));
           }
         } catch (error) {
           console.error('Error fetching event technologies:', error);
@@ -112,7 +112,7 @@ const EditEventForm = () => {
       
       if (event.EventTime) {
         const timeParts = event.EventTime.split(':');
-        if (timeParts.length >= 2) {
+        if (timeParts?.length >= 2) {
           const now = dayjs();
           eventTime = now.hour(parseInt(timeParts[0])).minute(parseInt(timeParts[1]));
         }
@@ -262,7 +262,7 @@ const EditEventForm = () => {
                 rules={[{ required: true, message: 'Vui lòng chọn danh mục' }]}
               >
                 <Select placeholder="Chọn danh mục">
-                  {categories.map(category => (
+                  {categories?.map(category => (
                     <Option key={category.value} value={category.value}>
                       {category.label}
                     </Option>
@@ -278,7 +278,7 @@ const EditEventForm = () => {
                 rules={[{ required: true, message: 'Vui lòng chọn độ khó' }]}
               >
                 <Select placeholder="Chọn độ khó">
-                  {difficulties.map(difficulty => (
+                  {difficulties?.map(difficulty => (
                     <Option key={difficulty.value} value={difficulty.value}>
                       {difficulty.label}
                     </Option>
@@ -327,7 +327,7 @@ const EditEventForm = () => {
                 rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
               >
                 <Select placeholder="Chọn trạng thái">
-                  {statusOptions.map(status => (
+                  {statusOptions?.map(status => (
                     <Option key={status.value} value={status.value}>
                       {status.label}
                     </Option>

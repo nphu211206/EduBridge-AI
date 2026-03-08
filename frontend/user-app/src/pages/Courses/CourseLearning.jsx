@@ -182,7 +182,7 @@ const CourseLearning = () => {
             const urlLessonId = searchParams.get('lessonId');
             
             // Find and set current lesson and module
-            if (formattedCourse.Modules && formattedCourse.Modules.length > 0) {
+            if (formattedCourse.Modules && formattedCourse.Modules?.length > 0) {
               // If we have a specific lesson from URL, find it
               if (urlLessonId) {
                 let foundLesson = null;
@@ -223,7 +223,7 @@ const CourseLearning = () => {
             const urlLessonId = searchParams.get('lessonId');
             
             // Set up a default lesson using empty progress
-            if (formattedCourse.Modules && formattedCourse.Modules.length > 0) {
+            if (formattedCourse.Modules && formattedCourse.Modules?.length > 0) {
               if (urlLessonId) {
                 handleLessonFromUrl(formattedCourse, urlLessonId);
               } else {
@@ -243,7 +243,7 @@ const CourseLearning = () => {
           const urlLessonId = searchParams.get('lessonId');
           
           // Find and set current lesson and module
-          if (formattedCourse.Modules && formattedCourse.Modules.length > 0) {
+          if (formattedCourse.Modules && formattedCourse.Modules?.length > 0) {
             // If we have a specific lesson from URL, find it
             if (urlLessonId) {
               handleLessonFromUrl(formattedCourse, urlLessonId);
@@ -308,11 +308,11 @@ const CourseLearning = () => {
 
   // Set the default current lesson (first non-completed or first lesson)
   const setDefaultCurrentLesson = (courseData, completedLessonIds = []) => {
-    if (!courseData.Modules || courseData.Modules.length === 0) return;
+    if (!courseData.Modules || courseData.Modules?.length === 0) return;
     
     // Find first incomplete lesson
     for (const module of courseData.Modules) {
-      if (module.Lessons && module.Lessons.length > 0) {
+      if (module.Lessons && module.Lessons?.length > 0) {
         for (const lesson of module.Lessons) {
           if (!completedLessonIds.includes(lesson.LessonID)) {
             setCurrentModule(module);
@@ -326,7 +326,7 @@ const CourseLearning = () => {
     
     // If all lessons are completed, just show the first one
     const firstModule = courseData.Modules[0];
-    if (firstModule.Lessons && firstModule.Lessons.length > 0) {
+    if (firstModule.Lessons && firstModule.Lessons?.length > 0) {
       setCurrentModule(firstModule);
       setCurrentLesson(firstModule.Lessons[0]);
       setContentType(determineContentType(firstModule.Lessons[0]));
@@ -384,11 +384,11 @@ const CourseLearning = () => {
         // Update progress
         if (course && course.Modules) {
           let totalLessons = 0;
-          course.Modules.forEach(module => {
-            totalLessons += module.Lessons ? module.Lessons.length : 0;
+          course.Modules?.forEach(module => {
+            totalLessons += module.Lessons ? module.Lessons?.length : 0;
           });
           
-          const newProgress = Math.round((updatedCompletedLessons.length / totalLessons) * 100);
+          const newProgress = Math.round((updatedCompletedLessons?.length / totalLessons) * 100);
           setProgress(newProgress);
         }
         
@@ -416,16 +416,16 @@ const CourseLearning = () => {
     if (currentLessonIndex === -1) return;
     
     // Check if there's another lesson in this module
-    if (currentLessonIndex < currentModule.Lessons.length - 1) {
+    if (currentLessonIndex < currentModule.Lessons?.length - 1) {
       const nextLesson = currentModule.Lessons[currentLessonIndex + 1];
       navigate(`/courses/${courseId}/learn?lessonId=${nextLesson.LessonID}`);
       return;
     }
     
     // Check if there's another module
-    if (currentModuleIndex < course.Modules.length - 1) {
+    if (currentModuleIndex < course.Modules?.length - 1) {
       const nextModule = course.Modules[currentModuleIndex + 1];
-      if (nextModule.Lessons && nextModule.Lessons.length > 0) {
+      if (nextModule.Lessons && nextModule.Lessons?.length > 0) {
         navigate(`/courses/${courseId}/learn?lessonId=${nextModule.Lessons[0].LessonID}`);
         return;
       }
@@ -455,8 +455,8 @@ const CourseLearning = () => {
     // Check if there's a previous module
     if (currentModuleIndex > 0) {
       const prevModule = course.Modules[currentModuleIndex - 1];
-      if (prevModule.Lessons && prevModule.Lessons.length > 0) {
-        const lastLesson = prevModule.Lessons[prevModule.Lessons.length - 1];
+      if (prevModule.Lessons && prevModule.Lessons?.length > 0) {
+        const lastLesson = prevModule.Lessons[prevModule.Lessons?.length - 1];
         navigate(`/courses/${courseId}/learn?lessonId=${lastLesson.LessonID}`);
         return;
       }
@@ -540,7 +540,7 @@ const CourseLearning = () => {
       
       console.log("Gemini API response:", response.data);
       
-      if (response.data && response.data.candidates && response.data.candidates.length > 0) {
+      if (response.data && response.data.candidates && response.data.candidates?.length > 0) {
         // Extract the summary text from Gemini response
         const summaryText = response.data.candidates[0].content.parts[0].text;
         setVideoSummary(summaryText);
@@ -714,14 +714,14 @@ const CourseLearning = () => {
             </div>
             
             <div className="overflow-y-auto flex-1 py-2">
-              {course.Modules.map((module, moduleIndex) => (
+              {course.Modules?.map((module, moduleIndex) => (
                 <div key={module.ModuleID || moduleIndex} className="mb-2">
                   <div className="px-4 py-2 font-medium text-gray-700 flex items-center">
                     <span>{moduleIndex + 1}. {module.Title}</span>
                   </div>
                   
                   <div className="space-y-1">
-                    {module.Lessons && module.Lessons.map((lesson, lessonIndex) => {
+                    {module.Lessons && module.Lessons?.map((lesson, lessonIndex) => {
                       const isActive = currentLesson && currentLesson.LessonID === lesson.LessonID;
                       const isCompleted = completedLessons.includes(lesson.LessonID);
                       const isPracticeExercise = lesson.CodeExercise && (lesson.Type === 'coding' || lesson.Type === 'exercise');
@@ -925,11 +925,11 @@ const CourseLearning = () => {
                           // Update progress
                           if (course && course.Modules) {
                             let totalLessons = 0;
-                            course.Modules.forEach(module => {
-                              totalLessons += module.Lessons ? module.Lessons.length : 0;
+                            course.Modules?.forEach(module => {
+                              totalLessons += module.Lessons ? module.Lessons?.length : 0;
                             });
                             
-                            const newProgress = Math.round((updatedCompletedLessons.length / totalLessons) * 100);
+                            const newProgress = Math.round((updatedCompletedLessons?.length / totalLessons) * 100);
                             setProgress(newProgress);
                           }
                         }
@@ -1056,11 +1056,11 @@ const CourseLearning = () => {
             </div>
             
             {/* Additional Resources Section - only show when not in fullscreen */}
-            {!isFullScreen && currentLesson?.Resources && currentLesson.Resources.length > 0 && (
+            {!isFullScreen && currentLesson?.Resources && currentLesson.Resources?.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6 max-w-7xl mx-auto">
                 <h2 className="text-lg font-bold mb-4">Tài liệu bổ sung</h2>
                 <ul className="space-y-2">
-                  {currentLesson.Resources.map((resource, index) => (
+                  {currentLesson.Resources?.map((resource, index) => (
                     <li key={index} className="flex items-center">
                       <svg className="w-5 h-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -1404,7 +1404,7 @@ const CodeExerciseEditor = ({ courseId, lessonId, codeExercise, onComplete, show
               
               {testResults.tests && (
                 <div className="space-y-3">
-                  {testResults.tests.map((test, index) => (
+                  {testResults.tests?.map((test, index) => (
                     <div 
                       key={index}
                       className={`p-3 rounded-md ${test.passed ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}

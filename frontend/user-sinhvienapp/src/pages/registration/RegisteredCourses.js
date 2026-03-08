@@ -122,7 +122,7 @@ const RegisteredCourses = () => {
           
           if (currentResponse.data.success && currentResponse.data.semester) {
             setSemester(currentResponse.data.semester.id.toString());
-          } else if (response.data.semesters.length > 0) {
+          } else if (response.data.semesters?.length > 0) {
             // Default to first semester if no current semester
             setSemester(response.data.semesters[0].id.toString());
           }
@@ -188,7 +188,7 @@ const RegisteredCourses = () => {
 
       if (response.data.success) {
         // Update the UI by removing the course
-        setRegisteredCourses(registeredCourses.filter(course => course.id !== courseId));
+        setRegisteredCourses(registeredCourses?.filter(course => course.id !== courseId));
         
         // Recalculate total credits
         const updatedCredits = registeredCourses
@@ -283,7 +283,7 @@ const RegisteredCourses = () => {
                     <CircularProgress size={24} /> Đang tải...
                   </MenuItem>
                 ) : (
-                  semesters.map(sem => (
+                  semesters?.map(sem => (
                     <MenuItem key={sem.id} value={sem.id}>
                       {sem.name} - {sem.academicYear}
                     </MenuItem>
@@ -302,7 +302,7 @@ const RegisteredCourses = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={4}>
                     <Typography variant="body1">
-                      <strong>Tổng số môn học:</strong> {registeredCourses.length}
+                      <strong>Tổng số môn học:</strong> {registeredCourses?.length}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -359,7 +359,7 @@ const RegisteredCourses = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {registeredCourses.length > 0 ? registeredCourses.map((course) => (
+                {registeredCourses?.length > 0 ? registeredCourses?.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell>{course.courseCode}</TableCell>
                     <TableCell>{course.courseName}</TableCell>

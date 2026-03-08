@@ -570,7 +570,7 @@ const Login = () => {
                     </Typography>
                     
                     <Grid container spacing={3}>
-                      {universityInfo.map((section, index) => (
+                      {universityInfo?.map((section, index) => (
                         <Grid item xs={12} md={6} lg={4} key={index}>
                           <Card sx={{ 
                             backgroundColor: 'rgba(255,255,255,0.15)', 
@@ -601,7 +601,7 @@ const Login = () => {
                             
                             <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)', mb: 2 }} />
                             
-                            {section.items.map((item, itemIndex) => (
+                            {section.items?.map((item, itemIndex) => (
                               <Box key={itemIndex} sx={{ mb: 1 }}>
                                 <Typography variant="body2" color="rgba(255,255,255,0.7)" gutterBottom>
                                   {item.name}

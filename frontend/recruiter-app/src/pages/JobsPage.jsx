@@ -16,7 +16,8 @@ import JobsFilter from '../components/jobs/JobsFilter'; // Component Filter đã
 import JobCard from '../components/jobs/JobCard';       // Component JobCard
 import Pagination from '../components/common/Pagination'; // Component Pagination đã nâng cấp
 // Import các component tiện ích
-import { LoadingSpinner, ErrorDisplay, EmptyState } from '../components/common/FeedbackComponents'; // Đường dẫn đúngimport { Briefcase } from 'lucide-react'; // Icon cho EmptyState
+import { LoadingSpinner, ErrorDisplay, EmptyState } from '../components/common/FeedbackComponents';
+import { Briefcase } from 'lucide-react';
 
 // --- Animation Variants ---
 const pageVariants = {
@@ -49,7 +50,7 @@ export default function JobsPage() {
     // Sử dụng useMemo để chỉ parse URL một lần khi searchParams thay đổi
     const currentFilters = useMemo(() => {
         const params = {};
-        searchParams.forEach((value, key) => {
+        searchParams?.forEach((value, key) => {
             if (key === 'jobTypes') {
                 // Parse mảng jobTypes từ URL (nếu có)
                 params[key] = value.split(',');
@@ -60,7 +61,7 @@ export default function JobsPage() {
         return params;
     }, [searchParams]);
 
-     // Đọc trang hiện tại từ URL hoặc mặc định là 1
+    // Đọc trang hiện tại từ URL hoặc mặc định là 1
     useEffect(() => {
         const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
         setCurrentPage(isNaN(pageFromUrl) || pageFromUrl < 1 ? 1 : pageFromUrl);
@@ -93,7 +94,7 @@ export default function JobsPage() {
             setIsLoading(false);
             console.log("[JobsPage] Fetch complete.");
         }
-    // Dependency: fetch lại khi filter hoặc page thay đổi
+        // Dependency: fetch lại khi filter hoặc page thay đổi
     }, [currentFilters, currentPage]);
 
     // --- Effect Trigger Fetch Dữ liệu ---
@@ -108,8 +109,8 @@ export default function JobsPage() {
         console.log("[JobsPage] Filters changed:", newFilters);
         const nextParams = new URLSearchParams();
         // Xây dựng params mới, loại bỏ giá trị rỗng/mặc định
-        Object.entries(newFilters).forEach(([key, value]) => {
-            if (key === 'jobTypes' && Array.isArray(value) && value.length > 0) {
+        Object.entries(newFilters)?.forEach(([key, value]) => {
+            if (key === 'jobTypes' && Array.isArray(value) && value?.length > 0) {
                 nextParams.set(key, value.join(',')); // Nối mảng thành chuỗi
             } else if (key !== 'jobTypes' && value && value !== 'Tất cả') {
                 nextParams.set(key, value);
@@ -161,7 +162,7 @@ export default function JobsPage() {
             // Loading Skeleton "Đẳng Cấp"
             return (
                 <div className="space-y-6">
-                    {[...Array(5)].map((_, i) => ( // Hiển thị 5 skeleton cards
+                    {[...Array(5)]?.map((_, i) => ( // Hiển thị 5 skeleton cards
                         <motion.div
                             key={i}
                             className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex gap-6 animate-pulse"
@@ -188,7 +189,7 @@ export default function JobsPage() {
             return <ErrorDisplay message={error} onRetry={fetchJobs} />;
         }
 
-        if (jobs.length === 0) {
+        if (jobs?.length === 0) {
             return (
                 <EmptyState
                     icon={Briefcase}
@@ -206,7 +207,7 @@ export default function JobsPage() {
                 initial="hidden"
                 animate="visible"
             >
-                {jobs.map(job => (
+                {jobs?.map(job => (
                     <JobCard
                         key={job.id}
                         job={job}
@@ -226,7 +227,7 @@ export default function JobsPage() {
     return (
         <>
             <Helmet>
-                <title>Tìm kiếm Việc làm | EduLedger AI - Nơi Tài Năng Được Bảo Chứng</title>
+                <title>Tìm kiếm Việc làm | EduBridge AI - Nơi Tài Năng Được Bảo Chứng</title>
                 <meta name="description" content="Khám phá hàng ngàn cơ hội việc làm IT hấp dẫn dành cho sinh viên từ các công ty hàng đầu. Năng lực của bạn được AI xác thực." />
             </Helmet>
 
@@ -252,7 +253,7 @@ export default function JobsPage() {
                             Khám Phá <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Cơ Hội</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-                            Tìm kiếm công việc IT mơ ước. Hồ sơ năng lực AI-Verified trên EduLedger là lợi thế cạnh tranh độc nhất của bạn.
+                            Tìm kiếm công việc IT mơ ước. Hồ sơ năng lực AI-Verified trên EduBridge là lợi thế cạnh tranh độc nhất của bạn.
                         </p>
                     </motion.div>
 
@@ -261,25 +262,25 @@ export default function JobsPage() {
 
                         {/* Cột Filter */}
                         <aside className="lg:col-span-4 xl:col-span-3">
-                             <JobsFilter
+                            <JobsFilter
                                 onFilterChange={handleFilterChange}
                                 // Truyền giá trị filter hiện tại từ URL vào Filter component
                                 // để nó có thể hiển thị đúng trạng thái ban đầu
                                 initialFilters={currentFilters}
-                             />
+                            />
                         </aside>
 
                         {/* Cột Results */}
                         <section className="lg:col-span-8 xl:col-span-9">
-                             {/* Hiển thị số lượng kết quả (nếu không loading/error) */}
-                             {!isLoading && !error && jobs.length > 0 && (
+                            {/* Hiển thị số lượng kết quả (nếu không loading/error) */}
+                            {!isLoading && !error && jobs?.length > 0 && (
                                 <motion.div
                                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                                     className="mb-6 text-sm text-gray-700 font-medium"
                                 >
-                                    Hiển thị {jobs.length} trên tổng số {totalJobs} việc làm phù hợp.
+                                    Hiển thị {jobs?.length} trên tổng số {totalJobs} việc làm phù hợp.
                                 </motion.div>
-                             )}
+                            )}
 
                             {/* Render danh sách jobs hoặc trạng thái khác */}
                             {renderContent()}

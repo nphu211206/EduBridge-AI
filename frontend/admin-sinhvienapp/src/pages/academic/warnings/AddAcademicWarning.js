@@ -84,7 +84,7 @@ const AddAcademicWarning = () => {
   // Search students - support searching by UserID as well
   useEffect(() => {
     const searchStudents = async () => {
-      if (studentSearchTerm.length < 2) return;
+      if (studentSearchTerm?.length < 2) return;
       
       setStudentsLoading(true);
       try {
@@ -306,7 +306,7 @@ const AddAcademicWarning = () => {
                             Đang tải...
                           </MenuItem>
                         ) : (
-                          semesters.map((semester) => (
+                          semesters?.map((semester) => (
                             <MenuItem key={semester.id} value={semester.id}>
                               {semester.name} - {semester.AcademicYear || ''} 
                               {semester.status === 'Current' && ' (Hiện tại)'}
@@ -330,7 +330,7 @@ const AddAcademicWarning = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
-                        {warningTypes.map((type) => (
+                        {warningTypes?.map((type) => (
                           <MenuItem key={type.value} value={type.value}>
                             {type.label}
                           </MenuItem>

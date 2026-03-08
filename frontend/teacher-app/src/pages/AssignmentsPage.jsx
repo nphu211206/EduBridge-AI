@@ -267,7 +267,7 @@ const AssignmentsPage = () => {
                   <tr key={assignment.AssignmentID} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{assignment.Title}</div>
-                      <div className="text-sm text-gray-500">{assignment.Description.length > 50 ? assignment.Description.slice(0, 50) + '...' : assignment.Description}</div>
+                      <div className="text-sm text-gray-500">{assignment.Description?.length > 50 ? assignment.Description.slice(0, 50) + '...' : assignment.Description}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">

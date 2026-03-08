@@ -141,7 +141,7 @@ const AcademicWarning = () => {
         
         // Fetch academic metrics (GPA, credits)
         const metricsData = await academicService.getMetrics(currentUser.UserID);
-        setMetrics(Array.isArray(metricsData) && metricsData.length > 0 ? metricsData[0] : null);
+        setMetrics(Array.isArray(metricsData) && metricsData?.length > 0 ? metricsData[0] : null);
       } catch (err) {
         console.error('Error fetching academic warnings:', err);
         setError('Không thể tải thông tin cảnh báo học vụ. Vui lòng thử lại sau.');
@@ -353,7 +353,7 @@ const AcademicWarning = () => {
           </Typography>
           <Divider sx={{ mb: 2 }} />
           
-          {warnings.length > 0 ? (
+          {warnings?.length > 0 ? (
             <List sx={{ 
               p: 0, 
               '& .MuiListItem-root': { 
@@ -362,7 +362,7 @@ const AcademicWarning = () => {
                 '&:last-child': { mb: 0 }
               } 
             }}>
-              {warnings.map((warning, index) => (
+              {warnings?.map((warning, index) => (
                 <ListItem key={index}>
                   <Paper 
                     variant="outlined" 

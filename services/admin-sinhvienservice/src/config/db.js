@@ -7,16 +7,22 @@
 -----------------------------------------------------------------*/
 const sql = require('mssql');
 
+// Validate required environment variables
+if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_NAME) {
+  console.error('CRITICAL: DB_USER, DB_PASSWORD, and DB_NAME must be set in .env!');
+  process.exit(1);
+}
+
 // Database connection configuration
 const dbConfig = {
-  user: process.env.DB_USER || 'sa',
-  password: process.env.DB_PASSWORD || '123456aA@$',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   server: (process.env.DB_SERVER || 'localhost').split('\\')[0],
-  database: process.env.DB_NAME || 'CampusLearning',
+  database: process.env.DB_NAME,
   options: {
     instanceName: (process.env.DB_SERVER || 'localhost').split('\\')[1],
-    encrypt: process.env.DB_ENCRYPT === 'true',
-    trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true' || true,
+    encrypt: false,
+    trustServerCertificate: true,
   },
   pool: {
     max: 10,
@@ -62,7 +68,7 @@ const executeQuery = async (query, params = {}) => {
   try {
     const pool = await getPool();
     let request = pool.request();
-    
+
     // Add parameters to the request, handling type/value objects
     for (const [key, param] of Object.entries(params)) {
       if (
@@ -76,7 +82,7 @@ const executeQuery = async (query, params = {}) => {
         request = request.input(key, param);
       }
     }
-    
+
     // Execute the query
     const result = await request.query(query);
     return result;

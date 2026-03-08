@@ -160,7 +160,7 @@ function App() {
               { path: '/achievements', element: <Achievements /> },
               { path: '/team-builder', element: <TeamBuilder /> },
               { path: '/insights', element: <Insights /> }
-            ].map(({ path, element }) => (
+            ]?.map(({ path, element }) => (
               <Route
                 key={path}
                 path={path}
@@ -182,6 +182,12 @@ function App() {
               }
             />
 
+            {/* Support routes */}
+            <Route path="/support/faq" element={<FAQ />} />
+            <Route path="/support/help-center" element={<HelpCenter />} />
+            <Route path="/support/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/support/terms-of-use" element={<TermsOfUse />} />
+
             {/* Catch all route - redirect to home if authenticated, otherwise to login */}
             <Route
               path="*"
@@ -191,12 +197,6 @@ function App() {
                   <Navigate to="/login" replace />
               }
             />
-
-            {/* Support routes */}
-            <Route path="/support/faq" element={<FAQ />} />
-            <Route path="/support/help-center" element={<HelpCenter />} />
-            <Route path="/support/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/support/terms-of-use" element={<TermsOfUse />} />
           </Routes>
         </MainLayout>
       </CallProvider>

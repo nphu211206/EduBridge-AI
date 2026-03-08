@@ -151,11 +151,11 @@ const PaymentHistory = () => {
           const stats = {
             totalPaid: 0,
             totalPending: 0,
-            totalTransactions: payments.length,
+            totalTransactions: payments?.length,
             successfulTransactions: 0
           };
           
-          payments.forEach(payment => {
+          payments?.forEach(payment => {
             const status = (payment.PaymentStatus || payment.Status || '').toLowerCase();
             const amount = parseFloat(payment.Amount) || 0;
             
@@ -222,7 +222,7 @@ const PaymentHistory = () => {
       if (response.data && response.data.success) {
         // Cập nhật UI ngay lập tức bằng cách xóa giao dịch khỏi state
         setPaymentHistory(prevPayments => 
-          prevPayments.filter(payment => payment.TransactionID !== paymentId)
+          prevPayments?.filter(payment => payment.TransactionID !== paymentId)
         );
         
         // Hiển thị thông báo thành công
@@ -259,7 +259,7 @@ const PaymentHistory = () => {
   const toggleSelectPayment = (paymentId) => {
     setSelectedPayments(prev => {
       if (prev.includes(paymentId)) {
-        return prev.filter(id => id !== paymentId);
+        return prev?.filter(id => id !== paymentId);
       } else {
         return [...prev, paymentId];
       }
@@ -272,7 +272,7 @@ const PaymentHistory = () => {
       .filter(payment => (payment.PaymentStatus || payment.Status || '').toLowerCase() === 'cancelled')
       .map(payment => payment.TransactionID);
     
-    if (cancelledPaymentIds.length === 0) {
+    if (cancelledPaymentIds?.length === 0) {
       toast.info('Không có giao dịch đã hủy nào để chọn', {
         position: "top-right",
         autoClose: 3000
@@ -282,7 +282,7 @@ const PaymentHistory = () => {
     
     setSelectedPayments(cancelledPaymentIds);
     
-    toast.info(`Đã chọn ${cancelledPaymentIds.length} giao dịch đã hủy`, {
+    toast.info(`Đã chọn ${cancelledPaymentIds?.length} giao dịch đã hủy`, {
       position: "top-right",
       autoClose: 2000
     });
@@ -295,7 +295,7 @@ const PaymentHistory = () => {
 
   // Delete multiple payments
   const deleteSelectedPayments = async () => {
-    if (selectedPayments.length === 0) {
+    if (selectedPayments?.length === 0) {
       toast.info('Chưa có giao dịch nào được chọn', {
         position: "top-right",
         autoClose: 3000
@@ -303,7 +303,7 @@ const PaymentHistory = () => {
       return;
     }
 
-    const confirmation = window.confirm(`Bạn có chắc chắn muốn xóa ${selectedPayments.length} giao dịch đã chọn không?`);
+    const confirmation = window.confirm(`Bạn có chắc chắn muốn xóa ${selectedPayments?.length} giao dịch đã chọn không?`);
     if (!confirmation) return;
 
     try {
@@ -313,7 +313,7 @@ const PaymentHistory = () => {
       if (response.data && response.data.success) {
         // Cập nhật UI ngay lập tức
         setPaymentHistory(prevPayments => 
-          prevPayments.filter(payment => !selectedPayments.includes(payment.TransactionID))
+          prevPayments?.filter(payment => !selectedPayments.includes(payment.TransactionID))
         );
         
         toast.success(`Đã xóa thành công ${response.data.deletedCount} giao dịch`, {
@@ -345,12 +345,12 @@ const PaymentHistory = () => {
 
   // Print only successful payments
   const handlePrint = () => {
-    const successfulPayments = paymentHistory.filter(payment => {
+    const successfulPayments = paymentHistory?.filter(payment => {
       const status = (payment.PaymentStatus || payment.Status || '').toLowerCase();
       return status === 'completed' || status === 'success';
     });
     
-    if (successfulPayments.length === 0) {
+    if (successfulPayments?.length === 0) {
       toast.info('Không có giao dịch thành công để in');
       return;
     }
@@ -677,7 +677,7 @@ const PaymentHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                ${successfulPayments.map((payment, index) => `
+                ${successfulPayments?.map((payment, index) => `
                   <tr>
                     <td>${index + 1}</td>
                     <td>${payment.Course?.Title || 'Không có thông tin khóa học'}</td>
@@ -693,7 +693,7 @@ const PaymentHistory = () => {
             <div class="total-section">
               <div class="total-row">
                 <div class="total-label">Số lượng giao dịch:</div>
-                <div class="total-amount">${successfulPayments.length} giao dịch</div>
+                <div class="total-amount">${successfulPayments?.length} giao dịch</div>
               </div>
               <div class="total-row grand-total">
                 <div class="total-label">Tổng thanh toán:</div>
@@ -781,7 +781,7 @@ const PaymentHistory = () => {
             addWatermarks();
             
             // If there are multiple pages, ensure each gets the page class
-            if (document.querySelectorAll('.page').length === 0) {
+            if (document.querySelectorAll('.page')?.length === 0) {
               const content = document.querySelector('.container');
               if (content) {
                 const page = document.createElement('div');
@@ -938,14 +938,14 @@ const PaymentHistory = () => {
   const renderSkeleton = () => (
     <div className="animate-pulse space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {Array(4).fill(0).map((_, index) => (
+        {Array(4).fill(0)?.map((_, index) => (
           <div key={`stat-skeleton-${index}`} className="bg-white p-4 rounded-xl shadow-md">
             <div className="h-5 bg-gray-200 rounded-md w-1/2 mb-2"></div>
             <div className="h-8 bg-gray-200 rounded-md w-3/4"></div>
           </div>
         ))}
       </div>
-      {Array(5).fill(0).map((_, index) => (
+      {Array(5).fill(0)?.map((_, index) => (
         <div key={`skeleton-${index}`} className="bg-white p-4 rounded-xl shadow-md mb-4">
           <div className="h-6 bg-gray-200 rounded-md w-1/4 mb-4"></div>
           <div className="h-4 bg-gray-200 rounded-md w-1/2 mb-2"></div>
@@ -1014,7 +1014,7 @@ const PaymentHistory = () => {
     
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {stats.map((stat, index) => (
+        {stats?.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
       </div>
@@ -1171,7 +1171,7 @@ const PaymentHistory = () => {
                 </svg>
                 Chọn tất cả đã hủy
               </button>
-              {selectedPayments.length > 0 && (
+              {selectedPayments?.length > 0 && (
                 <>
                   <button 
                     onClick={deselectAllPayments}
@@ -1198,7 +1198,7 @@ const PaymentHistory = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     )}
-                    Xóa ({selectedPayments.length})
+                    Xóa ({selectedPayments?.length})
                   </button>
                 </>
               )}
@@ -1210,7 +1210,7 @@ const PaymentHistory = () => {
           renderSkeleton()
         ) : error ? (
           renderError()
-        ) : filteredPayments.length === 0 ? (
+        ) : filteredPayments?.length === 0 ? (
           renderEmptyState()
         ) : (
           <>
@@ -1287,7 +1287,7 @@ const PaymentHistory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPayments.map((payment, index) => {
+                    {filteredPayments?.map((payment, index) => {
                       const isCancelled = (payment.PaymentStatus || payment.Status || '').toLowerCase() === 'cancelled';
                       return (
                         <tr 

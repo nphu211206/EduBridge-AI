@@ -158,7 +158,7 @@ const ExamSession = () => {
         
         // Deduplicate questions (in case API returns duplicates)
         const uniqueQuestionsMap = new Map();
-        examResponse.data.questions.forEach(q => {
+        examResponse.data.questions?.forEach(q => {
           if (!uniqueQuestionsMap.has(q.QuestionID)) {
             uniqueQuestionsMap.set(q.QuestionID, q);
           }
@@ -182,7 +182,7 @@ const ExamSession = () => {
         
         // Initialize answers object
         const initialAnswers = {};
-        examResponse.data.questions.forEach(q => {
+        examResponse.data.questions?.forEach(q => {
           initialAnswers[q.QuestionID] = '';
         });
         
@@ -200,11 +200,11 @@ const ExamSession = () => {
           if (userAnswersResponse.ok) {
             const userAnswersData = await userAnswersResponse.json();
             
-            if (userAnswersData && userAnswersData.answers && userAnswersData.answers.length > 0) {
-              console.log("Found existing answers:", userAnswersData.answers.length);
+            if (userAnswersData && userAnswersData.answers && userAnswersData.answers?.length > 0) {
+              console.log("Found existing answers:", userAnswersData.answers?.length);
               
               // Update initialAnswers with saved values
-              userAnswersData.answers.forEach(savedAnswer => {
+              userAnswersData.answers?.forEach(savedAnswer => {
                 if (savedAnswer.QuestionID && savedAnswer.Answer) {
                   initialAnswers[savedAnswer.QuestionID] = savedAnswer.Answer;
                   console.log(`Loaded answer for question ${savedAnswer.QuestionID}`);
@@ -228,8 +228,8 @@ const ExamSession = () => {
               
               if (altResponse.ok) {
                 const altData = await altResponse.json();
-                if (altData && altData.answers && altData.answers.length > 0) {
-                  altData.answers.forEach(savedAnswer => {
+                if (altData && altData.answers && altData.answers?.length > 0) {
+                  altData.answers?.forEach(savedAnswer => {
                     if (savedAnswer.QuestionID && savedAnswer.Answer) {
                       initialAnswers[savedAnswer.QuestionID] = savedAnswer.Answer;
                     }
@@ -576,7 +576,7 @@ const ExamSession = () => {
         
         // Save answers for all questions
         const questions = exam?.questions || [];
-        for (let i = 0; i < questions.length; i++) {
+        for (let i = 0; i < questions?.length; i++) {
           const question = questions[i];
           const questionId = question.QuestionID;
           const answerValue = answers[questionId];
@@ -635,7 +635,7 @@ const ExamSession = () => {
           // If we get a result from the server with grading already done
           if (completeResult && completeResult.evaluationDetails) {
             // To reduce flickering, prepare all the data first before updating the UI
-            const feedbacks = exam.questions.map((question, index) => {
+            const feedbacks = exam.questions?.map((question, index) => {
               const evaluation = completeResult.evaluationDetails.find(
                 e => e.questionId.toString() === question.QuestionID.toString()
               );
@@ -740,7 +740,7 @@ const ExamSession = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Grade each answer - collect all promises to process them in parallel
-      const gradingPromises = questions.map(async (question, i) => {
+      const gradingPromises = questions?.map(async (question, i) => {
         try {
           const answer = answers[question.QuestionID] || '';
           
@@ -748,10 +748,10 @@ const ExamSession = () => {
           setGradingProgress(prev => ({
             ...prev,
             current: i + 1,
-            message: `Đang chấm điểm câu ${i + 1}/${questions.length}...`
+            message: `Đang chấm điểm câu ${i + 1}/${questions?.length}...`
           }));
           
-          console.log(`Grading question ${question.QuestionID} with answer length: ${answer.length}`);
+          console.log(`Grading question ${question.QuestionID} with answer length: ${answer?.length}`);
           
           try {
             // Use the compareAnswer function from examApi instead of direct fetch
@@ -859,7 +859,7 @@ const ExamSession = () => {
             penaltyPercentage: penaltyPercentage,
             finalScore: finalScore,
             originalScore: totalScore,
-            feedbacks: feedbacks.map(fb => ({
+            feedbacks: feedbacks?.map(fb => ({
               questionId: exam.questions[feedbacks.indexOf(fb)]?.QuestionID,
               score: fb.score,
               similarity: fb.similarity
@@ -911,9 +911,9 @@ const ExamSession = () => {
       // Try to show results anyway with estimated scores if we have enough data
       if (!showResults) {
         const questions = exam?.questions || [];
-        if (questions.length > 0) {
+        if (questions?.length > 0) {
           // Create estimated results
-          const estimatedFeedbacks = questions.map((q, i) => {
+          const estimatedFeedbacks = questions?.map((q, i) => {
             const localSim = compareAnswerLocally(
               answers[q.QuestionID] || '',
               q.CorrectAnswer || '',
@@ -940,7 +940,7 @@ const ExamSession = () => {
             };
           });
           
-          const avgScore = estimatedFeedbacks.reduce((sum, f) => sum + f.score, 0) / estimatedFeedbacks.length;
+          const avgScore = estimatedFeedbacks.reduce((sum, f) => sum + f.score, 0) / estimatedFeedbacks?.length;
           
           setScore({
             total: avgScore,
@@ -1001,13 +1001,13 @@ const ExamSession = () => {
 
   // Function to get progress percentage
   const getProgressPercentage = () => {
-    if (!exam || !exam.questions || exam.questions.length === 0) return 0;
+    if (!exam || !exam.questions || exam.questions?.length === 0) return 0;
     
     const answeredCount = exam.questions.reduce((count, question) => {
       return count + (isQuestionAnswered(question.QuestionID) ? 1 : 0);
     }, 0);
     
-    return Math.round((answeredCount / exam.questions.length) * 100);
+    return Math.round((answeredCount / exam.questions?.length) * 100);
   };
 
   // Set up tab switch detector
@@ -1617,7 +1617,7 @@ const ExamSession = () => {
             
             <Box sx={{ overflow: 'auto', flexGrow: 1 }}>
               <List dense>
-                {exam.questions.map((question, index) => (
+                {exam.questions?.map((question, index) => (
                   <ListItem key={question.QuestionID} disablePadding>
                     <ListItemButton
                       selected={currentQuestionIndex === index}
@@ -1726,7 +1726,7 @@ const ExamSession = () => {
             </Typography>
             
             <Typography variant="body2" sx={{ mb: 1 }}>
-              <strong>Tổng số câu hỏi:</strong> {exam.questions.length}
+              <strong>Tổng số câu hỏi:</strong> {exam.questions?.length}
             </Typography>
             
             <Typography variant="body2" sx={{ mb: 1 }}>
@@ -1825,7 +1825,7 @@ const ExamSession = () => {
             {isFullscreen ? (
               <>
                 <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
-                  Câu hỏi {currentQuestionIndex + 1}/{exam.questions.length}
+                  Câu hỏi {currentQuestionIndex + 1}/{exam.questions?.length}
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 
@@ -1915,8 +1915,8 @@ const ExamSession = () => {
                   
                   <Button
                     variant="outlined"
-                    onClick={() => handleNavigateQuestion(Math.min(exam.questions.length - 1, currentQuestionIndex + 1))}
-                    disabled={currentQuestionIndex === exam.questions.length - 1 || submitting}
+                    onClick={() => handleNavigateQuestion(Math.min(exam.questions?.length - 1, currentQuestionIndex + 1))}
+                    disabled={currentQuestionIndex === exam.questions?.length - 1 || submitting}
                     sx={{ borderRadius: 1 }}
                   >
                     Câu tiếp theo

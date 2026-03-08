@@ -12,15 +12,15 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
+    port: 3001, // User app - matches .env USER_APP_PORT
     proxy: {
       '/uploads': {
-        target: 'http://localhost:5001',
+        target: 'http://127.0.0.1:5001',
         changeOrigin: true,
         secure: false,
       },
       '/api': {
-        target: 'http://localhost:5001',
+        target: 'http://127.0.0.1:5001',
         changeOrigin: true,
         secure: false,
       }

@@ -100,7 +100,7 @@ const AddEventSchedule = ({ eventId, onSuccess }) => {
           rules={[{ required: true, message: 'Vui lòng chọn loại hoạt động' }]}
         >
           <Select placeholder="Chọn loại hoạt động">
-            {activityTypes.map(type => (
+            {activityTypes?.map(type => (
               <Option key={type.value} value={type.value}>
                 {type.label}
               </Option>

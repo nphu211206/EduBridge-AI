@@ -213,12 +213,12 @@ const Story = ({ story, onClose, onNext, onPrevious, onDelete, viewCount }) => {
                 {showViewers && (
                     <div className="story-viewers-list">
                         <div className="story-viewers-header">
-                            <h4>Người xem ({viewers.length})</h4>
+                            <h4>Người xem ({viewers?.length})</h4>
                             <button onClick={() => setShowViewers(false)}>×</button>
                         </div>
                         <div className="story-viewers-content">
-                            {viewers.length > 0 ? (
-                                viewers.map((viewer) => (
+                            {viewers?.length > 0 ? (
+                                viewers?.map((viewer) => (
                                     <div key={viewer.ViewID} className="story-viewer-item">
                                         <Avatar
                                             src={viewer.Viewer?.Image}

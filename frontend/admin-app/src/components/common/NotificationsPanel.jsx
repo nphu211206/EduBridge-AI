@@ -146,8 +146,8 @@ const NotificationsPanel = ({ open, onClose }) => {
         overflowY: 'auto', 
         maxHeight: 'calc(100vh - 130px)'
       }}>
-        {dummyNotifications.length > 0 ? (
-          dummyNotifications.map((notification) => (
+        {dummyNotifications?.length > 0 ? (
+          dummyNotifications?.map((notification) => (
             <React.Fragment key={notification.id}>
               <ListItem
                 alignItems="flex-start"

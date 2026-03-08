@@ -263,7 +263,7 @@ const Dashboard = () => {
           </Grid>
           <Grid item xs={12} md={9}>
             <Grid container spacing={3}>
-              {[1, 2, 3, 4, 5].map((index) => (
+              {[1, 2, 3, 4, 5]?.map((index) => (
                 <Grid item xs={12} md={index <= 4 ? 6 : 12} key={index}>
                   <Skeleton variant="rounded" width="100%" height={index <= 4 ? 220 : 280} sx={{ borderRadius: 3 }} />
                 </Grid>
@@ -394,7 +394,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Lịch học hôm nay
             </Typography>
-            {scheduleData.length > 0 ? (
+            {scheduleData?.length > 0 ? (
               <TableContainer component={Paper} variant="outlined" sx={styles.tableContainer}>
                 <Table>
                   <TableHead>
@@ -406,7 +406,7 @@ const Dashboard = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {scheduleData.map((item, index) => (
+                    {scheduleData?.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -463,9 +463,9 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Thông báo mới
             </Typography>
-            {notificationsData.length > 0 ? (
+            {notificationsData?.length > 0 ? (
               <List sx={{ mt: 2 }}>
-                {notificationsData.slice(0, 5).map((notification, index) => (
+                {notificationsData.slice(0, 5)?.map((notification, index) => (
                   <React.Fragment key={notification.NotificationID || index}>
                     <ListItem alignItems="flex-start">
                       <ListItemText
@@ -487,7 +487,7 @@ const Dashboard = () => {
                         }
                       />
                     </ListItem>
-                    {index < notificationsData.length - 1 && <Divider />}
+                    {index < notificationsData?.length - 1 && <Divider />}
                   </React.Fragment>
                 ))}
               </List>

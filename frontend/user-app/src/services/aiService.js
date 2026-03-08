@@ -265,7 +265,7 @@ const getFileObjectFromBase64 = async (base64Data) => {
   
   // Chuyển base64 thành binary
   const binaryStr = atob(data);
-  const len = binaryStr.length;
+  const len = binaryStr?.length;
   const arr = new Uint8Array(len);
   
   for (let i = 0; i < len; i++) {

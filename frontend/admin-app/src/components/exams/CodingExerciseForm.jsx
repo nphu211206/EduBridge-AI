@@ -34,7 +34,7 @@ const CodingExerciseForm = ({ codingExercise, onChange }) => {
   };
 
   const removeTestCase = (index) => {
-    if (codingExercise.testCases.length > 1) {
+    if (codingExercise.testCases?.length > 1) {
       const updatedTestCases = [...codingExercise.testCases];
       updatedTestCases.splice(index, 1);
       handleChange('testCases', updatedTestCases);
@@ -146,7 +146,7 @@ int main() {
           <Typography variant="subtitle2" gutterBottom>
             Test Cases
           </Typography>
-          {codingExercise.testCases.map((testCase, index) => (
+          {codingExercise.testCases?.map((testCase, index) => (
             <Card key={index} variant="outlined" sx={{ mb: 2, p: 2 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={5}>
@@ -174,7 +174,7 @@ int main() {
                     <IconButton
                       color="error"
                       onClick={() => removeTestCase(index)}
-                      disabled={codingExercise.testCases.length <= 1}
+                      disabled={codingExercise.testCases?.length <= 1}
                     >
                       <Delete />
                     </IconButton>

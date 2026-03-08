@@ -107,11 +107,11 @@ const JobDetail = () => {
                         )}
 
                         {/* Skills */}
-                        {job.Skills && job.Skills.length > 0 && (
+                        {job.Skills && job.Skills?.length > 0 && (
                             <section className="detail-section">
                                 <h3>⚡ Kỹ năng yêu cầu</h3>
                                 <div className="required-skills">
-                                    {job.Skills.map((s, i) => <span key={i} className="skill-tag">{s}</span>)}
+                                    {job.Skills?.map((s, i) => <span key={i} className="skill-tag">{s}</span>)}
                                 </div>
                             </section>
                         )}

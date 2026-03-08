@@ -222,7 +222,7 @@ const OnlineServices = () => {
     setPurpose('');
     setQuantity(1);
     setNote('');
-    setDeliveryMethod(deliveryMethods.length > 0 ? deliveryMethods[0].id : '');
+    setDeliveryMethod(deliveryMethods?.length > 0 ? deliveryMethods[0].id : '');
     
     // Fetch purposes for this service
     fetchServicePurposes(service.id);
@@ -438,7 +438,7 @@ const OnlineServices = () => {
           </Box>
         ) : (
           <Grid container spacing={3}>
-            {services.length > 0 ? services.map((service) => (
+            {services?.length > 0 ? services?.map((service) => (
               <Grid item xs={12} sm={6} md={4} key={service.id}>
                 <Card sx={styles.card}>
                   <CardContent sx={styles.cardContent}>
@@ -509,7 +509,7 @@ const OnlineServices = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {requestHistory.length > 0 ? requestHistory.map((request) => (
+                  {requestHistory?.length > 0 ? requestHistory?.map((request) => (
                     <TableRow key={request.id}>
                       <TableCell>{request.serviceTitle}</TableCell>
                       <TableCell>{request.requestDate}</TableCell>
@@ -578,8 +578,8 @@ const OnlineServices = () => {
                             Đang tải...
                           </Box>
                         </MenuItem>
-                      ) : purposes.length > 0 ? (
-                        purposes.map((p) => (
+                      ) : purposes?.length > 0 ? (
+                        purposes?.map((p) => (
                           <MenuItem key={p.id} value={p.id}>
                             {p.name}
                           </MenuItem>
@@ -603,7 +603,7 @@ const OnlineServices = () => {
                       label="Phương thức nhận"
                       disabled={loading}
                     >
-                      {deliveryMethods.map((method) => (
+                      {deliveryMethods?.map((method) => (
                         <MenuItem key={method.id} value={method.id}>
                           {method.name}
                         </MenuItem>

@@ -154,12 +154,12 @@ const LessonDetailPage = () => {
       </div>
       
       {/* Coding exercises (if applicable) */}
-      {currentLesson.Type === 'coding' && currentLesson.exercises && currentLesson.exercises.length > 0 && (
+      {currentLesson.Type === 'coding' && currentLesson.exercises && currentLesson.exercises?.length > 0 && (
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Bài tập lập trình</h2>
           
           <div className="space-y-4">
-            {currentLesson.exercises.map((exercise) => (
+            {currentLesson.exercises?.map((exercise) => (
               <div key={exercise.ExerciseID} className="border border-gray-200 rounded-lg p-4">
                 <h3 className="font-medium text-gray-900">{exercise.Title}</h3>
                 <p className="text-gray-600 mt-1">{exercise.Description}</p>

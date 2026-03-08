@@ -61,7 +61,7 @@ const Contact = () => {
             className="bg-white rounded-lg shadow-lg p-8"
           >
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Thông tin liên hệ</h2>
-            
+
             <div className="space-y-6">
               <div className="flex items-start">
                 <MapPinIcon className="h-6 w-6 text-indigo-600 mt-1 mr-4" />
@@ -76,7 +76,7 @@ const Contact = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">Email</h3>
                   <p className="text-gray-600">contact@CampusLearning.vn</p>
-                  <p className="text-gray-600">CampusLearning@Campus Learning.edu.vn</p>
+                  <p className="text-gray-600">contact@EduBridgeAI.vn</p>
                   <p className="text-gray-600">quyen.nd19@outlook.com</p>
                 </div>
               </div>
@@ -99,7 +99,7 @@ const Contact = () => {
             className="bg-white rounded-lg shadow-lg p-8"
           >
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Gửi tin nhắn cho chúng tôi</h2>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">

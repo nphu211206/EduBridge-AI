@@ -90,7 +90,7 @@ const Payment = () => {
         if (result.success) {
           setBankList(result.data);
           // Initialize selected bank to first available
-          if (result.data && result.data.length > 0) {
+          if (result.data && result.data?.length > 0) {
             setSelectedBank(result.data[0].code);
           }
         } else {
@@ -251,7 +251,7 @@ const Payment = () => {
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-700 mb-2">VNPay Banks:</h3>
           <ul className="list-disc list-inside text-sm text-gray-600">
-            {bankList.map(bank => (
+            {bankList?.map(bank => (
               <li key={bank.code} className="mb-1">
                 <label className="flex items-center">
                   <input

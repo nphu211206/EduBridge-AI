@@ -233,7 +233,7 @@ const CourseRegistration = () => {
   };
   
   // Filter courses based on search query
-  const filteredCourses = availableCourses.filter(course => 
+  const filteredCourses = availableCourses?.filter(course => 
     course.SubjectCode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     course.SubjectName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     course.TeacherName?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -314,7 +314,7 @@ const CourseRegistration = () => {
       // For demo purposes, simulate successful registration if API fails
       // Update available courses
       setAvailableCourses(prevCourses => {
-        return prevCourses.map(course => {
+        return prevCourses?.map(course => {
           if (course.ClassID === selectedCourse.ClassID) {
             return {
               ...course,
@@ -395,7 +395,7 @@ const CourseRegistration = () => {
       });
       
       // For demo purposes, simulate successful cancellation if API fails
-      setRegisteredCourses(prevCourses => prevCourses.filter(course => course.RegistrationID !== registrationId));
+      setRegisteredCourses(prevCourses => prevCourses?.filter(course => course.RegistrationID !== registrationId));
     } finally {
       setLoading(false);
     }
@@ -410,7 +410,7 @@ const CourseRegistration = () => {
   const totalCredits = registeredCourses.reduce((sum, course) => sum + course.Credits, 0);
   
   // If still loading initial data
-  if (loading && !registrationPeriod && semesters.length === 0) {
+  if (loading && !registrationPeriod && semesters?.length === 0) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <CircularProgress />
@@ -555,7 +555,7 @@ const CourseRegistration = () => {
                   <MenuItem value="">
                     <em>Tất cả</em>
                   </MenuItem>
-                  {semesters.map((semester) => (
+                  {semesters?.map((semester) => (
                     <MenuItem key={semester.SemesterID} value={semester.SemesterID}>
                       {semester.SemesterName} ({semester.AcademicYear})
                     </MenuItem>
@@ -613,7 +613,7 @@ const CourseRegistration = () => {
             </Box>
           )}
           
-          {!loading && filteredCourses.length > 0 ? (
+          {!loading && filteredCourses?.length > 0 ? (
             <TableContainer sx={{ overflow: 'auto' }}>
               <Table>
                 <TableHead>
@@ -629,7 +629,7 @@ const CourseRegistration = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredCourses.map((course) => (
+                  {filteredCourses?.map((course) => (
                     <TableRow 
                       key={course.ClassID}
                       hover
@@ -701,7 +701,7 @@ const CourseRegistration = () => {
             </Box>
           )}
           
-          {!loading && registeredCourses.length > 0 ? (
+          {!loading && registeredCourses?.length > 0 ? (
             <TableContainer sx={{ overflow: 'auto' }}>
               <Table>
                 <TableHead>
@@ -718,7 +718,7 @@ const CourseRegistration = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {registeredCourses.map((course) => (
+                  {registeredCourses?.map((course) => (
                     <TableRow 
                       key={course.RegistrationID}
                       hover

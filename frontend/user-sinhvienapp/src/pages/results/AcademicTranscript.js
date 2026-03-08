@@ -86,7 +86,7 @@ const academicData = {
 // Function to get all courses from all semesters
 const getAllCourses = () => {
   let allCourses = [];
-  Object.keys(academicData.transcriptData).forEach(semester => {
+  Object.keys(academicData.transcriptData)?.forEach(semester => {
     allCourses = [...allCourses, ...academicData.transcriptData[semester]];
   });
   return allCourses;
@@ -181,7 +181,7 @@ const AcademicTranscript = () => {
     setCurrentCourses(courses);
     
     // Calculate semester GPA
-    if (courses.length > 0) {
+    if (courses?.length > 0) {
       const totalPoints = courses.reduce((sum, course) => sum + (course.points * course.credits), 0);
       const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
       gpa = totalPoints / totalCredits;
@@ -299,7 +299,7 @@ const AcademicTranscript = () => {
                 onChange={handleSemesterChange}
                 label="Học kỳ"
               >
-                {academicData.semesters.map((semester) => (
+                {academicData.semesters?.map((semester) => (
                   <MenuItem key={semester} value={semester}>
                     {semester === 'All' ? 'Tất cả học kỳ' : semester}
                   </MenuItem>
@@ -335,7 +335,7 @@ const AcademicTranscript = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {currentCourses.map((course) => (
+                {currentCourses?.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell>{course.courseCode}</TableCell>
                     <TableCell>{course.courseName}</TableCell>
@@ -351,7 +351,7 @@ const AcademicTranscript = () => {
                     )}
                   </TableRow>
                 ))}
-                {currentCourses.length === 0 && (
+                {currentCourses?.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={selectedSemester === 'All' ? 6 : 5} align="center">
                       <Typography variant="body1">

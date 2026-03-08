@@ -110,7 +110,7 @@ const useComments = ({ onUpdatePost } = {}) => {
       
       // Update comment in state
       setComments(prevComments => 
-        prevComments.map(comment => {
+        prevComments?.map(comment => {
           if (comment.CommentID === commentId) {
             const newLikesCount = comment.IsLiked 
               ? comment.LikesCount - 1 
@@ -142,7 +142,7 @@ const useComments = ({ onUpdatePost } = {}) => {
       
       // Remove comment from state
       setComments(prevComments => 
-        prevComments.filter(comment => comment.CommentID !== commentId)
+        prevComments?.filter(comment => comment.CommentID !== commentId)
       );
       
       // Update pagination

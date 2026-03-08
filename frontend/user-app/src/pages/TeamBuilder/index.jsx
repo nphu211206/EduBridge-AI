@@ -85,8 +85,8 @@ const TeamBuilder = () => {
     };
 
     const addRole = () => setForm(f => ({ ...f, roles: [...f.roles, { name: '', requiredSkills: [] }] }));
-    const updateRole = (i, key, val) => setForm(f => ({ ...f, roles: f.roles.map((r, j) => j === i ? { ...r, [key]: val } : r) }));
-    const removeRole = (i) => setForm(f => ({ ...f, roles: f.roles.filter((_, j) => j !== i) }));
+    const updateRole = (i, key, val) => setForm(f => ({ ...f, roles: f.roles?.map((r, j) => j === i ? { ...r, [key]: val } : r) }));
+    const removeRole = (i) => setForm(f => ({ ...f, roles: f.roles?.filter((_, j) => j !== i) }));
 
     const fields = ['Technical', 'Design', 'Business', 'Science', 'Soft Skill'];
     const fieldIcons = { Technical: '💻', Design: '🎨', Business: '📊', Science: '🔬', 'Soft Skill': '🤝' };
@@ -134,7 +134,7 @@ const TeamBuilder = () => {
                         className={`relative z-10 w-[140px] py-3 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 ${tab === 'invites' ? 'text-blue-400' : 'text-slate-400 hover:text-white'}`}
                     >
                         📨 Lời mời
-                        {invites.length > 0 && <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{invites.length}</span>}
+                        {invites?.length > 0 && <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{invites?.length}</span>}
                     </button>
                     <button
                         onClick={() => setTab('create')}
@@ -152,11 +152,11 @@ const TeamBuilder = () => {
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
                         {loading ? (
                             <div className="space-y-6">
-                                {[1, 2, 3].map(i => (
+                                {[1, 2, 3]?.map(i => (
                                     <div key={i} className="animate-pulse bg-slate-800/30 border border-slate-700/50 rounded-[2rem] p-8 h-48"></div>
                                 ))}
                             </div>
-                        ) : projects.length === 0 ? (
+                        ) : projects?.length === 0 ? (
                             <div className="text-center py-20 bg-slate-800/20 border-2 border-slate-700/50 border-dashed rounded-[2rem]">
                                 <span className="text-5xl opacity-50 mb-4 block">📁</span>
                                 <h3 className="text-xl font-bold text-white mb-2">Bạn chưa tham gia dự án nào</h3>
@@ -167,7 +167,7 @@ const TeamBuilder = () => {
                             </div>
                         ) : (
                             <div className="space-y-6">
-                                {projects.map((p, idx) => {
+                                {projects?.map((p, idx) => {
                                     const progress = p.TotalRoles > 0 ? (p.FilledRoles / p.TotalRoles) * 100 : 0;
                                     const isFull = p.FilledRoles === p.TotalRoles && p.TotalRoles > 0;
 
@@ -228,7 +228,7 @@ const TeamBuilder = () => {
                 {/* 2. INVITES TAB */}
                 {tab === 'invites' && (
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                        {invites.length === 0 ? (
+                        {invites?.length === 0 ? (
                             <div className="text-center py-20 bg-slate-800/20 border-2 border-slate-700/50 border-dashed rounded-[2rem]">
                                 <span className="text-5xl opacity-50 mb-4 block">📨</span>
                                 <h3 className="text-xl font-bold text-white mb-2">Không có lời mời nào</h3>
@@ -236,7 +236,7 @@ const TeamBuilder = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {invites.map((inv, idx) => (
+                                {invites?.map((inv, idx) => (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: idx * 0.1 }}
                                         key={inv.InviteID}
@@ -315,7 +315,7 @@ const TeamBuilder = () => {
                                     <div>
                                         <p className="text-sm font-semibold text-slate-400 mb-3 uppercase">Lĩnh vực chính (Lựa chọn hệ AI)</p>
                                         <div className="flex flex-wrap gap-2">
-                                            {fields.map(f => (
+                                            {fields?.map(f => (
                                                 <button
                                                     key={f}
                                                     className={`px-4 py-2.5 rounded-xl border text-sm transition-all font-medium flex items-center gap-2 ${form.fieldCategory === f
@@ -341,7 +341,7 @@ const TeamBuilder = () => {
 
                                 <div className="space-y-4 mb-6">
                                     <AnimatePresence>
-                                        {form.roles.map((role, i) => (
+                                        {form.roles?.map((role, i) => (
                                             <motion.div
                                                 initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
                                                 key={i}
@@ -360,13 +360,13 @@ const TeamBuilder = () => {
                                                     <label className="text-xs text-slate-500 font-bold uppercase mb-1 block">Kỹ năng bắt buộc</label>
                                                     <input
                                                         value={(role.requiredSkills || []).join(', ')}
-                                                        onChange={e => updateRole(i, 'requiredSkills', e.target.value.split(',').map(s => s.trimStart()))}
+                                                        onChange={e => updateRole(i, 'requiredSkills', e.target.value.split(',')?.map(s => s.trimStart()))}
                                                         placeholder="Figma, React, Node.js..."
                                                         className="w-full bg-transparent border-b border-slate-600 focus:border-blue-500 py-2 text-white outline-none transition-colors"
                                                     />
                                                 </div>
 
-                                                {form.roles.length > 1 && (
+                                                {form.roles?.length > 1 && (
                                                     <button
                                                         onClick={() => removeRole(i)}
                                                         className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -380,7 +380,7 @@ const TeamBuilder = () => {
                                     </AnimatePresence>
                                 </div>
 
-                                {form.roles.length < 10 && (
+                                {form.roles?.length < 10 && (
                                     <button
                                         onClick={addRole}
                                         className="w-full py-4 border-2 border-dashed border-slate-600 hover:border-blue-500 text-slate-400 hover:text-blue-400 bg-slate-900/30 rounded-2xl font-bold transition-colors flex items-center justify-center gap-2"

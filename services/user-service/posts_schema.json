@@ -1,0 +1,77 @@
+[
+  {
+    "COLUMN_NAME": "PostID",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "AuthorID",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "GroupID",
+    "IS_NULLABLE": "YES",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "Content",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "nvarchar"
+  },
+  {
+    "COLUMN_NAME": "ContentHtml",
+    "IS_NULLABLE": "YES",
+    "DATA_TYPE": "nvarchar"
+  },
+  {
+    "COLUMN_NAME": "Visibility",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "nvarchar"
+  },
+  {
+    "COLUMN_NAME": "IsPinned",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "bit"
+  },
+  {
+    "COLUMN_NAME": "LikeCount",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "CommentCount",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "ShareCount",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "ViewCount",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "int"
+  },
+  {
+    "COLUMN_NAME": "MediaFiles",
+    "IS_NULLABLE": "YES",
+    "DATA_TYPE": "nvarchar"
+  },
+  {
+    "COLUMN_NAME": "CreatedAt",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "datetime2"
+  },
+  {
+    "COLUMN_NAME": "UpdatedAt",
+    "IS_NULLABLE": "NO",
+    "DATA_TYPE": "datetime2"
+  },
+  {
+    "COLUMN_NAME": "DeletedAt",
+    "IS_NULLABLE": "YES",
+    "DATA_TYPE": "datetime2"
+  }
+]

@@ -11,104 +11,51 @@ import { motion } from 'framer-motion';
 const TermsOfUse = () => {
   const sections = [
     {
-      title: "Giới thiệu",
-      content: "Bằng việc sử dụng nền tảng Campus Learning, bạn đồng ý với các điều khoản và điều kiện được nêu trong tài liệu này. Vui lòng đọc kỹ các điều khoản trước khi sử dụng dịch vụ."
+      title: "1. Giới thiệu",
+      content: "Bằng việc sử dụng nền tảng EduBridge AI, bạn đồng ý với các điều khoản và điều kiện được nêu trong tài liệu này. Vui lòng đọc kỹ các điều khoản trước khi sử dụng dịch vụ."
     },
     {
-      title: "Điều kiện sử dụng",
-      content: "Để sử dụng nền tảng, bạn phải:",
+      title: "2. Quyền sở hữu trí tuệ",
+      content: "Tất cả nội dung trên nền tảng thuộc sở hữu của EduBridge AI hoặc được cấp phép sử dụng. Bạn không được:",
       items: [
-        "Đủ 13 tuổi trở lên",
-        "Có tài khoản hợp lệ",
-        "Cung cấp thông tin chính xác",
-        "Tuân thủ các quy định của nền tảng",
-        "Không vi phạm bản quyền"
-      ]
-    },
-    {
-      title: "Quyền sở hữu trí tuệ",
-      content: "Tất cả nội dung trên nền tảng thuộc sở hữu của Campus Learning hoặc được cấp phép sử dụng. Bạn không được:",
-      items: [
-        "Sao chép hoặc phân phối nội dung",
-        "Sử dụng nội dung cho mục đích thương mại",
-        "Chỉnh sửa hoặc tạo tác phẩm phái sinh",
-        "Xóa thông tin bản quyền",
+        "Sao chép, phân phối hoặc sửa đổi hệ thống khóa học khi chưa được phép",
+        "Sử dụng tài liệu học tập cho mục đích thương mại",
         "Chia sẻ tài khoản với người khác"
       ]
     },
     {
-      title: "Quy định về nội dung",
-      content: "Người dùng không được đăng tải nội dung:",
+      title: "3. Bảo mật thông tin",
+      content: "Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo Chính sách Bảo mật. Việc thu thập và sử dụng dữ liệu tuân thủ các quy định hiện hành."
+    },
+    {
+      title: "4. Thanh toán và Hoàn tiền",
+      content: "Các chính sách về thanh toán:",
       items: [
-        "Vi phạm pháp luật",
-        "Xúc phạm, đe dọa người khác",
-        "Chứa thông tin sai lệch",
-        "Quảng cáo trái phép",
-        "Chứa virus hoặc mã độc"
+        "Phí khóa học phải thanh toán trước khi bắt đầu học",
+        "Chính sách hoàn tiền (nếu có) sẽ theo quy định tại thời điểm đăng ký khóa học",
+        "Chúng tôi không chịu trách nhiệm với các giao dịch thông qua bên thứ ba"
       ]
     },
     {
-      title: "Thanh toán và hoàn tiền",
-      content: "Các quy định về thanh toán:",
+      title: "5. Hành vi người dùng",
+      content: "Yêu cầu hành vi chuẩn mực trên cộng đồng:",
       items: [
-        "Giá cả được niêm yết rõ ràng",
-        "Thanh toán trước khi sử dụng",
-        "Hoàn tiền trong vòng 7 ngày nếu chưa học",
-        "Không hoàn tiền sau khi đã học",
-        "Chính sách hoàn tiền chi tiết"
+        "Không dùng ngôn ngữ thù ghét, xúc phạm người hướng dẫn và các học viên khác",
+        "Không spam hoặc quảng cáo trong không gian học tập chung",
+        "Chịu trách nhiệm hoàn toàn về các nội dung bạn đăng tải"
       ]
     },
     {
-      title: "Chấm dứt tài khoản",
-      content: "Chúng tôi có quyền chấm dứt tài khoản nếu:",
-      items: [
-        "Vi phạm điều khoản sử dụng",
-        "Gian lận hoặc lừa đảo",
-        "Không hoạt động trong thời gian dài",
-        "Cung cấp thông tin giả mạo",
-        "Vi phạm pháp luật"
-      ]
+      title: "6. Giới hạn trách nhiệm",
+      content: "EduBridge AI nỗ lực để cung cấp dịch vụ xuyên suốt nhưng không đảm bảo hệ thống không bao giờ gặp gián đoạn. Chúng tôi không chịu trách nhiệm với các thiệt hại gián tiếp phát sinh từ việc sử dụng nền tảng."
     },
     {
-      title: "Giới hạn trách nhiệm",
-      content: "Chúng tôi không chịu trách nhiệm về:",
+      title: "7. Liên hệ",
+      content: "Mọi thắc mắc về Điều khoản Dịch vụ, vui lòng liên hệ:",
       items: [
-        "Mất mát dữ liệu",
-        "Gián đoạn dịch vụ",
-        "Thiệt hại gián tiếp",
-        "Hành vi của người dùng khác",
-        "Vấn đề kỹ thuật ngoài tầm kiểm soát"
-      ]
-    },
-    {
-      title: "Thay đổi điều khoản",
-      content: "Chúng tôi có quyền:",
-      items: [
-        "Cập nhật điều khoản khi cần",
-        "Thông báo trước 30 ngày",
-        "Áp dụng cho tất cả người dùng",
-        "Lưu trữ các phiên bản cũ",
-        "Giải thích rõ các thay đổi"
-      ]
-    },
-    {
-      title: "Giải quyết tranh chấp",
-      content: "Trong trường hợp có tranh chấp:",
-      items: [
-        "Ưu tiên giải quyết hòa giải",
-        "Áp dụng luật Việt Nam",
-        "Tòa án có thẩm quyền tại TP. HCM",
-        "Thời hạn khiếu nại 30 ngày",
-        "Bồi thường theo quy định pháp luật"
-      ]
-    },
-    {
-      title: "Liên hệ",
-      content: "Nếu bạn có câu hỏi về điều khoản sử dụng, vui lòng liên hệ:",
-      items: [
-        "Email: contact@Campus Learning.vn",
-        "Địa chỉ: 123 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh",
-        "Điện thoại: (84) 123-456-789"
+        "Email: contact@EduBridgeAI.vn",
+        "Hotline: 1900 1234",
+        "Địa chỉ: Khu Công nghệ cao, TP.HCM"
       ]
     }
   ];
@@ -122,7 +69,7 @@ const TermsOfUse = () => {
         </div>
 
         <div className="space-y-8">
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -134,7 +81,7 @@ const TermsOfUse = () => {
               <p className="text-gray-600 mb-4">{section.content}</p>
               {section.items && (
                 <ul className="space-y-2">
-                  {section.items.map((item, itemIndex) => (
+                  {section.items?.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-center text-gray-600">
                       <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></span>
                       {item}

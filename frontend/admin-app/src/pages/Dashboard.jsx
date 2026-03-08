@@ -6,10 +6,10 @@
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
 import React, { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Paper, 
+import {
+  Box,
+  Typography,
+  Paper,
   Card,
   CardContent,
   Grid,
@@ -47,11 +47,11 @@ import { vi } from 'date-fns/locale';
 
 const FeatureCard = ({ title, icon, description, color, route }) => {
   const theme = useTheme();
-  
+
   return (
-    <Card 
-      sx={{ 
-        height: '100%', 
+    <Card
+      sx={{
+        height: '100%',
         borderRadius: 4,
         boxShadow: '0 8px 40px -12px rgba(0,0,0,0.1)',
         transition: 'transform 0.3s, box-shadow 0.3s',
@@ -75,11 +75,11 @@ const FeatureCard = ({ title, icon, description, color, route }) => {
     >
       <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Avatar 
-            sx={{ 
-              bgcolor: `${color}15`, 
+          <Avatar
+            sx={{
+              bgcolor: `${color}15`,
               color: color,
-              width: 48, 
+              width: 48,
               height: 48,
               mr: 2
             }}
@@ -90,28 +90,28 @@ const FeatureCard = ({ title, icon, description, color, route }) => {
             {title}
           </Typography>
         </Box>
-        <Typography 
-          variant="body2" 
-          color="text.secondary" 
-          sx={{ 
-            mb: 'auto', 
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 'auto',
             minHeight: '3em',
             lineHeight: 1.6
           }}
         >
           {description}
         </Typography>
-        <Button 
-          variant="text" 
+        <Button
+          variant="text"
           endIcon={<ArrowForwardIcon />}
           href={route}
-          sx={{ 
-            mt: 2, 
-            color: color, 
+          sx={{
+            mt: 2,
+            color: color,
             justifyContent: 'flex-start',
             p: 0,
             fontWeight: 500,
-            '&:hover': { 
+            '&:hover': {
               bgcolor: 'transparent',
               transform: 'translateX(5px)'
             }
@@ -126,9 +126,9 @@ const FeatureCard = ({ title, icon, description, color, route }) => {
 
 const StatusCard = ({ title, value, icon, color, loading }) => {
   return (
-    <Card sx={{ 
-      borderRadius: 4, 
-      boxShadow: '0 4px 20px rgba(0,0,0,0.05)', 
+    <Card sx={{
+      borderRadius: 4,
+      boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
       overflow: 'hidden',
       backgroundColor: color,
       color: 'white',
@@ -137,20 +137,20 @@ const StatusCard = ({ title, value, icon, color, loading }) => {
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
-      <Box sx={{ 
-        position: 'absolute', 
-        top: '-20px', 
-        right: '-20px', 
+      <Box sx={{
+        position: 'absolute',
+        top: '-20px',
+        right: '-20px',
         borderRadius: '50%',
         width: '100px',
         height: '100px',
         backgroundColor: 'rgba(255,255,255,0.1)',
         zIndex: 0
       }} />
-      <Box sx={{ 
-        position: 'absolute', 
-        bottom: '-10px', 
-        left: '-10px', 
+      <Box sx={{
+        position: 'absolute',
+        bottom: '-10px',
+        left: '-10px',
         borderRadius: '50%',
         width: '50px',
         height: '50px',
@@ -167,14 +167,14 @@ const StatusCard = ({ title, value, icon, color, loading }) => {
           </Typography>
         </Box>
         {loading ? (
-          <Skeleton 
-            variant="text" 
-            width="60%" 
+          <Skeleton
+            variant="text"
+            width="60%"
             height={50}
-            sx={{ 
-              mt: 2, 
-              backgroundColor: 'rgba(255,255,255,0.2)' 
-            }} 
+            sx={{
+              mt: 2,
+              backgroundColor: 'rgba(255,255,255,0.2)'
+            }}
           />
         ) : (
           <Typography variant="h4" fontWeight="bold" sx={{ mt: 2 }}>
@@ -190,9 +190,9 @@ const ActivityItem = ({ activity }) => {
   // Format time to display how long ago
   const getTimeAgo = (timestamp) => {
     try {
-      return formatDistanceToNow(new Date(timestamp), { 
+      return formatDistanceToNow(new Date(timestamp), {
         addSuffix: true,
-        locale: vi 
+        locale: vi
       });
     } catch (error) {
       return 'Không xác định';
@@ -263,7 +263,7 @@ const Dashboard = () => {
   const userName = currentUser?.FullName || 'Quản trị viên';
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   // State for dashboard data
   const [stats, setStats] = useState({
     userStats: null,
@@ -276,11 +276,11 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const getCurrentTime = () => {
     const now = new Date();
     const hours = now.getHours();
-    
+
     if (hours < 12) return 'buổi sáng';
     if (hours < 18) return 'buổi chiều';
     return 'buổi tối';
@@ -296,7 +296,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Fetch dashboard stats
       const [statsResponse, activitiesResponse, notificationsResponse] = await Promise.allSettled([
@@ -304,24 +304,24 @@ const Dashboard = () => {
         dashboardAPI.getRecentActivities(),
         dashboardAPI.getSystemNotifications()
       ]);
-      
+
       // Handle stats response
       if (statsResponse.status === 'fulfilled' && statsResponse.value?.data) {
         setStats(statsResponse.value.data);
       } else {
         console.error('Stats API error:', statsResponse.reason);
       }
-      
+
       // Handle activities response
       if (activitiesResponse.status === 'fulfilled' && activitiesResponse.value?.data) {
         console.log('Activities response:', activitiesResponse.value.data);
-        setActivities(Array.isArray(activitiesResponse.value.data) 
-          ? activitiesResponse.value.data 
+        setActivities(Array.isArray(activitiesResponse.value.data)
+          ? activitiesResponse.value.data
           : activitiesResponse.value.data.recentActivities || []);
       } else {
         console.error('Activities API error:', activitiesResponse.reason);
       }
-      
+
       // Handle notifications response
       if (notificationsResponse.status === 'fulfilled' && notificationsResponse.value?.data) {
         console.log('Notifications response:', notificationsResponse.value.data);
@@ -339,7 +339,7 @@ const Dashboard = () => {
       setRefreshing(false);
     }
   };
-  
+
   // Refresh dashboard data
   const handleRefresh = () => {
     setRefreshing(true);
@@ -352,15 +352,15 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: '100vh',
       bgcolor: 'rgb(245, 247, 250)',
       p: 2
     }}>
       {/* Error alert if there's an error */}
       {error && (
-        <Alert 
-          severity="error" 
+        <Alert
+          severity="error"
           sx={{ mb: 3, borderRadius: 2 }}
           action={
             <Button color="inherit" size="small" onClick={handleRefresh}>
@@ -371,13 +371,13 @@ const Dashboard = () => {
           {error}
         </Alert>
       )}
-      
+
       {/* Header Section */}
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          p: { xs: 3, md: 4 }, 
-          mb: 3, 
+      <Paper
+        elevation={0}
+        sx={{
+          p: { xs: 3, md: 4 },
+          mb: 3,
           borderRadius: 4,
           background: 'linear-gradient(120deg, #3f51b5 0%, #2196f3 100%)',
           color: 'white',
@@ -385,25 +385,25 @@ const Dashboard = () => {
           overflow: 'hidden'
         }}
       >
-        <Box sx={{ 
-          position: 'absolute', 
-          top: '-50px', 
-          right: '-50px', 
-          width: '200px', 
-          height: '200px', 
+        <Box sx={{
+          position: 'absolute',
+          top: '-50px',
+          right: '-50px',
+          width: '200px',
+          height: '200px',
           borderRadius: '50%',
           background: 'rgba(255,255,255,0.1)'
         }} />
-        <Box sx={{ 
-          position: 'absolute', 
-          bottom: '-30px', 
-          left: '30%', 
-          width: '100px', 
-          height: '100px', 
+        <Box sx={{
+          position: 'absolute',
+          bottom: '-30px',
+          left: '30%',
+          width: '100px',
+          height: '100px',
           borderRadius: '50%',
           background: 'rgba(255,255,255,0.1)'
         }} />
-        
+
         <Box sx={{ position: 'relative', zIndex: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <ClockIcon sx={{ mr: 1, fontSize: 20, opacity: 0.8 }} />
@@ -415,7 +415,7 @@ const Dashboard = () => {
             Chào {getCurrentTime()}, {userName}!
           </Typography>
           <Typography variant="subtitle1" sx={{ maxWidth: '650px', lineHeight: 1.6 }}>
-            Chào mừng bạn trở lại với hệ thống quản lý Campus Campus Learning. Từ đây, bạn có thể quản lý mọi hoạt động của hệ thống. Hãy chọn một trong các tính năng dưới đây để bắt đầu.
+            Chào mừng bạn trở lại với hệ thống quản lý EduBridge AI. Từ đây, bạn có thể quản lý mọi hoạt động của hệ thống. Hãy chọn một trong các tính năng dưới đây để bắt đầu.
           </Typography>
         </Box>
       </Paper>
@@ -423,38 +423,38 @@ const Dashboard = () => {
       {/* Quick Stats Section */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={6} sm={3}>
-          <StatusCard 
-            title="Người dùng hoạt động" 
-            value={stats.userStats?.activeUsers || '0'} 
-            icon={<PersonIcon fontSize="large" />} 
-            color="#3f51b5" 
+          <StatusCard
+            title="Người dùng hoạt động"
+            value={stats.userStats?.activeUsers || '0'}
+            icon={<PersonIcon fontSize="large" />}
+            color="#3f51b5"
             loading={loading}
           />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <StatusCard 
-            title="Khóa học đang diễn ra" 
-            value={stats.courseStats?.publishedCourses || '0'} 
-            icon={<SchoolIcon fontSize="large" />} 
-            color="#f44336" 
+          <StatusCard
+            title="Khóa học đang diễn ra"
+            value={stats.courseStats?.publishedCourses || '0'}
+            icon={<SchoolIcon fontSize="large" />}
+            color="#f44336"
             loading={loading}
           />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <StatusCard 
-            title="Sự kiện sắp tới" 
-            value={stats.eventStats?.upcomingEvents || '0'} 
-            icon={<EventIcon fontSize="large" />} 
-            color="#ff9800" 
+          <StatusCard
+            title="Sự kiện sắp tới"
+            value={stats.eventStats?.upcomingEvents || '0'}
+            icon={<EventIcon fontSize="large" />}
+            color="#ff9800"
             loading={loading}
           />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <StatusCard 
-            title="Báo cáo chờ xử lý" 
-            value={stats.reportStats?.pendingReports || '0'} 
-            icon={<FlagIcon fontSize="large" />} 
-            color="#4caf50" 
+          <StatusCard
+            title="Báo cáo chờ xử lý"
+            value={stats.reportStats?.pendingReports || '0'}
+            icon={<FlagIcon fontSize="large" />}
+            color="#4caf50"
             loading={loading}
           />
         </Grid>
@@ -464,40 +464,40 @@ const Dashboard = () => {
       <Typography variant="h5" fontWeight="bold" sx={{ mb: 2, pl: 1 }}>
         Quản lý hệ thống
       </Typography>
-      
+
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} lg={3}>
-          <FeatureCard 
-            title="Quản lý người dùng" 
-            icon={<PersonIcon />} 
-            description="Quản lý tài khoản người dùng, phân quyền và theo dõi hoạt động của người dùng." 
+          <FeatureCard
+            title="Quản lý người dùng"
+            icon={<PersonIcon />}
+            description="Quản lý tài khoản người dùng, phân quyền và theo dõi hoạt động của người dùng."
             color="#3f51b5"
-            route="/users/management"
+            route="/users"
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <FeatureCard 
-            title="Quản lý khóa học" 
-            icon={<SchoolIcon />} 
-            description="Tạo và quản lý các khóa học, nội dung học tập và hoạt động học tập." 
+          <FeatureCard
+            title="Quản lý khóa học"
+            icon={<SchoolIcon />}
+            description="Tạo và quản lý các khóa học, nội dung học tập và hoạt động học tập."
             color="#f44336"
             route="/courses"
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <FeatureCard 
-            title="Quản lý sự kiện" 
-            icon={<EventIcon />} 
-            description="Tạo và quản lý các sự kiện, cuộc thi và hoạt động ngoại khóa." 
+          <FeatureCard
+            title="Quản lý sự kiện"
+            icon={<EventIcon />}
+            description="Tạo và quản lý các sự kiện, cuộc thi và hoạt động ngoại khóa."
             color="#ff9800"
             route="/events"
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
-          <FeatureCard 
-            title="Quản lý báo cáo" 
-            icon={<FlagIcon />} 
-            description="Xem và xử lý các báo cáo vi phạm từ người dùng trong hệ thống." 
+          <FeatureCard
+            title="Quản lý báo cáo"
+            icon={<FlagIcon />}
+            description="Xem và xử lý các báo cáo vi phạm từ người dùng trong hệ thống."
             color="#4caf50"
             route="/reports/management"
           />
@@ -507,10 +507,10 @@ const Dashboard = () => {
       {/* Recent Activities Section */}
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper sx={{ 
-            p: 3, 
-            borderRadius: 4, 
-            height: '100%', 
+          <Paper sx={{
+            p: 3,
+            borderRadius: 4,
+            height: '100%',
             minHeight: '60vh',
             boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
           }}>
@@ -527,10 +527,10 @@ const Dashboard = () => {
                 )}
               </IconButton>
             </Box>
-            
+
             {loading ? (
               <Box sx={{ p: 2 }}>
-                {[1, 2, 3, 4, 5].map((item) => (
+                {[1, 2, 3, 4, 5]?.map((item) => (
                   <Box key={item} sx={{ display: 'flex', mb: 2 }}>
                     <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
                     <Box sx={{ width: '100%' }}>
@@ -541,18 +541,18 @@ const Dashboard = () => {
                   </Box>
                 ))}
               </Box>
-            ) : activities && activities.length > 0 ? (
+            ) : activities && activities?.length > 0 ? (
               <List sx={{ p: 0 }}>
-                {activities.slice(0, 10).map((activity, index) => (
+                {activities.slice(0, 10)?.map((activity, index) => (
                   <ActivityItem key={index} activity={activity} />
                 ))}
               </List>
             ) : (
-              <Box sx={{ 
-                p: 4, 
-                textAlign: 'center', 
-                borderRadius: 2, 
-                bgcolor: 'rgba(0,0,0,0.02)', 
+              <Box sx={{
+                p: 4,
+                textAlign: 'center',
+                borderRadius: 2,
+                bgcolor: 'rgba(0,0,0,0.02)',
                 border: '1px dashed rgba(0,0,0,0.1)'
               }}>
                 <Box sx={{ mb: 2, opacity: 0.7 }}>
@@ -574,10 +574,10 @@ const Dashboard = () => {
       </Grid>
 
       {/* Help Section */}
-      <Paper 
-        sx={{ 
-          p: 3, 
-          mt: 3, 
+      <Paper
+        sx={{
+          p: 3,
+          mt: 3,
           borderRadius: 4,
           display: 'flex',
           alignItems: 'center',
@@ -600,9 +600,9 @@ const Dashboard = () => {
             </Typography>
           </Box>
         </Box>
-        <Button 
-          variant="outlined" 
-          color="info" 
+        <Button
+          variant="outlined"
+          color="info"
           sx={{ mt: { xs: 2, sm: 0 }, borderRadius: 8, px: 3 }}
         >
           Xem hướng dẫn

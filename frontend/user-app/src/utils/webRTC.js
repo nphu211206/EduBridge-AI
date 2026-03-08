@@ -65,7 +65,7 @@ export const getLocalStream = async (audio = true, video = false) => {
 export const addTracksToConnection = (peerConnection, stream) => {
   if (!peerConnection || !stream) return;
   
-  stream.getTracks().forEach(track => {
+  stream.getTracks()?.forEach(track => {
     peerConnection.addTrack(track, stream);
   });
 };
@@ -138,7 +138,7 @@ export const addIceCandidate = async (peerConnection, candidate) => {
 export const endCall = (peerConnection, localStream) => {
   // Stop all tracks in the local stream
   if (localStream) {
-    localStream.getTracks().forEach(track => {
+    localStream.getTracks()?.forEach(track => {
       track.stop();
     });
   }

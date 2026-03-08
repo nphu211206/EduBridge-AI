@@ -57,7 +57,7 @@ const Email = () => {
     }
     
     // Check email limit (max 3)
-    if (emails.length >= 3) {
+    if (emails?.length >= 3) {
       toast.error('Bạn chỉ có thể thêm tối đa 3 địa chỉ email');
       return;
     }
@@ -130,7 +130,7 @@ const Email = () => {
   const handleVerifyEmail = (e) => {
     e.preventDefault();
     
-    if (!verificationCode || verificationCode.length < 6) {
+    if (!verificationCode || verificationCode?.length < 6) {
       toast.error('Vui lòng nhập mã xác thực hợp lệ');
       return;
     }
@@ -213,7 +213,7 @@ const Email = () => {
           </div>
           <div className="p-5">
             <div className="space-y-5">
-              {emails.map((item) => (
+              {emails?.map((item) => (
                 <div key={item.EmailID} className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-b-0 last:pb-0">
                   <div className="flex items-start">
                     <EnvelopeIcon className="h-5 w-5 text-gray-400 mt-0.5 mr-2" />
@@ -366,12 +366,12 @@ const Email = () => {
                 <button
                   onClick={() => setShowAddEmail(true)}
                   className="flex items-center text-blue-600 hover:text-blue-800"
-                  disabled={emails.length >= 3}
+                  disabled={emails?.length >= 3}
                 >
                   <PlusCircleIcon className="h-5 w-5 mr-1" />
-                  <span>Thêm địa chỉ email {emails.length >= 3 && '(Đã đạt giới hạn)'}</span>
+                  <span>Thêm địa chỉ email {emails?.length >= 3 && '(Đã đạt giới hạn)'}</span>
                 </button>
-                {emails.length >= 3 && (
+                {emails?.length >= 3 && (
                   <p className="text-xs text-gray-500 mt-1">
                     Bạn chỉ có thể thêm tối đa 3 địa chỉ email.
                   </p>

@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
   const sections = [
     {
       title: "Giới thiệu",
-      content: "Chúng tôi cam kết bảo vệ quyền riêng tư và thông tin cá nhân của người dùng. Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn khi bạn sử dụng nền tảng Campus Learning."
+      content: "Chúng tôi cam kết bảo vệ quyền riêng tư và thông tin cá nhân của người dùng. Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn khi bạn sử dụng nền tảng EduBridge AI."
     },
     {
       title: "Thông tin chúng tôi thu thập",
@@ -84,7 +84,7 @@ const PrivacyPolicy = () => {
       title: "Liên hệ",
       content: "Nếu bạn có câu hỏi về chính sách bảo mật, vui lòng liên hệ:",
       items: [
-        "Email: contact@Campus Learning.vn",
+        "Email: contact@EduBridgeAI.vn",
         "Địa chỉ: 123 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh",
         "Điện thoại: (84) 123-456-789"
       ]
@@ -100,7 +100,7 @@ const PrivacyPolicy = () => {
         </div>
 
         <div className="space-y-8">
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -112,7 +112,7 @@ const PrivacyPolicy = () => {
               <p className="text-gray-600 mb-4">{section.content}</p>
               {section.items && (
                 <ul className="space-y-2">
-                  {section.items.map((item, itemIndex) => (
+                  {section.items?.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-center text-gray-600">
                       <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></span>
                       {item}

@@ -8,13 +8,13 @@
 const sql = require('mssql');
 const dotenv = require('dotenv');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+dotenv.config({ path: require('path').resolve(__dirname, '../../../../.env') });
 
 // Database configuration with default fallbacks
 const dbConfig = {
-  user: process.env.SQL_USER || process.env.DB_USER || 'sa',
-  password: process.env.SQL_PASSWORD || process.env.DB_PASSWORD || '123456aA@$',
+  user: process.env.SQL_USER || process.env.DB_USER,
+  password: process.env.SQL_PASSWORD || process.env.DB_PASSWORD,
   server: process.env.SQL_SERVER || process.env.DB_SERVER || 'localhost',
   database: process.env.SQL_DATABASE || process.env.DB_NAME || 'CampusLearning',
   options: {
@@ -35,16 +35,16 @@ const dbConfig = {
 const sqlConnection = {
   sql: sql,
   pool: null,
-  connect: async function() {
+  connect: async function () {
     try {
       // If pool already exists, return it
       if (this.pool) {
         console.log('Using existing SQL connection pool');
         return this.pool;
       }
-      
+
       console.log('Connecting to SQL Server...');
-      
+
       try {
         // First attempt with current config
         this.pool = await sql.connect(dbConfig);
@@ -52,7 +52,7 @@ const sqlConnection = {
         return this.pool;
       } catch (firstErr) {
         console.warn('First connection attempt failed:', firstErr.message);
-        
+
         // Try alternative configuration
         console.log('Trying alternative connection configuration...');
         const altConfig = {
@@ -63,14 +63,14 @@ const sqlConnection = {
             port: 1433 // Explicitly set default SQL Server port
           }
         };
-        
+
         console.log(`Alternative connection info:
           Server: ${altConfig.server}
           Database: ${altConfig.database}
           Encrypt: ${altConfig.options.encrypt}
           Port: ${altConfig.options.port}
         `);
-        
+
         try {
           this.pool = await sql.connect(altConfig);
           console.log('Connected to SQL Server with alternative config');
@@ -102,14 +102,14 @@ async function isSqlServerRunning(host, port) {
       console.log(`Connection to SQL Server at ${host}:${port} timed out`);
       resolve(false);
     }, 3000);
-    
+
     socket.connect(port, host, () => {
       clearTimeout(timeoutId);
       socket.destroy();
       console.log(`SQL Server at ${host}:${port} is reachable`);
       resolve(true);
     });
-    
+
     socket.on('error', (err) => {
       clearTimeout(timeoutId);
       console.log(`SQL Server at ${host}:${port} is not reachable:`, err.message);

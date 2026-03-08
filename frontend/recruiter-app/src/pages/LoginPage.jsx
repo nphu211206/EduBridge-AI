@@ -16,7 +16,7 @@ export default function LoginPage() {
 
   return (
     <div className="app-container">
-      <h2>Nền tảng EduLedger AI</h2>
+      <h2>Nền tảng EduBridge AI</h2>
       <p>Đăng nhập để quản lý hồ sơ năng lực số của bạn.</p>
       <br />
       <button className="login-btn" onClick={handleLogin}>

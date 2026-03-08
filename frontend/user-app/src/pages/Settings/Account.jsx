@@ -133,7 +133,7 @@ const Account = () => {
       if (result.success) {
         toast.success(`${provider} account disconnected successfully`);
         // Update connections list
-        setOauthConnections(oauthConnections.filter(conn => conn.Provider.toLowerCase() !== provider.toLowerCase()));
+        setOauthConnections(oauthConnections?.filter(conn => conn.Provider.toLowerCase() !== provider.toLowerCase()));
       } else {
         toast.error(result.error || `Failed to disconnect ${provider} account`);
       }
@@ -255,9 +255,9 @@ const Account = () => {
                     )
                   )}
                 </div>
-                {emails.length > 1 && (
+                {emails?.length > 1 && (
                   <p className="text-xs text-gray-500 mt-1">
-                    {emails.length} email đã liên kết. Quản lý tại trang "Email".
+                    {emails?.length} email đã liên kết. Quản lý tại trang "Email".
                   </p>
                 )}
               </div>

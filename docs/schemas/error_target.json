@@ -1,0 +1,10 @@
+{
+  "post_comments": {
+    "message": "Không tìm thấy bài viết"
+  },
+  "courses_enrolled": {
+    "success": true,
+    "count": 0,
+    "data": []
+  }
+}

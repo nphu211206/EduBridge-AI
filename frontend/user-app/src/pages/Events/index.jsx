@@ -172,7 +172,7 @@ const EventCardSkeleton = () => (
 
 // Hàm helper để render skeleton trong loading state
 const renderSkeletons = () => {
-  return Array(6).fill(0).map((_, index) => (
+  return Array(6).fill(0)?.map((_, index) => (
     <EventCardSkeleton key={`skeleton-${index}`} />
   ));
 };
@@ -232,7 +232,10 @@ const Events = () => {
   }
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("vi-VN", {
+    if (!date) return "Ngày chưa cập nhật";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "Ngày chưa cập nhật";
+    return d.toLocaleDateString("vi-VN", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -272,7 +275,7 @@ const Events = () => {
   }
 
   // Get all unique categories from events
-  const eventCategories = [...new Set(eventsList.map((event) => event.Category))].filter(Boolean)
+  const eventCategories = [...new Set(eventsList?.map((event) => event.Category))]?.filter(Boolean)
 
   if (loading) {
     return (
@@ -323,7 +326,7 @@ const Events = () => {
       <div className="bg-white border-b border-gray-200 mb-6">
         <div className="container mx-auto px-4 py-6">
           <h1 className="text-2xl font-bold text-gray-900">Khám phá sự kiện</h1>
-          
+
           {/* Mobile-optimized layout */}
           <div className="flex flex-col space-y-4 mt-6">
             {/* Horizontally scrollable categories - visible on all devices */}
@@ -331,30 +334,28 @@ const Events = () => {
               <div className="flex space-x-3 min-w-max">
                 <button
                   onClick={() => setActiveCategory("all")}
-                  className={`px-4 py-2.5 font-medium rounded-md whitespace-nowrap ${
-                    activeCategory === "all"
+                  className={`px-4 py-2.5 font-medium rounded-md whitespace-nowrap ${activeCategory === "all"
                       ? "bg-blue-50 text-blue-600"
                       : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                  }`}
+                    }`}
                 >
                   Tất cả
                 </button>
-                {eventCategories.map((category) => (
+                {eventCategories?.map((category) => (
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
-                    className={`px-4 py-2.5 font-medium rounded-md whitespace-nowrap ${
-                      activeCategory === category
+                    className={`px-4 py-2.5 font-medium rounded-md whitespace-nowrap ${activeCategory === category
                         ? "bg-blue-50 text-blue-600"
                         : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                    }`}
+                      }`}
                   >
                     {category}
                   </button>
                 ))}
               </div>
             </div>
-            
+
             {/* Filters - stacked on mobile, side-by-side on desktop */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="relative w-full sm:w-auto">
@@ -371,7 +372,7 @@ const Events = () => {
                 </select>
                 <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
               </div>
-            
+
               <div className="relative w-full">
                 <input
                   type="text"
@@ -380,9 +381,9 @@ const Events = () => {
                   placeholder="Tìm kiếm sự kiện..."
                   className="w-full px-4 py-2.5 rounded-md text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                <svg 
-                  className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" 
-                  fill="none" 
+                <svg
+                  className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2"
+                  fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -397,7 +398,7 @@ const Events = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Events Grid - Responsive grid with fewer columns on mobile */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {loading ? renderSkeletons() : filteredEvents.map((event, index) => (
+          {loading ? renderSkeletons() : filteredEvents?.map((event, index) => (
             <motion.div
               key={event.EventID}
               initial={{ opacity: 0, y: 20 }}
@@ -426,12 +427,12 @@ const Events = () => {
                     </h3>
                     <StatusBadge status={event.Status} />
                   </div>
-                  
+
                   {/* Event short description */}
                   <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
                     {event.Description || "Tham gia sự kiện này để có cơ hội giao lưu học hỏi và mở rộng kiến thức trong lĩnh vực này."}
                   </p>
-                  
+
                   {/* Event stats - optimized for mobile */}
                   <div className="text-xs text-gray-500 mt-auto space-y-1.5">
                     <div className="flex items-center">
@@ -439,7 +440,7 @@ const Events = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
                       <span>
-                        {formatDate(event.EventDate)}
+                        {formatDate(event.EventDate || event.StartDate || event.CreatedAt)}
                       </span>
                     </div>
 
@@ -457,7 +458,7 @@ const Events = () => {
         </div>
 
         {/* Empty State */}
-        {filteredEvents.length === 0 && (
+        {filteredEvents?.length === 0 && (
           <div className="col-span-full py-8 sm:py-12 text-center">
             <div className="bg-white rounded-xl p-6 sm:p-8 max-w-md mx-auto shadow-sm">
               <div className="bg-gray-50 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mx-auto mb-4">
@@ -467,8 +468,8 @@ const Events = () => {
                 Không tìm thấy sự kiện
               </h3>
               <p className="text-gray-600 text-sm sm:text-base mb-5 sm:mb-6">
-                {searchTerm 
-                  ? `Không có sự kiện nào phù hợp với từ khóa "${searchTerm}". Vui lòng thử tìm kiếm với từ khóa khác.` 
+                {searchTerm
+                  ? `Không có sự kiện nào phù hợp với từ khóa "${searchTerm}". Vui lòng thử tìm kiếm với từ khóa khác.`
                   : 'Hiện tại chưa có sự kiện nào trong danh mục này. Hãy thử danh mục khác!'}
               </p>
               {searchTerm ? (

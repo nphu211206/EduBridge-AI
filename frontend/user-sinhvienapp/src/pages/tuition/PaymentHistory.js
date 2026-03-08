@@ -105,7 +105,7 @@ const PaymentHistory = () => {
         const tuitionData = response.data.data;
         
         // Extract unique semesters
-        const uniqueSemesters = [...new Set(tuitionData.map(item => 
+        const uniqueSemesters = [...new Set(tuitionData?.map(item => 
           `${item.SemesterName} ${item.AcademicYear}`
         ))];
         
@@ -120,7 +120,7 @@ const PaymentHistory = () => {
             
             if (paymentsResponse.data.success) {
               // Enhance payment data with semester info
-              const enhancedPayments = paymentsResponse.data.data.map(payment => ({
+              const enhancedPayments = paymentsResponse.data.data?.map(payment => ({
                 ...payment,
                 semester: `${tuition.SemesterName} ${tuition.AcademicYear}`,
                 semesterId: tuition.SemesterID,
@@ -162,11 +162,11 @@ const PaymentHistory = () => {
     let result = payments;
     
     if (selectedSemester !== 'all') {
-      result = result.filter(payment => `${payment.SemesterName} ${payment.AcademicYear}` === selectedSemester);
+      result = result?.filter(payment => `${payment.SemesterName} ${payment.AcademicYear}` === selectedSemester);
     }
     
     if (selectedStatus !== 'all') {
-      result = result.filter(payment => payment.Status === selectedStatus);
+      result = result?.filter(payment => payment.Status === selectedStatus);
     }
     
     setFilteredPayments(result);
@@ -377,7 +377,7 @@ Thời gian xuất: ${new Date().toLocaleString('vi-VN')}
                   label="Học kỳ"
                 >
                   <MenuItem value="all">Tất cả</MenuItem>
-                  {semesters.map((semester, index) => (
+                  {semesters?.map((semester, index) => (
                     <MenuItem key={index} value={semester}>{semester}</MenuItem>
                   ))}
                 </Select>
@@ -418,7 +418,7 @@ Thời gian xuất: ${new Date().toLocaleString('vi-VN')}
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredPayments.map((payment) => (
+              {filteredPayments?.map((payment) => (
                 <TableRow key={payment.PaymentID}>
                   <TableCell>{payment.PaymentID}</TableCell>
                   <TableCell>{formatDate(payment.PaymentDate)}</TableCell>
@@ -445,7 +445,7 @@ Thời gian xuất: ${new Date().toLocaleString('vi-VN')}
                   </TableCell>
                 </TableRow>
               ))}
-              {filteredPayments.length === 0 && (
+              {filteredPayments?.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={8} align="center">
                     <Typography variant="body1">

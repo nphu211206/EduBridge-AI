@@ -132,7 +132,7 @@ const ExamHistory = () => {
     fetchExamHistory();
   };
 
-  if (loading && !attempts.length) {
+  if (loading && !attempts?.length) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
         <CircularProgress />
@@ -202,7 +202,7 @@ const ExamHistory = () => {
 
       {loading && <LinearProgress sx={{ mb: 2 }} />}
 
-      {attempts.length === 0 ? (
+      {attempts?.length === 0 ? (
         <Alert severity="info">
           Bạn chưa tham gia kỳ thi này
         </Alert>
@@ -221,7 +221,7 @@ const ExamHistory = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {attempts.map((attempt) => (
+              {attempts?.map((attempt) => (
                 <TableRow key={attempt.ParticipantID}>
                   <TableCell>{attempt.AttemptNumber}</TableCell>
                   <TableCell>{getStatusBadge(attempt.Status)}</TableCell>
@@ -270,7 +270,7 @@ const ExamHistory = () => {
       )}
 
       {examData.AllowRetakes && (
-        examData.MaxRetakes === 0 || attempts.length < examData.MaxRetakes + 1 ? (
+        examData.MaxRetakes === 0 || attempts?.length < examData.MaxRetakes + 1 ? (
           <Button 
             variant="contained" 
             color="primary" 

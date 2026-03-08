@@ -30,7 +30,7 @@ const authController = {
                 .input('email', sql.VarChar(100), email)
                 .query(`
                     SELECT u.UserID, u.Username, u.Email, u.Password, u.Role,
-                           u.FullName, u.Avatar, u.Status
+                           u.FullName, NULL as Avatar, u.Status
                     FROM Users u
                     WHERE u.Email = @email 
                     AND (u.Role = 'TEACHER' OR u.Role = 'ADMIN')
@@ -55,9 +55,9 @@ const authController = {
 
             // Create token with role
             const token = jwt.sign(
-                { 
+                {
                     userId: user.UserID,
-                    role: user.Role 
+                    role: user.Role
                 },
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' }
@@ -73,12 +73,12 @@ const authController = {
             });
         } catch (error) {
             console.error('Login Error:', error.message, error.stack);
-            
+
             // Send a more helpful error message for debugging
-            const errorMessage = process.env.NODE_ENV === 'development' 
-                ? `Login failed: ${error.message}` 
+            const errorMessage = process.env.NODE_ENV === 'development'
+                ? `Login failed: ${error.message}`
                 : 'Đã có lỗi xảy ra, vui lòng thử lại';
-                
+
             res.status(500).json({
                 message: errorMessage
             });
@@ -98,7 +98,7 @@ const authController = {
                 .input('userId', sql.BigInt, userId)
                 .query(`
                     SELECT u.UserID, u.Username, u.Email, u.Role,
-                           u.FullName, u.Avatar, u.Status
+                           u.FullName, NULL as Avatar, u.Status
                     FROM Users u
                     WHERE u.UserID = @userId
                     AND u.AccountStatus = 'ACTIVE'

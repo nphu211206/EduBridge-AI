@@ -68,7 +68,7 @@ const InterviewInstructions = ({ interviewData, onStart, studentName }) => (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-300">
                     <div className="flex items-start gap-3">
                         <ListChecks className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
-                        <span>Bài phỏng vấn có <strong className="text-white">{interviewData.questions.length}</strong> câu hỏi.</span>
+                        <span>Bài phỏng vấn có <strong className="text-white">{interviewData.questions?.length}</strong> câu hỏi.</span>
                     </div>
                     <div className="flex items-start gap-3">
                         <Clock className="w-5 h-5 text-yellow-400 mt-1 flex-shrink-0" />
@@ -154,10 +154,10 @@ const InterviewArena = ({ interviewData, answers, setAnswers, timeLeft, onSubmit
         console.log(`[InterviewPage] Auto-saved ${answers.size} answers to localStorage.`);
     }, [answers, storageKey]);
     const goToPrev = () => setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
-    const goToNext = () => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1));
+    const goToNext = () => setCurrentQuestionIndex(prev => Math.min(questions?.length - 1, prev + 1));
     const goToIndex = (index) => setCurrentQuestionIndex(index);
     const handleSubmitClick = async () => {
-        const unansweredCount = questions.filter(q => !answers.get(q.id)?.trim()).length;
+        const unansweredCount = questions?.filter(q => !answers.get(q.id)?.trim())?.length;
         let confirmationMessage = "Bạn có chắc chắn muốn nộp bài không?";
         if (unansweredCount > 0) {
             confirmationMessage = `Bạn còn ${unansweredCount} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài không?`;
@@ -177,7 +177,7 @@ const InterviewArena = ({ interviewData, answers, setAnswers, timeLeft, onSubmit
                     <h1 className="text-xl font-bold text-white truncate max-w-md" title={interviewData.jobTitle}>
                         Phỏng vấn: {interviewData.jobTitle}
                     </h1>
-                    <p className="text-sm text-gray-400">Đang thực hiện câu {currentQuestionIndex + 1} / {questions.length}</p>
+                    <p className="text-sm text-gray-400">Đang thực hiện câu {currentQuestionIndex + 1} / {questions?.length}</p>
                 </div>
                 <InterviewTimer timeLeftInSeconds={timeLeft} />
             </header>
@@ -189,8 +189,8 @@ const InterviewArena = ({ interviewData, answers, setAnswers, timeLeft, onSubmit
                 <nav className="w-1/4 max-w-xs flex-shrink-0 bg-gray-800/50 border-r border-gray-700/80 p-4 overflow-y-auto styled-scrollbar">
                     <h2 className="text-sm font-semibold uppercase text-gray-400 tracking-wider mb-3">Danh sách Câu hỏi</h2>
                     <div className="space-y-2">
-                        {questions.map((q, index) => {
-                            const isAnswered = (answers.get(q.id) || "").trim().length > 0;
+                        {questions?.map((q, index) => {
+                            const isAnswered = (answers.get(q.id) || "").trim()?.length > 0;
                             const isActive = index === currentQuestionIndex;
                             return (
                                 <button
@@ -228,7 +228,7 @@ const InterviewArena = ({ interviewData, answers, setAnswers, timeLeft, onSubmit
                                 transition={{ duration: 0.25, ease: 'easeInOut' }}
                             >
                                 <div className="mb-6">
-                                    <p className="text-sm font-semibold text-blue-300 mb-2">Câu {currentQuestionIndex + 1} / {questions.length}</p>
+                                    <p className="text-sm font-semibold text-blue-300 mb-2">Câu {currentQuestionIndex + 1} / {questions?.length}</p>
                                     <p className="text-lg md:text-xl text-gray-100 font-medium leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}>
                                         {currentQuestion.questionText}
                                     </p>
@@ -256,7 +256,7 @@ const InterviewArena = ({ interviewData, answers, setAnswers, timeLeft, onSubmit
                         </motion.button>
                         
                         {/* Nút nộp bài "Bất tử" (chỉ hiển thị ở câu cuối) */}
-                        {currentQuestionIndex === questions.length - 1 ? (
+                        {currentQuestionIndex === questions?.length - 1 ? (
                             <motion.button
                                 onClick={handleSubmitClick}
                                 disabled={isSubmitting}
@@ -268,7 +268,7 @@ const InterviewArena = ({ interviewData, answers, setAnswers, timeLeft, onSubmit
                         ) : (
                             <motion.button
                                 onClick={goToNext}
-                                disabled={currentQuestionIndex === questions.length - 1}
+                                disabled={currentQuestionIndex === questions?.length - 1}
                                 className="flex items-center gap-2 py-2 px-5 rounded-md bg-blue-600 text-white font-semibold transition-colors shadow-md hover:bg-blue-500 disabled:opacity-40"
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -308,7 +308,7 @@ export default function InterviewPage() {
         setView('submitting');
         if (timerRef.current) clearInterval(timerRef.current); 
 
-        const formattedAnswers = Array.from(answers.entries()).map(([qId, text]) => ({
+        const formattedAnswers = Array.from(answers.entries())?.map(([qId, text]) => ({
             questionId: qId,
             answerText: text
         }));
@@ -343,7 +343,7 @@ export default function InterviewPage() {
                 if (savedAnswersRaw) {
                     console.log("[InterviewPage] Found saved answers in localStorage. Loading...");
                     const savedAnswersObj = JSON.parse(savedAnswersRaw);
-                    data.questions.forEach(q => {
+                    data.questions?.forEach(q => {
                         if (savedAnswersObj[q.id]) {
                             loadedAnswers.set(q.id, savedAnswersObj[q.id]);
                         }

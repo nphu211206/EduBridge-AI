@@ -126,8 +126,8 @@ const Awards = () => {
 
   useEffect(() => {
     // Filter awards and disciplines
-    setAwards(awardsData.filter(item => item.type === 'award'));
-    setDisciplines(awardsData.filter(item => item.type === 'discipline'));
+    setAwards(awardsData?.filter(item => item.type === 'award'));
+    setDisciplines(awardsData?.filter(item => item.type === 'discipline'));
   }, []);
 
   const handleTabChange = (event, newValue) => {
@@ -154,7 +154,7 @@ const Awards = () => {
                 <Box display="flex" alignItems="center">
                   <EmojiEvents color="primary" sx={styles.icon} />
                   <Typography variant="h6">
-                    Tổng số khen thưởng: {awards.length}
+                    Tổng số khen thưởng: {awards?.length}
                   </Typography>
                 </Box>
               </Grid>
@@ -162,7 +162,7 @@ const Awards = () => {
                 <Box display="flex" alignItems="center">
                   <Report color="error" sx={styles.icon} />
                   <Typography variant="h6">
-                    Tổng số kỷ luật: {disciplines.length}
+                    Tổng số kỷ luật: {disciplines?.length}
                   </Typography>
                 </Box>
               </Grid>
@@ -176,7 +176,7 @@ const Awards = () => {
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
-          {awards.length > 0 ? (
+          {awards?.length > 0 ? (
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -189,7 +189,7 @@ const Awards = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {awards.map((award) => (
+                  {awards?.map((award) => (
                     <TableRow key={award.id}>
                       <TableCell>
                         <Box display="flex" alignItems="center">
@@ -216,7 +216,7 @@ const Awards = () => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          {disciplines.length > 0 ? (
+          {disciplines?.length > 0 ? (
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -228,7 +228,7 @@ const Awards = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {disciplines.map((discipline) => (
+                  {disciplines?.map((discipline) => (
                     <TableRow key={discipline.id}>
                       <TableCell>
                         <Box display="flex" alignItems="center">

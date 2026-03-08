@@ -44,7 +44,7 @@ const Avatar = ({ src, alt, name, className = '', size = 'medium', onClick }) =>
     if (src && typeof src === 'string' && src.trim() !== '' && src !== 'null' && src !== 'undefined') {
       // Handle relative paths from backend
       if (src.startsWith('/uploads/')) {
-        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
         return `${API_BASE_URL}${src}`;
       }
       return src;

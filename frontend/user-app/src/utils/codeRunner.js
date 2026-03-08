@@ -62,7 +62,7 @@ class CodeRunner {
       this.initialized = true;
       
       // Update language support status
-      Object.keys(this.supportedLanguages).forEach(lang => {
+      Object.keys(this.supportedLanguages)?.forEach(lang => {
         if (lang !== 'javascript' && lang !== 'python') {
           this.supportedLanguages[lang].status = 'not supported';
         }

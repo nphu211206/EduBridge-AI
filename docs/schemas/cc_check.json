@@ -1,0 +1,17 @@
+[
+  {
+    "definition": "([JobType]='Freelance' OR [JobType]='Internship' OR [JobType]='Contract' OR [JobType]='PartTime' OR [JobType]='FullTime')"
+  },
+  {
+    "definition": "([WorkModel]='Hybrid' OR [WorkModel]='Remote' OR [WorkModel]='OnSite')"
+  },
+  {
+    "definition": "([ExperienceLevel]='Manager' OR [ExperienceLevel]='Lead' OR [ExperienceLevel]='Senior' OR [ExperienceLevel]='Mid' OR [ExperienceLevel]='Junior' OR [ExperienceLevel]='Entry' OR [ExperienceLevel]='Intern')"
+  },
+  {
+    "definition": "([SalaryPeriod]='Yearly' OR [SalaryPeriod]='Monthly' OR [SalaryPeriod]='Weekly' OR [SalaryPeriod]='Daily' OR [SalaryPeriod]='Hourly')"
+  },
+  {
+    "definition": "([Status]='Rejected' OR [Status]='Paused' OR [Status]='Closed' OR [Status]='Published' OR [Status]='Draft')"
+  }
+]

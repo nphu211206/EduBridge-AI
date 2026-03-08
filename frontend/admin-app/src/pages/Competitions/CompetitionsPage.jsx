@@ -33,7 +33,7 @@ const CompetitionsPage = () => {
   }, []);
   
   useEffect(() => {
-    if (competitions.length > 0) {
+    if (competitions?.length > 0) {
       handleSearch(searchText);
     }
   }, [searchText, competitions]);
@@ -52,7 +52,7 @@ const CompetitionsPage = () => {
   };
 
   const handleSearch = (value) => {
-    const filtered = competitions.filter(
+    const filtered = competitions?.filter(
       (competition) =>
         competition.Title.toLowerCase().includes(value.toLowerCase()) ||
         competition.Description.toLowerCase().includes(value.toLowerCase())

@@ -17,7 +17,7 @@ export const courseApi = apiSlice.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.courses.map(({ CourseID }) => ({ type: 'Course', id: CourseID })),
+              ...result.courses?.map(({ CourseID }) => ({ type: 'Course', id: CourseID })),
               { type: 'Course', id: 'LIST' },
             ]
           : [{ type: 'Course', id: 'LIST' }],

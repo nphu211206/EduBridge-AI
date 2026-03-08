@@ -126,7 +126,7 @@ const RoleManagement = () => {
         await api.put(`/users/roles/${selectedRole.RoleID}`, roleData);
         
         // Update local state
-        const updatedRoles = roles.map(role => {
+        const updatedRoles = roles?.map(role => {
           if (role.RoleID === selectedRole.RoleID) {
             return {
               ...role,
@@ -161,7 +161,7 @@ const RoleManagement = () => {
       await api.delete(`/users/roles/${selectedRole.RoleID}`);
       
       // Update local state
-      setRoles(roles.filter(role => role.RoleID !== selectedRole.RoleID));
+      setRoles(roles?.filter(role => role.RoleID !== selectedRole.RoleID));
       showNotification('Role deleted successfully', 'success');
       closeDeleteDialog();
     } catch (err) {
@@ -251,7 +251,7 @@ const RoleManagement = () => {
       
       {/* Roles Grid */}
       <Grid container spacing={3}>
-        {roles.map((role) => (
+        {roles?.map((role) => (
           <Grid item xs={12} sm={6} md={4} key={role.RoleID}>
             <Card 
               sx={{ 
@@ -313,7 +313,7 @@ const RoleManagement = () => {
                 
                 <Box sx={{ mt: 1 }}>
                   {role.Permissions ? (
-                    role.Permissions.split(',').map((permission, index) => (
+                    role.Permissions.split(',')?.map((permission, index) => (
                       <Chip 
                         key={index}
                         label={permission.trim()}

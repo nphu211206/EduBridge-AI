@@ -68,8 +68,8 @@ const CompetitionDetail = () => {
               }
 
               // If no completion time, sort by completed problems count
-              const aCompleted = Array.isArray(a.CompletedProblems) ? a.CompletedProblems.length : 0;
-              const bCompleted = Array.isArray(b.CompletedProblems) ? b.CompletedProblems.length : 0;
+              const aCompleted = Array.isArray(a.CompletedProblems) ? a.CompletedProblems?.length : 0;
+              const bCompleted = Array.isArray(b.CompletedProblems) ? b.CompletedProblems?.length : 0;
 
               return bCompleted - aCompleted;
             });
@@ -305,13 +305,13 @@ const CompetitionDetail = () => {
       key: 'problemsSolved',
       render: (completedProblems, record) => {
         const count = Array.isArray(completedProblems)
-          ? completedProblems.length
+          ? completedProblems?.length
           : (record.TotalProblemsSolved || 0);
 
         return (
           <Space>
             <CheckOutlined style={{ color: '#52c41a' }} />
-            <Text>{count}/{problems.length}</Text>
+            <Text>{count}/{problems?.length}</Text>
           </Space>
         );
       }
@@ -414,7 +414,7 @@ const CompetitionDetail = () => {
                 onChange={handleUpdateStatus}
                 loading={statusLoading}
               >
-                {statusOptions.map(option => (
+                {statusOptions?.map(option => (
                   <Option key={option.value} value={option.value}>
                     {option.label}
                   </Option>
@@ -526,7 +526,7 @@ const CompetitionDetail = () => {
               <Card>
                 <Statistic
                   title="Số bài tập"
-                  value={problems.length}
+                  value={problems?.length}
                   prefix={<CodeOutlined />}
                 />
               </Card>
@@ -539,10 +539,10 @@ const CompetitionDetail = () => {
                     <Statistic
                       title="Điểm trung bình"
                       value={
-                        participants.length > 0
+                        participants?.length > 0
                           ? (
                               participants.reduce((acc, p) => acc + p.Score, 0) /
-                              participants.length
+                              participants?.length
                             ).toFixed(1)
                           : 0
                       }
@@ -553,7 +553,7 @@ const CompetitionDetail = () => {
                     <Statistic
                       title="Bài giải đúng"
                       value={
-                        participants.length > 0
+                        participants?.length > 0
                           ? participants.reduce(
                               (acc, p) => acc + p.TotalProblemsSolved,
                               0

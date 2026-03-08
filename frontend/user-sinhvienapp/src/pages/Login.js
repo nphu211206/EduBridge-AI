@@ -738,7 +738,7 @@ const Login = () => {
 
         {/* University general information section with alternating side animations */}
         <Grid container spacing={4} sx={{ mb: 6 }}>
-          {universityInfo.map((section, index) => (
+          {universityInfo?.map((section, index) => (
             <Grid item xs={12} md={4} key={index}>
               <Slide 
                 direction={index % 2 === 0 ? "right" : "left"} 
@@ -779,7 +779,7 @@ const Login = () => {
                   <Divider sx={{ mb: 2 }} />
                   
                   <Stack spacing={2}>
-                    {section.items.map((item, itemIndex) => (
+                    {section.items?.map((item, itemIndex) => (
                       <Box key={itemIndex}>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                           {item.name}
@@ -1183,7 +1183,7 @@ const Login = () => {
           </Fade>
           
           <Grid container spacing={3}>
-            {partnerships.map((partner, index) => (
+            {partnerships?.map((partner, index) => (
               <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
                 <Slide 
                   direction={index % 2 === 0 ? "right" : "left"} 
@@ -1262,7 +1262,7 @@ const Login = () => {
               }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                {achievements.map((achievement, index) => (
+                {achievements?.map((achievement, index) => (
                   <Grow 
                     key={index}
                     in={achievementsSectionVisible} 
@@ -1298,7 +1298,7 @@ const Login = () => {
           <Box sx={{ textAlign: 'center' }}>
             {["Đơn vị đào tạo xuất sắc 2023", "Top 10 trường đại học về công nghệ", 
               "Môi trường học tập năng động", "Liên kết doanh nghiệp mạnh mẽ", 
-              "Tỷ lệ việc làm sau tốt nghiệp cao"].map((chipText, index) => (
+              "Tỷ lệ việc làm sau tốt nghiệp cao"]?.map((chipText, index) => (
               <Fade
                 key={index}
                 in={achievementsSectionVisible}

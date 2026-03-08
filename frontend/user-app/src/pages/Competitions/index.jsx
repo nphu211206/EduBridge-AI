@@ -58,7 +58,7 @@ const CompetitionsPage = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredCompetitions = competitions.filter(competition => {
+  const filteredCompetitions = competitions?.filter(competition => {
     // First apply status filter
     if (filter !== 'all' && competition.Status !== filter) return false;
     
@@ -321,8 +321,8 @@ const CompetitionsPage = () => {
         <div className="bg-red-100 text-red-700 p-4 rounded-md">{error}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {filteredCompetitions.length > 0 ? (
-            filteredCompetitions.map((competition) => {
+          {filteredCompetitions?.length > 0 ? (
+            filteredCompetitions?.map((competition) => {
               const status = getCompetitionStatus(
                 competition.Status,
                 competition.StartTime,

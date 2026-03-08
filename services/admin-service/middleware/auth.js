@@ -23,7 +23,7 @@ const verifyAdmin = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    
+
     if (!token) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
@@ -31,12 +31,12 @@ const verifyAdmin = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key');
     const pool = await poolPromise;
-    
+
     // Check if user exists and has admin role
     const result = await pool.request()
       .input('userId', sql.BigInt, decoded.userId || decoded.UserID)
       .query('SELECT * FROM Users WHERE UserID = @userId AND Role = \'ADMIN\' AND AccountStatus = \'ACTIVE\'');
-    
+
     if (result.recordset.length === 0) {
       return res.status(403).json({ message: 'Access denied. Admin privileges required.' });
     }
@@ -57,32 +57,32 @@ const verifyAdmin = async (req, res, next) => {
 const refreshTokenHandler = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
-    
+
     if (!refreshToken) {
       return res.status(400).json({ message: 'Refresh token is required' });
     }
-    
+
     // Verify refresh token
     const decoded = jwt.verify(
-      refreshToken, 
+      refreshToken,
       process.env.JWT_REFRESH_SECRET || 'refresh_secret_key'
     );
-    
+
     // Check if it's a refresh token
     if (decoded.tokenType !== 'refresh') {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
-    
+
     // Verify user exists and is active
     const pool = await poolPromise;
     const result = await pool.request()
       .input('userId', sql.BigInt, decoded.userId)
       .query('SELECT * FROM Users WHERE UserID = @userId AND AccountStatus = \'ACTIVE\'');
-    
+
     if (result.recordset.length === 0) {
       return res.status(401).json({ message: 'User not found or inactive' });
     }
-    
+
     // Generate new token pair
     const user = result.recordset[0];
     const token = jwt.sign(
@@ -90,13 +90,13 @@ const refreshTokenHandler = async (req, res, next) => {
       process.env.JWT_SECRET || 'secret_key',
       { expiresIn: '1d' }
     );
-    
+
     const newRefreshToken = jwt.sign(
       { userId: user.UserID, role: user.Role, tokenType: 'refresh' },
       process.env.JWT_REFRESH_SECRET || 'refresh_secret_key',
       { expiresIn: '30d' }
     );
-    
+
     // Return new tokens
     return res.status(200).json({
       token,
@@ -104,11 +104,11 @@ const refreshTokenHandler = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Refresh Token Error:', error);
-    
+
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ message: 'Refresh token expired' });
     }
-    
+
     return res.status(401).json({ message: 'Invalid token' });
   }
 };
@@ -120,7 +120,7 @@ const authenticateToken = async (req, res, next) => {
     if (req.method === 'OPTIONS') {
       return next();
     }
-    
+
     // Get token from header
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -128,7 +128,7 @@ const authenticateToken = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    
+
     if (!token) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
@@ -140,25 +140,25 @@ const authenticateToken = async (req, res, next) => {
     } catch (jwtError) {
       // Handle different JWT errors more specifically
       if (jwtError instanceof jwt.TokenExpiredError) {
-        return res.status(401).json({ 
+        return res.status(401).json({
           message: 'Token expired. Please refresh token.',
-          code: 'TOKEN_EXPIRED' 
+          code: 'TOKEN_EXPIRED'
         });
       }
-      
-      return res.status(401).json({ 
+
+      return res.status(401).json({
         message: 'Invalid token',
         code: 'INVALID_TOKEN'
       });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Check if user exists
     const result = await pool.request()
       .input('userId', sql.BigInt, decoded.userId || decoded.UserID)
       .query('SELECT * FROM Users WHERE UserID = @userId');
-    
+
     if (result.recordset.length === 0) {
       return res.status(404).json({ message: 'User not found.' });
     }
@@ -207,25 +207,28 @@ const isAdmin = async (req, res, next) => {
 
 // CORS middleware
 const enableCORS = (req, res, next) => {
-  const allowedOrigins = ['http://localhost:5005', 'http://127.0.0.1:5005'];
-  
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+    : ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'];
+
   // Check if the request origin is allowed
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
-  } else {
-    res.header('Access-Control-Allow-Origin', allowedOrigins[0]);
+  } else if (!origin) {
+    // Allow requests with no origin (e.g., server-to-server, Postman)
+    res.header('Access-Control-Allow-Origin', '*');
   }
-  
+
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   next();
 };
 

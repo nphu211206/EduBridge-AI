@@ -67,7 +67,7 @@ export default function VNPayCheckout({ courseId, defaultBank = '', onError }) {
           onChange={(e) => setSelectedBank(e.target.value)}
         >
           <option value="">-- Chọn ngân hàng (hoặc để trống) --</option>
-          {banks.map((b) => (
+          {banks?.map((b) => (
             <option key={b.code || b.bankCode} value={b.code || b.bankCode}>
               {b.shortName || b.name || b.code}
             </option>

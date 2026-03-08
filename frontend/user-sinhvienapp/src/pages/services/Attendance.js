@@ -89,7 +89,7 @@ const Attendance = () => {
         const sems = await attendanceService.getSemesters(uid);
         setSemesters(sems);
 
-        if (sems.length > 0) {
+        if (sems?.length > 0) {
           setSelectedSemester(sems[0].SemesterID);
         }
       } catch (err) {
@@ -106,7 +106,7 @@ const Attendance = () => {
       try {
         const list = await attendanceService.getCourses(currentUser.UserID, selectedSemester);
         setCourses(list);
-        if (list.length > 0) {
+        if (list?.length > 0) {
           setSelectedCourse(list[0]);
         }
       } catch (err) {
@@ -137,10 +137,10 @@ const Attendance = () => {
   const updateAttendanceState = (data) => {
     setAttendance(data);
     // stats
-    const present = data.filter(i => i.Status === 'Present').length;
-    const absent = data.filter(i => i.Status === 'Absent').length;
-    const late = data.filter(i => i.Status === 'Late').length;
-    const total = data.length;
+    const present = data?.filter(i => i.Status === 'Present')?.length;
+    const absent = data?.filter(i => i.Status === 'Absent')?.length;
+    const late = data?.filter(i => i.Status === 'Late')?.length;
+    const total = data?.length;
     const percentage = total ? Math.round(((present + late*0.5)/total)*100) : 0;
     setAttendanceStats({present, absent, late, total, percentage});
   };
@@ -233,7 +233,7 @@ const Attendance = () => {
                 onChange={handleSemesterChange}
                 label="Học kỳ"
               >
-                {semesters.map((sem) => (
+                {semesters?.map((sem) => (
                   <MenuItem key={sem.SemesterID} value={sem.SemesterID}>
                     {sem.SemesterName} - {sem.AcademicYear}
                   </MenuItem>
@@ -249,7 +249,7 @@ const Attendance = () => {
                 onChange={handleCourseChange}
                 label="Môn học"
               >
-                {courses.map((course) => (
+                {courses?.map((course) => (
                   <MenuItem key={course.ClassID} value={course.ClassID}>
                     {course.SubjectCode || course.ClassCode} - {course.SubjectName}
                   </MenuItem>
@@ -315,7 +315,7 @@ const Attendance = () => {
             <CircularProgress />
           </Box>
         ) : (
-          attendance.length > 0 ? (
+          attendance?.length > 0 ? (
             <TableContainer component={Paper} sx={styles.tableContainer}>
               <Table>
                 <TableHead>
@@ -327,7 +327,7 @@ const Attendance = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {attendance.map((item) => (
+                  {attendance?.map((item) => (
                     <TableRow key={item.AttendanceID}>
                       <TableCell>{new Date(item.SessionDate).toLocaleDateString()}</TableCell>
                       <TableCell>{`${item.CheckInTime || ''} - ${item.CheckOutTime || ''}`}</TableCell>

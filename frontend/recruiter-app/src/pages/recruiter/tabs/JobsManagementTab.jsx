@@ -64,7 +64,7 @@ JobManagementRow.displayName = 'JobManagementRow';
 const JobsManagementTab = ({ jobs, isLoading, error, onJobClick, selectedJobId, onEditJob, onDeleteJob, onChangeJobStatus }) => {
     if (isLoading) { return <div className="py-20"><LoadingSpinner text="Đang tải danh sách tin tuyển dụng..." /></div>; }
     if (error) { return <div className="my-6"><ErrorDisplay message={error} details="Không thể tải danh sách tin tuyển dụng của bạn từ server." onRetry={() => window.location.reload()} /></div>; }
-    if (!jobs || jobs.length === 0) { 
+    if (!jobs || jobs?.length === 0) { 
         return ( 
             <EmptyState 
                 icon={Briefcase} 
@@ -94,7 +94,7 @@ const JobsManagementTab = ({ jobs, isLoading, error, onJobClick, selectedJobId, 
                     </thead>
                     <motion.tbody layout> 
                         <AnimatePresence initial={false}> 
-                            {jobs.map(job => ( 
+                            {jobs?.map(job => ( 
                                 <JobManagementRow 
                                     key={job.id} 
                                     job={job} 
@@ -110,7 +110,7 @@ const JobsManagementTab = ({ jobs, isLoading, error, onJobClick, selectedJobId, 
                 </table>
             </div>
             <div className="p-3 bg-gray-700/40 border-t border-gray-700/80 text-xs text-gray-500 text-right"> 
-                Tổng cộng: <span className="font-semibold text-gray-400">{jobs.length}</span> tin tuyển dụng 
+                Tổng cộng: <span className="font-semibold text-gray-400">{jobs?.length}</span> tin tuyển dụng 
             </div>
         </div>
     );

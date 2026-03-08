@@ -703,7 +703,7 @@ const SettingsPage = () => {
         {/* System Info Tab */}
         <TabPanel value={activeTab} index={2}>
           <Grid container spacing={3}>
-            {Object.entries(systemInfo).map(([key, value]) => (
+            {Object.entries(systemInfo)?.map(([key, value]) => (
               <Grid item xs={12} sm={6} md={4} key={key}>
                 <Card 
                   elevation={0}

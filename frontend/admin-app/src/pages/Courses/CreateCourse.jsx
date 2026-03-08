@@ -200,7 +200,7 @@ const CreateCourse = () => {
 
   // Di chuyển module xuống
   const handleMoveDown = (index) => {
-    if (index === modules.length - 1) return;
+    if (index === modules?.length - 1) return;
     const updatedModules = [...modules];
     const temp = updatedModules[index];
     updatedModules[index] = updatedModules[index + 1];
@@ -274,7 +274,7 @@ const CreateCourse = () => {
   const handleRemoveRequirement = (index) => {
     setCourseData(prev => ({
       ...prev,
-      requirements: prev.requirements.filter((_, i) => i !== index)
+      requirements: prev.requirements?.filter((_, i) => i !== index)
     }));
   };
   
@@ -292,7 +292,7 @@ const CreateCourse = () => {
   const handleRemoveObjective = (index) => {
     setCourseData(prev => ({
       ...prev,
-      objectives: prev.objectives.filter((_, i) => i !== index)
+      objectives: prev.objectives?.filter((_, i) => i !== index)
     }));
   };
 
@@ -354,24 +354,24 @@ const CreateCourse = () => {
     if (!courseVideo) errors.video = true;
     
     // Kiểm tra modules
-    if (modules.length === 0) {
+    if (modules?.length === 0) {
       errors.modules = 'Khóa học cần ít nhất một module';
     } else {
       // Kiểm tra từng module có tiêu đề không
-      const invalidModules = modules.filter(m => !m.title.trim());
-      if (invalidModules.length > 0) {
+      const invalidModules = modules?.filter(m => !m.title.trim());
+      if (invalidModules?.length > 0) {
         errors.modules = 'Một số module chưa có tiêu đề';
       }
       
       // Kiểm tra module có ít nhất một loại media (video URL HOẶC hình ảnh)
-      const modulesWithoutMedia = modules.filter(m => !m.videoUrl && !m.image);
-      if (modulesWithoutMedia.length > 0) {
+      const modulesWithoutMedia = modules?.filter(m => !m.videoUrl && !m.image);
+      if (modulesWithoutMedia?.length > 0) {
         if (!errors.modules) {
           errors.modules = 'Một số module chưa có link video bài giảng hoặc hình ảnh';
         }
         
         // Đánh dấu các module thiếu media
-        modules.forEach((module, index) => {
+        modules?.forEach((module, index) => {
           if (!module.videoUrl && !module.image) {
             errors[`module_${index}_media`] = true;
           }
@@ -380,7 +380,7 @@ const CreateCourse = () => {
     }
     
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    return Object.keys(errors)?.length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -432,8 +432,8 @@ const CreateCourse = () => {
       }
       
       // Tạo các module cho khóa học
-      if (modules.length > 0) {
-        for (let i = 0; i < modules.length; i++) {
+      if (modules?.length > 0) {
+        for (let i = 0; i < modules?.length; i++) {
           const module = modules[i];
           if (module.title) {
             const moduleResponse = await api.post(`/courses/${courseId}/modules`, {
@@ -545,7 +545,7 @@ const CreateCourse = () => {
                 onChange={handleChange}
                 label="Level"
               >
-                {levelOptions.map(option => (
+                {levelOptions?.map(option => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -563,7 +563,7 @@ const CreateCourse = () => {
                 onChange={handleChange}
                 label="Category"
               >
-                {categoryOptions.map(option => (
+                {categoryOptions?.map(option => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -581,7 +581,7 @@ const CreateCourse = () => {
                 onChange={handleChange}
                 label="Language"
               >
-                {languageOptions.map(option => (
+                {languageOptions?.map(option => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -765,7 +765,7 @@ const CreateCourse = () => {
             </Box>
             
             <List sx={{ bgcolor: 'background.paper' }}>
-              {courseData.requirements.map((req, index) => (
+              {courseData.requirements?.map((req, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <Typography variant="body2" sx={{ flex: 1 }}>
                     {index + 1}. {req}
@@ -806,7 +806,7 @@ const CreateCourse = () => {
             </Box>
             
             <List sx={{ bgcolor: 'background.paper' }}>
-              {courseData.objectives.map((obj, index) => (
+              {courseData.objectives?.map((obj, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <Typography variant="body2" sx={{ flex: 1 }}>
                     {index + 1}. {obj}
@@ -843,7 +843,7 @@ const CreateCourse = () => {
         )}
         
         <List>
-          {modules.map((module, index) => (
+          {modules?.map((module, index) => (
             <Card key={index} variant="outlined" sx={{ mb: 2 }}>
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -862,7 +862,7 @@ const CreateCourse = () => {
                       <IconButton
                         size="small"
                         onClick={() => handleMoveDown(index)}
-                        disabled={index === modules.length - 1}
+                        disabled={index === modules?.length - 1}
                       >
                         <ArrowDownwardIcon fontSize="small" />
                       </IconButton>
@@ -871,7 +871,7 @@ const CreateCourse = () => {
                       <IconButton
                         size="small"
                         onClick={() => handleRemoveModule(index)}
-                        disabled={modules.length === 1}
+                        disabled={modules?.length === 1}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -991,7 +991,7 @@ const CreateCourse = () => {
           ))}
         </List>
         
-        {modules.length === 0 && (
+        {modules?.length === 0 && (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography variant="body1" color="text.secondary">
               Chưa có module nào. Hãy thêm module đầu tiên.

@@ -1,0 +1,12 @@
+{
+    "name": "edubridge-ai-portal",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --port 3000 --open"
+    },
+    "devDependencies": {
+        "vite": "^5.4.0"
+    }
+}

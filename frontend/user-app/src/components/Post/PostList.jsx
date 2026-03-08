@@ -59,7 +59,7 @@ const markdownComponents = {
 
 // Modal component for lightbox
 const MediaLightbox = ({ isOpen, media, currentIndex, onClose, onNext, onPrev }) => {
-  if (!isOpen || !media || media.length === 0) return null;
+  if (!isOpen || !media || media?.length === 0) return null;
 
   const currentMedia = media[currentIndex];
   const isVideo = currentMedia.MediaType === 'video';
@@ -113,7 +113,7 @@ const MediaLightbox = ({ isOpen, media, currentIndex, onClose, onNext, onPrev })
       
       {/* Media counter */}
       <div className="absolute top-4 left-4 z-10 text-white bg-black bg-opacity-60 px-3 py-1 rounded-full text-sm">
-        {currentIndex + 1} / {media.length}
+        {currentIndex + 1} / {media?.length}
       </div>
       
       {/* Media content */}
@@ -148,7 +148,7 @@ const MediaLightbox = ({ isOpen, media, currentIndex, onClose, onNext, onPrev })
       </div>
       
       {/* Navigation buttons */}
-      {media.length > 1 && (
+      {media?.length > 1 && (
         <>
           <button 
             onClick={(e) => { e.stopPropagation(); onPrev(); }} 
@@ -193,7 +193,7 @@ const PostList = ({ initialPosts, onLike, onComment, onShare, onEdit, onRefreshM
       }
       
       // Remove post from state
-      const updatedPosts = posts.filter(post => post.PostID !== postId);
+      const updatedPosts = posts?.filter(post => post.PostID !== postId);
       setPosts(updatedPosts);
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -252,7 +252,7 @@ const PostList = ({ initialPosts, onLike, onComment, onShare, onEdit, onRefreshM
       }
       
       // Update post's share count in state
-      const updatedPosts = posts.map(post => {
+      const updatedPosts = posts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -289,7 +289,7 @@ const PostList = ({ initialPosts, onLike, onComment, onShare, onEdit, onRefreshM
       }
       
       // Update post in state
-      const updatedPosts = posts.map(post => {
+      const updatedPosts = posts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -308,7 +308,7 @@ const PostList = ({ initialPosts, onLike, onComment, onShare, onEdit, onRefreshM
     }
   };
 
-  if (!Array.isArray(posts) || posts.length === 0) {
+  if (!Array.isArray(posts) || posts?.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-8 text-center">
         <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
@@ -324,7 +324,7 @@ const PostList = ({ initialPosts, onLike, onComment, onShare, onEdit, onRefreshM
 
   return (
     <div className="space-y-6">
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <PostCard
           key={post.PostID}
           post={post}
@@ -449,7 +449,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
 
   const handleCommentToggle = () => {
     setShowComments(!showComments);
-    if (!showComments && comments.length === 0) {
+    if (!showComments && comments?.length === 0) {
       fetchComments();
     }
   };
@@ -531,7 +531,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
       }
       
       // Update comment in state
-      setComments(comments.map(comment => 
+      setComments(comments?.map(comment => 
         comment.CommentID === commentId 
           ? { 
               ...comment, 
@@ -560,7 +560,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
       }
       
       // Remove comment from state
-      setComments(comments.filter(comment => comment.CommentID !== commentId));
+      setComments(comments?.filter(comment => comment.CommentID !== commentId));
       
       // Update comment count in the post
       if (onComment) {
@@ -572,7 +572,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
   };
 
   const handleEditSubmit = async () => {
-    if (!editedContent.trim() && editMedia.length === 0 && newMedia.length === 0) return;
+    if (!editedContent.trim() && editMedia?.length === 0 && newMedia?.length === 0) return;
     
     setIsSubmittingEdit(true);
     try {
@@ -580,11 +580,11 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
       await onEdit(post.PostID, editedContent);
       
       // Then handle any new media uploads
-      if (newMedia.length > 0) {
+      if (newMedia?.length > 0) {
         const token = localStorage.getItem('token');
         const formData = new FormData();
         
-        newMedia.forEach(file => {
+        newMedia?.forEach(file => {
           formData.append('media', file);
         });
         
@@ -627,14 +627,14 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
   };
   
   const handleAddMedia = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target.files?.length > 0) {
       const files = Array.from(e.target.files);
       setNewMedia([...newMedia, ...files]);
     }
   };
   
   const handleRemoveNewMedia = (index) => {
-    setNewMedia(newMedia.filter((_, i) => i !== index));
+    setNewMedia(newMedia?.filter((_, i) => i !== index));
   };
   
   const handleRemoveExistingMedia = async (mediaId) => {
@@ -652,7 +652,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
       }
       
       // Remove from UI
-      setEditMedia(editMedia.filter(media => media.MediaID !== mediaId));
+      setEditMedia(editMedia?.filter(media => media.MediaID !== mediaId));
       
       // Refresh post data to get updated media list
       if (onRefreshMedia) {
@@ -870,11 +870,11 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
             />
             
             {/* Existing Media */}
-            {editMedia.length > 0 && (
+            {editMedia?.length > 0 && (
               <div className="mt-4">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">Media hiện tại</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {editMedia.map((media) => (
+                  {editMedia?.map((media) => (
                     <div key={media.MediaID} className="relative group">
                       {media.MediaType === 'image' ? (
                         <img
@@ -904,11 +904,11 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
             )}
             
             {/* New Media Preview */}
-            {newMedia.length > 0 && (
+            {newMedia?.length > 0 && (
               <div className="mt-4">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">Media mới</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {newMedia.map((file, index) => (
+                  {newMedia?.map((file, index) => (
                     <div key={index} className="relative group">
                       {file.type.startsWith('image/') ? (
                         <img
@@ -996,7 +996,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
           post.Content && (
             <div className="prose max-w-none mb-4">
               {/* Replace the notification banner with just an AI button for posts > 500 words */}
-              {post.Content.trim().split(/\s+/).length > 500 && !aiSummary && !isLoadingSummary && (
+              {post.Content.trim().split(/\s+/)?.length > 500 && !aiSummary && !isLoadingSummary && (
                 <div className="flex justify-end mb-3">
                   <button
                     onClick={handleAiSummarize}
@@ -1061,7 +1061,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
                   components={markdownComponents}
                 >
                   {(() => {
-                    const wordCount = post.Content.trim().split(/\s+/).length;
+                    const wordCount = post.Content.trim().split(/\s+/)?.length;
                     const shouldTruncate = (wordCount > 200 && !showFullContent) || (aiSummary && !showFullContent);
                     return shouldTruncate
                       ? post.Content.trim().split(/\s+/).slice(0, 200).join(' ') + '...'
@@ -1070,7 +1070,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
                 </ReactMarkdown>
               </div>
               
-              {post.Content.trim().split(/\s+/).length > 200 && (
+              {post.Content.trim().split(/\s+/)?.length > 200 && (
                 <button
                   onClick={() => setShowFullContent(!showFullContent)}
                   className="text-blue-600 hover:text-blue-800 font-medium text-sm mt-2 flex items-center"
@@ -1094,9 +1094,9 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
       </div>
 
       {/* Post Media */}
-      {!isEditing && post.media && post.media.length > 0 && (
-        <div className={`${post.media.length === 1 ? '' : 'grid grid-cols-2 gap-1'} mb-2`}>
-          {post.media.map((media, index) => {
+      {!isEditing && post.media && post.media?.length > 0 && (
+        <div className={`${post.media?.length === 1 ? '' : 'grid grid-cols-2 gap-1'} mb-2`}>
+          {post.media?.map((media, index) => {
             let mediaUrl = '';
             try {
               if (!media.MediaUrl) {
@@ -1116,7 +1116,7 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
             return (
               <div 
                 key={index} 
-                className={`overflow-hidden ${post.media.length === 1 ? 'max-h-[500px]' : 'max-h-[300px]'} relative group cursor-pointer`}
+                className={`overflow-hidden ${post.media?.length === 1 ? 'max-h-[500px]' : 'max-h-[300px]'} relative group cursor-pointer`}
                 onClick={() => handleMediaClick(index)}
               >
                 {media.MediaType === 'image' ? (
@@ -1303,11 +1303,11 @@ const PostCard = ({ post, onLike, onComment, onShare, onDelete, onReport, onEdit
             </div>
           ) : commentError ? (
             <div className="text-center py-4 text-red-500 text-sm">{commentError}</div>
-          ) : comments.length === 0 ? (
+          ) : comments?.length === 0 ? (
             <div className="text-center py-4 text-gray-500 text-sm">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</div>
           ) : (
             <div className="space-y-4">
-              {comments.map((comment) => (
+              {comments?.map((comment) => (
                 <div key={comment.CommentID} className="flex space-x-2">
                   <Avatar
                     src={comment.UserImage || comment.avatar || comment.profileImage}

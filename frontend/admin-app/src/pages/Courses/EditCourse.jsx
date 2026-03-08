@@ -159,8 +159,8 @@ const EditCourse = () => {
       label: (
         <span>
           Xem trước {' '}
-          {modules.reduce((count, module) => count + (module.lessons ? module.lessons.filter(l => l.IsPreview).length : 0), 0) > 0 && (
-            <Badge count={modules.reduce((count, module) => count + (module.lessons ? module.lessons.filter(l => l.IsPreview).length : 0), 0)} />
+          {modules.reduce((count, module) => count + (module.lessons ? module.lessons?.filter(l => l.IsPreview)?.length : 0), 0) > 0 && (
+            <Badge count={modules.reduce((count, module) => count + (module.lessons ? module.lessons?.filter(l => l.IsPreview)?.length : 0), 0)} />
           )}
         </span>
       ),
@@ -278,7 +278,7 @@ const EditCourse = () => {
       setModuleData({
         title: '',
         description: '',
-        orderIndex: modules.length,
+        orderIndex: modules?.length,
         duration: 0
       });
       setSelectedModule(null);
@@ -329,7 +329,7 @@ const EditCourse = () => {
         await api.delete(`/courses/${courseId}/modules/${moduleId}`);
         
         // Update modules list
-        setModules(modules.filter(m => m.ModuleID !== moduleId));
+        setModules(modules?.filter(m => m.ModuleID !== moduleId));
           message.success('Mô-đun đã được xoá thành công');
       } catch (err) {
           message.error('Lỗi khi xoá mô-đun');
@@ -397,11 +397,11 @@ const EditCourse = () => {
         
         // Giả lập dữ liệu validation nếu API không tồn tại
         const mockValidationData = {
-          isValid: courseData.imageUrl && courseData.videoUrl && modules.length > 0,
+          isValid: courseData.imageUrl && courseData.videoUrl && modules?.length > 0,
           details: {
             courseHasVideo: !!courseData.videoUrl,
             courseHasImage: !!courseData.imageUrl,
-            hasSufficientModules: modules.length > 0,
+            hasSufficientModules: modules?.length > 0,
             lessonsWithMissingContent: []
           }
         };
@@ -516,7 +516,7 @@ const EditCourse = () => {
                   rules={[{ required: true, message: 'Vui lòng chọn cấp độ' }]}
                     >
                   <Select placeholder="Chọn cấp độ">
-                      {levelOptions.map(option => (
+                      {levelOptions?.map(option => (
                       <Option key={option.value} value={option.value}>
                           {option.label}
                       </Option>
@@ -532,7 +532,7 @@ const EditCourse = () => {
                   rules={[{ required: true, message: 'Vui lòng chọn danh mục' }]}
                     >
                   <Select placeholder="Chọn danh mục">
-                      {categoryOptions.map(option => (
+                      {categoryOptions?.map(option => (
                       <Option key={option.value} value={option.value}>
                           {option.label}
                       </Option>
@@ -548,7 +548,7 @@ const EditCourse = () => {
                   rules={[{ required: true, message: 'Vui lòng chọn ngôn ngữ' }]}
                     >
                   <Select placeholder="Chọn ngôn ngữ">
-                      {languageOptions.map(option => (
+                      {languageOptions?.map(option => (
                       <Option key={option.value} value={option.value}>
                           {option.label}
                       </Option>
@@ -824,11 +824,11 @@ const EditCourse = () => {
                   {!validationData.details.hasSufficientModules && (
                     <li>Các mô-đun có nội dung</li>
                   )}
-                  {validationData.details.lessonsWithMissingContent.filter(item => item.issue === 'Missing video').length > 0 && (
-                    <li>Video cho {validationData.details.lessonsWithMissingContent.filter(item => item.issue === 'Missing video').length} bài học</li>
+                  {validationData.details.lessonsWithMissingContent?.filter(item => item.issue === 'Missing video')?.length > 0 && (
+                    <li>Video cho {validationData.details.lessonsWithMissingContent?.filter(item => item.issue === 'Missing video')?.length} bài học</li>
                         )}
-                  {validationData.details.lessonsWithMissingContent.filter(item => item.issue === 'Coding lesson missing test cases').length > 0 && (
-                    <li>File test cho {validationData.details.lessonsWithMissingContent.filter(item => item.issue === 'Coding lesson missing test cases').length} bài tập lập trình</li>
+                  {validationData.details.lessonsWithMissingContent?.filter(item => item.issue === 'Coding lesson missing test cases')?.length > 0 && (
+                    <li>File test cho {validationData.details.lessonsWithMissingContent?.filter(item => item.issue === 'Coding lesson missing test cases')?.length} bài tập lập trình</li>
                   )}
                 </ul>
               </div>
@@ -845,7 +845,7 @@ const EditCourse = () => {
         <Tabs
           activeKey={activeTab}
           onChange={setActiveTab}
-          items={tabItems.map(item => ({
+          items={tabItems?.map(item => ({
             ...item,
             children: item.key === 'basic'
               ? renderBasicTab()

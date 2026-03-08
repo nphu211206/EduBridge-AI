@@ -130,7 +130,7 @@ const TakeExam = () => {
     await saveCurrentAnswer();
     
     // Move to next question
-    if (activeStep < examData.questions.length - 1) {
+    if (activeStep < examData.questions?.length - 1) {
       setActiveStep((prevStep) => prevStep + 1);
       
       // Load next answer if exists
@@ -167,7 +167,7 @@ const TakeExam = () => {
   
   // Render the current question
   const renderQuestion = () => {
-    if (!examData || !examData.questions || examData.questions.length === 0) {
+    if (!examData || !examData.questions || examData.questions?.length === 0) {
       return <Typography>No questions available.</Typography>;
     }
     
@@ -212,7 +212,7 @@ const TakeExam = () => {
       <Card elevation={3} sx={{ opacity: cheatingDetected ? 0.6 : 1, pointerEvents: cheatingDetected ? 'none' : 'auto' }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Question {activeStep + 1} of {examData.questions.length}
+            Question {activeStep + 1} of {examData.questions?.length}
           </Typography>
           
           <Typography variant="body1" paragraph>
@@ -225,7 +225,7 @@ const TakeExam = () => {
               onChange={handleMultipleChoiceChange}
               disabled={cheatingDetected}
             >
-              {currentQuestion.options.map((option, index) => (
+              {currentQuestion.options?.map((option, index) => (
                 <FormControlLabel
                   key={index}
                   value={option.value}
@@ -327,7 +327,7 @@ const TakeExam = () => {
         )}
         
         <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-          {examData?.questions.map((question, index) => (
+          {examData?.questions?.map((question, index) => (
             <Step key={index}>
               <StepLabel>Q{index + 1}</StepLabel>
             </Step>
@@ -346,7 +346,7 @@ const TakeExam = () => {
           </Button>
           
           <Box>
-            {activeStep === examData?.questions.length - 1 ? (
+            {activeStep === examData?.questions?.length - 1 ? (
               isFullscreen && (
                 <Button
                   variant="contained"

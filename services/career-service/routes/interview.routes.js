@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router(); // Router chính cho /api/interviews
 const controller = require('../controllers/interview.controller.js');
-const { authenticateToken, recruiterOnly, studentOnly } = require('../middleware/authenticateToken.js');
+const { authenticateToken, requireRecruiter, requireStudent } = require('../middleware/authenticateToken.js');
 
 // === BẢO VỆ TOÀN BỘ HỆ THỐNG PHỎNG VẤN ===
 // Mọi request đến /api/interviews/* đều phải được xác thực
@@ -16,11 +16,11 @@ router.use(authenticateToken);
 // Prefix: /api/interviews/recruiter
 // ==========================================================
 const recruiterRouter = express.Router(); // Tạo một router con "chuyên biệt"
-recruiterRouter.use(recruiterOnly); // "Cổng gác" bảo vệ TOÀN BỘ các route bên dưới
+recruiterRouter.use(requireRecruiter); // "Cổng gác" bảo vệ TOÀN BỘ các route bên dưới
 
 // 1. Quản lý Mẫu Phỏng vấn (Templates)
 // POST /api/interviews/recruiter/templates (AI tạo mẫu phỏng vấn mới từ Job ID)
-recruiterRouter.post('/templates', controller.createTemplate); 
+recruiterRouter.post('/templates', controller.createTemplate);
 // GET /api/interviews/recruiter/templates (Lấy danh sách mẫu của NTD)
 recruiterRouter.get('/templates', controller.getTemplates);
 
@@ -32,7 +32,7 @@ recruiterRouter.get('/results', controller.getResults);
 // GET /api/interviews/recruiter/results/:id (Lấy chi tiết bài đã chấm - side-by-side)
 recruiterRouter.get('/results/:id', controller.getResultDetail);
 // POST /api/interviews/recruiter/results/:id/grade (Yêu cầu AI chấm bài - Bất đồng bộ)
-recruiterRouter.post('/results/:id/grade', controller.gradeInterview); 
+recruiterRouter.post('/results/:id/grade', controller.gradeInterview);
 
 // ===>>> Gắn "Đại lộ NTD" vào router chính
 router.use('/recruiter', recruiterRouter);
@@ -43,13 +43,13 @@ router.use('/recruiter', recruiterRouter);
 // Prefix: /api/interviews/student
 // ==========================================================
 const studentRouter = express.Router(); // Tạo router con "chuyên biệt"
-studentRouter.use(studentOnly); // "Cổng gác" bảo vệ TOÀN BỘ các route bên dưới
+studentRouter.use(requireStudent); // "Cổng gác" bảo vệ TOÀN BỘ các route bên dưới
 
 // 1. Làm bài Phỏng vấn
 // GET /api/interviews/student/start/:id (Lấy đề bài và bắt đầu tính giờ)
-studentRouter.get('/start/:id', controller.startInterview); 
+studentRouter.get('/start/:id', controller.startInterview);
 // POST /api/interviews/student/submit/:id (Nộp bài)
-studentRouter.post('/submit/:id', controller.submitInterview); 
+studentRouter.post('/submit/:id', controller.submitInterview);
 
 // ===>>> Gắn "Đại lộ SV" vào router chính
 router.use('/student', studentRouter);

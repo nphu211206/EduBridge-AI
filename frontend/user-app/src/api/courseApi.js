@@ -28,7 +28,7 @@ const courseApi = {
     const cleanIdentifier = String(identifier).trim();
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('GET', `${apiUrl}/api/courses/${cleanIdentifier}`, true);
@@ -79,7 +79,7 @@ const courseApi = {
     }
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('GET', `${apiUrl}/api/courses/${courseId}/check-enrollment`, true);
@@ -122,7 +122,7 @@ const courseApi = {
     console.log('Enrolling in free course:', courseId);
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('POST', `${apiUrl}/api/courses/${courseId}/enroll/free`, true);
@@ -243,7 +243,7 @@ const courseApi = {
   
   // Delete multiple payment transactions
   deleteManyPayments: (paymentIds) => {
-    if (!paymentIds || !Array.isArray(paymentIds) || paymentIds.length === 0) {
+    if (!paymentIds || !Array.isArray(paymentIds) || paymentIds?.length === 0) {
       return Promise.reject(new Error('Valid payment IDs array is required'));
     }
     return axiosClient.post('/payments/delete-many', { paymentIds });
@@ -272,7 +272,7 @@ const courseApi = {
     }
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('GET', `${apiUrl}/api/courses/${courseId}/content`, true);
@@ -362,7 +362,7 @@ const courseApi = {
     }
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('GET', `${apiUrl}/api/courses/${courseId}/progress`, true);
@@ -438,7 +438,7 @@ const courseApi = {
     }
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('GET', `${apiUrl}/api/courses/${courseId}/lessons/${lessonId}/code-exercise`, true);
@@ -479,7 +479,7 @@ const courseApi = {
     }
     
     return new Promise((resolve, reject) => {
-      const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const xhr = new XMLHttpRequest();
       
       xhr.open('POST', `${apiUrl}/api/courses/${courseId}/lessons/${lessonId}/run-code`, true);
@@ -616,7 +616,7 @@ const courseApi = {
     
     return new Promise((resolve, reject) => {
       try {
-        const apiUrl = process.env.VITE_API_URL || 'http://localhost:5001';
+        const apiUrl = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
         const xhr = new XMLHttpRequest();
         
         xhr.open('POST', `${apiUrl}/api/courses/${courseId}/lessons/${lessonId}/submit-code`, true);

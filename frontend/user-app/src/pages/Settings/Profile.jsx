@@ -129,10 +129,10 @@ const Profile = () => {
     userServices.getEmails()
       .then(res => {
         const emails = res.data.emails || [];
-        const verified = emails.filter(e => e.IsVerified === 1 || e.IsVerified === true);
+        const verified = emails?.filter(e => e.IsVerified === 1 || e.IsVerified === true);
         setVerifiedEmails(verified);
         // if current public email not set yet, preselect primary verified email
-        if (!profileData.email && verified.length) {
+        if (!profileData.email && verified?.length) {
           const primary = verified.find(e => e.IsPrimary === 1 || e.IsPrimary === true) || verified[0];
           setProfileData(prev => ({ ...prev, email: primary.Email }));
         }
@@ -197,7 +197,7 @@ const Profile = () => {
   const handleUpdateEducation = (id, field, value) => {
     setProfileData(prevData => ({
       ...prevData,
-      education: prevData.education.map(item => 
+      education: prevData.education?.map(item => 
         item.id === id ? { ...item, [field]: value } : item
       )
     }));
@@ -207,7 +207,7 @@ const Profile = () => {
   const handleRemoveEducation = (id) => {
     setProfileData(prevData => ({
       ...prevData,
-      education: prevData.education.filter(item => item.id !== id)
+      education: prevData.education?.filter(item => item.id !== id)
     }));
   };
 
@@ -234,7 +234,7 @@ const Profile = () => {
   const handleUpdateWorkExperience = (id, field, value) => {
     setProfileData(prevData => ({
       ...prevData,
-      workExperience: prevData.workExperience.map(item => 
+      workExperience: prevData.workExperience?.map(item => 
         item.id === id ? { ...item, [field]: value } : item
       )
     }));
@@ -244,7 +244,7 @@ const Profile = () => {
   const handleRemoveWorkExperience = (id) => {
     setProfileData(prevData => ({
       ...prevData,
-      workExperience: prevData.workExperience.filter(item => item.id !== id)
+      workExperience: prevData.workExperience?.filter(item => item.id !== id)
     }));
   };
 
@@ -262,7 +262,7 @@ const Profile = () => {
   const handleRemoveSkill = (skillToRemove) => {
     setProfileData(prevData => ({
       ...prevData,
-      skills: prevData.skills.filter(skill => skill !== skillToRemove)
+      skills: prevData.skills?.filter(skill => skill !== skillToRemove)
     }));
   };
 
@@ -280,7 +280,7 @@ const Profile = () => {
   const handleRemoveInterest = (interestToRemove) => {
     setProfileData(prevData => ({
       ...prevData,
-      interests: prevData.interests.filter(interest => interest !== interestToRemove)
+      interests: prevData.interests?.filter(interest => interest !== interestToRemove)
     }));
   };
 
@@ -359,7 +359,7 @@ const Profile = () => {
                   className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Chọn email đã xác thực để hiển thị</option>
-                  {verifiedEmails.map(item => (
+                  {verifiedEmails?.map(item => (
                     <option key={item.Email} value={item.Email}>{item.Email}{item.IsPrimary ? ' (Chính)' : ''}</option>
                   ))}
                 </select>
@@ -531,8 +531,8 @@ const Profile = () => {
               
               {editMode.education ? (
                 <>
-                  {profileData.education && profileData.education.length > 0 ? (
-                    profileData.education.map((edu, index) => (
+                  {profileData.education && profileData.education?.length > 0 ? (
+                    profileData.education?.map((edu, index) => (
                       <div key={edu.id || index} className="p-4 border rounded-md bg-gray-50">
                         <div className="flex justify-between items-center mb-2">
                           <h4 className="font-medium">Học vấn {index + 1}</h4>
@@ -668,8 +668,8 @@ const Profile = () => {
               ) : (
                 // View mode for education
                 <div>
-                  {profileData.education && profileData.education.length > 0 ? (
-                    profileData.education.map((edu, index) => (
+                  {profileData.education && profileData.education?.length > 0 ? (
+                    profileData.education?.map((edu, index) => (
                       <div key={edu.id || index} className="mb-4 border-b pb-4 last:border-b-0">
                         <div className="flex justify-between">
                           <h4 className="font-bold text-gray-800">{edu.school || 'Không có tên trường'}</h4>
@@ -726,8 +726,8 @@ const Profile = () => {
               
               {editMode.workExperience ? (
                 <>
-                  {profileData.workExperience && profileData.workExperience.length > 0 ? (
-                    profileData.workExperience.map((work, index) => (
+                  {profileData.workExperience && profileData.workExperience?.length > 0 ? (
+                    profileData.workExperience?.map((work, index) => (
                       <div key={work.id || index} className="p-4 border rounded-md bg-gray-50">
                         <div className="flex justify-between items-center mb-2">
                           <h4 className="font-medium">Kinh nghiệm {index + 1}</h4>
@@ -865,8 +865,8 @@ const Profile = () => {
               ) : (
                 // View mode for work experience
                 <div>
-                  {profileData.workExperience && profileData.workExperience.length > 0 ? (
-                    profileData.workExperience.map((work, index) => (
+                  {profileData.workExperience && profileData.workExperience?.length > 0 ? (
+                    profileData.workExperience?.map((work, index) => (
                       <div key={work.id || index} className="mb-4 border-b pb-4 last:border-b-0">
                         <div className="flex justify-between">
                           <h4 className="font-bold text-gray-800">{work.company || 'Không có tên công ty'}</h4>
@@ -938,8 +938,8 @@ const Profile = () => {
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {profileData.skills && profileData.skills.length > 0 ? (
-                  profileData.skills.map((skill, index) => (
+                {profileData.skills && profileData.skills?.length > 0 ? (
+                  profileData.skills?.map((skill, index) => (
                       <div key={index} className="group flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-sm">
                         <span className="truncate">{skill}</span>
                         <button type="button" onClick={() => handleRemoveSkill(skill)} className="ml-1 opacity-0 group-hover:opacity-100 text-gray-600 focus:opacity-100">
@@ -986,8 +986,8 @@ const Profile = () => {
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {profileData.interests && profileData.interests.length > 0 ? (
-                  profileData.interests.map((interest, index) => (
+                {profileData.interests && profileData.interests?.length > 0 ? (
+                  profileData.interests?.map((interest, index) => (
                       <div key={index} className="group flex items-center bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-sm">
                         <span className="truncate">{interest}</span>
                         <button type="button" onClick={() => handleRemoveInterest(interest)} className="ml-1 opacity-0 group-hover:opacity-100 text-gray-600 focus:opacity-100">

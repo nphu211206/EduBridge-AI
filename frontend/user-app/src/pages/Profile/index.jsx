@@ -509,7 +509,7 @@ const Profile = () => {
       }
 
       // Update like status in the UI
-      setUserPosts(userPosts.map(post => {
+      setUserPosts(userPosts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -527,7 +527,7 @@ const Profile = () => {
   const handleComment = async (postId, change = 1) => {
     try {
       // Update the UI immediately to reflect comment count change
-      setUserPosts(userPosts.map(post => {
+      setUserPosts(userPosts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -565,7 +565,7 @@ const Profile = () => {
       }
 
       // Update post in the UI
-      setUserPosts(userPosts.map(post => {
+      setUserPosts(userPosts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -600,7 +600,7 @@ const Profile = () => {
       const updatedPost = await response.json();
 
       // Update the post in the UI with new media
-      setUserPosts(userPosts.map(post => {
+      setUserPosts(userPosts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -625,7 +625,7 @@ const Profile = () => {
   };
 
   const handleProfilePictureChange = async (e) => {
-    if (!e.target.files || e.target.files.length === 0) return;
+    if (!e.target.files || e.target.files?.length === 0) return;
     
     const file = e.target.files[0];
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -830,7 +830,7 @@ const Profile = () => {
 
   // Call fetchBookmarkedPosts when tab changes to 'saved'
   useEffect(() => {
-    if (activeTab === 'saved' && isOwnProfile && bookmarkedPosts.length === 0 && !bookmarksLoading) {
+    if (activeTab === 'saved' && isOwnProfile && bookmarkedPosts?.length === 0 && !bookmarksLoading) {
       fetchBookmarkedPosts();
     }
   }, [activeTab, isOwnProfile]);
@@ -852,7 +852,7 @@ const Profile = () => {
       
       // If on the saved posts tab, remove the post from the list
       if (activeTab === 'saved') {
-        setBookmarkedPosts(prev => prev.filter(post => post.PostID !== postId));
+        setBookmarkedPosts(prev => prev?.filter(post => post.PostID !== postId));
       }
     } catch (error) {
       console.error('Error toggling bookmark:', error);
@@ -878,7 +878,7 @@ const Profile = () => {
   // Function to update an education item
   const handleUpdateEducation = (id, field, value) => {
     setEducationData(prevData => 
-      prevData.map(item => 
+      prevData?.map(item => 
         item.id === id ? { ...item, [field]: value } : item
       )
     );
@@ -886,7 +886,7 @@ const Profile = () => {
 
   // Function to remove an education item
   const handleRemoveEducation = (id) => {
-    setEducationData(prevData => prevData.filter(item => item.id !== id));
+    setEducationData(prevData => prevData?.filter(item => item.id !== id));
   };
 
   // Function to add a new work experience item
@@ -908,7 +908,7 @@ const Profile = () => {
   // Function to update a work experience item
   const handleUpdateWorkExperience = (id, field, value) => {
     setWorkExperienceData(prevData => 
-      prevData.map(item => 
+      prevData?.map(item => 
         item.id === id ? { ...item, [field]: value } : item
       )
     );
@@ -916,7 +916,7 @@ const Profile = () => {
 
   // Function to remove a work experience item
   const handleRemoveWorkExperience = (id) => {
-    setWorkExperienceData(prevData => prevData.filter(item => item.id !== id));
+    setWorkExperienceData(prevData => prevData?.filter(item => item.id !== id));
   };
 
   // Function to save education
@@ -1183,16 +1183,16 @@ const Profile = () => {
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4 py-4 border-t border-gray-100">
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-gray-900">{userPosts.length}</div>
+                    <div className="text-lg font-semibold text-gray-900">{userPosts?.length}</div>
                     <div className="text-xs text-gray-500">Bài viết</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-gray-900">{userFriends.length}</div>
+                    <div className="text-lg font-semibold text-gray-900">{userFriends?.length}</div>
                     <div className="text-xs text-gray-500">Bạn bè</div>
                   </div>
                   <div className="text-center">
                     <div className="text-lg font-semibold text-gray-900">
-                      {isOwnProfile ? bookmarkedPosts.length : 0}
+                      {isOwnProfile ? bookmarkedPosts?.length : 0}
                     </div>
                     <div className="text-xs text-gray-500">Đã lưu</div>
                   </div>
@@ -1250,14 +1250,14 @@ const Profile = () => {
               </div>
 
               {/* Education */}
-              {educationData.length > 0 && (
+              {educationData?.length > 0 && (
                 <div className="mb-6 border-t border-gray-100 pt-6">
                   <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
                     <AcademicCapIcon className="h-4 w-4 mr-2" />
                     Học vấn
                   </h3>
                   <div className="space-y-3">
-                    {educationData.slice(0, 2).map((edu, index) => (
+                    {educationData.slice(0, 2)?.map((edu, index) => (
                       <div key={edu.id || index} className="text-sm">
                         <div className="font-medium text-gray-900">{edu.school}</div>
                         <div className="text-gray-600">
@@ -1273,14 +1273,14 @@ const Profile = () => {
               )}
 
               {/* Work Experience */}
-              {workExperienceData.length > 0 && (
+              {workExperienceData?.length > 0 && (
                 <div className="mb-6 border-t border-gray-100 pt-6">
                   <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
                     <BriefcaseIcon className="h-4 w-4 mr-2" />
                     Kinh nghiệm
                   </h3>
                   <div className="space-y-3">
-                    {workExperienceData.slice(0, 2).map((work, index) => (
+                    {workExperienceData.slice(0, 2)?.map((work, index) => (
                       <div key={work.id || index} className="text-sm">
                         <div className="font-medium text-gray-900">{work.company}</div>
                         <div className="text-gray-600">{work.position}</div>
@@ -1294,14 +1294,14 @@ const Profile = () => {
               )}
 
               {/* Friends Preview */}
-              {userFriends.length > 0 && (
+              {userFriends?.length > 0 && (
                 <div className="border-t border-gray-100 pt-6">
                   <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
                     <UserGroupIcon className="h-4 w-4 mr-2" />
-                    Bạn bè ({userFriends.length})
+                    Bạn bè ({userFriends?.length})
                   </h3>
                   <div className="grid grid-cols-6 gap-2">
-                    {userFriends.slice(0, 6).map(friend => (
+                    {userFriends.slice(0, 6)?.map(friend => (
                       <div 
                         key={friend.UserID || friend.FriendID}
                         className="cursor-pointer"
@@ -1316,12 +1316,12 @@ const Profile = () => {
                       </div>
                     ))}
                   </div>
-                  {userFriends.length > 6 && (
+                  {userFriends?.length > 6 && (
                     <button 
                       className="text-xs text-blue-600 hover:text-blue-800 mt-2"
                       onClick={() => navigate(isOwnProfile ? '/friends' : `/friends?userId=${userId}`)}
                     >
-                      Xem tất cả {userFriends.length} bạn bè
+                      Xem tất cả {userFriends?.length} bạn bè
                     </button>
                   )}
                 </div>
@@ -1346,7 +1346,7 @@ const Profile = () => {
                     <DocumentTextIcon className="h-4 w-4" />
                     <span>Bài viết</span>
                     <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
-                      {userPosts.length}
+                      {userPosts?.length}
                     </span>
                   </div>
                 </button>
@@ -1363,7 +1363,7 @@ const Profile = () => {
                     <PhotoIcon className="h-4 w-4" />
                     <span>Ảnh</span>
                     <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
-                      {filteredPosts(userPosts, 'image').length}
+                      {filteredPosts(userPosts, 'image')?.length}
                     </span>
                   </div>
                 </button>
@@ -1382,7 +1382,7 @@ const Profile = () => {
                     </svg>
                     <span>Video</span>
                     <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
-                      {filteredPosts(userPosts, 'video').length}
+                      {filteredPosts(userPosts, 'video')?.length}
                     </span>
                   </div>
                 </button>
@@ -1400,7 +1400,7 @@ const Profile = () => {
                       <BookmarkIcon className="h-4 w-4" />
                       <span>Đã lưu</span>
                       <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
-                        {bookmarkedPosts.length}
+                        {bookmarkedPosts?.length}
                       </span>
                     </div>
                   </button>
@@ -1422,7 +1422,7 @@ const Profile = () => {
                     <div className="text-center py-12">
                       <p className="text-red-600">Không thể tải bài viết đã lưu: {bookmarksError}</p>
                     </div>
-                  ) : bookmarkedPosts.length === 0 ? (
+                  ) : bookmarkedPosts?.length === 0 ? (
                     <div className="text-center py-12">
                       <BookmarkIcon className="h-12 w-12 mx-auto text-gray-300 mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">Chưa có bài viết đã lưu</h3>
@@ -1459,7 +1459,7 @@ const Profile = () => {
                     <div className="text-center py-12">
                       <p className="text-red-600">Không thể tải bài viết: {postsError}</p>
                     </div>
-                  ) : filteredPosts(userPosts, activeTab).length === 0 ? (
+                  ) : filteredPosts(userPosts, activeTab)?.length === 0 ? (
                     <div className="text-center py-12">
                       <DocumentTextIcon className="h-12 w-12 mx-auto text-gray-300 mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -1510,10 +1510,10 @@ function filteredPosts(posts, tab) {
   if (!Array.isArray(posts)) return [];
   if (tab === 'all') return posts;
   if (tab === 'image') {
-    return posts.filter(post => Array.isArray(post.media) && post.media.some(m => m.MediaType === 'image'));
+    return posts?.filter(post => Array.isArray(post.media) && post.media.some(m => m.MediaType === 'image'));
   }
   if (tab === 'video') {
-    return posts.filter(post => Array.isArray(post.media) && post.media.some(m => m.MediaType === 'video'));
+    return posts?.filter(post => Array.isArray(post.media) && post.media.some(m => m.MediaType === 'video'));
   }
   return posts;
 }

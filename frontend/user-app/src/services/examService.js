@@ -154,7 +154,7 @@ const examService = {
         examsData = [];
       }
       
-      console.log(`Extracted ${examsData.length} exams from API response`);
+      console.log(`Extracted ${examsData?.length} exams from API response`);
       
       return { 
         ...response, 
@@ -730,7 +730,7 @@ const examService = {
         
         // Convert any string options to arrays for multiple choice questions
         if (response.data.answers && Array.isArray(response.data.answers)) {
-          response.data.answers.forEach(answer => {
+          response.data.answers?.forEach(answer => {
             if (answer.question && answer.question.Type === 'multiple_choice' && 
                 typeof answer.question.Options === 'string') {
               try {
@@ -844,7 +844,7 @@ const examService = {
       return Promise.reject(new Error('Invalid input parameters'));
     }
     
-    console.log(`Submitting exam ${numericExamId} with ${data.answers.length} answers`);
+    console.log(`Submitting exam ${numericExamId} with ${data.answers?.length} answers`);
     
     // Check if we're in bypass mode
     if (localStorage.getItem('bypassMode') === 'true' || BYPASS_PERMISSIONS) {
@@ -855,7 +855,7 @@ const examService = {
         const bypassAnswers = JSON.parse(localStorage.getItem('bypassAnswers') || '{}');
         
         // Add new answers to storage
-        data.answers.forEach(answer => {
+        data.answers?.forEach(answer => {
           const key = `${numericExamId}-${answer.questionId}`;
           bypassAnswers[key] = {
             answer: answer.answer,
@@ -874,14 +874,14 @@ const examService = {
           // Get questions with correct answers if available
           let questions = [];
           
-          if (examData.ExamQuestions && examData.ExamQuestions.length > 0) {
+          if (examData.ExamQuestions && examData.ExamQuestions?.length > 0) {
             questions = examData.ExamQuestions;
-          } else if (examData.questions && examData.questions.length > 0) {
+          } else if (examData.questions && examData.questions?.length > 0) {
             questions = examData.questions;
           }
           
           // Score the answers
-          const scoredAnswers = data.answers.map(answer => {
+          const scoredAnswers = data.answers?.map(answer => {
             // Find matching question
             const question = questions.find(q => q.QuestionID === answer.questionId);
             
@@ -911,7 +911,7 @@ const examService = {
           let totalPoints = 0;
           let earnedPoints = 0;
           
-          scoredAnswers.forEach(answer => {
+          scoredAnswers?.forEach(answer => {
             if (answer.question && answer.question.Points) {
               totalPoints += answer.question.Points;
               
@@ -942,7 +942,7 @@ const examService = {
               message: 'Exam submitted successfully in bypass mode',
               submitTime: new Date().toISOString(),
               bypassMode: true,
-              answers: data.answers.map(answer => ({
+              answers: data.answers?.map(answer => ({
                 questionId: answer.questionId,
                 answer: answer.answer,
                 submittedAt: answer.timestamp || new Date().toISOString(),

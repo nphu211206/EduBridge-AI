@@ -34,7 +34,7 @@ export const fetchEvents = createAsyncThunk(
 
       // Validate và format dữ liệu
       const events = Array.isArray(response.data) ? response.data : [];
-      return events.map(event => ({
+      return events?.map(event => ({
         ...event,
         EventDate: event.EventDate || new Date().toISOString().split('T')[0],
         EventTime: event.EventTime || '00:00:00',

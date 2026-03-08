@@ -108,13 +108,13 @@ const TestCasePanel = ({ testCases, testResults, userTestCases = [], updateTestC
 
   // Delete a test case
   const handleDeleteTestCase = (index) => {
-    const updatedTestCases = testCases.filter((_, idx) => idx !== index);
+    const updatedTestCases = testCases?.filter((_, idx) => idx !== index);
     updateTestCases(updatedTestCases);
   };
 
   return (
     <div className="space-y-2">
-      {testCases.map((testCase, index) => {
+      {testCases?.map((testCase, index) => {
         // Find matching test result if any
         const result = testResults.find(r => r.id === index);
         const isUserCase = isUserTestCase(index);

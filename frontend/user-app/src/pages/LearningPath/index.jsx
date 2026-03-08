@@ -113,7 +113,7 @@ const LearningPath = () => {
 
                             <h4 className="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider">Chọn lĩnh vực chính</h4>
                             <div className="flex flex-wrap gap-3 mb-8">
-                                {fields.map(f => (
+                                {fields?.map(f => (
                                     <button
                                         key={f}
                                         className={`px-5 py-3 rounded-xl border transition-all font-medium ${field === f
@@ -146,7 +146,7 @@ const LearningPath = () => {
                 {loading ? (
                     // Skeleton Loading
                     <div className="space-y-6 max-w-4xl mx-auto">
-                        {[1, 2].map(i => (
+                        {[1, 2]?.map(i => (
                             <div key={i} className="animate-pulse bg-slate-800/30 rounded-3xl p-8 border border-slate-700/50">
                                 <div className="h-8 bg-slate-700/50 rounded-lg w-1/3 mb-4"></div>
                                 <div className="h-4 bg-slate-700/50 rounded-md w-1/4 mb-8"></div>
@@ -157,7 +157,7 @@ const LearningPath = () => {
                             </div>
                         ))}
                     </div>
-                ) : paths.length === 0 ? (
+                ) : paths?.length === 0 ? (
                     <motion.div
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                         className="text-center py-24 bg-slate-800/20 rounded-[2rem] border-2 border-slate-700/50 max-w-3xl mx-auto border-dashed"
@@ -168,7 +168,7 @@ const LearningPath = () => {
                     </motion.div>
                 ) : (
                     <div className="grid grid-cols-1 gap-6 max-w-4xl mx-auto">
-                        {paths.map((path, idx) => (
+                        {paths?.map((path, idx) => (
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
                                 key={path.PathID}
@@ -223,7 +223,7 @@ const LearningPath = () => {
                                             <div className="pt-8 border-t border-slate-700/50">
                                                 <h4 className="text-xl font-bold text-white mb-8">Nhiệm vụ & Cột mốc</h4>
                                                 <div className="pl-5 space-y-10 border-l-[3px] border-slate-700 relative">
-                                                    {path.milestones.map((m, i) => (
+                                                    {path.milestones?.map((m, i) => (
                                                         <div key={m.MilestoneID} className="relative pl-8">
                                                             {/* Dot */}
                                                             <div className={`absolute -left-[23px] top-1 w-11 h-11 rounded-full flex items-center justify-center border-4 border-slate-800 ${m.IsCompleted ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'} shadow-lg text-lg`}>

@@ -88,7 +88,7 @@ const TeacherDashboard = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {courses.map((course) => (
+                                {courses?.map((course) => (
                                     <TableRow key={course.CourseID}>
                                         <TableCell>{course.Title}</TableCell>
                                         <TableCell>{course.StudentCount}</TableCell>

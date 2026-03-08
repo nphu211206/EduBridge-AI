@@ -12,7 +12,7 @@ import { selectCurrentUser, selectToken } from '../store/slices/authSlice';
 import axios from 'axios';
 
 // Define API URL with fallback
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5003';
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5003';
 
 const ProfilePage = () => {
   const user = useSelector(selectCurrentUser);

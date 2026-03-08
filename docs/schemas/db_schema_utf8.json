@@ -1,0 +1,358 @@
+﻿Executing (default): SELECT 1+1 AS result
+Executing (default): SELECT 1+1 AS result
+Database connected successfully
+Executing (default): SELECT c.COLUMN_NAME AS 'Name', c.DATA_TYPE AS 'Type', c.CHARACTER_MAXIMUM_LENGTH AS 'Length', c.IS_NULLABLE as 'IsNull', COLUMN_DEFAULT AS 'Default', pk.CONSTRAINT_TYPE AS 'Constraint', COLUMNPROPERTY(OBJECT_ID('[' + c.TABLE_SCHEMA + '].[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsIdentity') as 'IsIdentity', CAST(prop.value AS NVARCHAR) AS 'Comment' FROM INFORMATION_SCHEMA.TABLES t INNER JOIN INFORMATION_SCHEMA.COLUMNS c ON t.TABLE_NAME = c.TABLE_NAME AND t.TABLE_SCHEMA = c.TABLE_SCHEMA LEFT JOIN (SELECT tc.table_schema, tc.table_name,  cu.column_name, tc.CONSTRAINT_TYPE  FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc  JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE  cu  ON tc.table_schema=cu.table_schema and tc.table_name=cu.table_name  and tc.constraint_name=cu.constraint_name  and tc.CONSTRAINT_TYPE='PRIMARY KEY') pk  ON pk.table_schema=c.table_schema  AND pk.table_name=c.table_name  AND pk.column_name=c.column_name  INNER JOIN sys.columns AS sc ON sc.object_id = OBJECT_ID('[' + t.TABLE_SCHEMA + '].[' + t.TABLE_NAME + ']') AND sc.name = c.column_name LEFT JOIN sys.extended_properties prop ON prop.major_id = sc.object_id AND prop.minor_id = sc.column_id AND prop.name = 'MS_Description' WHERE t.TABLE_NAME = 'Users'
+{
+  "UserID": {
+    "type": "INT",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": true,
+    "autoIncrement": true,
+    "comment": null
+  },
+  "Username": {
+    "type": "NVARCHAR(100)",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Email": {
+    "type": "NVARCHAR(255)",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Password": {
+    "type": "NVARCHAR(500)",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "PasswordSalt": {
+    "type": "NVARCHAR(200)",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "FirstName": {
+    "type": "NVARCHAR(100)",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "LastName": {
+    "type": "NVARCHAR(100)",
+    "allowNull": false,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "FullName": {
+    "type": "NVARCHAR(201)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "PhoneNumber": {
+    "type": "NVARCHAR(20)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "AvatarUrl": {
+    "type": "NVARCHAR(500)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "CoverPhotoUrl": {
+    "type": "NVARCHAR(500)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "DateOfBirth": {
+    "type": "DATE",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Gender": {
+    "type": "NVARCHAR(20)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Bio": {
+    "type": "NVARCHAR(MAX)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Address": {
+    "type": "NVARCHAR(500)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "City": {
+    "type": "NVARCHAR(100)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Country": {
+    "type": "NVARCHAR(100)",
+    "allowNull": true,
+    "defaultValue": "(NVietnam",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Timezone": {
+    "type": "VARCHAR(50)",
+    "allowNull": true,
+    "defaultValue": "Asia/Ho_Chi_Minh",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Language": {
+    "type": "VARCHAR(10)",
+    "allowNull": true,
+    "defaultValue": "vi",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "IsEmailVerified": {
+    "type": "BIT",
+    "allowNull": false,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "IsPhoneVerified": {
+    "type": "BIT",
+    "allowNull": false,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "IsActive": {
+    "type": "BIT",
+    "allowNull": false,
+    "defaultValue": "((1))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "IsBanned": {
+    "type": "BIT",
+    "allowNull": false,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "BannedReason": {
+    "type": "NVARCHAR(500)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "BannedUntil": {
+    "type": "DATETIME2",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "LastLoginAt": {
+    "type": "DATETIME2",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "LastActiveAt": {
+    "type": "DATETIME2",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "OnlineStatus": {
+    "type": "NVARCHAR(20)",
+    "allowNull": false,
+    "defaultValue": "Offline",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "RegistrationSource": {
+    "type": "NVARCHAR(50)",
+    "allowNull": true,
+    "defaultValue": "Web",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "ReferralCode": {
+    "type": "VARCHAR(20)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "ReferredBy": {
+    "type": "INT",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "TotalPoints": {
+    "type": "INT",
+    "allowNull": false,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Level": {
+    "type": "INT",
+    "allowNull": false,
+    "defaultValue": "((1))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "CreatedAt": {
+    "type": "DATETIME2",
+    "allowNull": false,
+    "defaultValue": "(getdate())",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "UpdatedAt": {
+    "type": "DATETIME2",
+    "allowNull": false,
+    "defaultValue": "(getdate())",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "DeletedAt": {
+    "type": "DATETIME2",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "EduCoinsBalance": {
+    "type": "INT",
+    "allowNull": false,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "TwoFASecret": {
+    "type": "VARCHAR(255)",
+    "allowNull": true,
+    "defaultValue": null,
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "TwoFAEnabled": {
+    "type": "BIT",
+    "allowNull": true,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "HasPasskey": {
+    "type": "BIT",
+    "allowNull": true,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "RequireTwoFA": {
+    "type": "BIT",
+    "allowNull": true,
+    "defaultValue": "((0))",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "AccountStatus": {
+    "type": "VARCHAR(20)",
+    "allowNull": true,
+    "defaultValue": "ACTIVE",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Status": {
+    "type": "VARCHAR(20)",
+    "allowNull": true,
+    "defaultValue": "ONLINE",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  },
+  "Role": {
+    "type": "VARCHAR(20)",
+    "allowNull": true,
+    "defaultValue": "STUDENT",
+    "primaryKey": false,
+    "autoIncrement": false,
+    "comment": null
+  }
+}

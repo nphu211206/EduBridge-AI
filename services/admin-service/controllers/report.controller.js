@@ -12,18 +12,18 @@ const reportController = {
   // Lấy danh sách tất cả báo cáo với phân trang và lọc
   getAllReports: async (req, res) => {
     try {
-      const { 
-        page = 1, 
-        limit = 10, 
-        status, 
+      const {
+        page = 1,
+        limit = 10,
+        status,
         category,
-        sortBy = 'createdAt', 
+        sortBy = 'createdAt',
         sortOrder = 'DESC',
-        search 
+        search
       } = req.query;
-  
+
       const offset = (page - 1) * limit;
-      
+
       // Build the query
       let countQuery = `SELECT COUNT(*) AS total FROM Reports WHERE DeletedAt IS NULL`;
       let query = `
@@ -46,70 +46,70 @@ const reportController = {
         LEFT JOIN Users ON Reports.ReporterID = Users.UserID
         WHERE Reports.DeletedAt IS NULL
       `;
-      
+
       // Add filters
       const whereConditions = [];
       const params = [];
-      
+
       if (status) {
         whereConditions.push(`Reports.Status = @status`);
         params.push({ name: 'status', value: status });
       }
-      
+
       if (category) {
         whereConditions.push(`Reports.Category = @category`);
         params.push({ name: 'category', value: category });
       }
-      
+
       if (search) {
         whereConditions.push(`(Reports.Title LIKE @search OR Reports.Content LIKE @search)`);
         params.push({ name: 'search', value: `%${search}%` });
       }
-      
+
       // Apply filters to both queries
       if (whereConditions.length > 0) {
         const whereClause = whereConditions.join(' AND ');
         countQuery = countQuery.replace('WHERE DeletedAt IS NULL', `WHERE DeletedAt IS NULL AND ${whereClause}`);
         query = query.replace('WHERE Reports.DeletedAt IS NULL', `WHERE Reports.DeletedAt IS NULL AND ${whereClause}`);
       }
-      
+
       // Add sorting
       const validSortColumns = ['CreatedAt', 'Status', 'Category', 'Title'];
       const sortColumn = validSortColumns.includes(sortBy) ? sortBy : 'CreatedAt';
       const order = sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-      
+
       query += ` ORDER BY Reports.${sortColumn} ${order}`;
-      
+
       // Add pagination
       query += ` OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY`;
-      
+
       // Execute count query
       const pool = await poolPromise;
       const countResult = await pool.request();
-      
+
       // Add parameters to count query
       params.forEach(param => {
         countResult.input(param.name, param.value);
       });
-      
+
       const totalResult = await countResult.query(countQuery);
       const total = totalResult.recordset[0].total;
-      
+
       // Execute main query
       const request = pool.request();
-      
+
       // Add parameters to main query
       params.forEach(param => {
         request.input(param.name, param.value);
       });
-      
+
       const result = await request.query(query);
-      
+
       // Calculate pagination info
       const totalPages = Math.ceil(total / limit);
       const hasNext = page < totalPages;
       const hasPrev = page > 1;
-      
+
       res.json({
         data: result.recordset,
         pagination: {
@@ -130,10 +130,10 @@ const reportController = {
   getReportById: async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       const pool = await poolPromise;
       const result = await pool.request()
-        .input('id', id)
+        .input('id', sql.BigInt, id)
         .query(`
           SELECT 
             r.ReportID as id,
@@ -154,11 +154,11 @@ const reportController = {
           LEFT JOIN Users u ON r.ReporterID = u.UserID
           WHERE r.ReportID = @id AND r.DeletedAt IS NULL
         `);
-      
+
       if (result.recordset.length === 0) {
         return res.status(404).json({ message: 'Report not found' });
       }
-      
+
       res.json(result.recordset[0]);
     } catch (error) {
       console.error('Error fetching report:', error);
@@ -171,47 +171,47 @@ const reportController = {
     try {
       const { id } = req.params;
       const { status, notes } = req.body;
-      
+
       if (!['PENDING', 'RESOLVED', 'REJECTED'].includes(status)) {
         return res.status(400).json({ message: 'Invalid status. Must be one of: PENDING, RESOLVED, REJECTED' });
       }
-      
+
       const pool = await poolPromise;
-      
+
       // Check if report exists
       const checkResult = await pool.request()
-        .input('id', id)
+        .input('id', sql.BigInt, id)
         .query(`SELECT ReportID FROM Reports WHERE ReportID = @id AND DeletedAt IS NULL`);
-      
+
       if (checkResult.recordset.length === 0) {
         return res.status(404).json({ message: 'Report not found' });
       }
-      
+
       // Update the report status
       const updateRequest = pool.request()
-        .input('id', id)
-        .input('status', status)
-        .input('notes', notes || null);
-      
+        .input('id', sql.BigInt, id)
+        .input('status', sql.VarChar(20), status)
+        .input('notes', sql.NVarChar(sql.MAX), notes || null);
+
       let updateQuery = `
         UPDATE Reports SET 
           Status = @status, 
           UpdatedAt = GETDATE(),
           Notes = @notes
       `;
-      
+
       // If status is RESOLVED or REJECTED, set ResolvedAt
       if (status === 'RESOLVED' || status === 'REJECTED') {
         updateQuery += `, ResolvedAt = GETDATE()`;
       }
-      
+
       updateQuery += ` WHERE ReportID = @id`;
-      
+
       await updateRequest.query(updateQuery);
-      
+
       // Get updated report
-      const result = await pool.request()
-        .input('id', id)
+      const getResult = await pool.request()
+        .input('reportId', sql.BigInt, id)
         .query(`
           SELECT 
             r.ReportID as id,
@@ -230,12 +230,12 @@ const reportController = {
             r.ActionTaken as actionTaken
           FROM Reports r
           LEFT JOIN Users u ON r.ReporterID = u.UserID
-          WHERE r.ReportID = @id
+          WHERE r.ReportID = @reportId
         `);
-      
+
       res.json({
         message: 'Report status updated successfully',
-        report: result.recordset[0]
+        report: getResult.recordset[0]
       });
     } catch (error) {
       console.error('Error updating report status:', error);
@@ -247,23 +247,23 @@ const reportController = {
   deleteReport: async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       const pool = await poolPromise;
-      
+
       // Check if report exists
       const checkResult = await pool.request()
-        .input('id', id)
+        .input('id', sql.BigInt, id)
         .query(`SELECT ReportID FROM Reports WHERE ReportID = @id AND DeletedAt IS NULL`);
-      
+
       if (checkResult.recordset.length === 0) {
         return res.status(404).json({ message: 'Report not found' });
       }
-      
+
       // Soft delete the report
       await pool.request()
-        .input('id', id)
+        .input('id', sql.BigInt, id)
         .query(`UPDATE Reports SET DeletedAt = GETDATE() WHERE ReportID = @id`);
-      
+
       res.json({ message: 'Report deleted successfully' });
     } catch (error) {
       console.error('Error deleting report:', error);
@@ -275,12 +275,12 @@ const reportController = {
   getReportStats: async (req, res) => {
     try {
       const pool = await poolPromise;
-      
+
       // Get total reports
       const totalResult = await pool.request().query(`
         SELECT COUNT(*) as total FROM Reports WHERE DeletedAt IS NULL
       `);
-      
+
       // Get reports by status
       const byStatusResult = await pool.request().query(`
         SELECT Status, COUNT(*) as count 
@@ -288,18 +288,18 @@ const reportController = {
         WHERE DeletedAt IS NULL 
         GROUP BY Status
       `);
-      
+
       // Format the data
       const byStatus = {
         PENDING: 0,
         RESOLVED: 0,
         REJECTED: 0
       };
-      
+
       byStatusResult.recordset.forEach(item => {
         byStatus[item.Status] = item.count;
       });
-      
+
       res.json({
         total: totalResult.recordset[0].total,
         pending: byStatus.PENDING || 0,
@@ -319,13 +319,13 @@ const reportController = {
     try {
       const { id } = req.params;
       const { notes } = req.body;
-      
+
       const pool = await poolPromise;
-      
+
       // Bắt đầu transaction
       const transaction = new sql.Transaction(pool);
       await transaction.begin();
-      
+
       try {
         // Lấy thông tin báo cáo
         const getReportQuery = `
@@ -333,7 +333,7 @@ const reportController = {
         `;
 
         const reportResult = await transaction.request()
-          .input('id', id)
+          .input('id', sql.BigInt, id)
           .query(getReportQuery);
 
         if (reportResult.recordset.length === 0) {
@@ -374,7 +374,7 @@ const reportController = {
         `;
 
         await transaction.request()
-          .input('id', id)
+          .input('id', sql.BigInt, id)
           .input('notes', sql.NVarChar, notes || 'Đã xóa nội dung vi phạm')
           .query(updateReportQuery);
 
@@ -401,13 +401,13 @@ const reportController = {
     try {
       const { id } = req.params;
       const { reason, notes } = req.body;
-      
+
       const pool = await poolPromise;
-      
+
       // Bắt đầu transaction
       const transaction = new sql.Transaction(pool);
       await transaction.begin();
-      
+
       try {
         // Lấy thông tin báo cáo
         const getReportQuery = `
@@ -415,7 +415,7 @@ const reportController = {
         `;
 
         const reportResult = await transaction.request()
-          .input('id', id)
+          .input('id', sql.BigInt, id)
           .query(getReportQuery);
 
         if (reportResult.recordset.length === 0) {
@@ -458,7 +458,7 @@ const reportController = {
         `;
 
         await transaction.request()
-          .input('id', id)
+          .input('id', sql.BigInt, id)
           .input('notes', sql.NVarChar, notes || `Đã gắn cờ vi phạm: ${reason || 'Vi phạm tiêu chuẩn cộng đồng'}`)
           .query(updateReportQuery);
 
@@ -484,7 +484,7 @@ const reportController = {
   exportReportsAsCsv: async (req, res) => {
     try {
       const { status, category, startDate, endDate } = req.query;
-      
+
       // Build the query
       let query = `
         SELECT 
@@ -506,26 +506,26 @@ const reportController = {
         LEFT JOIN Users u ON r.ReporterID = u.UserID
         WHERE r.DeletedAt IS NULL
       `;
-      
+
       // Add filters
       const whereConditions = [];
       const params = [];
-      
+
       if (status) {
         whereConditions.push(`r.Status = @status`);
         params.push({ name: 'status', value: status });
       }
-      
+
       if (category) {
         whereConditions.push(`r.Category = @category`);
         params.push({ name: 'category', value: category });
       }
-      
+
       if (startDate) {
         whereConditions.push(`r.CreatedAt >= @startDate`);
         params.push({ name: 'startDate', value: new Date(startDate) });
       }
-      
+
       if (endDate) {
         whereConditions.push(`r.CreatedAt <= @endDate`);
         // Add one day to include the entire end date
@@ -533,27 +533,27 @@ const reportController = {
         endDateTime.setDate(endDateTime.getDate() + 1);
         params.push({ name: 'endDate', value: endDateTime });
       }
-      
+
       // Apply filters
       if (whereConditions.length > 0) {
         const whereClause = whereConditions.join(' AND ');
         query += ` AND ${whereClause}`;
       }
-      
+
       // Add sorting
       query += ` ORDER BY r.CreatedAt DESC`;
-      
+
       // Execute query
       const pool = await poolPromise;
       const request = pool.request();
-      
+
       // Add parameters
       params.forEach(param => {
         request.input(param.name, param.value);
       });
-      
+
       const result = await request.query(query);
-      
+
       // Create CSV with Vietnamese headers
       const csvStringifier = createCsvStringifier({
         header: [
@@ -571,7 +571,7 @@ const reportController = {
           { id: 'ResolvedAt', title: 'Ngày xử lý' }
         ]
       });
-      
+
       const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(result.recordset);
       // Send CSV with UTF-8 BOM for proper Vietnamese encoding
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
@@ -587,7 +587,7 @@ const reportController = {
   getReportsByCategory: async (req, res) => {
     try {
       const pool = await poolPromise;
-      
+
       // Get reports grouped by category
       const result = await pool.request().query(`
         SELECT Category, COUNT(*) as count 
@@ -595,7 +595,7 @@ const reportController = {
         WHERE DeletedAt IS NULL 
         GROUP BY Category
       `);
-      
+
       res.json(result.recordset);
     } catch (error) {
       console.error('Error fetching reports by category:', error);
@@ -610,7 +610,7 @@ const reportController = {
       const pool = await poolPromise;
       // Lấy thông tin báo cáo
       const reportResult = await pool.request()
-        .input('id', id)
+        .input('id', sql.BigInt, id)
         .query(`
           SELECT * FROM Reports WHERE ReportID = @id AND DeletedAt IS NULL
         `);

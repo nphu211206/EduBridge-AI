@@ -100,7 +100,7 @@ const Pagination = ({
         </li>
         
         {/* Page numbers */}
-        {pageNumbers.map((pageNumber, index) => (
+        {pageNumbers?.map((pageNumber, index) => (
           <li key={index}>
             {pageNumber === '...' ? (
               <span className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300">

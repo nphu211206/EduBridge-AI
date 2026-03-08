@@ -83,7 +83,7 @@ export default function CompanyProfilePage() {
     // --- (PHẦN ĐÃ SỬA LỖI) ---
     // 1. Kiểm tra Loading
     if (isLoading) return <div className="bg-gray-900 min-h-screen flex items-center justify-center"><Spinner /></div>;
-    
+
     // 2. Kiểm tra lỗi (nếu API trả về lỗi)
     if (error) return <div className="bg-gray-900 min-h-screen flex items-center justify-center p-6"><ErrorMessage message={error} /></div>;
 
@@ -104,14 +104,14 @@ export default function CompanyProfilePage() {
     return (
         <>
             <Helmet>
-                <title>{`Tuyển dụng tại ${profile.name} | EduLedger AI`}</title>
+                <title>{`Tuyển dụng tại ${profile.name} | EduBridge AI`}</title>
                 <meta name="description" content={profile.tagline || `Khám phá các cơ hội việc làm tại ${profile.name}.`} />
             </Helmet>
             <div className="bg-gray-900 text-white min-h-screen">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="max-w-7xl mx-auto space-y-8">
                         <CompanyHeader profile={profile} />
-                        <CompanyStats profile={profile} jobCount={jobs.length} />
+                        <CompanyStats profile={profile} jobCount={jobs?.length} />
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Cột trái: Giới thiệu & Phúc lợi */}
@@ -135,11 +135,11 @@ export default function CompanyProfilePage() {
                             {/* Cột phải: Danh sách việc làm */}
                             <div className="lg:col-span-2">
                                 <h2 className="text-2xl font-bold text-white mb-6">Các vị trí đang tuyển dụng</h2>
-                                {jobs.length > 0 ? (
+                                {jobs?.length > 0 ? (
                                     <div className="space-y-6">
-                                        {jobs.map(job => (
-                                            <JobCard 
-                                                key={job.id} 
+                                        {jobs?.map(job => (
+                                            <JobCard
+                                                key={job.id}
                                                 job={{ ...job, company: { name: profile.name, logoUrl: profile.logoUrl } }}
                                                 onApplyClick={handleApplyClick}
                                                 isApplied={appliedJobs.has(job.id)}

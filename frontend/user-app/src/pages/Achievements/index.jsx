@@ -42,7 +42,7 @@ const Achievements = () => {
             const d = res.data;
             if (d?.data?.newBadges?.length > 0) {
                 setNewBadges(d.data.newBadges);
-                toast.success(`Chúc mừng! Bạn vượt ải và nhận ${d.data.newBadges.length} huy hiệu mới! 🎉`);
+                toast.success(`Chúc mừng! Bạn vượt ải và nhận ${d.data.newBadges?.length} huy hiệu mới! 🎉`);
                 fetchAchievements();
             } else {
                 toast.info('Bạn chưa có huy hiệu mới nào để nhận. Hãy cố gắng thêm nhé!');
@@ -115,7 +115,7 @@ const Achievements = () => {
 
             {/* Popup New Badges */}
             <AnimatePresence>
-                {newBadges.length > 0 && (
+                {newBadges?.length > 0 && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -125,9 +125,9 @@ const Achievements = () => {
                         <div className="bg-gradient-to-br from-amber-900/60 to-red-900/60 p-1 border border-amber-500/50 rounded-3xl shadow-[0_0_30px_rgba(245,158,11,0.2)]">
                             <div className="bg-slate-900/80 backdrop-blur-xl rounded-[22px] p-8 text-center relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500/20 via-transparent to-transparent pointer-events-none"></div>
-                                <h3 className="text-2xl font-bold text-white mb-6">🎉 Chúc mừng! Bạn vửa nhận {newBadges.length} huy hiệu mới!</h3>
+                                <h3 className="text-2xl font-bold text-white mb-6">🎉 Chúc mừng! Bạn vửa nhận {newBadges?.length} huy hiệu mới!</h3>
                                 <div className="flex flex-wrap justify-center gap-4">
-                                    {newBadges.map(b => (
+                                    {newBadges?.map(b => (
                                         <motion.div
                                             initial={{ rotate: -10, scale: 0 }}
                                             animate={{ rotate: 0, scale: 1 }}
@@ -151,14 +151,14 @@ const Achievements = () => {
                 // Skeleton Stats
                 <div className="space-y-12">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[1, 2, 3, 4].map(i => (
+                        {[1, 2, 3, 4]?.map(i => (
                             <div key={i} className="animate-pulse bg-slate-800/40 border border-slate-700/50 rounded-3xl p-6 h-36"></div>
                         ))}
                     </div>
                     <div>
                         <div className="h-8 bg-slate-800/50 rounded max-w-xs mb-6"></div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {[1, 2, 3, 4].map(i => (
+                            {[1, 2, 3, 4]?.map(i => (
                                 <div key={i} className="animate-pulse bg-slate-800/40 border border-slate-700/50 rounded-[2rem] h-64"></div>
                             ))}
                         </div>
@@ -202,7 +202,7 @@ const Achievements = () => {
                             animate="show"
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                         >
-                            {(data?.allBadges || []).map(badge => {
+                            {(data?.allBadges || [])?.map(badge => {
                                 const earned = data?.earned?.find(e => e.BadgeID === badge.BadgeID);
                                 const rarityClass = rarityColors[badge.Rarity] || rarityColors.Common;
                                 const badgeTagClass = rarityBadgeColors[badge.Rarity] || rarityBadgeColors.Common;

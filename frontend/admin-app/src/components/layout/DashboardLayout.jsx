@@ -7,17 +7,17 @@
 -----------------------------------------------------------------*/
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Box, 
+import {
+  Box,
   Drawer,
-  AppBar, 
-  Toolbar, 
-  List, 
-  Typography, 
-  Divider, 
-  IconButton, 
-  ListItem, 
-  ListItemIcon, 
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
   ListItemText,
   Avatar,
   Menu,
@@ -223,7 +223,7 @@ const DashboardLayout = ({ children }) => {
           <MarqueeText>
             <Box className="marquee-container">
               {/* Render quotes 2 lần để tạo hiệu ứng liên tục */}
-              {[...managementQuotes, ...managementQuotes].map((quote, index) => (
+              {[...managementQuotes, ...managementQuotes]?.map((quote, index) => (
                 <Typography
                   key={index}
                   className="marquee-item"
@@ -243,28 +243,28 @@ const DashboardLayout = ({ children }) => {
           </MarqueeText>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconButton 
-              color="default" 
+            <IconButton
+              color="default"
               onClick={toggleNotifications}
-              sx={{ 
-                '&:hover': { 
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1) 
-                } 
+              sx={{
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1)
+                }
               }}
             >
               <Badge badgeContent={3} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            
+
             <Tooltip title="Account settings">
               <IconButton
                 onClick={handleProfileMenuOpen}
                 size="small"
                 sx={{
                   ml: 1,
-                  '&:hover': { 
-                    backgroundColor: alpha(theme.palette.primary.main, 0.1) 
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.primary.main, 0.1)
                   }
                 }}
               >
@@ -299,19 +299,19 @@ const DashboardLayout = ({ children }) => {
           </Box>
         </Toolbar>
         <Divider />
-        
-        <List 
-          component="nav" 
-          sx={{ 
+
+        <List
+          component="nav"
+          sx={{
             px: 2,
             height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
             overflow: 'auto'
           }}
         >
-          {menuItems.map((item) => (
-            <ListItem 
-              key={item.text} 
-              disablePadding 
+          {menuItems?.map((item) => (
+            <ListItem
+              key={item.text}
+              disablePadding
               sx={{ display: 'block', mb: 0.5 }}
             >
               <ListItemButton
@@ -341,8 +341,8 @@ const DashboardLayout = ({ children }) => {
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText 
-                  primary={item.text} 
+                <ListItemText
+                  primary={item.text}
                   sx={{
                     color: location.pathname === item.path ? 'primary.main' : 'inherit',
                   }}
@@ -376,18 +376,14 @@ const DashboardLayout = ({ children }) => {
           },
         }}
       >
-        <MenuItem component={Link} to="/profile">
-          <ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon>
-          <ListItemText primary="My Profile" />
-        </MenuItem>
-        
+        {/* Profile page is not yet implemented for Admin */}
         <MenuItem component={Link} to="/settings">
           <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
           <ListItemText primary="Settings" />
         </MenuItem>
-        
+
         <Divider sx={{ borderStyle: 'dashed' }} />
-        
+
         <MenuItem onClick={handleLogout} sx={{ color: 'error.main' }}>
           <ListItemIcon sx={{ color: 'error.main' }}>
             <LogoutIcon fontSize="small" />
@@ -396,9 +392,9 @@ const DashboardLayout = ({ children }) => {
         </MenuItem>
       </Menu>
 
-      <NotificationsPanel 
-        open={notificationsOpen} 
-        onClose={() => setNotificationsOpen(false)} 
+      <NotificationsPanel
+        open={notificationsOpen}
+        onClose={() => setNotificationsOpen(false)}
       />
     </StyledRoot>
   );

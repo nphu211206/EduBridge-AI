@@ -42,7 +42,7 @@ const FAQ = () => {
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {faqs?.map((faq, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}

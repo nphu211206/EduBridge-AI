@@ -201,7 +201,7 @@ const EditExamPage = () => {
       await deleteQuestion(questionId);
       
       // Update questions list
-      const updatedQuestions = examData.questions.filter(q => q.QuestionID !== questionId);
+      const updatedQuestions = examData.questions?.filter(q => q.QuestionID !== questionId);
       setExamData({ ...examData, questions: updatedQuestions });
       
       setSuccess('Đã xóa câu hỏi thành công');
@@ -478,7 +478,7 @@ const EditExamPage = () => {
           </Typography>
           
           {examData.questions?.length > 0 ? (
-            examData.questions.map((question, index) => (
+            examData.questions?.map((question, index) => (
               <Accordion key={question.QuestionID || index}>
                 <AccordionSummary expandIcon={<ExpandMore />}>
                   <Typography>
@@ -498,7 +498,7 @@ const EditExamPage = () => {
                     <Box mt={2}>
                       <Typography gutterBottom><strong>Các lựa chọn:</strong></Typography>
                       <ul>
-                        {JSON.parse(question.Options).map((option, i) => (
+                        {JSON.parse(question.Options)?.map((option, i) => (
                           <li key={i}>{option}</li>
                         ))}
                       </ul>

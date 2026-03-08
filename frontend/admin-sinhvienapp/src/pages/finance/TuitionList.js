@@ -126,7 +126,7 @@ const TuitionList = () => {
       );
       if (response.success) {
         // Map API fields to UI fields
-        const list = (response.data || []).map(item => ({
+        const list = (response.data || [])?.map(item => ({
           id: item.TuitionID,
           studentCode: item.UserID,
           studentName: item.FullName,
@@ -138,7 +138,7 @@ const TuitionList = () => {
           status: item.Status
         }));
         setTuitionList(list);
-        setTotalTuition(response.pagination?.total || list.length);
+        setTotalTuition(response.pagination?.total || list?.length);
         // If in showAll mode, clear it after first load
         if (showAllList) {
           setShowAllList(false);
@@ -328,7 +328,7 @@ const TuitionList = () => {
                   label="Học kỳ"
                 >
                   <MenuItem value="">Tất cả</MenuItem>
-                  {semesters.map((sem) => (
+                  {semesters?.map((sem) => (
                     <MenuItem key={sem.id} value={sem.id}>
                       {sem.name}
                     </MenuItem>
@@ -389,14 +389,14 @@ const TuitionList = () => {
                       <CircularProgress />
                     </TableCell>
                   </TableRow>
-                ) : tuitionList.length === 0 ? (
+                ) : tuitionList?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={9} align="center" sx={{ py: 5 }}>
                       <Typography variant="body1">Không tìm thấy thông tin học phí nào</Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  tuitionList.map((tuition) => (
+                  tuitionList?.map((tuition) => (
                     <TableRow 
                       key={tuition.id} 
                       hover 

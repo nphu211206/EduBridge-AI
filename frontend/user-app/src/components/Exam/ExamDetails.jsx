@@ -648,7 +648,7 @@ const ExamDetails = () => {
                     </Typography>
                   )}
                   
-                  {exam.attempts && exam.attempts.length > 0 ? (
+                  {exam.attempts && exam.attempts?.length > 0 ? (
                     <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
                       <Table>
                         <TableHead>
@@ -660,9 +660,9 @@ const ExamDetails = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {exam.attempts.map((attempt, index) => (
+                          {exam.attempts?.map((attempt, index) => (
                             <TableRow key={attempt.ParticipantID}>
-                              <TableCell>{attempt.AttemptNumber || (exam.attempts.length - index)}</TableCell>
+                              <TableCell>{attempt.AttemptNumber || (exam.attempts?.length - index)}</TableCell>
                               <TableCell>{formatDateTime(attempt.StartedAt)}</TableCell>
                               <TableCell>
                                 {attempt.Score !== null && attempt.Score !== undefined ? (

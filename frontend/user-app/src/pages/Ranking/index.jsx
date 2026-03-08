@@ -108,7 +108,7 @@ const Ranking = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {rankings.map((item, index) => (
+              {rankings?.map((item, index) => (
                 <tr 
                   key={item.id} 
                   className={`${index < 3 ? 'bg-blue-50/50' : ''} ${user?.id === item.id ? 'bg-yellow-50' : ''}`}

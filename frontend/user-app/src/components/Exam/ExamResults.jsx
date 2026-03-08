@@ -121,7 +121,7 @@ const ExamResults = () => {
 
   // Deduplicate answers by QuestionID to ensure correct question count
   const uniqueAnswerMap = new Map();
-  answers.forEach(ans => {
+  answers?.forEach(ans => {
     if (ans && ans.QuestionID) {
       // Keep the first occurrence (or we could replace to keep latest)
       if (!uniqueAnswerMap.has(ans.QuestionID)) {
@@ -267,21 +267,21 @@ const ExamResults = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <School sx={{ mr: 1, color: 'primary.main' }} />
                   <Typography variant="body2">
-                    <strong>Số câu:</strong> {uniqueAnswers.length}
+                    <strong>Số câu:</strong> {uniqueAnswers?.length}
                   </Typography>
                 </Box>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CheckCircle sx={{ mr: 1, color: 'success.main' }} />
                   <Typography variant="body2">
-                    <strong>Câu trả lời đúng:</strong> {uniqueAnswers.filter(a => a.IsCorrect === 1).length}
+                    <strong>Câu trả lời đúng:</strong> {uniqueAnswers?.filter(a => a.IsCorrect === 1)?.length}
                   </Typography>
                 </Box>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Cancel sx={{ mr: 1, color: 'error.main' }} />
                   <Typography variant="body2">
-                    <strong>Câu trả lời sai:</strong> {uniqueAnswers.filter(a => a.IsCorrect === 0).length}
+                    <strong>Câu trả lời sai:</strong> {uniqueAnswers?.filter(a => a.IsCorrect === 0)?.length}
                   </Typography>
                 </Box>
                 

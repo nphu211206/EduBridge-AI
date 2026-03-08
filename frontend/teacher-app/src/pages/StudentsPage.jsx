@@ -67,7 +67,7 @@ const StudentsPage = () => {
   // Toggle student selection
   const toggleStudentSelection = (student) => {
     if (selectedStudents.some(s => s.UserID === student.UserID)) {
-      setSelectedStudents(selectedStudents.filter(s => s.UserID !== student.UserID));
+      setSelectedStudents(selectedStudents?.filter(s => s.UserID !== student.UserID));
     } else {
       setSelectedStudents([...selectedStudents, student]);
     }
@@ -96,13 +96,13 @@ const StudentsPage = () => {
           <h1 className="text-2xl font-bold text-gray-800">Quản lý học viên</h1>
         </div>
         
-        {selectedStudents.length > 0 && (
+        {selectedStudents?.length > 0 && (
           <button
             onClick={() => setShowNotification(true)}
             className="btn btn-primary flex items-center"
           >
             <BellIcon className="w-5 h-5 mr-2" />
-            Gửi thông báo ({selectedStudents.length})
+            Gửi thông báo ({selectedStudents?.length})
           </button>
         )}
       </div>

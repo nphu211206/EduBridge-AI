@@ -357,9 +357,9 @@ const EventDetail = () => {
           {activeTab === 'schedule' && (
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-semibold mb-4">Lịch trình</h2>
-              {event.schedule && event.schedule.length > 0 ? (
+              {event.schedule && event.schedule?.length > 0 ? (
                 <div className="space-y-4">
-                  {event.schedule.map((item, index) => (
+                  {event.schedule?.map((item, index) => (
                     <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
                       <ClockIcon className="h-6 w-6 text-gray-500 mt-1" />
                       <div>
@@ -383,9 +383,9 @@ const EventDetail = () => {
           {activeTab === 'prizes' && (
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-semibold mb-4">Giải thưởng</h2>
-              {event.prizes && event.prizes.length > 0 ? (
+              {event.prizes && event.prizes?.length > 0 ? (
                 <div className="space-y-4">
-                  {event.prizes.map((prize, index) => (
+                  {event.prizes?.map((prize, index) => (
                     <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
                       <TrophyIcon className="h-6 w-6 text-yellow-500 mt-1" />
                       <div>
@@ -415,9 +415,9 @@ const EventDetail = () => {
                   Ngôn ngữ lập trình
                 </h3>
                 
-                {event.languages && event.languages.length > 0 ? (
+                {event.languages && event.languages?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {event.languages.map((lang, index) => (
+                    {event.languages?.map((lang, index) => (
                       <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                         {lang.Language}
                       </span>
@@ -434,9 +434,9 @@ const EventDetail = () => {
                   Công nghệ sử dụng
                 </h3>
                 
-                {event.technologies && event.technologies.length > 0 ? (
+                {event.technologies && event.technologies?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {event.technologies.map((tech, index) => (
+                    {event.technologies?.map((tech, index) => (
                       <span key={index} className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
                         {tech.Technology}
                       </span>

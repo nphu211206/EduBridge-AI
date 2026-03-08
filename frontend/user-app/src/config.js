@@ -6,12 +6,12 @@
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
 // API configuration
-export const API_URL = 'http://localhost:5001';
-export const CAREER_API_URL = 'http://localhost:3800';
-export const PORTFOLIO_API_URL = 'http://localhost:3900';
+export const API_URL = 'http://127.0.0.1:5001';
+export const CAREER_API_URL = 'http://127.0.0.1:3800';
+export const PORTFOLIO_API_URL = 'http://127.0.0.1:3900';
 
 // Socket.IO configuration
-export const SOCKET_URL = 'http://localhost:5001';
+export const SOCKET_URL = 'http://127.0.0.1:5001';
 
 // Other app configuration
 export const APP_CONFIG = {

@@ -104,7 +104,7 @@ export const ThemeProvider = ({ children }) => {
     }
 
     const cssVariables = generateCSSVariables(colors);
-    Object.entries(cssVariables).forEach(([property, value]) => {
+    Object.entries(cssVariables)?.forEach(([property, value]) => {
       document.documentElement.style.setProperty(property, value);
     });
 

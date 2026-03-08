@@ -243,11 +243,11 @@ const EssayQuestionForm = ({ examId, questionId, onSaveSuccess }) => {
           
           <Grid item xs={12}>
             <Typography variant="subtitle2" gutterBottom>
-              Danh sách từ khóa ({essayData.keywords.length})
+              Danh sách từ khóa ({essayData.keywords?.length})
             </Typography>
-            {essayData.keywords.length > 0 ? (
+            {essayData.keywords?.length > 0 ? (
               <List dense sx={{ bgcolor: 'background.paper', borderRadius: 1 }}>
-                {essayData.keywords.map((keyword, index) => (
+                {essayData.keywords?.map((keyword, index) => (
                   <ListItem 
                     key={index}
                     secondaryAction={

@@ -46,7 +46,7 @@ const ResetPassword = () => {
 
   const validatePassword = (password) => {
     // Password must be at least 8 characters with at least 1 uppercase, 1 lowercase, and 1 number
-    const minLength = password.length >= 8;
+    const minLength = password?.length >= 8;
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
     const hasNumber = /\d/.test(password);
@@ -57,7 +57,7 @@ const ResetPassword = () => {
     if (!hasLowercase) errors.hasLowercase = 'Mật khẩu phải có ít nhất 1 chữ thường';
     if (!hasNumber) errors.hasNumber = 'Mật khẩu phải có ít nhất 1 chữ số';
     
-    return { isValid: Object.keys(errors).length === 0, errors };
+    return { isValid: Object.keys(errors)?.length === 0, errors };
   };
   
   const handlePasswordChange = (e) => {
@@ -122,7 +122,7 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       // Get API URL from environment
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
       
       const response = await fetch(`${apiUrl}/api/auth/reset-password`, {
         method: 'POST',

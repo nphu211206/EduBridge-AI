@@ -8,7 +8,7 @@
 import axios from 'axios';
 
 const teacherApi = axios.create({
-  baseURL: 'http://localhost:5003/api/v1',
+  baseURL: 'http://127.0.0.1:5003/api/v1',
   timeout: 10000
 });
 

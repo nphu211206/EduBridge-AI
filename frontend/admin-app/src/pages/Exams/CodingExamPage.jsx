@@ -122,7 +122,7 @@ const CodingExamPage = () => {
   };
 
   const removeTestCase = (index) => {
-    if (currentQuestion.codingExercise.testCases.length <= 1) {
+    if (currentQuestion.codingExercise.testCases?.length <= 1) {
       setError('Cần có ít nhất một test case');
       return;
     }
@@ -160,7 +160,7 @@ const CodingExamPage = () => {
       type: 'coding',
       content: '',
       points: 10,
-      orderIndex: questions.length + 2,
+      orderIndex: questions?.length + 2,
       codingExercise: {
         programmingLanguage: 'javascript',
         initialCode: '',
@@ -206,7 +206,7 @@ const CodingExamPage = () => {
       handleCreateExam();
     } else if (activeStep === 1) {
       // Validate questions
-      if (questions.length === 0) {
+      if (questions?.length === 0) {
         setError('Vui lòng thêm ít nhất một câu hỏi');
         return;
       }
@@ -365,7 +365,7 @@ const CodingExamPage = () => {
         </Box>
         
         <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-          {steps.map((label) => (
+          {steps?.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
@@ -449,7 +449,7 @@ const CodingExamPage = () => {
                     margin="normal"
                   >
                     <MenuItem value="">Không thuộc khóa học</MenuItem>
-                    {courses.map((course) => (
+                    {courses?.map((course) => (
                       <MenuItem key={course.CourseID} value={course.CourseID}>
                         {course.Title}
                       </MenuItem>
@@ -592,12 +592,12 @@ const CodingExamPage = () => {
               </Typography>
               
               {/* Danh sách câu hỏi đã thêm */}
-              {questions.length > 0 && (
+              {questions?.length > 0 && (
                 <Box mb={4}>
                   <Typography variant="subtitle1" gutterBottom>
-                    Câu hỏi đã thêm: {questions.length}
+                    Câu hỏi đã thêm: {questions?.length}
                   </Typography>
-                  {questions.map((question, index) => (
+                  {questions?.map((question, index) => (
                     <Accordion key={question.id || index}>
                       <AccordionSummary expandIcon={<ExpandMore />}>
                         <Typography>
@@ -620,7 +620,7 @@ const CodingExamPage = () => {
                         </Typography>
                         
                         <Typography gutterBottom>
-                          <strong>Số lượng test cases:</strong> {question.codingExercise.testCases.length}
+                          <strong>Số lượng test cases:</strong> {question.codingExercise.testCases?.length}
                         </Typography>
                         
                         <Box mt={2} display="flex" justifyContent="flex-end">
@@ -772,7 +772,7 @@ const CodingExamPage = () => {
                       Test Cases
                     </Typography>
                     
-                    {currentQuestion.codingExercise.testCases.map((testCase, index) => (
+                    {currentQuestion.codingExercise.testCases?.map((testCase, index) => (
                       <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2 }}>
                         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                           <Typography variant="subtitle2">
@@ -781,7 +781,7 @@ const CodingExamPage = () => {
                           <IconButton 
                             color="error" 
                             onClick={() => removeTestCase(index)}
-                            disabled={currentQuestion.codingExercise.testCases.length <= 1}
+                            disabled={currentQuestion.codingExercise.testCases?.length <= 1}
                           >
                             <Delete />
                           </IconButton>
@@ -914,10 +914,10 @@ const CodingExamPage = () => {
               </Card>
               
               <Typography variant="h6" gutterBottom>
-                Bài tập lập trình ({questions.length})
+                Bài tập lập trình ({questions?.length})
               </Typography>
               
-              {questions.map((question, index) => (
+              {questions?.map((question, index) => (
                 <Card key={index} variant="outlined" sx={{ mb: 2 }}>
                   <CardContent>
                     <Typography variant="subtitle1">
@@ -947,7 +947,7 @@ const CodingExamPage = () => {
                         
                         <Grid item xs={12} sm={4}>
                           <Typography variant="body2">
-                            <strong>Test cases:</strong> {question.codingExercise.testCases.length}
+                            <strong>Test cases:</strong> {question.codingExercise.testCases?.length}
                           </Typography>
                         </Grid>
                         
@@ -971,7 +971,7 @@ const CodingExamPage = () => {
                           </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          {question.codingExercise.testCases.map((testCase, tcIndex) => (
+                          {question.codingExercise.testCases?.map((testCase, tcIndex) => (
                             <Box key={tcIndex} sx={{ mb: 2, p: 1, border: '1px solid #eee', borderRadius: 1 }}>
                               <Typography variant="body2">
                                 <strong>Test #{tcIndex + 1}:</strong> {testCase.description || 'Không có mô tả'}
@@ -1014,13 +1014,13 @@ const CodingExamPage = () => {
               variant="contained"
               color="primary"
               onClick={handleNext}
-              endIcon={activeStep === steps.length - 1 ? <Save /> : <ArrowForward />}
+              endIcon={activeStep === steps?.length - 1 ? <Save /> : <ArrowForward />}
               disabled={loading}
             >
               {loading ? (
                 <CircularProgress size={24} />
               ) : (
-                activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'
+                activeStep === steps?.length - 1 ? 'Hoàn thành' : 'Tiếp tục'
               )}
             </Button>
           </Box>

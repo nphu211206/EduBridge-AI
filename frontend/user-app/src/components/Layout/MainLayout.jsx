@@ -139,12 +139,12 @@ const MainLayout = ({ children }) => {
   useEffect(() => {
     const loadUserData = () => {
       // Priority: AuthContext currentUser > Redux authUser > localStorage
-      if (contextUser && Object.keys(contextUser).length > 0) {
+      if (contextUser && Object.keys(contextUser)?.length > 0) {
         console.log('Setting current user from AuthContext:', contextUser);
         setCurrentUser(contextUser);
         // Update Redux store to keep in sync
         dispatch(updateProfileImage(contextUser.avatar || contextUser.profileImage || contextUser.Image));
-      } else if (authUser && Object.keys(authUser).length > 0) {
+      } else if (authUser && Object.keys(authUser)?.length > 0) {
         console.log('Setting current user from Redux state:', authUser);
         setCurrentUser(authUser);
       } else {
@@ -155,7 +155,7 @@ const MainLayout = ({ children }) => {
             console.log('Setting current user from localStorage:', userData);
             setCurrentUser(userData);
             // If we have user data in localStorage but not in Redux, update Redux too
-            if (!authUser || Object.keys(authUser).length === 0) {
+            if (!authUser || Object.keys(authUser)?.length === 0) {
               dispatch(updateProfileImage(userData.profileImage || userData.avatar || userData.Image));
             }
           } catch (error) {
@@ -274,7 +274,7 @@ const MainLayout = ({ children }) => {
     }
 
     // If search query is too short, clear results
-    if (searchQuery.trim().length < SEARCH_CONFIG.minSearchLength) {
+    if (searchQuery.trim()?.length < SEARCH_CONFIG.minSearchLength) {
       setSearchData({
         users: [],
         posts: [],
@@ -320,7 +320,7 @@ const MainLayout = ({ children }) => {
     if (searchCacheRef.current.size > 50) {
       const entries = Array.from(searchCacheRef.current.entries());
       entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-      entries.slice(0, 10).forEach(([key]) => {
+      entries.slice(0, 10)?.forEach(([key]) => {
         searchCacheRef.current.delete(key);
       });
     }
@@ -331,7 +331,7 @@ const MainLayout = ({ children }) => {
     activeSearchesRef.current.clear();
 
     // Abort all active requests
-    searchAbortControllerRef.current.forEach(controller => {
+    searchAbortControllerRef.current?.forEach(controller => {
       controller.abort();
     });
     searchAbortControllerRef.current.clear();
@@ -417,7 +417,7 @@ const MainLayout = ({ children }) => {
       }));
       setShowResults(true);
 
-      console.log(`✅ Search completed: ${searchKey}, Results: ${result.length}`);
+      console.log(`✅ Search completed: ${searchKey}, Results: ${result?.length}`);
 
     } catch (error) {
       console.error(`❌ Search failed: ${searchKey}`, error);
@@ -460,7 +460,7 @@ const MainLayout = ({ children }) => {
   };
 
   const executeSearch = async (query, type, searchKey) => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
 
     // Create abort controller for this search
     const abortController = new AbortController();
@@ -531,7 +531,7 @@ const MainLayout = ({ children }) => {
   };
 
   const executeAlternativeSearch = async (query, type, signal) => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
 
     let endpoint = '';
     let dataKey = '';
@@ -577,7 +577,7 @@ const MainLayout = ({ children }) => {
 
     const searchTerm = query.toLowerCase().trim();
 
-    return items.filter(item => {
+    return items?.filter(item => {
       switch (type) {
         case 'posts':
           return (
@@ -655,12 +655,12 @@ const MainLayout = ({ children }) => {
     }
 
     // Tránh loading state nếu đã có dữ liệu
-    if (notifications.length === 0) {
+    if (notifications?.length === 0) {
       setIsLoadingNotifications(true);
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
       console.log(`[Notifications] Fetching notifications, isAdmin: ${isAdminUser}`);
 
       // Gọi API lấy thông báo
@@ -678,7 +678,7 @@ const MainLayout = ({ children }) => {
       setNotifications(data.notifications || []);
 
       // Đếm số thông báo chưa đọc
-      const unread = (data.notifications || []).filter(notification => !notification.IsRead).length;
+      const unread = (data.notifications || [])?.filter(notification => !notification.IsRead)?.length;
       setUnreadCount(unread);
 
       // Đánh dấu đã fetch ban đầu
@@ -786,7 +786,7 @@ const MainLayout = ({ children }) => {
   // Xử lý đánh dấu đã đọc thông báo
   const markNotificationAsRead = async (notificationId) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
 
       await fetch(`${apiUrl}/api/notifications/${notificationId}/read`, {
         method: 'PUT',
@@ -796,7 +796,7 @@ const MainLayout = ({ children }) => {
       });
 
       // Cập nhật state
-      setNotifications(notifications.map(notification =>
+      setNotifications(notifications?.map(notification =>
         notification.NotificationID === notificationId
           ? { ...notification, IsRead: true }
           : notification
@@ -812,7 +812,7 @@ const MainLayout = ({ children }) => {
   // Xử lý đánh dấu đã đọc tất cả thông báo
   const markAllAsRead = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
 
       await fetch(`${apiUrl}/api/notifications/read-all`, {
         method: 'PUT',
@@ -822,7 +822,7 @@ const MainLayout = ({ children }) => {
       });
 
       // Cập nhật state
-      setNotifications(notifications.map(notification => ({ ...notification, IsRead: true })));
+      setNotifications(notifications?.map(notification => ({ ...notification, IsRead: true })));
       setUnreadCount(0);
     } catch (error) {
       console.error('Lỗi khi đánh dấu đã đọc tất cả:', error);
@@ -1000,7 +1000,7 @@ const MainLayout = ({ children }) => {
                   {/* Main Nav Links - Show in header when header navigation is enabled */}
                   {isHeaderNavigation && (
                     <nav className="hidden lg:flex items-center flex-nowrap space-x-3 md:space-x-4 lg:space-x-6 ml-2 md:ml-4 max-w-full">
-                      {navigation.filter(nav => !['/profile', '/settings', '/exams', '/competitions', '/chat', '/friends', '/reports', '/ai-chat', '/ai-test-local'].includes(nav.href)).map((item) => {
+                      {navigation?.filter(nav => !['/profile', '/settings', '/exams', '/competitions', '/chat', '/friends', '/reports', '/ai-chat', '/ai-test-local'].includes(nav.href))?.map((item) => {
                         const isActive = item.external ? false : (location.pathname === item.href || (item.href !== '/home' && location.pathname.startsWith(item.href)));
                         const Icon = item.icon;
 
@@ -1312,7 +1312,7 @@ const MainLayout = ({ children }) => {
                       { key: 'posts', label: 'Bài viết', icon: ChatBubbleLeftRightIcon },
                       { key: 'courses', label: 'Khóa học', icon: BookOpenIcon },
                       { key: 'events', label: 'Sự kiện', icon: CalendarIcon }
-                    ].map(({ key, label, icon: Icon }) => (
+                    ]?.map(({ key, label, icon: Icon }) => (
                       <button
                         key={`search-tab-${key}`}
                         onClick={() => setSearchType(key)}
@@ -1336,7 +1336,7 @@ const MainLayout = ({ children }) => {
                       </div>
                     ) : searchData[searchType]?.length > 0 ? (
                       <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                        {searchData[searchType].map((item, index) => {
+                        {searchData[searchType]?.map((item, index) => {
                           // Generate unique key based on search type and item properties
                           const getItemKey = () => {
                             if (searchType === 'users') return `user-${item.UserID || item.id || index}`;
@@ -1429,7 +1429,7 @@ const MainLayout = ({ children }) => {
                           );
                         })}
                       </div>
-                    ) : searchQuery.length >= 2 ? (
+                    ) : searchQuery?.length >= 2 ? (
                       <div className="py-12 text-center">
                         <div className="bg-theme-accent/50 dark:bg-theme-accent/20 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4">
                           <MagnifyingGlassIcon className="h-8 w-8 text-theme-secondary" />
@@ -1513,9 +1513,9 @@ const MainLayout = ({ children }) => {
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-theme-primary mx-auto"></div>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Đang tải thông báo...</p>
                       </div>
-                    ) : notifications.length > 0 ? (
+                    ) : notifications?.length > 0 ? (
                       <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                        {notifications.map((notification) => {
+                        {notifications?.map((notification) => {
                           const NotificationIcon = getNotificationIcon(notification.Type);
                           return (
                             <div
@@ -1601,7 +1601,7 @@ const MainLayout = ({ children }) => {
               {/* Navigation Menu */}
               <div className="flex-1 overflow-y-auto p-4">
                 <nav className="space-y-2">
-                  {navigation.map((item) => {
+                  {navigation?.map((item) => {
                     const isActive = item.external ? false : (location.pathname === item.href ||
                       (item.href !== '/home' && location.pathname.startsWith(item.href)));
                     const Icon = item.icon;
@@ -1932,7 +1932,7 @@ const MainLayout = ({ children }) => {
               {/* Mobile Menu Items */}
               <div className="flex-1 overflow-y-auto p-2">
                 <div className="space-y-1">
-                  {navigation.map((item) => {
+                  {navigation?.map((item) => {
                     const isActive = item.external ? false : (location.pathname === item.href ||
                       (item.href !== '/home' && location.pathname.startsWith(item.href)));
                     const Icon = item.icon;

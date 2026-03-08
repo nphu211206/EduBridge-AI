@@ -99,7 +99,7 @@ const PaymentHistory = () => {
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-8">Lịch sử thanh toán</h1>
       
-      {payments.length === 0 ? (
+      {payments?.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
           <h2 className="text-xl font-medium text-gray-700 mb-4">Bạn chưa có giao dịch nào</h2>
           <p className="text-gray-600 mb-6">Hãy khám phá và đăng ký các khóa học của chúng tôi</p>
@@ -139,7 +139,7 @@ const PaymentHistory = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {payments.map((payment) => (
+              {payments?.map((payment) => (
                 <tr key={payment.TransactionID} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {payment.TransactionCode}

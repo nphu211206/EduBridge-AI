@@ -5,8 +5,8 @@
 * Description: This file is part of the student admin backend service.
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
-// Load environment variables
-require('dotenv').config();
+// Load environment variables from project root
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 const express = require('express');
 const cors = require('cors');
@@ -16,17 +16,24 @@ const morgan = require('morgan');
 // Import routes
 const authRoutes = require('./routes/auth');
 const studentsRoutes = require('./src/routes/students');
-const usersRoutes = require('./src/routes/users'); // Import users routes from src/routes
-const academicRoutes = require('./src/routes/academic'); // Update to use src/routes
+const usersRoutes = require('./src/routes/users');
+const academicRoutes = require('./src/routes/academic');
 const financeRoutes = require('./routes/finance');
-const servicesRoutes = require('./routes/services'); // Import new services routes
+const servicesRoutes = require('./routes/services');
 
 // Initialize express app
 const app = express();
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+    : '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));

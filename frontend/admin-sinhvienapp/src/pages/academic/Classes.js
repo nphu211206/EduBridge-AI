@@ -76,7 +76,7 @@ function Classes() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {classes.map((cls) => (
+              {classes?.map((cls) => (
                 <TableRow key={cls.ClassID} hover>
                   <TableCell>{cls.ClassCode}</TableCell>
                   <TableCell>{cls.SubjectName}</TableCell>

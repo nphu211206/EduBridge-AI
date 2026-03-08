@@ -9,7 +9,7 @@ const AuthGraphicPanel = () => (
     <div className="hidden lg:flex flex-col items-center justify-center bg-gray-800 p-12 text-white text-center">
         <h1 className="text-4xl font-bold">
             <span className="text-blue-400">Edu</span>
-            <span className="text-purple-400">Ledger</span> AI
+            <span className="text-purple-400">Bridge</span> AI
         </h1>
         <p className="mt-4 text-lg text-gray-300">Gia nhập cộng đồng tài năng công nghệ.</p>
         <p className="mt-2 text-gray-400">Nơi dự án của bạn là bản CV mạnh mẽ nhất.</p>
@@ -56,12 +56,12 @@ export default function StudentLoginPage() {
 
                     <div className="mt-6 text-center text-sm">
                         <p className="text-gray-500">
-                            Bằng việc đăng nhập, bạn đồng ý cho phép EduLedger AI truy cập vào các dự án public trên tài khoản GitHub của bạn.
+                            Bằng việc đăng nhập, bạn đồng ý cho phép EduBridge AI truy cập vào các dự án public trên tài khoản GitHub của bạn.
                         </p>
                     </div>
 
                     <div className="mt-8 border-t border-gray-700 pt-6 text-center">
-                         <Link to="/recruiter/login" className="text-sm font-medium text-blue-400 hover:text-blue-300">
+                        <Link to="/recruiter/login" className="text-sm font-medium text-blue-400 hover:text-blue-300">
                             Bạn là Nhà tuyển dụng?
                         </Link>
                     </div>

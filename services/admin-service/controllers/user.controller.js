@@ -17,13 +17,13 @@ const userController = {
       const result = await pool.request()
         .query(`
           SELECT UserID, Username, Email, FullName,
-                 Role, Status, AccountStatus, School,
+                 Role, Status, AccountStatus, School, Bio,
                  CreatedAt, LastLoginAt
           FROM Users
           WHERE DeletedAt IS NULL
           ORDER BY CreatedAt DESC
         `);
-      
+
       // Đếm tổng số người dùng
       const countResult = await pool.request()
         .query(`
@@ -31,7 +31,7 @@ const userController = {
           FROM Users
           WHERE DeletedAt IS NULL
         `);
-      
+
       // Trả về dữ liệu theo định dạng mà frontend yêu cầu
       res.json({
         users: result.recordset,
@@ -159,24 +159,39 @@ const userController = {
       const { id } = req.params;
       const { duration, reason } = req.body;
 
-      // Calculate locked until date based on duration (in hours)
-      const lockedUntil = duration === -1 ? null : new Date(Date.now() + duration * 60 * 60 * 1000);
-
       const pool = await poolPromise;
-      await pool.request()
-        .input('userId', sql.BigInt, id)
-        .input('duration', sql.Int, duration)
-        .input('reason', sql.NVarChar(255), reason)
-        .input('lockedUntil', sql.DateTime, lockedUntil)
-        .query(`
-          UPDATE Users
-          SET AccountStatus = 'LOCKED',
-              LockDuration = @duration,
-              LockReason = @reason,
-              LockedUntil = @lockedUntil,
-              UpdatedAt = GETDATE()
-          WHERE UserID = @userId AND DeletedAt IS NULL
-        `);
+
+      // Try to update with all lock columns, fall back to just AccountStatus
+      try {
+        // Calculate locked until date based on duration (in hours)
+        const lockedUntil = duration === -1 ? null : new Date(Date.now() + duration * 60 * 60 * 1000);
+
+        await pool.request()
+          .input('userId', sql.BigInt, id)
+          .input('duration', sql.Int, duration)
+          .input('reason', sql.NVarChar(255), reason)
+          .input('lockedUntil', sql.DateTime, lockedUntil)
+          .query(`
+            UPDATE Users
+            SET AccountStatus = 'LOCKED',
+                LockDuration = @duration,
+                LockReason = @reason,
+                LockedUntil = @lockedUntil,
+                UpdatedAt = GETDATE()
+            WHERE UserID = @userId AND DeletedAt IS NULL
+          `);
+      } catch (columnError) {
+        // If LockDuration/LockReason/LockedUntil columns don't exist, just update AccountStatus
+        console.warn('Lock columns may not exist, falling back to simple lock:', columnError.message);
+        await pool.request()
+          .input('userId', sql.BigInt, id)
+          .query(`
+            UPDATE Users
+            SET AccountStatus = 'LOCKED',
+                UpdatedAt = GETDATE()
+            WHERE UserID = @userId AND DeletedAt IS NULL
+          `);
+      }
 
       res.json({ message: 'User account locked successfully' });
     } catch (error) {
@@ -190,17 +205,31 @@ const userController = {
     try {
       const { id } = req.params;
       const pool = await poolPromise;
-      await pool.request()
-        .input('userId', sql.BigInt, id)
-        .query(`
-          UPDATE Users
-          SET AccountStatus = 'ACTIVE',
-              LockDuration = NULL,
-              LockReason = NULL,
-              LockedUntil = NULL,
-              UpdatedAt = GETDATE()
-          WHERE UserID = @userId AND DeletedAt IS NULL
-        `);
+
+      try {
+        await pool.request()
+          .input('userId', sql.BigInt, id)
+          .query(`
+            UPDATE Users
+            SET AccountStatus = 'ACTIVE',
+                LockDuration = NULL,
+                LockReason = NULL,
+                LockedUntil = NULL,
+                UpdatedAt = GETDATE()
+            WHERE UserID = @userId AND DeletedAt IS NULL
+          `);
+      } catch (columnError) {
+        // Fallback if lock columns don't exist
+        console.warn('Lock columns may not exist, falling back to simple unlock:', columnError.message);
+        await pool.request()
+          .input('userId', sql.BigInt, id)
+          .query(`
+            UPDATE Users
+            SET AccountStatus = 'ACTIVE',
+                UpdatedAt = GETDATE()
+            WHERE UserID = @userId AND DeletedAt IS NULL
+          `);
+      }
 
       res.json({ message: 'User account unlocked successfully' });
     } catch (error) {
@@ -213,14 +242,14 @@ const userController = {
   resetUserPassword: async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       // Generate a secure random password (12 characters)
       const newPassword = crypto.randomBytes(6).toString('hex');
-      
+
       // Hash the password with bcrypt
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-      
+
       const pool = await poolPromise;
       await pool.request()
         .input('userId', sql.BigInt, id)
@@ -233,8 +262,8 @@ const userController = {
         `);
 
       // Return the new plain text password to be shown to the admin
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         message: 'Password reset successfully',
         newPassword: newPassword
       });

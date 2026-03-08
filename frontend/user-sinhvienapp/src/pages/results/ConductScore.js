@@ -148,7 +148,7 @@ const ConductScore = () => {
 
   useEffect(() => {
     // Set default semester to the first one (current semester)
-    if (conductData.semesters.length > 0) {
+    if (conductData.semesters?.length > 0) {
       const currentSemester = conductData.semesters[0];
       setSelectedSemester(currentSemester);
       setCurrentScore(conductData.scores[currentSemester]);
@@ -284,7 +284,7 @@ const ConductScore = () => {
             onChange={handleSemesterChange}
             label="Học kỳ"
           >
-            {conductData.semesters.map((semester) => (
+            {conductData.semesters?.map((semester) => (
               <MenuItem key={semester} value={semester}>
                 {semester}
               </MenuItem>
@@ -330,7 +330,7 @@ const ConductScore = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {currentScore.details.map((item) => (
+                  {currentScore.details?.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.category}</TableCell>
                       <TableCell align="center">{item.maxScore}</TableCell>

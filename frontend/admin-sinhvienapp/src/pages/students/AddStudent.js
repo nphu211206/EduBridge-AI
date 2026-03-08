@@ -604,7 +604,7 @@ Jane,Smith,jane.smith@example.com,0901234568,2001-02-15,Nữ,456 Elm St,SV002,2`
                                   {loading ? (
                                     <MenuItem disabled>Đang tải...</MenuItem>
                                   ) : (
-                                    programs.map(program => (
+                                    programs?.map(program => (
                                       <MenuItem key={program.id || program.ProgramID} value={program.id || program.ProgramID}>
                                         {program.name || program.ProgramName}
                                       </MenuItem>
@@ -851,7 +851,7 @@ Jane,Smith,jane.smith@example.com,0901234568,2001-02-15,Nữ,456 Elm St,SV002,2`
                           <Typography variant="subtitle2" color="error" gutterBottom>
                             Lỗi:
                           </Typography>
-                          {uploadResults.errors.map((error, index) => (
+                          {uploadResults.errors?.map((error, index) => (
                             <Typography key={index} variant="body2" color="error" sx={{ mb: 0.5 }}>
                               • Dòng {error.row}: {error.message}
                             </Typography>

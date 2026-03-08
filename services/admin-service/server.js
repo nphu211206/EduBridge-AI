@@ -16,7 +16,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 
 const { enableCORS } = require('./middleware/auth');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -25,7 +25,9 @@ const PORT = process.env.PORT || 5002;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: ['http://localhost:5005', 'http://127.0.0.1:5005'],
+  origin: process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+    : ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'Cache-Control']
@@ -39,7 +41,7 @@ app.use(enableCORS);
 // File upload middleware
 app.use(fileUpload({
   createParentPath: true,
-  limits: { 
+  limits: {
     fileSize: 10 * 1024 * 1024 // 10MB max file size
   },
   abortOnLimit: true,
@@ -104,9 +106,9 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error('Server Error:', err);
-  res.status(500).json({ 
-    message: 'Internal server error', 
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined 
+  res.status(500).json({
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 

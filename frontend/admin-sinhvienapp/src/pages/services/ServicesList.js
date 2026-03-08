@@ -83,7 +83,7 @@ const ServicesList = () => {
     if (searchTerm.trim() === '') {
       setFilteredServices(services);
     } else {
-      const filtered = services.filter(service => 
+      const filtered = services?.filter(service => 
         service.ServiceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (service.Department && service.Department.toLowerCase().includes(searchTerm.toLowerCase()))
       );
@@ -205,7 +205,7 @@ const ServicesList = () => {
                       </Typography>
                     </TableCell>
                   </TableRow>
-                ) : filteredServices.length === 0 ? (
+                ) : filteredServices?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
                       <Typography variant="body1">
@@ -214,7 +214,7 @@ const ServicesList = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredServices.map((service) => (
+                  filteredServices?.map((service) => (
                     <TableRow key={service.ServiceID}>
                       <TableCell>
                         <Typography variant="body1" fontWeight="medium">

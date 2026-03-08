@@ -95,7 +95,7 @@ const ServiceRequests = () => {
         Cancelled: 0
       };
       
-      response.forEach(req => {
+      response?.forEach(req => {
         if (counts[req.Status] !== undefined) {
           counts[req.Status]++;
         }
@@ -130,7 +130,7 @@ const ServiceRequests = () => {
     if (searchTerm.trim() === '') {
       setFilteredRequests(requests);
     } else {
-      const filtered = requests.filter(request => 
+      const filtered = requests?.filter(request => 
         (request.StudentName && request.StudentName.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (request.ServiceName && request.ServiceName.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (request.Email && request.Email.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -245,7 +245,7 @@ const ServiceRequests = () => {
         >
           <Tab 
             label="Tất cả" 
-            icon={<Badge badgeContent={requests.length} color="primary" showZero></Badge>}
+            icon={<Badge badgeContent={requests?.length} color="primary" showZero></Badge>}
             iconPosition="end"
           />
           <Tab 
@@ -308,7 +308,7 @@ const ServiceRequests = () => {
                       label="Dịch vụ"
                     >
                       <MenuItem value="">Tất cả dịch vụ</MenuItem>
-                      {services.map((service) => (
+                      {services?.map((service) => (
                         <MenuItem key={service.ServiceID} value={service.ServiceID}>
                           {service.ServiceName}
                         </MenuItem>
@@ -376,7 +376,7 @@ const ServiceRequests = () => {
                       </Typography>
                     </TableCell>
                   </TableRow>
-                ) : filteredRequests.length === 0 ? (
+                ) : filteredRequests?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
                       <Typography variant="body1">
@@ -385,7 +385,7 @@ const ServiceRequests = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredRequests.map((request) => (
+                  filteredRequests?.map((request) => (
                     <TableRow key={request.RegistrationID}>
                       <TableCell>
                         <Typography variant="body1" fontWeight="medium">

@@ -43,12 +43,12 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  
+
   const { login, loading, isAuthenticated } = useAuth();
   const { error: notifyError } = useNotification();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   useEffect(() => {
     if (isAuthenticated) {
       const savedPath = localStorage.getItem('auth_redirect');
@@ -61,45 +61,45 @@ const LoginPage = () => {
       }
     }
   }, [isAuthenticated, navigate]);
-  
+
   const validateForm = () => {
     let isValid = true;
-    
+
     if (!identifier) {
       setIdentifierError('Vui lòng nhập username hoặc email');
       isValid = false;
     } else {
       setIdentifierError('');
     }
-    
+
     if (!password) {
       setPasswordError('Vui lòng nhập mật khẩu');
       isValid = false;
-    } else if (password.length < 6) {
+    } else if (password?.length < 6) {
       setPasswordError('Mật khẩu phải có ít nhất 6 ký tự');
       isValid = false;
     } else {
       setPasswordError('');
     }
-    
+
     return isValid;
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     try {
       await login({
         username: identifier,
         password: password,
         role: 'ADMIN'
       });
-      
+
       // After successful login, check if there's a saved redirect path
       const savedPath = localStorage.getItem('auth_redirect');
       if (savedPath) {
@@ -112,16 +112,16 @@ const LoginPage = () => {
     } catch (err) {
       console.error('Login error:', err);
       setError(
-        err.response?.data?.message || 
+        err.response?.data?.message ||
         'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.'
       );
     }
   };
-  
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  
+
   if (loading) {
     return (
       <Box sx={{ width: '100%', position: 'fixed', top: 0, zIndex: 9999 }}>
@@ -129,7 +129,7 @@ const LoginPage = () => {
       </Box>
     );
   }
-  
+
   return (
     <Box
       sx={{
@@ -169,7 +169,7 @@ const LoginPage = () => {
           zIndex: 0
         }}
       />
-      
+
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Grow in={true} timeout={800}>
           <Paper
@@ -211,24 +211,24 @@ const LoginPage = () => {
                     backgroundPosition: 'center'
                   }}
                 />
-                
+
                 <Fade in={true} timeout={1000}>
                   <Box sx={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
                     <School sx={{ fontSize: 80, mb: 2 }} />
-                    
+
                     <Typography variant="h3" fontWeight="bold" gutterBottom>
-                      Campus Campus Learning
+                      EduBridge AI
                     </Typography>
-                    
+
                     <Typography variant="h5" fontWeight="light" gutterBottom>
                       Admin Portal
                     </Typography>
-                    
+
                     <Box sx={{ mt: 4, width: '80%', mx: 'auto' }}>
                       <Typography variant="body1" sx={{ opacity: 0.8, mb: 3 }}>
                         Hệ thống quản lý trường học thông minh và hiện đại
                       </Typography>
-                      
+
                       <Box
                         sx={{
                           display: 'flex',
@@ -237,8 +237,8 @@ const LoginPage = () => {
                           mt: 4
                         }}
                       >
-                        {['Quản lý sinh viên', 'Quản lý khóa học', 'Quản lý tài chính'].map((text, index) => (
-                          <Box 
+                        {['Quản lý sinh viên', 'Quản lý khóa học', 'Quản lý tài chính']?.map((text, index) => (
+                          <Box
                             key={index}
                             sx={{
                               display: 'flex',
@@ -260,7 +260,7 @@ const LoginPage = () => {
                 </Fade>
               </Box>
             )}
-            
+
             {/* Right side - Login form */}
             <Box
               sx={{
@@ -283,11 +283,11 @@ const LoginPage = () => {
                 >
                   <AdminPanelSettings sx={{ fontSize: 40, color: theme.palette.primary.main, mb: 1 }} />
                   <Typography variant="h4" color="primary.main" fontWeight="bold">
-                    Campus Campus Learning
+                    EduBridge AI
                   </Typography>
                 </Box>
               )}
-              
+
               <Fade in={true} timeout={1000}>
                 <Box>
                   <Typography
@@ -297,7 +297,7 @@ const LoginPage = () => {
                   >
                     Đăng nhập
                   </Typography>
-                  
+
                   <Typography
                     variant="body1"
                     color="text.secondary"
@@ -305,7 +305,7 @@ const LoginPage = () => {
                   >
                     Vui lòng đăng nhập để truy cập hệ thống quản trị
                   </Typography>
-                  
+
                   {error && (
                     <Alert
                       severity="error"
@@ -320,7 +320,7 @@ const LoginPage = () => {
                       {error}
                     </Alert>
                   )}
-                  
+
                   <Box
                     component="form"
                     onSubmit={handleSubmit}
@@ -350,7 +350,7 @@ const LoginPage = () => {
                         maxLength: 50
                       }}
                     />
-                    
+
                     <TextField
                       required
                       fullWidth
@@ -382,7 +382,7 @@ const LoginPage = () => {
                         maxLength: 50
                       }}
                     />
-                    
+
                     <Grid container justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
                       <Grid item>
                         <Link
@@ -401,7 +401,7 @@ const LoginPage = () => {
                         </Link>
                       </Grid>
                     </Grid>
-                    
+
                     <Button
                       type="submit"
                       fullWidth
@@ -425,10 +425,10 @@ const LoginPage = () => {
                     >
                       Đăng nhập
                     </Button>
-                    
+
                     <Box sx={{ mt: 4, textAlign: 'center' }}>
                       <Typography variant="body2" color="text.secondary">
-                        Campus Campus Learning Admin Portal &copy; {new Date().getFullYear()}
+                        EduBridge AI Admin Portal &copy; {new Date().getFullYear()}
                       </Typography>
                     </Box>
                   </Box>

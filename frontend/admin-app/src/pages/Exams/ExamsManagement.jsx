@@ -45,7 +45,7 @@ const ExamsManagement = () => {
       const response = await getAllExams(queryParams.toString());
       
       // Transform data để khớp với cấu trúc DataGrid
-      const transformedExams = response.exams.map(exam => ({
+      const transformedExams = response.exams?.map(exam => ({
         ...exam,
         id: exam.ExamID, // Đảm bảo có trường id cho DataGrid
         Title: exam.Title,

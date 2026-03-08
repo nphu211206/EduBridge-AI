@@ -282,9 +282,9 @@ const PostCard = ({ post, onLike, onComment, onDelete, onReport, onShare }) => {
           {post.Content}
         </Typography>
 
-        {post.media && post.media.length > 0 && (
+        {post.media && post.media?.length > 0 && (
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            {post.media.map((media, index) => (
+            {post.media?.map((media, index) => (
               media.MediaType === 'image' ? (
                 <Box
                   key={index}
@@ -373,7 +373,7 @@ const PostCard = ({ post, onLike, onComment, onDelete, onReport, onShare }) => {
             <Typography color="error">Error loading comments</Typography>
           ) : (
             <List>
-              {comments.map((comment) => (
+              {comments?.map((comment) => (
                 <CommentItem
                   key={comment.CommentID}
                   comment={comment}

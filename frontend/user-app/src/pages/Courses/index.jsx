@@ -26,17 +26,17 @@ const formatPrice = (price) => {
 const isITCourse = (course) => {
   // Ưu tiên sử dụng CourseType nếu có
   if (course.CourseType !== undefined || course.courseType !== undefined) {
-    const courseType = (course.CourseType || course.courseType || '').toLowerCase();
+    const courseType = String(course.CourseType || course.courseType || '').toLowerCase();
     return courseType === 'it';
   }
-  
+
   // Phương án dự phòng: kiểm tra tiêu đề khóa học
-  const title = (course.Title || course.title || '').toLowerCase();
-  
+  const title = String(course.Title || course.title || '').toLowerCase();
+
   // Nếu tiêu đề có từ khóa của khóa học thường, đây không phải khóa học IT
   if (
-    title.includes('lịch sử') || 
-    title.includes('tư tưởng') || 
+    title.includes('lịch sử') ||
+    title.includes('tư tưởng') ||
     title.includes('chính trị') ||
     title.includes('đạo đức') ||
     title.includes('triết học') ||
@@ -45,7 +45,7 @@ const isITCourse = (course) => {
   ) {
     return false;
   }
-  
+
   // Nếu tiêu đề có từ khóa IT, đây là khóa học IT
   if (
     title.includes('it') ||
@@ -59,7 +59,7 @@ const isITCourse = (course) => {
     title.includes('database') ||
     title.includes('dữ liệu') ||
     title.includes('python') ||
-    title.includes('java') || 
+    title.includes('java') ||
     title.includes('javascript') ||
     title.includes('html') ||
     title.includes('css') ||
@@ -68,36 +68,36 @@ const isITCourse = (course) => {
   ) {
     return true;
   }
-  
+
   // Kiểm tra category
-  const category = (course.Category || course.category || '').toLowerCase();
-  if (category.includes('it') || 
-     category.includes('programming') || 
-     category.includes('web') ||
-     category.includes('mobile') ||
-     category.includes('data') ||
-     category.includes('computer')) {
+  const category = String(course.Category || course.category || '').toLowerCase();
+  if (category.includes('it') ||
+    category.includes('programming') ||
+    category.includes('web') ||
+    category.includes('mobile') ||
+    category.includes('data') ||
+    category.includes('computer')) {
     return true;
   }
-  
+
   // Mặc định là khóa học IT
   return true;
 };
 
 // Hàm helper để kiểm tra khóa học đã đăng ký
 const isEnrolledCourse = (course, enrolledCourses = []) => {
-  if (!enrolledCourses || !Array.isArray(enrolledCourses) || enrolledCourses.length === 0) {
+  if (!enrolledCourses || !Array.isArray(enrolledCourses) || enrolledCourses?.length === 0) {
     return false;
   }
-  
+
   // Nếu course đã có thuộc tính enrolled được đánh dấu
   if (course.enrolled === true) {
     return true;
   }
-  
+
   const courseId = course.CourseID || course.id;
   if (!courseId) return false;
-  
+
   // Kiểm tra ID trong danh sách đã đăng ký
   return enrolledCourses.some(enrolledCourse => {
     const enrolledId = enrolledCourse.CourseID || enrolledCourse.id;
@@ -181,7 +181,7 @@ const CourseCard = ({ course, enrollmentFilter, courseCategory, navigate, enroll
   const ratingCount = course.RatingCount || course.ratingCount || 0;
 
   return (
-    <div 
+    <div
       className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg cursor-pointer h-full flex flex-col transition-shadow"
       onClick={handleCourseClick}
     >
@@ -192,19 +192,18 @@ const CourseCard = ({ course, enrollmentFilter, courseCategory, navigate, enroll
           alt={course.Title || course.title}
           className="w-full h-40 sm:h-48 md:h-52 object-cover"
         />
-        
+
         {/* Course provider badge - positioned on top of the image */}
         <div className="absolute top-0 left-0 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1.5">
           CampusLearning
         </div>
-        
+
         {/* Badge Overlay */}
         <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[calc(100%-1rem)]">
-          <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${
-            courseType === 'it' 
-              ? 'bg-blue-600 text-white' 
+          <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${courseType === 'it'
+              ? 'bg-blue-600 text-white'
               : 'bg-green-600 text-white'
-          }`}>
+            }`}>
             {courseType === 'it' ? 'IT & Công nghệ' : 'Kiến thức cơ bản'}
           </span>
           {enrolled && (
@@ -221,17 +220,17 @@ const CourseCard = ({ course, enrollmentFilter, courseCategory, navigate, enroll
         <div className="text-xs font-medium text-blue-600 mb-1">
           {courseType === 'it' ? 'Khoa học máy tính' : 'Kiến thức xã hội'}
         </div>
-        
+
         {/* Course title */}
         <h3 className="font-medium text-gray-900 line-clamp-2 mb-2 text-sm sm:text-base hover:text-blue-700 transition-colors">
           {course.Title || course.title}
         </h3>
-        
+
         {/* Course short description */}
         <p className="text-gray-500 text-xs line-clamp-2 mb-2">
           {course.ShortDescription || course.Description || course.description || 'Khóa học này sẽ giúp bạn nắm vững những kiến thức quan trọng và kỹ năng cần thiết.'}
         </p>
-        
+
         {/* Course stats */}
         <div className="flex items-center gap-2 sm:gap-3 text-[10px] text-gray-500 flex-wrap mb-auto">
           <div className="flex items-center gap-1">
@@ -259,7 +258,7 @@ const CourseCard = ({ course, enrollmentFilter, courseCategory, navigate, enroll
             <span>{difficulty}</span>
           </div>
         </div>
-        
+
         {/* Footer with price and button */}
         <div className="flex items-center justify-between pt-3 sm:pt-4 mt-2 sm:mt-3 border-t border-gray-100">
           <div>
@@ -273,13 +272,12 @@ const CourseCard = ({ course, enrollmentFilter, courseCategory, navigate, enroll
               </span>
             )}
           </div>
-          
+
           {!enrolled ? (
             <button
               onClick={handleEnrollFreeCourse}
-              className={`px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium ${
-                isFreeCourse ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'
-              } transition-shadow shadow-sm`}
+              className={`px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium ${isFreeCourse ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'
+                } transition-shadow shadow-sm`}
             >
               {isFreeCourse ? 'Đăng ký ngay' : 'Mua ngay'}
             </button>
@@ -350,17 +348,17 @@ const Courses = () => {
       title: "Machine Learning"
     }
   ];
-  
+
   // Function to handle manual navigation
   const navigateCarousel = (direction) => {
     if (direction === "prev") {
       setCurrentImageIndex((prevIndex) => {
-        const newIndex = prevIndex === 0 ? courseImages.length - 1 : prevIndex - 1;
+        const newIndex = prevIndex === 0 ? courseImages?.length - 1 : prevIndex - 1;
         return newIndex;
       });
     } else {
       setCurrentImageIndex((prevIndex) => {
-        const newIndex = (prevIndex + 1) % courseImages.length;
+        const newIndex = (prevIndex + 1) % courseImages?.length;
         return newIndex;
       });
     }
@@ -370,13 +368,13 @@ const Courses = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => {
-        const newIndex = (prevIndex + 1) % courseImages.length;
+        const newIndex = (prevIndex + 1) % courseImages?.length;
         return newIndex;
       });
     }, 3000);
-    
+
     return () => clearInterval(interval);
-  }, [courseImages.length]);
+  }, [courseImages?.length]);
 
   // Reset navigation loading state after timeout to prevent getting stuck
   useEffect(() => {
@@ -384,7 +382,7 @@ const Courses = () => {
       const timeout = setTimeout(() => {
         setNavigatingToCourse(false);
       }, 5000); // Reset after 5 seconds if still loading
-      
+
       return () => clearTimeout(timeout);
     }
   }, [navigatingToCourse]);
@@ -393,16 +391,16 @@ const Courses = () => {
   useEffect(() => {
     setNavigatingToCourse(false);
   }, [location.pathname]);
-  
+
   // Immediately try to load cached data without loading state
   useEffect(() => {
     dispatch(loadCachedAllCourses());
   }, [dispatch]);
-  
+
   // Separate effect to update loading state when allCourses changes
   useEffect(() => {
     // If we have cached data, we don't need to show loading state
-    if (allCourses && allCourses.length > 0) {
+    if (allCourses && allCourses?.length > 0) {
       setLoading(false);
     }
   }, [allCourses]);
@@ -413,12 +411,12 @@ const Courses = () => {
       if (location.state.activeTab === 'enrolled') {
         setEnrollmentFilter('enrolled');
       }
-      
+
       // Hiển thị thông báo thành công nếu là từ trang thanh toán
       if (location.state.paymentSuccess) {
         // Refresh enrolled courses explicitly when coming from successful payment
         dispatch(fetchEnrolledCourses({ forceRefresh: true }));
-        
+
         toast.success('Thanh toán thành công! Bạn đã đăng ký khóa học thành công.');
       }
     }
@@ -434,11 +432,11 @@ const Courses = () => {
   // Main data loading effect - separated for better performance
   useEffect(() => {
     let isMounted = true;
-    
+
     // First, load all courses if needed - higher priority for new visitors
     const loadAllCourses = async () => {
       // Only load if not already loaded and we don't have data
-      if (!dataLoaded && (!allCourses || allCourses.length === 0)) {
+      if (!dataLoaded && (!allCourses || allCourses?.length === 0)) {
         setLoading(true);
         try {
           await dispatch(preloadAllCourses()).unwrap();
@@ -449,7 +447,7 @@ const Courses = () => {
             setError('Lỗi khi tải danh sách khóa học');
             setLoading(false);
           }
-          
+
           // Fallback to direct API call if redux action fails
           try {
             const response = await courseApi.getAllCourses();
@@ -468,23 +466,23 @@ const Courses = () => {
         }
       }
     };
-    
+
     // Load all courses first
     loadAllCourses();
-    
+
     return () => {
       isMounted = false;
     };
   }, [dispatch, dataLoaded]);
-  
+
   // Separate effect for enrolled courses - lower priority
   useEffect(() => {
     // Only fetch enrolled courses if user is authenticated and has valid user ID
-    if (isAuthenticated && currentUser?.id && !enrolledCourses.length) {
+    if (isAuthenticated && currentUser?.id && !enrolledCourses?.length) {
       console.log('Fetching enrolled courses for user:', currentUser.id);
       dispatch(fetchEnrolledCourses());
     }
-  }, [dispatch, isAuthenticated, currentUser?.id, enrolledCourses.length]);
+  }, [dispatch, isAuthenticated, currentUser?.id, enrolledCourses?.length]);
 
   // Separate effect for handling payment success
   useEffect(() => {
@@ -492,19 +490,19 @@ const Courses = () => {
       const processPaymentCallback = async () => {
         try {
           console.log('Processing payment callback from location state');
-          
+
           // Get course ID and transaction ID from location state
           const { courseId, transactionId } = location.state;
-          
+
           if (courseId) {
             console.log(`Payment successful for course ${courseId}`);
-            
+
             // Force refresh enrolled courses to show the newly purchased course
             await dispatch(fetchEnrolledCourses({ forceRefresh: true }));
-            
+
             // Show success message
             toast.success('Thanh toán thành công! Khóa học đã được thêm vào danh sách của bạn.');
-      
+
             // Clear the payment success state to prevent re-processing
             window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
           }
@@ -513,7 +511,7 @@ const Courses = () => {
           toast.error('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng kiểm tra lại.');
         }
       };
-      
+
       processPaymentCallback();
     }
   }, [isAuthenticated, currentUser?.id, location.state?.paymentSuccess, dispatch]);
@@ -524,17 +522,17 @@ const Courses = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('courseId');
     const paymentStatus = urlParams.get('status');
-    
+
     // Only process if we have both parameters and user is authenticated
     if (courseId && paymentStatus === 'success' && isAuthenticated) {
       console.log('Detected successful payment for course ID:', courseId);
-      
+
       // Process in the background without changing main view unless needed
       const processPaymentCallback = async () => {
         // Don't switch tabs immediately to avoid flickering
         // Only update enrolled courses in the background
         dispatch(fetchEnrolledCourses({ forceRefresh: true }));
-        
+
         try {
           const response = await courseApi.getCourseDetails(courseId);
           if (response && response.success && isMounted) {
@@ -544,8 +542,8 @@ const Courses = () => {
               // Determine course type based on title
               const title = (courseData.Title || courseData.title || '').toLowerCase();
               if (
-                title.includes('lịch sử') || 
-                title.includes('tư tưởng') || 
+                title.includes('lịch sử') ||
+                title.includes('tư tưởng') ||
                 title.includes('chính trị') ||
                 title.includes('đạo đức') ||
                 title.includes('triết học')
@@ -555,10 +553,10 @@ const Courses = () => {
                 courseData.CourseType = 'it';
               }
             }
-            
+
             // Add to enrolled courses
             dispatch(addEnrolledCourse(courseData));
-            
+
             // Notify user of success without switching tabs
             toast.success('Khóa học đã được thêm vào danh sách đã đăng ký của bạn!');
           }
@@ -569,10 +567,10 @@ const Courses = () => {
           }
         }
       };
-      
+
       processPaymentCallback();
     }
-    
+
     return () => {
       isMounted = false;
     };
@@ -604,12 +602,12 @@ const Courses = () => {
     if (category.includes('ai') || title.includes('ai') || title.includes('machine learning') || description.includes('trí tuệ nhân tạo')) {
       return 'ai';
     }
-    if (title.includes('lập trình') || category.includes('programming') || 
-        title.includes('code') || title.includes('python') || title.includes('java')) {
+    if (title.includes('lập trình') || category.includes('programming') ||
+      title.includes('code') || title.includes('python') || title.includes('java')) {
       return 'programming';
     }
-    if (title.includes('đời sống') || category.includes('life') || 
-        title.includes('kỹ năng') || title.includes('soft skill')) {
+    if (title.includes('đời sống') || category.includes('life') ||
+      title.includes('kỹ năng') || title.includes('soft skill')) {
       return 'life';
     }
     return 'programming'; // Default category
@@ -618,7 +616,7 @@ const Courses = () => {
   const filteredCourses = useMemo(() => {
     const addedCourseIds = new Set();
     const result = [];
-    
+
     const coursesToProcess = enrollmentFilter === 'enrolled' && isAuthenticated
       ? enrolledCourses
       : allCourses;
@@ -629,20 +627,20 @@ const Courses = () => {
 
       const isEnrolled = enrolledCourses.some(ec => (ec.CourseID || ec.id) === courseId);
       if (enrollmentFilter === 'enrolled' && !isEnrolled) return;
-      
+
       const courseCat = getCourseCategory(course);
       const matchesCategory = courseCategory === 'all' || courseCat === courseCategory;
-      
-      const matchesSearch = !searchTerm || 
+
+      const matchesSearch = !searchTerm ||
         (course.Title || course.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (course.Description || course.description || '').toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       if (matchesCategory && matchesSearch && (enrollmentFilter === 'all' || isEnrolled)) {
         addedCourseIds.add(courseId);
-        result.push({...course, enrolled: isEnrolled, category: courseCat});
+        result.push({ ...course, enrolled: isEnrolled, category: courseCat });
       }
     });
-    
+
     return result;
   }, [courseCategory, enrollmentFilter, allCourses, enrolledCourses, isAuthenticated, searchTerm]);
 
@@ -651,18 +649,18 @@ const Courses = () => {
     // For the enrolled tab
     if (enrollmentFilter === 'enrolled') {
       // Only show loading if we're actively fetching and don't have data
-      return enrolledLoading && (!enrolledCourses || enrolledCourses.length === 0);
-    } 
+      return enrolledLoading && (!enrolledCourses || enrolledCourses?.length === 0);
+    }
     // For the all courses tab
     else {
       // Only show loading if we're actively fetching and don't have data
-      return loading && (!allCourses || allCourses.length === 0);
+      return loading && (!allCourses || allCourses?.length === 0);
     }
   }, [enrollmentFilter, enrolledLoading, loading, enrolledCourses?.length, allCourses?.length]);
 
   // Render skeleton placeholders during loading
   const renderSkeletons = () => {
-    return Array(6).fill(0).map((_, index) => (
+    return Array(6).fill(0)?.map((_, index) => (
       <CourseCardSkeleton key={`skeleton-${index}`} />
     ));
   };
@@ -679,8 +677,8 @@ const Courses = () => {
             </div>
             <h2 className="text-xl font-bold text-gray-800 mb-3">Đã xảy ra lỗi</h2>
             <p className="text-red-500 mb-6">{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Tải lại trang
@@ -693,14 +691,14 @@ const Courses = () => {
 
   // Define tab styles
   const getTabStyle = (isActive) => {
-    return isActive 
+    return isActive
       ? "bg-blue-50 text-blue-700"
       : "text-gray-600 hover:text-gray-800 hover:bg-gray-50";
   };
 
   // Define button styles
   const getButtonStyle = (isActive, color) => {
-    return isActive 
+    return isActive
       ? `bg-${color}-600 text-white shadow-sm`
       : `bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200`;
   };
@@ -708,16 +706,16 @@ const Courses = () => {
   return (
     <>
       {navigatingToCourse && (
-        <Loading 
-          message="Đang tải thông tin khóa học..." 
+        <Loading
+          message="Đang tải thông tin khóa học..."
           variant="default"
           size="default"
           fullscreen={true}
         />
       )}
-    <div className="bg-gray-50 min-h-screen pb-12">
-      {/* Thêm CSS cho phần header */}
-      <style jsx>{`
+      <div className="bg-gray-50 min-h-screen pb-12">
+        {/* Thêm CSS cho phần header */}
+        <style jsx>{`
         @media (max-width: 400px) {
           .xs\\:hidden {
             display: none;
@@ -803,297 +801,294 @@ const Courses = () => {
           right: 0;
         }
       `}</style>
-      
-      {/* Modern Banner - Positioned at the very top */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-indigo-800 to-blue-700">
-        {/* Decorative elements */}
-        <div className="absolute inset-0">
-          <svg className="absolute left-0 h-full w-48 text-white/5" viewBox="0 0 100 100" preserveAspectRatio="none" fill="currentColor">
-            <polygon points="50,0 100,0 50,100 0,100" />
-          </svg>
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-700/30 mix-blend-multiply" />
-          <div className="absolute right-0 top-0 -mt-20 -mr-32 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl"></div>
-          <div className="absolute left-0 bottom-0 -mb-20 -ml-32 h-72 w-72 rounded-full bg-indigo-600/20 blur-3xl"></div>
-        </div>
 
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-between py-6 md:py-12 relative z-10">
-            <div className="mb-6 md:mb-0 md:w-1/2 lg:w-2/5 md:mr-4">
-              <div className="flex items-center mb-3">
-                <div className="bg-blue-400/30 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold text-white inline-flex items-center">
-                  <span className="animate-pulse mr-1.5 h-2 w-2 rounded-full bg-blue-200"></span>
-                  Đang diễn ra
+        {/* Modern Banner - Positioned at the very top */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-indigo-800 to-blue-700">
+          {/* Decorative elements */}
+          <div className="absolute inset-0">
+            <svg className="absolute left-0 h-full w-48 text-white/5" viewBox="0 0 100 100" preserveAspectRatio="none" fill="currentColor">
+              <polygon points="50,0 100,0 50,100 0,100" />
+            </svg>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-700/30 mix-blend-multiply" />
+            <div className="absolute right-0 top-0 -mt-20 -mr-32 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl"></div>
+            <div className="absolute left-0 bottom-0 -mb-20 -ml-32 h-72 w-72 rounded-full bg-indigo-600/20 blur-3xl"></div>
+          </div>
+
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-center md:items-start justify-between py-6 md:py-12 relative z-10">
+              <div className="mb-6 md:mb-0 md:w-1/2 lg:w-2/5 md:mr-4">
+                <div className="flex items-center mb-3">
+                  <div className="bg-blue-400/30 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold text-white inline-flex items-center">
+                    <span className="animate-pulse mr-1.5 h-2 w-2 rounded-full bg-blue-200"></span>
+                    Đang diễn ra
+                  </div>
+                  <div className="h-0.5 w-6 bg-blue-300/30 mx-3"></div>
+                  <div className="text-blue-100 text-xs font-medium">Cập nhật mới 2025</div>
                 </div>
-                <div className="h-0.5 w-6 bg-blue-300/30 mx-3"></div>
-                <div className="text-blue-100 text-xs font-medium">Cập nhật mới 2025</div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+                  Khám phá thế giới kiến thức <br className="hidden sm:block" />
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200">
+                    với CampusLearing
+                  </span>
+                </h2>
+                <p className="text-blue-100 mb-6 text-base md:text-lg opacity-80 max-w-xl">
+                  Truy cập hơn 100+ khóa học chất lượng cao, được thiết kế bởi những chuyên gia hàng đầu trong lĩnh vực.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <button className="px-6 py-3 bg-white text-blue-700 rounded-lg font-medium hover:bg-blue-50 transition-colors shadow-md flex items-center group">
+                    <span>Khám phá khóa học</span>
+                    <svg className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                  </button>
+                  <button className="px-6 py-3 bg-blue-700/30 backdrop-blur-sm border border-blue-300/20 text-white rounded-lg font-medium hover:bg-blue-600/30 transition-colors">
+                    Tìm hiểu thêm
+                  </button>
+                </div>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-                Khám phá thế giới kiến thức <br className="hidden sm:block" />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200">
-                  với CampusLearing
-                </span>
-              </h2>
-              <p className="text-blue-100 mb-6 text-base md:text-lg opacity-80 max-w-xl">
-                Truy cập hơn 100+ khóa học chất lượng cao, được thiết kế bởi những chuyên gia hàng đầu trong lĩnh vực.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <button className="px-6 py-3 bg-white text-blue-700 rounded-lg font-medium hover:bg-blue-50 transition-colors shadow-md flex items-center group">
-                  <span>Khám phá khóa học</span>
-                  <svg className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </button>
-                <button className="px-6 py-3 bg-blue-700/30 backdrop-blur-sm border border-blue-300/20 text-white rounded-lg font-medium hover:bg-blue-600/30 transition-colors">
-                  Tìm hiểu thêm
-                </button>
-              </div>
-            </div>
-            
-            {/* Image Carousel - Completely redesigned */}
-            <div className="w-full md:w-1/2 lg:w-3/5 md:pl-6 lg:pl-10 flex justify-center overflow-visible">
-              <div className="relative w-full max-w-[600px] h-[280px] md:h-[320px]">
-                {/* Carousel Container */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative w-full h-full px-8">
-                    {/* Main center image */}
-                    <div className="absolute inset-0 z-20 flex items-center justify-center">
-                      <div className="relative w-[60%] h-[75%] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/40 transform transition-all duration-700 ease-out hover:scale-105">
-                        <img 
-                          src={courseImages[currentImageIndex].url}
-                          alt={courseImages[currentImageIndex].title}
-                          className="w-full h-full object-cover transition-all duration-700 ease-out"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 border border-white/20">
-                            <h3 className="text-white font-semibold text-sm">{courseImages[currentImageIndex].title}</h3>
-                            <p className="text-white/80 text-xs mt-1">Khóa học chất lượng cao</p>
+
+              {/* Image Carousel - Completely redesigned */}
+              <div className="w-full md:w-1/2 lg:w-3/5 md:pl-6 lg:pl-10 flex justify-center overflow-visible">
+                <div className="relative w-full max-w-[600px] h-[280px] md:h-[320px]">
+                  {/* Carousel Container */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative w-full h-full px-8">
+                      {/* Main center image */}
+                      <div className="absolute inset-0 z-20 flex items-center justify-center">
+                        <div className="relative w-[60%] h-[75%] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/40 transform transition-all duration-700 ease-out hover:scale-105">
+                          <img
+                            src={courseImages[currentImageIndex].url}
+                            alt={courseImages[currentImageIndex].title}
+                            className="w-full h-full object-cover transition-all duration-700 ease-out"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                          <div className="absolute bottom-0 left-0 right-0 p-4">
+                            <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 border border-white/20">
+                              <h3 className="text-white font-semibold text-sm">{courseImages[currentImageIndex].title}</h3>
+                              <p className="text-white/80 text-xs mt-1">Khóa học chất lượng cao</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    {/* Left side image */}
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-[45%] h-[55%] transition-all duration-700 ease-out">
-                      <div className="relative w-full h-full rounded-xl overflow-hidden shadow-xl opacity-60 transform scale-80 blur-[1.5px] hover:opacity-80 hover:scale-85 transition-all duration-500">
-                        <img 
-                          src={courseImages[(currentImageIndex - 1 + courseImages.length) % courseImages.length].url}
-                          alt={courseImages[(currentImageIndex - 1 + courseImages.length) % courseImages.length].title}
-                          className="w-full h-full object-cover transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/30"></div>
+
+                      {/* Left side image */}
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-[45%] h-[55%] transition-all duration-700 ease-out">
+                        <div className="relative w-full h-full rounded-xl overflow-hidden shadow-xl opacity-60 transform scale-80 blur-[1.5px] hover:opacity-80 hover:scale-85 transition-all duration-500">
+                          <img
+                            src={courseImages[(currentImageIndex - 1 + courseImages?.length) % courseImages?.length].url}
+                            alt={courseImages[(currentImageIndex - 1 + courseImages?.length) % courseImages?.length].title}
+                            className="w-full h-full object-cover transition-all duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/30"></div>
+                        </div>
                       </div>
-                    </div>
-                    
-                    {/* Right side image */}
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-[45%] h-[55%] transition-all duration-700 ease-out">
-                      <div className="relative w-full h-full rounded-xl overflow-hidden shadow-xl opacity-60 transform scale-80 blur-[1.5px] hover:opacity-80 hover:scale-85 transition-all duration-500">
-                        <img 
-                          src={courseImages[(currentImageIndex + 1) % courseImages.length].url}
-                          alt={courseImages[(currentImageIndex + 1) % courseImages.length].title}
-                          className="w-full h-full object-cover transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/30"></div>
+
+                      {/* Right side image */}
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-[45%] h-[55%] transition-all duration-700 ease-out">
+                        <div className="relative w-full h-full rounded-xl overflow-hidden shadow-xl opacity-60 transform scale-80 blur-[1.5px] hover:opacity-80 hover:scale-85 transition-all duration-500">
+                          <img
+                            src={courseImages[(currentImageIndex + 1) % courseImages?.length].url}
+                            alt={courseImages[(currentImageIndex + 1) % courseImages?.length].title}
+                            className="w-full h-full object-cover transition-all duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/30"></div>
+                        </div>
                       </div>
-                    </div>
-                    
-                    {/* Additional side images for extended view */}
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 z-5 w-[30%] h-[40%] transition-all duration-700 ease-out">
-                      <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg opacity-30 transform scale-60 blur-[2px]">
-                        <img 
-                          src={courseImages[(currentImageIndex - 2 + courseImages.length) % courseImages.length].url}
-                          alt={courseImages[(currentImageIndex - 2 + courseImages.length) % courseImages.length].title}
-                          className="w-full h-full object-cover transition-all duration-700"
-                        />
+
+                      {/* Additional side images for extended view */}
+                      <div className="absolute -left-4 top-1/2 -translate-y-1/2 z-5 w-[30%] h-[40%] transition-all duration-700 ease-out">
+                        <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg opacity-30 transform scale-60 blur-[2px]">
+                          <img
+                            src={courseImages[(currentImageIndex - 2 + courseImages?.length) % courseImages?.length].url}
+                            alt={courseImages[(currentImageIndex - 2 + courseImages?.length) % courseImages?.length].title}
+                            className="w-full h-full object-cover transition-all duration-700"
+                          />
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-5 w-[30%] h-[40%] transition-all duration-700 ease-out">
-                      <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg opacity-30 transform scale-60 blur-[2px]">
-                        <img 
-                          src={courseImages[(currentImageIndex + 2) % courseImages.length].url}
-                          alt={courseImages[(currentImageIndex + 2) % courseImages.length].title}
-                          className="w-full h-full object-cover transition-all duration-700"
-                        />
+
+                      <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-5 w-[30%] h-[40%] transition-all duration-700 ease-out">
+                        <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg opacity-30 transform scale-60 blur-[2px]">
+                          <img
+                            src={courseImages[(currentImageIndex + 2) % courseImages?.length].url}
+                            alt={courseImages[(currentImageIndex + 2) % courseImages?.length].title}
+                            className="w-full h-full object-cover transition-all duration-700"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                
-                {/* Enhanced Navigation buttons */}
-                <button 
-                  onClick={() => navigateCarousel('prev')}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-110 group"
-                  aria-label="Previous image"
-                >
-                  <svg className="w-6 h-6 transform group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                
-                <button 
-                  onClick={() => navigateCarousel('next')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-110 group"
-                  aria-label="Next image"
-                >
-                  <svg className="w-6 h-6 transform group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-                
-                {/* Enhanced Carousel indicators */}
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 z-30">
-                  {courseImages.map((_, idx) => (
-                    <button 
-                      key={idx} 
-                      onClick={() => setCurrentImageIndex(idx)}
-                      className={`rounded-full transition-all duration-300 hover:scale-110 ${
-                        idx === currentImageIndex 
-                          ? 'bg-white w-8 h-2.5 shadow-lg' 
-                          : 'bg-white/50 w-2.5 h-2.5 hover:bg-white/70'
-                      }`} 
-                      aria-label={`Go to image ${idx + 1}`}
-                    />
-                  ))}
+
+                  {/* Enhanced Navigation buttons */}
+                  <button
+                    onClick={() => navigateCarousel('prev')}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-110 group"
+                    aria-label="Previous image"
+                  >
+                    <svg className="w-6 h-6 transform group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={() => navigateCarousel('next')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-110 group"
+                    aria-label="Next image"
+                  >
+                    <svg className="w-6 h-6 transform group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  {/* Enhanced Carousel indicators */}
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 z-30">
+                    {courseImages?.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`rounded-full transition-all duration-300 hover:scale-110 ${idx === currentImageIndex
+                            ? 'bg-white w-8 h-2.5 shadow-lg'
+                            : 'bg-white/50 w-2.5 h-2.5 hover:bg-white/70'
+                          }`}
+                        aria-label={`Go to image ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Redesigned Header section */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 py-4 md:py-6">
-          {/* Main header with title and payment history button */}
-          <div className="mb-5">
-            <div className="flex items-center justify-between gap-3 mb-4">
-              <div className="flex items-center">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mr-2">Khám phá khóa học</h1>
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
-                  {filteredCourses.length} khóa học
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                {/* Search box */}
-                <div className="relative hidden sm:block w-60 lg:w-72">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Tìm kiếm khóa học..."
-                    className="w-full px-4 py-1.5 pl-8 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <svg 
-                    className="w-4 h-4 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2" 
-                    fill="none" 
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  </svg>
+        {/* Redesigned Header section */}
+        <div className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="container mx-auto px-4 py-4 md:py-6">
+            {/* Main header with title and payment history button */}
+            <div className="mb-5">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <div className="flex items-center">
+                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mr-2">Khám phá khóa học</h1>
+                  <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                    {filteredCourses?.length} khóa học
+                  </span>
                 </div>
-                
-                {/* My Courses button for authenticated users */}
-                {isAuthenticated && (
-                  <button
-                    onClick={() => setEnrollmentFilter(enrollmentFilter === 'enrolled' ? 'all' : 'enrolled')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-sm ${
-                      enrollmentFilter === 'enrolled'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-white text-green-600 border border-green-600 hover:bg-green-50'
-                    }`}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="hidden sm:inline">Khóa học của tôi</span>
-                    <span className="bg-white bg-opacity-20 px-1.5 py-0.5 rounded-full text-xs">
-                      {enrolledCourses.length}
-                    </span>
-                  </button>
-                )}
-                
-                {/* Payment History button for authenticated users */}
-                {isAuthenticated && (
-                  <button
-                    onClick={() => navigate('/payment-history')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="hidden sm:inline">Lịch sử thanh toán</span>
-                  </button>
-                )}
-              </div>
-            </div>
-            
-            {/* Mobile search box */}
-            <div className="relative mb-4 sm:hidden">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                placeholder="Tìm kiếm khóa học..."
-                className="w-full px-4 py-2.5 pl-10 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <svg 
-                className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" 
-                fill="none" 
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </div>
-              
-            {/* Centered Categories and Filters Bar */}
-            <div className="flex justify-center w-full">
-              {/* Categories horizontal scroll container */}
-              <div 
-                className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth py-3 px-6 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl bg-gradient-to-r from-blue-50/30 via-white/40 to-blue-50/30"
-                style={{ 
-                  scrollBehavior: 'smooth',
-                  msOverflowStyle: 'none',
-                  scrollbarWidth: 'none'
-                }}
-              >
-                {courseCategories.map((category, index) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setCourseCategory(category.id)}
-                    className={`relative flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-500 whitespace-nowrap min-w-fit backdrop-blur-sm ${
-                      courseCategory === category.id
-                        ? 'bg-gradient-to-r from-blue-600/90 to-blue-700/90 text-white shadow-lg transform scale-110 border border-blue-400/30'
-                        : 'bg-white/60 text-gray-700 hover:bg-white/80 hover:text-blue-700 shadow-md border border-white/40 hover:shadow-lg hover:scale-105 hover:border-blue-200/50'
-                    }`}
-                  >
-                    {/* Glass effect for active state */}
-                    {courseCategory === category.id && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-white/20 rounded-2xl"></div>
-                    )}
-                    
-                    <svg 
-                      className={`relative z-10 w-4 h-4 ${courseCategory === category.id ? 'text-white' : 'text-gray-500'}`}
-                      fill="none" 
-                      stroke="currentColor" 
+
+                <div className="flex items-center gap-2">
+                  {/* Search box */}
+                  <div className="relative hidden sm:block w-60 lg:w-72">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      placeholder="Tìm kiếm khóa học..."
+                      className="w-full px-4 py-1.5 pl-8 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <svg
+                      className="w-4 h-4 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2"
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={category.icon}></path>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <span className="relative z-10">{category.name}</span>
-                    {courseCategory === category.id && (
-                      <div className="relative z-10 w-2 h-2 bg-blue-200/80 rounded-full animate-pulse"></div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
+                  </div>
 
-            {/* Enhanced styles for glass morphism and scrollbar */}
-            <style jsx>{`
+                  {/* My Courses button for authenticated users */}
+                  {isAuthenticated && (
+                    <button
+                      onClick={() => setEnrollmentFilter(enrollmentFilter === 'enrolled' ? 'all' : 'enrolled')}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-sm ${enrollmentFilter === 'enrolled'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-white text-green-600 border border-green-600 hover:bg-green-50'
+                        }`}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="hidden sm:inline">Khóa học của tôi</span>
+                      <span className="bg-white bg-opacity-20 px-1.5 py-0.5 rounded-full text-xs">
+                        {enrolledCourses?.length}
+                      </span>
+                    </button>
+                  )}
+
+                  {/* Payment History button for authenticated users */}
+                  {isAuthenticated && (
+                    <button
+                      onClick={() => navigate('/payment-history')}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="hidden sm:inline">Lịch sử thanh toán</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile search box */}
+              <div className="relative mb-4 sm:hidden">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="Tìm kiếm khóa học..."
+                  className="w-full px-4 py-2.5 pl-10 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <svg
+                  className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+
+              {/* Centered Categories and Filters Bar */}
+              <div className="flex justify-center w-full">
+                {/* Categories horizontal scroll container */}
+                <div
+                  className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth py-3 px-6 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl bg-gradient-to-r from-blue-50/30 via-white/40 to-blue-50/30"
+                  style={{
+                    scrollBehavior: 'smooth',
+                    msOverflowStyle: 'none',
+                    scrollbarWidth: 'none'
+                  }}
+                >
+                  {courseCategories?.map((category, index) => (
+                    <button
+                      key={category.id}
+                      onClick={() => setCourseCategory(category.id)}
+                      className={`relative flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-500 whitespace-nowrap min-w-fit backdrop-blur-sm ${courseCategory === category.id
+                          ? 'bg-gradient-to-r from-blue-600/90 to-blue-700/90 text-white shadow-lg transform scale-110 border border-blue-400/30'
+                          : 'bg-white/60 text-gray-700 hover:bg-white/80 hover:text-blue-700 shadow-md border border-white/40 hover:shadow-lg hover:scale-105 hover:border-blue-200/50'
+                        }`}
+                    >
+                      {/* Glass effect for active state */}
+                      {courseCategory === category.id && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-white/20 rounded-2xl"></div>
+                      )}
+
+                      <svg
+                        className={`relative z-10 w-4 h-4 ${courseCategory === category.id ? 'text-white' : 'text-gray-500'}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={category.icon}></path>
+                      </svg>
+                      <span className="relative z-10">{category.name}</span>
+                      {courseCategory === category.id && (
+                        <div className="relative z-10 w-2 h-2 bg-blue-200/80 rounded-full animate-pulse"></div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Enhanced styles for glass morphism and scrollbar */}
+              <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
                 scrollbar-width: none;
@@ -1125,67 +1120,67 @@ const Courses = () => {
                 animation: shimmer 3s infinite;
               }
             `}</style>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Promotional Banner - Removing the old banner */}
+        {/* Promotional Banner - Removing the old banner */}
 
-      <div className="container mx-auto px-4 py-5 md:py-8">
-        {/* Course Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          {isLoading ? (
-            renderSkeletons()
-          ) : filteredCourses.length > 0 ? (
-            filteredCourses.map((course) => (
-              <CourseCard
-                key={`course-${course.CourseID || course.id}`}
-                course={course}
-                enrollmentFilter={enrollmentFilter}
-                courseCategory={courseCategory}
-                navigate={navigate}
-                enrolledCourses={enrolledCourses}
-                onNavigate={() => setNavigatingToCourse(true)}
-              />
-            ))
-          ) : (
-            <div className="col-span-full py-12 text-center">
-              <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-sm">
-                <div className="bg-gray-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+        <div className="container mx-auto px-4 py-5 md:py-8">
+          {/* Course Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+            {isLoading ? (
+              renderSkeletons()
+            ) : filteredCourses?.length > 0 ? (
+              filteredCourses?.map((course) => (
+                <CourseCard
+                  key={`course-${course.CourseID || course.id}`}
+                  course={course}
+                  enrollmentFilter={enrollmentFilter}
+                  courseCategory={courseCategory}
+                  navigate={navigate}
+                  enrolledCourses={enrolledCourses}
+                  onNavigate={() => setNavigatingToCourse(true)}
+                />
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center">
+                <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-sm">
+                  <div className="bg-gray-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Không tìm thấy khóa học
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    {searchTerm
+                      ? `Không tìm thấy khóa học phù hợp với từ khóa "${searchTerm}". Vui lòng thử tìm kiếm với từ khóa khác.`
+                      : 'Hiện tại chưa có khóa học nào trong danh mục này. Hãy thử danh mục khác!'}
+                  </p>
+                  {searchTerm ? (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm"
+                    >
+                      Xóa tìm kiếm
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setCourseCategory(courseCategory === 'it' ? 'regular' : 'it')}
+                      className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm"
+                    >
+                      Xem khóa học {courseCategory === 'it' ? 'Thường' : 'IT'}
+                    </button>
+                  )}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Không tìm thấy khóa học
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {searchTerm 
-                    ? `Không tìm thấy khóa học phù hợp với từ khóa "${searchTerm}". Vui lòng thử tìm kiếm với từ khóa khác.` 
-                    : 'Hiện tại chưa có khóa học nào trong danh mục này. Hãy thử danh mục khác!'}
-                </p>
-                {searchTerm ? (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm"
-                  >
-                    Xóa tìm kiếm
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setCourseCategory(courseCategory === 'it' ? 'regular' : 'it')}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm"
-                  >
-                    Xem khóa học {courseCategory === 'it' ? 'Thường' : 'IT'}
-                  </button>
-                )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+
       </div>
-      
-    </div>
     </>
   );
 };

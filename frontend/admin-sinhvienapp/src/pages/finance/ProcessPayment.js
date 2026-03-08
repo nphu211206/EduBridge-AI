@@ -474,7 +474,7 @@ const ProcessPayment = () => {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                         >
-                          {paymentMethods.map((method) => (
+                          {paymentMethods?.map((method) => (
                             <MenuItem key={method.value} value={method.value}>
                               {method.label}
                             </MenuItem>

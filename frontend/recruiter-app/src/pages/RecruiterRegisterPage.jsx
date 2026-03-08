@@ -10,7 +10,7 @@ const AuthGraphicPanel = () => (
     <div className="hidden lg:flex flex-col items-center justify-center bg-gray-800 p-12 text-white text-center">
         <h1 className="text-4xl font-bold">
             <span className="text-blue-400">Edu</span>
-            <span className="text-purple-400">Ledger</span> AI
+            <span className="text-purple-400">Bridge</span> AI
         </h1>
         <p className="mt-4 text-lg text-gray-300">Xưởng đúc tài năng công nghệ thế hệ mới.</p>
         <p className="mt-2 text-gray-400">Nơi năng lực được xác thực, không chỉ là lời nói.</p>
@@ -58,12 +58,12 @@ export default function RecruiterRegisterPage() {
         password: '',
         confirmPassword: ''
     });
-    
+
     const [errors, setErrors] = useState({});
     const [apiError, setApiError] = useState('');
     const [apiSuccess, setApiSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    
+
     const navigate = useNavigate();
 
     const validateField = (name, value) => {
@@ -71,7 +71,7 @@ export default function RecruiterRegisterPage() {
             case 'fullName': return value.trim() ? '' : 'Họ và tên là bắt buộc.';
             case 'companyName': return value.trim() ? '' : 'Tên công ty là bắt buộc.'; // <-- VALIDATION MỚI
             case 'email': return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Email không hợp lệ.';
-            case 'password': return value.length >= 6 ? '' : 'Mật khẩu phải có ít nhất 6 ký tự.';
+            case 'password': return value?.length >= 6 ? '' : 'Mật khẩu phải có ít nhất 6 ký tự.';
             case 'confirmPassword': return value === formData.password ? '' : 'Mật khẩu xác nhận không khớp.';
             default: return '';
         }
@@ -98,7 +98,7 @@ export default function RecruiterRegisterPage() {
             return acc;
         }, {});
 
-        if (Object.keys(formErrors).length > 0) {
+        if (Object.keys(formErrors)?.length > 0) {
             setErrors(formErrors);
             return;
         }
@@ -112,7 +112,7 @@ export default function RecruiterRegisterPage() {
                 email: formData.email,
                 password: formData.password
             });
-            
+
             setApiSuccess('Đăng ký thành công! Đang chuyển đến trang đăng nhập...');
             setTimeout(() => navigate('/recruiter/login'), 2000);
 
@@ -142,10 +142,10 @@ export default function RecruiterRegisterPage() {
                         {apiSuccess && <Alert message={apiSuccess} type="success" />}
 
                         <FormInput id="fullName" name="fullName" type="text" label="Họ và Tên" placeholder="Nguyễn Văn A" value={formData.fullName} onChange={handleChange} onBlur={handleBlur} error={errors.fullName} required />
-                        
+
                         {/* --- TRƯỜNG MỚI CHO TÊN CÔNG TY --- */}
                         <FormInput id="companyName" name="companyName" type="text" label="Tên Công ty" placeholder="Công ty Cổ phần ABC" value={formData.companyName} onChange={handleChange} onBlur={handleBlur} error={errors.companyName} required />
-                        
+
                         <FormInput id="email" name="email" type="email" label="Email Công ty" placeholder="your.email@company.com" value={formData.email} onChange={handleChange} onBlur={handleBlur} error={errors.email} required />
                         <FormInput id="password" name="password" type="password" label="Mật khẩu" placeholder="••••••••" value={formData.password} onChange={handleChange} onBlur={handleBlur} error={errors.password} required />
                         <FormInput id="confirmPassword" name="confirmPassword" type="password" label="Xác nhận Mật khẩu" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} onBlur={handleBlur} error={errors.confirmPassword} required />

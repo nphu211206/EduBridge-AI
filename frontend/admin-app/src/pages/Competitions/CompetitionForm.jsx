@@ -296,7 +296,7 @@ const CompetitionForm = () => {
                     ]}
                   >
                     <Select>
-                      {difficultyOptions.map((option) => (
+                      {difficultyOptions?.map((option) => (
                         <Option key={option.value} value={option.value}>
                           {option.label}
                         </Option>
@@ -317,7 +317,7 @@ const CompetitionForm = () => {
                     ]}
                   >
                     <Select>
-                      {statusOptions.map((option) => (
+                      {statusOptions?.map((option) => (
                         <Option key={option.value} value={option.value}>
                           {option.label}
                         </Option>
@@ -375,7 +375,7 @@ const CompetitionForm = () => {
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                 >
-                  {instructors.map((instructor) => (
+                  {instructors?.map((instructor) => (
                     <Option key={instructor.UserID} value={instructor.UserID}>
                       {instructor.FullName}
                     </Option>

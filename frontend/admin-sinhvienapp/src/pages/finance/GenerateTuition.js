@@ -135,11 +135,11 @@ const GenerateTuition = () => {
           setSemesters(semestersData);
           
           // Extract unique academic years from semesters
-          const years = [...new Set(semestersData.map(sem => sem.AcademicYear))].sort().reverse();
+          const years = [...new Set(semestersData?.map(sem => sem.AcademicYear))].sort().reverse();
           setAcademicYears(years);
           
           // Set default selections if we have semesters
-          if (semestersData.length > 0) {
+          if (semestersData?.length > 0) {
             // Find current semester or use the first one
             const currentSemester = semestersData.find(s => s.IsCurrent === true) || semestersData[0];
             console.log('Selected semester:', currentSemester);
@@ -178,8 +178,8 @@ const GenerateTuition = () => {
       setStudentError(null);
       
       // Make sure we have a clean array of program IDs as strings
-      const programsParam = formData.programs.length > 0 
-        ? formData.programs.map(id => id.toString()).join(',') 
+      const programsParam = formData.programs?.length > 0 
+        ? formData.programs?.map(id => id.toString()).join(',') 
         : '';
       
       // Ensure semesterId is a number
@@ -210,7 +210,7 @@ const GenerateTuition = () => {
         setSelectAll(false);
         
         // Show info message if no students found
-        if (!response.data || response.data.length === 0) {
+        if (!response.data || response.data?.length === 0) {
           setStudentError(response.message || 'Không có sinh viên nào phù hợp với tiêu chí đã chọn');
         }
       } else {
@@ -292,8 +292,8 @@ const GenerateTuition = () => {
     setFormData(prev => ({ ...prev, academicYear: year }));
     
     // Find semesters in this year
-    const yearSemesters = semesters.filter(s => s.AcademicYear === year);
-    if (yearSemesters.length > 0) {
+    const yearSemesters = semesters?.filter(s => s.AcademicYear === year);
+    if (yearSemesters?.length > 0) {
       const selectedSemester = yearSemesters[0];
       
       // Parse semesterId as a number to avoid type issues
@@ -417,16 +417,16 @@ const GenerateTuition = () => {
     }
     
     setSelectedStudents(newSelected);
-    setSelectAll(newSelected.length === filteredStudents.length && filteredStudents.length > 0);
+    setSelectAll(newSelected?.length === filteredStudents?.length && filteredStudents?.length > 0);
   };
 
   // Select or deselect all students
   const handleSelectAllStudents = () => {
-    if (selectedStudents.length === filteredStudents.length) {
+    if (selectedStudents?.length === filteredStudents?.length) {
       setSelectedStudents([]);
       setSelectAll(false);
     } else {
-      setSelectedStudents(filteredStudents.map(student => student.UserID));
+      setSelectedStudents(filteredStudents?.map(student => student.UserID));
       setSelectAll(true);
     }
   };
@@ -437,7 +437,7 @@ const GenerateTuition = () => {
     setSearchTerm(searchValue);
 
     if (searchValue) {
-      const filtered = allStudents.filter(student =>
+      const filtered = allStudents?.filter(student =>
         student.FullName.toLowerCase().includes(searchValue.toLowerCase()) ||
         student.UserID.toString().includes(searchValue)
       );
@@ -495,7 +495,7 @@ const GenerateTuition = () => {
 
   // Calculate summary data
   const getSelectedStudentsData = () => {
-    return filteredStudents.filter(student => selectedStudents.includes(student.UserID));
+    return filteredStudents?.filter(student => selectedStudents.includes(student.UserID));
   };
 
   const calculateTotalAmount = () => {
@@ -508,7 +508,7 @@ const GenerateTuition = () => {
       total = students.reduce((sum, student) => sum + (student.TotalCredits * formData.amountPerCredit), 0);
     } else {
       // Semester-based calculation (fixed fee per student)
-      total = students.length * formData.semesterFee;
+      total = students?.length * formData.semesterFee;
     }
     
     // Apply discount if enabled
@@ -548,7 +548,7 @@ const GenerateTuition = () => {
                   select
                   disabled={dataLoading}
                 >
-                  {academicYears.map((year) => (
+                  {academicYears?.map((year) => (
                     <MenuItem key={year} value={year}>{year}</MenuItem>
                   ))}
                 </TextField>
@@ -597,7 +597,7 @@ const GenerateTuition = () => {
                     input={<OutlinedInput label="Ngành học" />}
                     renderValue={(selected) => (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => {
+                        {selected?.map((value) => {
                           const program = programs.find(p => p.ProgramID.toString() === value.toString());
                           return (
                             <Chip key={value} label={program ? program.ProgramName : value} />
@@ -606,7 +606,7 @@ const GenerateTuition = () => {
                       </Box>
                     )}
                   >
-                    {programs.map((program) => (
+                    {programs?.map((program) => (
                       <MenuItem key={program.ProgramID} value={program.ProgramID.toString()}>
                         <Checkbox checked={formData.programs.indexOf(program.ProgramID.toString()) > -1} />
                         <ListItemText primary={program.ProgramName} />
@@ -712,18 +712,18 @@ const GenerateTuition = () => {
               <>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                   <Typography variant="h6" color="primary">
-                    Đã chọn {selectedStudents.length} / {filteredStudents.length} sinh viên
+                    Đã chọn {selectedStudents?.length} / {filteredStudents?.length} sinh viên
                   </Typography>
                   <Button 
                     variant="outlined" 
                     onClick={handleSelectAllStudents}
-                    disabled={studentsLoading || filteredStudents.length === 0}
+                    disabled={studentsLoading || filteredStudents?.length === 0}
                   >
                     {selectAll ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
                   </Button>
                 </Box>
                 <DataGrid
-                  rows={filteredStudents.map(student => ({ 
+                  rows={filteredStudents?.map(student => ({ 
                     id: student.UserID, 
                     ...student, 
                     calculatedTuition: formData.chargeMode === 'credit' 
@@ -760,8 +760,8 @@ const GenerateTuition = () => {
                   onRowClick={handleRowClick}
                   loading={studentsLoading}
                   autoHeight
-                  pageSize={filteredStudents.length}
-                  rowsPerPageOptions={[filteredStudents.length]}
+                  pageSize={filteredStudents?.length}
+                  rowsPerPageOptions={[filteredStudents?.length]}
                   hideFooterPagination
                   getRowId={(row) => row.id}
                   sx={{
@@ -788,7 +788,7 @@ const GenerateTuition = () => {
               </>
             )}
             
-            {!studentsLoading && selectedStudents.length === 0 && filteredStudents.length > 0 && (
+            {!studentsLoading && selectedStudents?.length === 0 && filteredStudents?.length > 0 && (
               <Alert severity="warning" sx={{ mt: 3 }}>
                 Vui lòng chọn ít nhất một sinh viên để tiếp tục.
               </Alert>
@@ -962,7 +962,7 @@ const GenerateTuition = () => {
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body1">
-                          {formData.programs.length > 0 ? formData.programs.map(id => {
+                          {formData.programs?.length > 0 ? formData.programs?.map(id => {
                             const program = programs.find(p => p.ProgramID.toString() === id);
                             return program ? program.ProgramName : id;
                           }).join(', ') : 'Tất cả các ngành'}
@@ -972,7 +972,7 @@ const GenerateTuition = () => {
                         <Typography variant="body2" color="text.secondary">Sinh viên:</Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Typography variant="body1">{selectedStudents.length} sinh viên</Typography>
+                        <Typography variant="body1">{selectedStudents?.length} sinh viên</Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">Giảm học phí:</Typography>
@@ -1009,7 +1009,7 @@ const GenerateTuition = () => {
                       Tổng số tiền: {formatCurrency(calculateTotalAmount())}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Bao gồm học phí cho {selectedStudents.length} sinh viên
+                      Bao gồm học phí cho {selectedStudents?.length} sinh viên
                       {formData.includePreviousBalance ? ', đã bao gồm công nợ trước đó' : ''}
                       {formData.applyDiscount ? `, với mức giảm ${formData.discountPercentage}%` : ''}.
                     </Typography>
@@ -1028,7 +1028,7 @@ const GenerateTuition = () => {
                 </Card>
                 
                 <Box sx={{ mt: 3 }}>
-                  {selectedStudents.length === 0 ? (
+                  {selectedStudents?.length === 0 ? (
                     <Alert severity="error">
                       <AlertTitle>Lỗi</AlertTitle>
                       Không có sinh viên nào được chọn. Vui lòng quay lại và chọn ít nhất một sinh viên.
@@ -1036,7 +1036,7 @@ const GenerateTuition = () => {
                   ) : (
                     <Alert severity="warning" icon={<WarningIcon />}>
                       <AlertTitle>Quan trọng</AlertTitle>
-                      Bạn sắp tạo hóa đơn học phí cho {selectedStudents.length} sinh viên.
+                      Bạn sắp tạo hóa đơn học phí cho {selectedStudents?.length} sinh viên.
                       Hành động này không thể hoàn tác. Vui lòng xác nhận tất cả thông tin đã chính xác trước khi tiếp tục.
                     </Alert>
                   )}
@@ -1058,7 +1058,7 @@ const GenerateTuition = () => {
       
       <Paper sx={{ p: 3, mb: 4 }}>
         <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
+          {steps?.map((label, index) => {
             const stepProps = {};
             const labelProps = {};
             if (isStepOptional(index)) {
@@ -1075,7 +1075,7 @@ const GenerateTuition = () => {
           })}
         </Stepper>
         
-        {activeStep === steps.length ? (
+        {activeStep === steps?.length ? (
           <Box sx={{ mt: 3, mb: 1 }}>
             <Typography sx={{ mt: 2, mb: 1 }}>
               Đã hoàn tất tất cả các bước
@@ -1106,11 +1106,11 @@ const GenerateTuition = () => {
                   Bỏ qua
                 </Button>
               )}
-              {activeStep === steps.length - 1 ? (
+              {activeStep === steps?.length - 1 ? (
                 <Button 
                   onClick={handleConfirmGeneration} 
                   variant="contained"
-                  disabled={selectedStudents.length === 0 || loading}
+                  disabled={selectedStudents?.length === 0 || loading}
                   startIcon={loading ? undefined : <SendIcon />}
                 >
                   {loading ? 'Đang xử lý...' : 'Tạo học phí'}
@@ -1119,7 +1119,7 @@ const GenerateTuition = () => {
                 <Button 
                   onClick={handleNext}
                   variant="contained"
-                  disabled={(activeStep === 1 && selectedStudents.length === 0) || dataLoading}
+                  disabled={(activeStep === 1 && selectedStudents?.length === 0) || dataLoading}
                   endIcon={<ArrowForwardIcon />}
                 >
                   Tiếp tục
@@ -1138,7 +1138,7 @@ const GenerateTuition = () => {
         <DialogTitle>Xác nhận tạo học phí</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn sắp tạo hóa đơn học phí cho {selectedStudents.length} sinh viên 
+            Bạn sắp tạo hóa đơn học phí cho {selectedStudents?.length} sinh viên 
             với tổng số tiền {formatCurrency(calculateTotalAmount())}.
             Hành động này không thể hoàn tác. Bạn có muốn tiếp tục?
           </DialogContentText>
@@ -1164,7 +1164,7 @@ const GenerateTuition = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Đã tạo học phí thành công cho {selectedStudents.length} sinh viên.
+            Đã tạo học phí thành công cho {selectedStudents?.length} sinh viên.
             {formData.notifyStudents && ' Email thông báo đã được gửi đến tất cả sinh viên.'}
           </DialogContentText>
         </DialogContent>

@@ -127,14 +127,14 @@ const AiTestLocal = () => {
 
   // Save messages to localStorage when they change
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages?.length > 0) {
       localStorage.setItem('aiTestLocalMessages', JSON.stringify(messages));
     }
   }, [messages]);
 
   // Save test cases to localStorage when they change
   useEffect(() => {
-    if (testCases.length > 0) {
+    if (testCases?.length > 0) {
       localStorage.setItem('aiTestLocalTestCases', JSON.stringify(testCases));
     }
   }, [testCases]);
@@ -181,17 +181,17 @@ const AiTestLocal = () => {
       
       // Try to extract test cases from the response
       const extractedTestCases = extractTestCases(response);
-      if (extractedTestCases.length > 0) {
+      if (extractedTestCases?.length > 0) {
         setTestCases(extractedTestCases);
       }
       
       // Add this conversation to history
       const newConversation = {
         id: Date.now(),
-        title: userMessage.substring(0, 30) + (userMessage.length > 30 ? '...' : ''),
+        title: userMessage.substring(0, 30) + (userMessage?.length > 30 ? '...' : ''),
         timestamp: new Date().toISOString(),
         messages: [...messages, { role: 'user', content: userMessage }, { role: 'assistant', content: response }],
-        testCases: extractedTestCases.length > 0 ? extractedTestCases : testCases,
+        testCases: extractedTestCases?.length > 0 ? extractedTestCases : testCases,
         problemDescription: userMessage
       };
       
@@ -271,7 +271,7 @@ const AiTestLocal = () => {
       
       // Extract test cases
       const extractedTestCases = extractTestCases(response);
-      if (extractedTestCases.length > 0) {
+      if (extractedTestCases?.length > 0) {
         setTestCases(extractedTestCases);
       }
       
@@ -309,7 +309,7 @@ const AiTestLocal = () => {
     const testCasesRegex = /```(?:json|javascript)?\s*(\[(?:\s|\S)*?\])\s*```/g;
     const matches = [...response.matchAll(testCasesRegex)];
     
-    if (matches && matches.length > 0) {
+    if (matches && matches?.length > 0) {
       // Try each match until we find valid test cases
       for (const match of matches) {
         try {
@@ -318,7 +318,7 @@ const AiTestLocal = () => {
           
           // Validate that it's an array of test cases with input and expected output
           if (Array.isArray(parsedTestCases) && 
-              parsedTestCases.length > 0 && 
+              parsedTestCases?.length > 0 && 
               parsedTestCases[0].hasOwnProperty('input') && 
               parsedTestCases[0].hasOwnProperty('expected')) {
             return parsedTestCases;
@@ -337,7 +337,7 @@ const AiTestLocal = () => {
       if (jsonMatch) {
         const parsedTestCases = JSON.parse(jsonMatch[0]);
         if (Array.isArray(parsedTestCases) && 
-            parsedTestCases.length > 0 && 
+            parsedTestCases?.length > 0 && 
             parsedTestCases[0].hasOwnProperty('input') && 
             parsedTestCases[0].hasOwnProperty('expected')) {
           return parsedTestCases;
@@ -393,8 +393,8 @@ const AiTestLocal = () => {
         setCodeOutput(result.data.stdout || 'No output');
         
         // Run against test cases if there are any
-        if (testCases.length > 0) {
-          const testResults = await Promise.all(testCases.map(async (testCase, index) => {
+        if (testCases?.length > 0) {
+          const testResults = await Promise.all(testCases?.map(async (testCase, index) => {
             const input = JSON.stringify(testCase.input);
             const testResult = await executeCode(code, selectedLanguage, input);
             
@@ -414,11 +414,11 @@ const AiTestLocal = () => {
           setTestResults(testResults);
           
           // Calculate test summary
-          const passed = testResults.filter(r => r.passed).length;
+          const passed = testResults?.filter(r => r.passed)?.length;
           setTestSummary({
-            total: testResults.length,
+            total: testResults?.length,
             passed,
-            failed: testResults.length - passed
+            failed: testResults?.length - passed
           });
         }
       } else {
@@ -434,7 +434,7 @@ const AiTestLocal = () => {
   
   const loadHistoryItem = (historyItem) => {
     setMessages(historyItem.messages);
-    if (historyItem.testCases && historyItem.testCases.length > 0) {
+    if (historyItem.testCases && historyItem.testCases?.length > 0) {
       setTestCases(historyItem.testCases);
     }
     if (historyItem.problemDescription) {
@@ -496,7 +496,7 @@ const AiTestLocal = () => {
             onChange={(e) => setSelectedDifficulty(e.target.value)}
             className="flex-1 min-w-[140px] sm:flex-none px-3 py-1.5 bg-white/90 border border-blue-100 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-1 focus:ring-blue-400 text-center"
           >
-            {difficulties.map(diff => (
+            {difficulties?.map(diff => (
               <option key={diff} value={diff}>{diff}</option>
             ))}
           </select>
@@ -506,7 +506,7 @@ const AiTestLocal = () => {
             onChange={(e) => setSelectedProblemType(e.target.value)}
             className="flex-1 min-w-[140px] sm:flex-none px-3 py-1.5 bg-white/90 border border-blue-100 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-1 focus:ring-blue-400 text-center"
           >
-            {problemTypes.map(type => (
+            {problemTypes?.map(type => (
               <option key={type} value={type}>{type}</option>
             ))}
           </select>
@@ -562,7 +562,7 @@ const AiTestLocal = () => {
             <>
               <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-100 scrollbar-track-transparent">
                 <div className="p-3 space-y-3">
-                  {messages.map((message, index) => (
+                  {messages?.map((message, index) => (
                     <div 
                       key={index} 
                       className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
@@ -638,9 +638,9 @@ const AiTestLocal = () => {
           {activeTab === 'history' && (
             <div className="flex-1 overflow-y-auto">
               <div className="p-3">
-                {chatHistory.length > 0 ? (
+                {chatHistory?.length > 0 ? (
                   <div className="space-y-2">
-                    {chatHistory.map((item) => (
+                    {chatHistory?.map((item) => (
                       <div 
                         key={item.id}
                         onClick={() => loadHistoryItem(item)}

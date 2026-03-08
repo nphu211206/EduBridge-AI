@@ -83,8 +83,8 @@ const ProfileHeaderCard = React.memo(({ profile }) => {
                 <p className="mt-6 text-gray-300 max-w-xl mx-auto text-sm leading-relaxed px-2">
                     {profile.bio || <span className="italic opacity-70">Người dùng này chưa cập nhật tiểu sử trên GitHub.</span>}
                 </p>
-                 {/* Các liên kết bổ sung (ví dụ) - Chỉ hiển thị nếu có dữ liệu */}
-                  {/* <div className="mt-6 flex flex-wrap justify-center items-center gap-x-5 gap-y-2 text-gray-400 text-xs">
+                {/* Các liên kết bổ sung (ví dụ) - Chỉ hiển thị nếu có dữ liệu */}
+                {/* <div className="mt-6 flex flex-wrap justify-center items-center gap-x-5 gap-y-2 text-gray-400 text-xs">
                        {profile.location && <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4"/> {profile.location}</span>}
                        {profile.website && <a href={profile.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-400"><LinkIcon className="w-4 h-4"/> Portfolio</a>}
                        {profile.email && <a href={`mailto:${profile.email}`} className="flex items-center gap-1.5 hover:text-blue-400"><Mail className="w-4 h-4"/> Liên hệ</a>}
@@ -110,16 +110,16 @@ ProfileHeaderCard.displayName = 'ProfileHeaderCard'; // Tên hiển thị trong 
  * @param {Array<object>} skills - Mảng các skill object [{ skill_name, score }].
  */
 const CustomRadarTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="bg-gray-700/80 backdrop-blur-sm border border-gray-600 rounded-md shadow-lg px-3 py-1.5 text-xs">
-        <p className="font-semibold text-blue-300">{data.skill_name}</p>
-        <p className="text-gray-200">Điểm: <span className="font-bold">{data.score}</span> / 100</p>
-      </div>
-    );
-  }
-  return null;
+    if (active && payload && payload?.length) {
+        const data = payload[0].payload;
+        return (
+            <div className="bg-gray-700/80 backdrop-blur-sm border border-gray-600 rounded-md shadow-lg px-3 py-1.5 text-xs">
+                <p className="font-semibold text-blue-300">{data.skill_name}</p>
+                <p className="text-gray-200">Điểm: <span className="font-bold">{data.score}</span> / 100</p>
+            </div>
+        );
+    }
+    return null;
 };
 const SkillsRadarSection = React.memo(({ skills }) => {
     // Sắp xếp skills theo alphabet để biểu đồ trông ổn định hơn
@@ -133,7 +133,7 @@ const SkillsRadarSection = React.memo(({ skills }) => {
             <h2 className="text-xl font-semibold text-white mb-5 flex items-center gap-2.5">
                 <Award className="w-6 h-6 text-yellow-400" /> Hồ sơ năng lực AI-Verified
             </h2>
-            {sortedSkills && sortedSkills.length > 0 ? (
+            {sortedSkills && sortedSkills?.length > 0 ? (
                 <div className="h-[300px] w-full"> {/* Đảm bảo width 100% */}
                     <ResponsiveContainer width="100%" height="100%">
                         <RadarChart cx="50%" cy="50%" outerRadius="75%" data={sortedSkills} margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
@@ -143,22 +143,22 @@ const SkillsRadarSection = React.memo(({ skills }) => {
                                 stroke="#9CA3AF"
                                 tick={{ fontSize: 11, fill: '#D1D5DB' }}
                                 tickLine={false} // Ẩn gạch nối từ tâm ra
-                                // Custom tick formatter nếu tên quá dài (tùy chọn)
-                                // tickFormatter={(value) => value.length > 12 ? `${value.substring(0, 10)}...` : value}
-                             />
+                            // Custom tick formatter nếu tên quá dài (tùy chọn)
+                            // tickFormatter={(value) => value?.length > 12 ? `${value.substring(0, 10)}...` : value}
+                            />
                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} /> {/* Ẩn trục điểm */}
                             <Radar name="Điểm" dataKey="score" stroke="#60A5FA" fill="#3B82F6" fillOpacity={0.7} strokeWidth={1.5} />
-                             <RechartsTooltip content={<CustomRadarTooltip />} cursor={{ stroke: '#60A5FA', strokeWidth: 1, strokeDasharray: '3 3', fill: 'rgba(59, 130, 246, 0.1)' }} />
+                            <RechartsTooltip content={<CustomRadarTooltip />} cursor={{ stroke: '#60A5FA', strokeWidth: 1, strokeDasharray: '3 3', fill: 'rgba(59, 130, 246, 0.1)' }} />
                         </RadarChart>
                     </ResponsiveContainer>
-                 </div>
+                </div>
             ) : (
-                 <div className="text-center py-10">
-                     <Award className="w-12 h-12 text-gray-600 mx-auto mb-3"/>
+                <div className="text-center py-10">
+                    <Award className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-500 italic text-sm">Chưa có kỹ năng nào được xác thực.</p>
                     {/* Có thể thêm nút gợi ý phân tích repo nếu là owner */}
                     {/* <p className="text-xs text-gray-600 mt-1">(Hãy thử phân tích một dự án GitHub)</p> */}
-                 </div>
+                </div>
             )}
         </motion.div>
     );
@@ -172,7 +172,7 @@ SkillsRadarSection.displayName = 'SkillsRadarSection';
  * @param {boolean} isOwnerOrRecruiter - Cho biết người xem có quyền phân tích repo không.
  */
 const RepoCard = React.memo(({ repo, onClick, isOwnerOrRecruiter }) => (
-     <motion.div
+    <motion.div
         variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.3 } } }}
         whileHover={{ scale: 1.02, boxShadow: "0px 8px 20px rgba(59, 130, 246, 0.15)" }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
@@ -183,8 +183,8 @@ const RepoCard = React.memo(({ repo, onClick, isOwnerOrRecruiter }) => (
         aria-label={isOwnerOrRecruiter ? `Phân tích repository ${repo.name}` : `Xem repository ${repo.name} trên GitHub`}
     >
         <div className="flex justify-between items-start mb-2">
-             <a href={repo.html_url} target="_blank" rel="noopener noreferrer" title={`Xem ${repo.name} trên GitHub`} onClick={(e) => e.stopPropagation()} className="font-semibold text-lg text-blue-400 hover:text-blue-300 transition line-clamp-1 flex-grow mr-4 group/link inline-flex items-center gap-1.5">
-                 <Github className="w-4 h-4 flex-shrink-0"/> <span className="truncate">{repo.name}</span> <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity flex-shrink-0" />
+            <a href={repo.html_url} target="_blank" rel="noopener noreferrer" title={`Xem ${repo.name} trên GitHub`} onClick={(e) => e.stopPropagation()} className="font-semibold text-lg text-blue-400 hover:text-blue-300 transition line-clamp-1 flex-grow mr-4 group/link inline-flex items-center gap-1.5">
+                <Github className="w-4 h-4 flex-shrink-0" /> <span className="truncate">{repo.name}</span> <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity flex-shrink-0" />
             </a>
             <span className="text-xs text-yellow-400 flex items-center gap-1 flex-shrink-0 pt-1"> <Star className="w-3.5 h-3.5" /> {repo.stargazers_count ?? 0} </span>
         </div>
@@ -193,15 +193,15 @@ const RepoCard = React.memo(({ repo, onClick, isOwnerOrRecruiter }) => (
             <span>{repo.language || 'N/A'}</span>
             <span>Cập nhật: {new Date(repo.updated_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
         </div>
-         {isOwnerOrRecruiter && (
-             <button
+        {isOwnerOrRecruiter && (
+            <button
                 // onClick đã được xử lý ở div cha, button này chỉ để hiển thị
                 className="absolute bottom-4 right-4 bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:opacity-100 flex items-center gap-1.5 transform group-hover:scale-100 scale-95 pointer-events-none" // pointer-events-none để click xuyên qua
                 aria-hidden="true" // Ẩn khỏi trình đọc màn hình vì div cha đã xử lý
             >
-                 <BrainCircuit className="w-3.5 h-3.5"/> Phân tích
+                <BrainCircuit className="w-3.5 h-3.5" /> Phân tích
             </button>
-         )}
+        )}
     </motion.div>
 ));
 RepoCard.displayName = 'RepoCard';
@@ -238,7 +238,7 @@ const AnalysisResultModal = React.memo(({ repo, onClose, analysisResult, isAnaly
         if (isAnalyzing) {
             let textIndex = 0;
             textIntervalId = setInterval(() => {
-                textIndex = (textIndex + 1) % loadingTexts.length;
+                textIndex = (textIndex + 1) % loadingTexts?.length;
                 setCurrentLoadingText(loadingTexts[textIndex]);
             }, 600); // Đổi text sau mỗi 600ms
 
@@ -265,7 +265,7 @@ const AnalysisResultModal = React.memo(({ repo, onClose, analysisResult, isAnaly
     const formattedAdvice = useMemo(() => {
         if (!analysisResult?.career_advice) return null;
         // Tách thành các đoạn dựa trên xuống dòng kép
-        return analysisResult.career_advice.split('\n\n').map((paragraph, index) => (
+        return analysisResult.career_advice.split('\n\n')?.map((paragraph, index) => (
             <p key={index} className="mb-2 last:mb-0">{paragraph}</p>
         ));
     }, [analysisResult?.career_advice]);
@@ -289,7 +289,7 @@ const AnalysisResultModal = React.memo(({ repo, onClose, analysisResult, isAnaly
                     {/* Repo Name */}
                     <div className="mb-6 pb-4 border-b border-gray-700">
                         <a href={repo?.html_url} target="_blank" rel="noopener noreferrer" className="text-2xl font-semibold text-blue-400 hover:text-blue-300 transition inline-flex items-center gap-2 group">
-                            <Github className="w-5 h-5"/> {repo?.full_name || 'Đang tải...'} <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Github className="w-5 h-5" /> {repo?.full_name || 'Đang tải...'} <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
                     </div>
                     {/* Loading State */}
@@ -338,15 +338,15 @@ const AnalysisResultModal = React.memo(({ repo, onClose, analysisResult, isAnaly
                             {/* Strengths & Weaknesses */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="bg-gray-900/40 p-5 rounded-lg border border-gray-700">
-                                    <h4 className="font-semibold text-green-400 mb-3 text-md flex items-center gap-2"><ClipboardCheck className="w-5 h-5"/> Điểm mạnh</h4>
+                                    <h4 className="font-semibold text-green-400 mb-3 text-md flex items-center gap-2"><ClipboardCheck className="w-5 h-5" /> Điểm mạnh</h4>
                                     <ul className="list-disc list-inside text-gray-300 text-sm space-y-1.5 marker:text-green-500">
-                                        {analysisResult.strengths.map((item, i) => <li key={`strength-${i}`}>{item}</li>)}
+                                        {analysisResult.strengths?.map((item, i) => <li key={`strength-${i}`}>{item}</li>)}
                                     </ul>
                                 </div>
                                 <div className="bg-gray-900/40 p-5 rounded-lg border border-gray-700">
-                                    <h4 className="font-semibold text-yellow-400 mb-3 text-md flex items-center gap-2"><AlertCircle className="w-5 h-5"/> Cần cải thiện</h4>
+                                    <h4 className="font-semibold text-yellow-400 mb-3 text-md flex items-center gap-2"><AlertCircle className="w-5 h-5" /> Cần cải thiện</h4>
                                     <ul className="list-disc list-inside text-gray-300 text-sm space-y-1.5 marker:text-yellow-500">
-                                        {analysisResult.weaknesses.map((item, i) => <li key={`weakness-${i}`}>{item}</li>)}
+                                        {analysisResult.weaknesses?.map((item, i) => <li key={`weakness-${i}`}>{item}</li>)}
                                     </ul>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@ const AnalysisResultModal = React.memo(({ repo, onClose, analysisResult, isAnaly
                             <div>
                                 <h4 className="font-semibold text-white mb-4 text-lg">🛠️ Kỹ năng được xác thực</h4>
                                 <div className="flex flex-wrap gap-2.5">
-                                    {analysisResult.detected_skills.map((skill, i) => (
+                                    {analysisResult.detected_skills?.map((skill, i) => (
                                         <motion.div
                                             key={`skill-${i}`}
                                             initial={{ opacity: 0, scale: 0.8 }}
@@ -368,17 +368,17 @@ const AnalysisResultModal = React.memo(({ repo, onClose, analysisResult, isAnaly
                                     ))}
                                 </div>
                             </div>
-                             {/* Lời khuyên Sự nghiệp */}
-                              {formattedAdvice && (
+                            {/* Lời khuyên Sự nghiệp */}
+                            {formattedAdvice && (
                                 <div className="bg-gray-900/50 p-6 rounded-lg border border-gray-700 mt-6">
                                     <h4 className="font-semibold text-white mb-4 text-lg flex items-center gap-2">
-                                        <MessageSquareText className="w-5 h-5 text-purple-300"/> Lời khuyên Phát triển Sự nghiệp
+                                        <MessageSquareText className="w-5 h-5 text-purple-300" /> Lời khuyên Phát triển Sự nghiệp
                                     </h4>
                                     <div className="text-gray-300 text-sm space-y-3 leading-relaxed prose prose-sm prose-invert max-w-none">
                                         {formattedAdvice}
                                     </div>
                                 </div>
-                             )}
+                            )}
                         </motion.div>
                     )}
                 </div> {/* End Content */}
@@ -420,22 +420,22 @@ const generateFakeEvaluation = (profileData) => {
     const education = profileData.education || [];
 
     // Tăng/giảm điểm
-    if (skills.length > 5) score = Math.min(100, score + 6); else if (skills.length === 0) score -= 5;
-    if (repos.length > 5) score = Math.min(100, score + 4);
-    if (experiences.length > 0) score = Math.min(100, score + 7); else score -= 3;
-    if (education.length > 0) score = Math.min(100, score + 3);
+    if (skills?.length > 5) score = Math.min(100, score + 6); else if (skills?.length === 0) score -= 5;
+    if (repos?.length > 5) score = Math.min(100, score + 4);
+    if (experiences?.length > 0) score = Math.min(100, score + 7); else score -= 3;
+    if (education?.length > 0) score = Math.min(100, score + 3);
 
     // Section 1: Đánh giá Tổng quan
     evaluation.overall = `Ứng viên thể hiện tiềm năng ${score > 85 ? 'rất tốt' : (score > 70 ? 'khá tốt' : 'trung bình')}. Cần xem xét thêm các yếu tố chi tiết.`;
 
     // Section 2: Kỹ năng (AI-Verified)
     let skillSection = { title: "Kỹ năng (AI-Verified)", points: [] };
-    if (skills.length > 0) {
-        const avgScore = skills.length > 0 ? Math.round(skills.reduce((sum, s) => sum + (s.score || 0), 0) / skills.length) : 0;
-        skillSection.points.push(`Có ${skills.length} kỹ năng được AI xác thực, điểm trung bình ~${avgScore}/100.`);
+    if (skills?.length > 0) {
+        const avgScore = skills?.length > 0 ? Math.round(skills.reduce((sum, s) => sum + (s.score || 0), 0) / skills?.length) : 0;
+        skillSection.points.push(`Có ${skills?.length} kỹ năng được AI xác thực, điểm trung bình ~${avgScore}/100.`);
         const topSkill = [...skills].sort((a, b) => (b.score || 0) - (a.score || 0))[0];
         if (topSkill) skillSection.points.push(`Nổi bật: ${topSkill.skill_name} (${topSkill.score || 'N/A'} điểm).`);
-        if (skills.length < 3) skillSection.points.push("Cần bổ sung thêm kỹ năng được xác thực.");
+        if (skills?.length < 3) skillSection.points.push("Cần bổ sung thêm kỹ năng được xác thực.");
     } else {
         skillSection.points.push("Chưa có kỹ năng nào được AI xác thực. Đây là điểm cần cải thiện lớn.");
     }
@@ -443,12 +443,12 @@ const generateFakeEvaluation = (profileData) => {
 
     // Section 3: Dự án GitHub
     let repoSection = { title: "Dự án GitHub", points: [] };
-    if (repos.length > 0) {
-        repoSection.points.push(`Có ${repos.length} dự án public.`);
+    if (repos?.length > 0) {
+        repoSection.points.push(`Có ${repos?.length} dự án public.`);
         const recentRepo = [...repos].sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime())[0];
         if (recentRepo) repoSection.points.push(`Dự án "${recentRepo.name}" được cập nhật gần đây nhất.`);
         if (repos.some(r => r.stargazers_count > 10)) { score = Math.min(100, score + 2); repoSection.points.push("Có dự án nhận được sự chú ý nhất định (stars > 10)."); }
-        if (repos.length < 3) repoSection.points.push("Số lượng dự án còn khá ít.");
+        if (repos?.length < 3) repoSection.points.push("Số lượng dự án còn khá ít.");
     } else {
         repoSection.points.push("Không có dự án public nào.");
     }
@@ -456,8 +456,8 @@ const generateFakeEvaluation = (profileData) => {
 
     // Section 4: Kinh nghiệm làm việc
     let expSection = { title: "Kinh nghiệm làm việc", points: [] };
-    if (experiences.length > 0) {
-        expSection.points.push(`Đã có ${experiences.length} kinh nghiệm được ghi nhận.`);
+    if (experiences?.length > 0) {
+        expSection.points.push(`Đã có ${experiences?.length} kinh nghiệm được ghi nhận.`);
         const latestExp = experiences[0]; // Assume sorted
         expSection.points.push(`${latestExp.isCurrent ? 'Hiện tại:' : 'Gần nhất:'} ${latestExp.title || 'N/A'} tại ${latestExp.company || 'N/A'}.`);
         if (experiences.some(exp => exp.description?.length > 100)) expSection.points.push("Mô tả kinh nghiệm khá chi tiết.");
@@ -466,14 +466,14 @@ const generateFakeEvaluation = (profileData) => {
     }
     evaluation.sections.push(expSection);
 
-     // Section 5: Học vấn
+    // Section 5: Học vấn
     let eduSection = { title: "Học vấn", points: [] };
-    if (education.length > 0) {
+    if (education?.length > 0) {
         const latestEdu = education[0]; // Assume sorted
         eduSection.points.push(`${latestEdu.isCurrent ? 'Đang theo học' : 'Đã tốt nghiệp'} ${latestEdu.degree || 'N/A'} - ${latestEdu.fieldOfStudy || 'N/A'} tại ${latestEdu.school || 'N/A'}.`);
         if (latestEdu.grade) eduSection.points.push(`GPA: ${latestEdu.grade} (tham khảo).`);
     } else {
-         eduSection.points.push("Chưa có thông tin học vấn.");
+        eduSection.points.push("Chưa có thông tin học vấn.");
     }
     evaluation.sections.push(eduSection);
 
@@ -503,14 +503,14 @@ const FakeEvaluationModal = React.memo(({ student, onClose }) => { // Prop 'stud
             setEvaluationResult(null);
             const delayMs = Math.floor(Math.random() * (FAKE_EVAL_DELAY_MS - 1000 + 1)) + 1000;
             await sleep(delayMs);
-            
+
             try {
                 const result = generateFakeEvaluation(student); // Truyền toàn bộ profileData
-                 setEvaluationResult(result);
+                setEvaluationResult(result);
             } catch (error) {
-                 console.error("Error generating fake evaluation:", error);
-                 // Cập nhật để hiển thị lỗi rõ hơn trong modal
-                 setEvaluationResult({score: 0, evaluation: { overall: "Lỗi tạo đánh giá", sections: [{title: "Chi tiết lỗi", points:[error.message || "Lỗi không xác định"]}], finalVerdict: "Vui lòng thử lại.", disclaimer: "" } });
+                console.error("Error generating fake evaluation:", error);
+                // Cập nhật để hiển thị lỗi rõ hơn trong modal
+                setEvaluationResult({ score: 0, evaluation: { overall: "Lỗi tạo đánh giá", sections: [{ title: "Chi tiết lỗi", points: [error.message || "Lỗi không xác định"] }], finalVerdict: "Vui lòng thử lại.", disclaimer: "" } });
             } finally {
                 setIsLoading(false);
             }
@@ -521,86 +521,86 @@ const FakeEvaluationModal = React.memo(({ student, onClose }) => { // Prop 'stud
         if (student && student.profile) {
             performFakeEvaluation();
         } else {
-             console.error("FakeEvaluationModal: student or student.profile is missing!");
-             setIsLoading(false);
-             setEvaluationResult({score: 0, evaluation: { overall: "Thiếu thông tin hồ sơ để đánh giá.", sections: [], finalVerdict: "", disclaimer: "" } });
+            console.error("FakeEvaluationModal: student or student.profile is missing!");
+            setIsLoading(false);
+            setEvaluationResult({ score: 0, evaluation: { overall: "Thiếu thông tin hồ sơ để đánh giá.", sections: [], finalVerdict: "", disclaimer: "" } });
         }
     }, [student]);
 
     const getSectionIcon = (title) => { /* ... (giữ nguyên) ... */
-        if (title.includes("Kỹ năng")) return <Award className="w-5 h-5 text-yellow-400 mr-2 shrink-0"/>;
-        if (title.includes("GitHub")) return <Github className="w-5 h-5 text-blue-400 mr-2 shrink-0"/>;
-        if (title.includes("Kinh nghiệm")) return <Briefcase className="w-5 h-5 text-purple-400 mr-2 shrink-0"/>;
-        if (title.includes("Học vấn")) return <GraduationCap className="w-5 h-5 text-green-400 mr-2 shrink-0"/>;
-        return <Info className="w-5 h-5 text-gray-400 mr-2 shrink-0"/>;
+        if (title.includes("Kỹ năng")) return <Award className="w-5 h-5 text-yellow-400 mr-2 shrink-0" />;
+        if (title.includes("GitHub")) return <Github className="w-5 h-5 text-blue-400 mr-2 shrink-0" />;
+        if (title.includes("Kinh nghiệm")) return <Briefcase className="w-5 h-5 text-purple-400 mr-2 shrink-0" />;
+        if (title.includes("Học vấn")) return <GraduationCap className="w-5 h-5 text-green-400 mr-2 shrink-0" />;
+        return <Info className="w-5 h-5 text-gray-400 mr-2 shrink-0" />;
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-[110] p-4 backdrop-blur-md" onClick={onClose}>
-             <motion.div
-                 initial={{ scale: 0.95, opacity: 0, y: 10 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 10 }}
-                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                 className="bg-gradient-to-b from-gray-800 to-gray-800/90 rounded-xl border border-gray-700 w-full max-w-3xl flex flex-col overflow-hidden shadow-2xl max-h-[90vh]"
-                 onClick={e => e.stopPropagation()}>
-                 {/* Header Modal */}
-                 <div className="p-5 border-b border-gray-700/80 flex justify-between items-center flex-shrink-0 bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10">
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2.5"> <ClipboardCheck className="w-6 h-6 text-green-400"/> Đánh giá Nhanh (AI Giả Lập) </h2>
+            <motion.div
+                initial={{ scale: 0.95, opacity: 0, y: 10 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="bg-gradient-to-b from-gray-800 to-gray-800/90 rounded-xl border border-gray-700 w-full max-w-3xl flex flex-col overflow-hidden shadow-2xl max-h-[90vh]"
+                onClick={e => e.stopPropagation()}>
+                {/* Header Modal */}
+                <div className="p-5 border-b border-gray-700/80 flex justify-between items-center flex-shrink-0 bg-gray-800/80 backdrop-blur-sm sticky top-0 z-10">
+                    <h2 className="text-xl font-bold text-white flex items-center gap-2.5"> <ClipboardCheck className="w-6 h-6 text-green-400" /> Đánh giá Nhanh (AI Giả Lập) </h2>
                     <button onClick={onClose} className="text-gray-500 hover:text-white transition rounded-full p-1.5 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-700"> <X className="w-5 h-5" /> </button>
-                 </div>
-                 {/* Content Modal */}
-                 <div className="p-6 md:p-8 overflow-y-auto flex-grow styled-scrollbar">
-                     {/* Thông tin Sinh viên */}
-                     <div className="mb-6 pb-5 border-b border-gray-700/80 flex items-center gap-4">
-                        <img src={student?.profile?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(student?.profile?.githubUsername || '?')}&background=random`} alt="Avatar" className="w-14 h-14 rounded-full border-2 border-gray-600 shadow-md"/>
+                </div>
+                {/* Content Modal */}
+                <div className="p-6 md:p-8 overflow-y-auto flex-grow styled-scrollbar">
+                    {/* Thông tin Sinh viên */}
+                    <div className="mb-6 pb-5 border-b border-gray-700/80 flex items-center gap-4">
+                        <img src={student?.profile?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(student?.profile?.githubUsername || '?')}&background=random`} alt="Avatar" className="w-14 h-14 rounded-full border-2 border-gray-600 shadow-md" />
                         <div>
                             <p className="text-xl font-semibold text-blue-300">{student?.profile?.name || student?.profile?.githubUsername}</p>
-                            <a href={`https://github.com/${student?.profile?.githubUsername}`} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-blue-400 transition inline-flex items-center gap-1"> @{student?.profile?.githubUsername} <ExternalLink size={14}/> </a>
+                            <a href={`https://github.com/${student?.profile?.githubUsername}`} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-blue-400 transition inline-flex items-center gap-1"> @{student?.profile?.githubUsername} <ExternalLink size={14} /> </a>
                         </div>
-                     </div>
-                     {/* Loading hoặc Kết quả */}
-                     {isLoading ? ( <div className="py-20"> <LoadingSpinner text="AI đang phân tích hồ sơ và đưa ra đánh giá..." size="md"/> </div> )
-                      : evaluationResult ? (
-                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-                             {/* Điểm số & Đánh giá tổng quan */}
-                             <div className="text-center bg-gradient-to-br from-gray-700/60 to-gray-700/30 p-6 rounded-lg border border-gray-600/60 shadow-inner backdrop-blur-sm">
-                                <p className="text-gray-400 text-xs mb-2 uppercase tracking-widest font-medium">Điểm Đánh giá Tổng quan</p>
-                                <p className="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-blue-400 mb-3">{evaluationResult.score}<span className="text-3xl text-gray-500 font-normal">/100</span></p>
-                                <p className="text-sm text-gray-300 italic max-w-md mx-auto">{evaluationResult.evaluation?.overall || "Không có đánh giá tổng quan."}</p>
-                             </div>
-                             {/* Nhận xét Chi tiết theo Sections */}
-                             <div className="space-y-5">
-                                <h3 className="text-lg font-semibold text-gray-300 border-b border-gray-700 pb-2 mb-4 flex items-center gap-2"><MessageSquareText className="w-5 h-5"/> Nhận xét Chi tiết:</h3>
-                                {evaluationResult.evaluation?.sections?.map((section, index) => (
-                                    section.points && section.points.length > 0 && (
-                                        <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 * index }} className="bg-gray-900/40 p-4 rounded-lg border border-gray-700/80">
-                                            <h4 className="font-semibold text-blue-300 mb-2.5 text-md flex items-center"> {getSectionIcon(section.title)} {section.title} </h4>
-                                            <ul className="list-disc list-outside text-gray-400 text-sm space-y-1.5 pl-5 marker:text-gray-600"> {section.points.map((point, pIndex) => ( <li key={pIndex}>{point}</li> ))} </ul>
-                                        </motion.div>
-                                    )
-                                ))}
-                                {/* Hiển thị nếu không có section nào có nội dung */}
-                                {(!evaluationResult.evaluation?.sections || evaluationResult.evaluation.sections.every(s => !s.points || s.points.length === 0)) && (
-                                    <p className="text-gray-500 italic text-center text-sm py-4">Không có nhận xét chi tiết nào.</p>
-                                )}
-                             </div>
-                             {/* Nhận xét Cuối cùng */}
-                             {evaluationResult.evaluation?.finalVerdict && (
-                                <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 p-5 rounded-lg border border-purple-700/50 mt-8 shadow-lg">
-                                    <h4 className="font-semibold text-purple-300 mb-2 text-md flex items-center gap-2"><UserCheck className="w-5 h-5"/> Đề xuất:</h4>
-                                    <p className="text-gray-300 text-sm font-medium">{evaluationResult.evaluation.finalVerdict}</p>
+                    </div>
+                    {/* Loading hoặc Kết quả */}
+                    {isLoading ? (<div className="py-20"> <LoadingSpinner text="AI đang phân tích hồ sơ và đưa ra đánh giá..." size="md" /> </div>)
+                        : evaluationResult ? (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                                {/* Điểm số & Đánh giá tổng quan */}
+                                <div className="text-center bg-gradient-to-br from-gray-700/60 to-gray-700/30 p-6 rounded-lg border border-gray-600/60 shadow-inner backdrop-blur-sm">
+                                    <p className="text-gray-400 text-xs mb-2 uppercase tracking-widest font-medium">Điểm Đánh giá Tổng quan</p>
+                                    <p className="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-blue-400 mb-3">{evaluationResult.score}<span className="text-3xl text-gray-500 font-normal">/100</span></p>
+                                    <p className="text-sm text-gray-300 italic max-w-md mx-auto">{evaluationResult.evaluation?.overall || "Không có đánh giá tổng quan."}</p>
                                 </div>
-                             )}
-                             {/* Disclaimer */}
-                             {evaluationResult.evaluation?.disclaimer && ( <p className="text-xs text-gray-500 italic text-center pt-4 border-t border-gray-700/50 mt-8">{evaluationResult.evaluation.disclaimer}</p> )}
-                         </motion.div>
-                     ) : ( <ErrorDisplay message="Không thể tạo đánh giá."/> )}
-                 </div>
-                 {/* Footer Modal */}
-                 <div className="p-4 border-t border-gray-700/80 flex justify-end bg-gray-800/70 backdrop-blur-sm flex-shrink-0 sticky bottom-0 z-10">
-                     <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} onClick={onClose} className="py-2 px-6 bg-gray-600 rounded-md hover:bg-gray-500 transition text-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-gray-800"> Đóng </motion.button>
-                 </div>
-             </motion.div>
-             <style jsx>{/* CSS for pulse */}</style>
+                                {/* Nhận xét Chi tiết theo Sections */}
+                                <div className="space-y-5">
+                                    <h3 className="text-lg font-semibold text-gray-300 border-b border-gray-700 pb-2 mb-4 flex items-center gap-2"><MessageSquareText className="w-5 h-5" /> Nhận xét Chi tiết:</h3>
+                                    {evaluationResult.evaluation?.sections?.map((section, index) => (
+                                        section.points && section.points?.length > 0 && (
+                                            <motion.div key={index} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 * index }} className="bg-gray-900/40 p-4 rounded-lg border border-gray-700/80">
+                                                <h4 className="font-semibold text-blue-300 mb-2.5 text-md flex items-center"> {getSectionIcon(section.title)} {section.title} </h4>
+                                                <ul className="list-disc list-outside text-gray-400 text-sm space-y-1.5 pl-5 marker:text-gray-600"> {section.points?.map((point, pIndex) => (<li key={pIndex}>{point}</li>))} </ul>
+                                            </motion.div>
+                                        )
+                                    ))}
+                                    {/* Hiển thị nếu không có section nào có nội dung */}
+                                    {(!evaluationResult.evaluation?.sections || evaluationResult.evaluation.sections.every(s => !s.points || s.points?.length === 0)) && (
+                                        <p className="text-gray-500 italic text-center text-sm py-4">Không có nhận xét chi tiết nào.</p>
+                                    )}
+                                </div>
+                                {/* Nhận xét Cuối cùng */}
+                                {evaluationResult.evaluation?.finalVerdict && (
+                                    <div className="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 p-5 rounded-lg border border-purple-700/50 mt-8 shadow-lg">
+                                        <h4 className="font-semibold text-purple-300 mb-2 text-md flex items-center gap-2"><UserCheck className="w-5 h-5" /> Đề xuất:</h4>
+                                        <p className="text-gray-300 text-sm font-medium">{evaluationResult.evaluation.finalVerdict}</p>
+                                    </div>
+                                )}
+                                {/* Disclaimer */}
+                                {evaluationResult.evaluation?.disclaimer && (<p className="text-xs text-gray-500 italic text-center pt-4 border-t border-gray-700/50 mt-8">{evaluationResult.evaluation.disclaimer}</p>)}
+                            </motion.div>
+                        ) : (<ErrorDisplay message="Không thể tạo đánh giá." />)}
+                </div>
+                {/* Footer Modal */}
+                <div className="p-4 border-t border-gray-700/80 flex justify-end bg-gray-800/70 backdrop-blur-sm flex-shrink-0 sticky bottom-0 z-10">
+                    <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} onClick={onClose} className="py-2 px-6 bg-gray-600 rounded-md hover:bg-gray-500 transition text-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-gray-800"> Đóng </motion.button>
+                </div>
+            </motion.div>
+            <style jsx>{/* CSS for pulse */}</style>
         </div>
     );
 });
@@ -675,7 +675,7 @@ const ProfileItemModal = React.memo(({ item, onSave, onClose, type, isLoading })
         // Xóa lỗi của trường đang được sửa
         if (errors[name]) {
             setErrors(prevErrors => {
-                const newErrors = {...prevErrors};
+                const newErrors = { ...prevErrors };
                 delete newErrors[name];
                 return newErrors;
             });
@@ -724,7 +724,7 @@ const ProfileItemModal = React.memo(({ item, onSave, onClose, type, isLoading })
         // }
 
         setErrors(newErrors); // Cập nhật state errors
-        return Object.keys(newErrors).length === 0; // Trả về true nếu không có lỗi
+        return Object.keys(newErrors)?.length === 0; // Trả về true nếu không có lỗi
     }, [formData, isExperience]); // Dependency là formData và isExperience
 
     /**
@@ -773,12 +773,12 @@ const ProfileItemModal = React.memo(({ item, onSave, onClose, type, isLoading })
                     <h2 id="profile-item-modal-title" className="text-xl font-bold text-white">
                         {item ? `Chỉnh sửa ${isExperience ? 'Kinh nghiệm Làm việc' : 'Quá trình Học vấn'}` : `Thêm ${isExperience ? 'Kinh nghiệm mới' : 'Học vấn mới'}`}
                     </h2>
-                     <button
-                         onClick={onClose}
-                         className="text-gray-400 hover:text-white transition rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-                         aria-label="Đóng modal"
-                     >
-                         <X className="w-5 h-5" />
+                    <button
+                        onClick={onClose}
+                        className="text-gray-400 hover:text-white transition rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                        aria-label="Đóng modal"
+                    >
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 
@@ -786,20 +786,20 @@ const ProfileItemModal = React.memo(({ item, onSave, onClose, type, isLoading })
                 <form onSubmit={handleSubmit} noValidate> {/* noValidate để tắt validation mặc định của trình duyệt */}
                     <div className="p-6 space-y-5 overflow-y-auto styled-scrollbar"> {/* Thêm padding và scroll */}
                         {/* Render các trường input dựa trên loại modal (Experience/Education) */}
-                         {isExperience ? (
-                             <>
-                                 <FormInput id="exp-title" name="title" label="Chức danh *" value={formData.title} onChange={handleChange} error={errors.title} placeholder="VD: Lập trình viên Frontend" required />
-                                 <FormInput id="exp-company" name="company" label="Công ty *" value={formData.company} onChange={handleChange} error={errors.company} placeholder="VD: FPT Software" required />
-                                 <FormInput id="exp-location" name="location" label="Địa điểm" value={formData.location} onChange={handleChange} error={errors.location} placeholder="VD: Hà Nội, Việt Nam" />
-                             </>
-                         ) : (
-                              <>
-                                 <FormInput id="edu-school" name="school" label="Tên trường / Tổ chức *" value={formData.school} onChange={handleChange} error={errors.school} placeholder="VD: Đại học Bách Khoa Hà Nội" required />
-                                 <FormInput id="edu-degree" name="degree" label="Bằng cấp *" value={formData.degree} onChange={handleChange} error={errors.degree} placeholder="VD: Kỹ sư Công nghệ Thông tin" required />
-                                 <FormInput id="edu-fieldOfStudy" name="fieldOfStudy" label="Chuyên ngành *" value={formData.fieldOfStudy} onChange={handleChange} error={errors.fieldOfStudy} placeholder="VD: Khoa học Máy tính" required />
-                                 <FormInput id="edu-grade" name="grade" label="Điểm GPA (tùy chọn)" value={formData.grade} onChange={handleChange} error={errors.grade} placeholder="VD: 3.6/4.0" />
-                             </>
-                         )}
+                        {isExperience ? (
+                            <>
+                                <FormInput id="exp-title" name="title" label="Chức danh *" value={formData.title} onChange={handleChange} error={errors.title} placeholder="VD: Lập trình viên Frontend" required />
+                                <FormInput id="exp-company" name="company" label="Công ty *" value={formData.company} onChange={handleChange} error={errors.company} placeholder="VD: FPT Software" required />
+                                <FormInput id="exp-location" name="location" label="Địa điểm" value={formData.location} onChange={handleChange} error={errors.location} placeholder="VD: Hà Nội, Việt Nam" />
+                            </>
+                        ) : (
+                            <>
+                                <FormInput id="edu-school" name="school" label="Tên trường / Tổ chức *" value={formData.school} onChange={handleChange} error={errors.school} placeholder="VD: Đại học Bách Khoa Hà Nội" required />
+                                <FormInput id="edu-degree" name="degree" label="Bằng cấp *" value={formData.degree} onChange={handleChange} error={errors.degree} placeholder="VD: Kỹ sư Công nghệ Thông tin" required />
+                                <FormInput id="edu-fieldOfStudy" name="fieldOfStudy" label="Chuyên ngành *" value={formData.fieldOfStudy} onChange={handleChange} error={errors.fieldOfStudy} placeholder="VD: Khoa học Máy tính" required />
+                                <FormInput id="edu-grade" name="grade" label="Điểm GPA (tùy chọn)" value={formData.grade} onChange={handleChange} error={errors.grade} placeholder="VD: 3.6/4.0" />
+                            </>
+                        )}
 
                         {/* Input Ngày Bắt đầu và Kết thúc (chung cho cả 2 loại) */}
                         <div className="flex flex-col sm:flex-row gap-5">
@@ -807,14 +807,14 @@ const ProfileItemModal = React.memo(({ item, onSave, onClose, type, isLoading })
                             <div className="flex-1">
                                 <label htmlFor="startDate" className="block text-sm font-medium text-gray-300 mb-1.5">Ngày bắt đầu *</label>
                                 <input id="startDate" type="date" name="startDate" value={formData.startDate} onChange={handleChange} className={`w-full p-3 bg-gray-700 border rounded-md focus:outline-none focus:ring-2 transition duration-200 text-white ${errors.startDate ? 'border-red-500 ring-red-500/50' : 'border-gray-600 hover:border-gray-500 focus:ring-blue-500 focus:border-transparent'}`} required aria-invalid={!!errors.startDate} aria-describedby={errors.startDate ? "startDate-error" : undefined} />
-                                {errors.startDate && <p id="startDate-error" className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5"/>{errors.startDate}</p>}
+                                {errors.startDate && <p id="startDate-error" className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" />{errors.startDate}</p>}
                             </div>
                             {/* End Date */}
                             <div className="flex-1">
                                 <label htmlFor="endDate" className="block text-sm font-medium text-gray-300 mb-1.5">Ngày kết thúc</label>
                                 <input id="endDate" type="date" name="endDate" value={formData.endDate} onChange={handleChange} className={`w-full p-3 bg-gray-700 border rounded-md focus:outline-none focus:ring-2 transition duration-200 text-white ${errors.endDate ? 'border-red-500 ring-red-500/50' : 'border-gray-600 hover:border-gray-500 focus:ring-blue-500 focus:border-transparent'}`} aria-invalid={!!errors.endDate} aria-describedby={errors.endDate ? "endDate-error" : "endDate-helper"} />
                                 <p id="endDate-helper" className="text-xs text-gray-500 mt-1.5">Để trống nếu đang tiếp tục</p>
-                                {errors.endDate && <p id="endDate-error" className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5"/>{errors.endDate}</p>}
+                                {errors.endDate && <p id="endDate-error" className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" />{errors.endDate}</p>}
                             </div>
                         </div>
 
@@ -856,7 +856,7 @@ const ProfileItemModal = React.memo(({ item, onSave, onClose, type, isLoading })
                             className="py-2 px-5 bg-blue-600 rounded-md hover:bg-blue-500 transition-colors duration-200 text-white font-bold text-sm flex items-center justify-center min-w-[90px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {/* Hiển thị spinner hoặc text */}
-                             {isLoading ? <LoadingSpinner size="sm" text="" /> : 'Lưu'}
+                            {isLoading ? <LoadingSpinner size="sm" text="" /> : 'Lưu'}
                         </motion.button>
                     </div>
                 </form>
@@ -920,8 +920,8 @@ const TimelineSection = React.memo(({ isOwner, items = [], itemType, onAdd, onEd
             </div>
             {/* Content Section */}
             {isLoading ? (
-                <div className="flex justify-center py-10"><LoadingSpinner size="md"/></div>
-            ) : items.length === 0 ? (
+                <div className="flex justify-center py-10"><LoadingSpinner size="md" /></div>
+            ) : items?.length === 0 ? (
                 // SỬA LỖI Ở ĐÂY: Truyền thẳng ItemIcon vào prop icon
                 <EmptyState
                     icon={ItemIcon} // Truyền component type
@@ -931,13 +931,13 @@ const TimelineSection = React.memo(({ isOwner, items = [], itemType, onAdd, onEd
                         <button onClick={onAdd} className="mt-6 inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-2.5 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
                             <Plus className="w-5 h-5" /> {addText}
                         </button>
-                    : null}
+                        : null}
                 />
             ) : (
                 // Phần hiển thị danh sách (giữ nguyên)
                 <div className="space-y-8 relative border-l-2 border-gray-700 ml-4 pl-8 pt-2">
                     <AnimatePresence>
-                        {items.map((item, index) => (
+                        {items?.map((item, index) => (
                             <motion.div
                                 key={item.id}
                                 layout // Cho phép animation mượt khi item bị xóa/thêm
@@ -960,14 +960,14 @@ const TimelineSection = React.memo(({ isOwner, items = [], itemType, onAdd, onEd
                                                 title="Chỉnh sửa"
                                                 className="p-1.5 text-gray-400 hover:text-yellow-400 bg-gray-700/50 hover:bg-gray-600/70 rounded-md transition-colors"
                                             >
-                                                <Edit className="w-4 h-4"/>
+                                                <Edit className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => onDelete(item.id, itemType)}
                                                 title="Xóa"
                                                 className="p-1.5 text-gray-400 hover:text-red-400 bg-gray-700/50 hover:bg-gray-600/70 rounded-md transition-colors"
                                             >
-                                                <Trash2 className="w-4 h-4"/>
+                                                <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
                                     )}
@@ -977,7 +977,7 @@ const TimelineSection = React.memo(({ isOwner, items = [], itemType, onAdd, onEd
                                     </p>
                                     <p className="text-xs text-gray-400 mb-3 flex items-center flex-wrap gap-x-3 gap-y-1">
                                         <span>{formatDateRange(item.startDate, item.endDate)}</span>
-                                        {isExperience && item.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3"/>{item.location}</span>}
+                                        {isExperience && item.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{item.location}</span>}
                                         {!isExperience && item.grade && <span className="font-medium text-gray-300">GPA: {item.grade}</span>}
                                     </p>
                                     {item.description && <p className="text-sm text-gray-300 whitespace-pre-line leading-relaxed">{item.description}</p>}
@@ -1002,7 +1002,7 @@ const FormInput = React.memo(({ id, label, error, helperText, ...props }) => (
             {...props}
         />
         {helperText && !error && <p className="text-xs text-gray-500 mt-1.5">{helperText}</p>}
-        {error && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5"/>{error}</p>}
+        {error && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
     </div>
 ));
 FormInput.displayName = 'FormInput';
@@ -1016,7 +1016,7 @@ const FormTextarea = React.memo(({ id, label, error, helperText, ...props }) => 
             {...props}
         ></textarea>
         {helperText && !error && <p className="text-xs text-gray-500 mt-1.5">{helperText}</p>}
-        {error && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5"/>{error}</p>}
+        {error && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" />{error}</p>}
     </div>
 ));
 FormTextarea.displayName = 'FormTextarea';
@@ -1086,10 +1086,10 @@ export default function ProfilePage() {
     // useEffect hook để gọi fetchData khi component mount hoặc username thay đổi
     useEffect(() => {
         if (username) { // Chỉ fetch nếu có username hợp lệ
-             fetchData();
+            fetchData();
         } else {
-             setError("Username không hợp lệ trong URL."); // Xử lý trường hợp URL thiếu username
-             setIsLoading(false);
+            setError("Username không hợp lệ trong URL."); // Xử lý trường hợp URL thiếu username
+            setIsLoading(false);
         }
     }, [username, fetchData]); // Chạy lại effect khi username hoặc hàm fetchData thay đổi
 
@@ -1188,7 +1188,7 @@ export default function ProfilePage() {
                 let newItems;
                 if (isEditing) {
                     // Thay thế item cũ bằng item mới đã lưu
-                    newItems = items.map(it => it.id === savedItem.id ? savedItem : it);
+                    newItems = items?.map(it => it.id === savedItem.id ? savedItem : it);
                 } else {
                     // Thêm item mới vào đầu mảng
                     newItems = [savedItem, ...items];
@@ -1203,8 +1203,8 @@ export default function ProfilePage() {
         } catch (err) {
             console.error(`[ProfilePage] Error saving ${modalType}:`, err);
             // Hiển thị lỗi ngay trên modal (hoặc bằng Toast) thay vì đóng modal
-             alert(`Lưu ${modalType === 'experience' ? 'kinh nghiệm' : 'học vấn'} thất bại: ${err.message || 'Lỗi không xác định'}`);
-             setIsSaving(false); // Cho phép người dùng thử lại
+            alert(`Lưu ${modalType === 'experience' ? 'kinh nghiệm' : 'học vấn'} thất bại: ${err.message || 'Lỗi không xác định'}`);
+            setIsSaving(false); // Cho phép người dùng thử lại
         }
         // finally { setIsSaving(false); } // Đã chuyển vào catch để không đóng modal khi lỗi
     }, [editingItem, modalType, closeItemModal]); // Dependencies
@@ -1235,7 +1235,7 @@ export default function ProfilePage() {
                 // Tắt overlay loading nếu có
             }
         } else {
-             console.log(`[ProfilePage] Deletion cancelled for ${type} ID: ${id}`);
+            console.log(`[ProfilePage] Deletion cancelled for ${type} ID: ${id}`);
         }
     }, []); // Dependencies
 
@@ -1283,14 +1283,14 @@ export default function ProfilePage() {
     // 4. Dữ liệu đã sẵn sàng, tiến hành render giao diện chính
     const { profile, skills = [], repos = [], experiences = [], education = [] } = profileData; // Destructure và đặt giá trị mặc định là mảng rỗng
     const tabs = [ // Cấu hình các tab
-        { id: 'github', label: `Dự án GitHub (${repos.length})`, icon: Github },
-        { id: 'experience', label: `Kinh nghiệm (${experiences.length})`, icon: Briefcase },
-        { id: 'education', label: `Học vấn (${education.length})`, icon: GraduationCap }
+        { id: 'github', label: `Dự án GitHub (${repos?.length})`, icon: Github },
+        { id: 'experience', label: `Kinh nghiệm (${experiences?.length})`, icon: Briefcase },
+        { id: 'education', label: `Học vấn (${education?.length})`, icon: GraduationCap }
     ];
 
     /** Render nội dung tương ứng cho tab đang được chọn */
     const renderTabContent = () => {
-        switch(activeTab) {
+        switch (activeTab) {
             case 'github': // Tab Dự án GitHub
                 return (
                     <motion.div variants={{ visible: { transition: { staggerChildren: 0.05 } } }} initial="hidden" animate="visible">
@@ -1298,71 +1298,71 @@ export default function ProfilePage() {
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
                             <h2 className="text-2xl font-bold text-white flex items-center gap-3 shrink-0"> <Github className="w-6 h-6 text-blue-400" /> Dự án Public trên GitHub </h2>
                             {/* Nút Xem thêm/Thu gọn chỉ hiển thị nếu repo > MAX_REPOS_DISPLAY */}
-                            {repos.length > MAX_REPOS_DISPLAY && (
+                            {repos?.length > MAX_REPOS_DISPLAY && (
                                 <button
                                     onClick={toggleShowAllRepos}
                                     className="text-sm text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 transition-colors duration-200 self-end sm:self-center"
                                 >
-                                    {showAllRepos ? 'Thu gọn bớt' : `Xem tất cả (${repos.length})`}
+                                    {showAllRepos ? 'Thu gọn bớt' : `Xem tất cả (${repos?.length})`}
                                     <ChevronsUpDown className={`w-4 h-4 transition-transform duration-300 ${showAllRepos ? 'rotate-180' : ''}`} />
                                 </button>
                             )}
                         </div>
-                         {/* Danh sách Repo hoặc Empty State */}
-                         {displayedRepos.length > 0 ? (
+                        {/* Danh sách Repo hoặc Empty State */}
+                        {displayedRepos?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
                                 {/* Dùng AnimatePresence để xử lý animation khi item bị thêm/xóa (ở đây là khi thu gọn/mở rộng) */}
                                 <AnimatePresence initial={false}>
-                                    {displayedRepos.map(repo => (
-                                         <RepoCard key={repo.id} repo={repo} onClick={() => handleRepoCardClick(repo)} isOwnerOrRecruiter={canAnalyzeRepo} />
+                                    {displayedRepos?.map(repo => (
+                                        <RepoCard key={repo.id} repo={repo} onClick={() => handleRepoCardClick(repo)} isOwnerOrRecruiter={canAnalyzeRepo} />
                                     ))}
                                 </AnimatePresence>
                             </div>
                         ) : (
-                             // Hiển thị EmptyState nếu không có repo nào
-                             <EmptyState
-                                 icon={<Github className="w-16 h-16 text-gray-600"/>}
-                                 title="Không có dự án Public"
-                                 message={isOwner ? "Hãy chia sẻ các dự án tuyệt vời của bạn lên GitHub và đặt chế độ public để nhà tuyển dụng có thể thấy!" : "Người dùng này chưa có repository public nào trên GitHub."}
+                            // Hiển thị EmptyState nếu không có repo nào
+                            <EmptyState
+                                icon={<Github className="w-16 h-16 text-gray-600" />}
+                                title="Không có dự án Public"
+                                message={isOwner ? "Hãy chia sẻ các dự án tuyệt vời của bạn lên GitHub và đặt chế độ public để nhà tuyển dụng có thể thấy!" : "Người dùng này chưa có repository public nào trên GitHub."}
                             />
                         )}
-                         {/* Nút Xem thêm/Thu gọn ở cuối (chỉ hiển thị nếu danh sách bị cắt ngắn) */}
-                          {repos.length > MAX_REPOS_DISPLAY && !showAllRepos && (
+                        {/* Nút Xem thêm/Thu gọn ở cuối (chỉ hiển thị nếu danh sách bị cắt ngắn) */}
+                        {repos?.length > MAX_REPOS_DISPLAY && !showAllRepos && (
                             <div className="mt-8 text-center">
                                 <button
                                     onClick={toggleShowAllRepos}
                                     className="text-sm text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 mx-auto transition-colors duration-200 py-2 px-4 rounded-md hover:bg-gray-700/50"
                                 >
-                                    Xem thêm {repos.length - MAX_REPOS_DISPLAY} dự án khác <ChevronsUpDown className="w-4 h-4" />
+                                    Xem thêm {repos?.length - MAX_REPOS_DISPLAY} dự án khác <ChevronsUpDown className="w-4 h-4" />
                                 </button>
-                             </div>
+                            </div>
                         )}
                     </motion.div>
-                   );
+                );
             case 'experience': // Tab Kinh nghiệm
                 return (
-                     <TimelineSection
-                         isOwner={isOwner} // Cho phép chỉnh sửa nếu là chủ hồ sơ
-                         items={experiences} // Dữ liệu kinh nghiệm
-                         itemType="experience" // Loại item
-                         onAdd={() => openItemModal('experience')} // Mở modal thêm mới
-                         onEdit={(item) => openItemModal('experience', item)} // Mở modal sửa
-                         onDelete={handleDeleteItem} // Hàm xóa item
-                         isLoading={isLoading && !experiences} // Chỉ loading nếu đang fetch và chưa có data
-                     />
-                 );
+                    <TimelineSection
+                        isOwner={isOwner} // Cho phép chỉnh sửa nếu là chủ hồ sơ
+                        items={experiences} // Dữ liệu kinh nghiệm
+                        itemType="experience" // Loại item
+                        onAdd={() => openItemModal('experience')} // Mở modal thêm mới
+                        onEdit={(item) => openItemModal('experience', item)} // Mở modal sửa
+                        onDelete={handleDeleteItem} // Hàm xóa item
+                        isLoading={isLoading && !experiences} // Chỉ loading nếu đang fetch và chưa có data
+                    />
+                );
             case 'education': // Tab Học vấn
                 return (
-                     <TimelineSection
-                         isOwner={isOwner}
-                         items={education}
-                         itemType="education"
-                         onAdd={() => openItemModal('education')}
-                         onEdit={(item) => openItemModal('education', item)}
-                         onDelete={handleDeleteItem}
-                         isLoading={isLoading && !education}
-                     />
-                 );
+                    <TimelineSection
+                        isOwner={isOwner}
+                        items={education}
+                        itemType="education"
+                        onAdd={() => openItemModal('education')}
+                        onEdit={(item) => openItemModal('education', item)}
+                        onDelete={handleDeleteItem}
+                        isLoading={isLoading && !education}
+                    />
+                );
             default: // Trường hợp không khớp tab nào (nên không xảy ra)
                 return null;
         }
@@ -1373,8 +1373,8 @@ export default function ProfilePage() {
         <>
             {/* Cấu hình thẻ <head> */}
             <Helmet>
-                <title>{`Hồ sơ ${profile.name || profile.githubUsername} | EduLedger AI`}</title>
-                <meta name="description" content={`Khám phá hồ sơ năng lực 360°, kỹ năng AI-Verified, dự án GitHub, kinh nghiệm làm việc và quá trình học vấn của ${profile.name || profile.githubUsername} trên nền tảng EduLedger AI.`} />
+                <title>{`Hồ sơ ${profile.name || profile.githubUsername} | EduBridge AI`}</title>
+                <meta name="description" content={`Khám phá hồ sơ năng lực 360°, kỹ năng AI-Verified, dự án GitHub, kinh nghiệm làm việc và quá trình học vấn của ${profile.name || profile.githubUsername} trên nền tảng EduBridge AI.`} />
                 {/* Thêm các thẻ meta khác nếu cần cho SEO */}
             </Helmet>
 
@@ -1388,18 +1388,18 @@ export default function ProfilePage() {
                     >
                         {/* --- Sidebar Trái (Aside) --- */}
                         <aside className="lg:col-span-4 xl:col-span-3 space-y-8 lg:sticky lg:top-24 self-start"> {/* `sticky top-24` để sidebar cố định khi cuộn */}
-                             {/* Card thông tin profile */}
-                             <ProfileHeaderCard profile={profile} />
-                             {/* Biểu đồ skills */}
-                             <SkillsRadarSection skills={skills} />
-                             {/* Nút Đánh giá Giả lập (chỉ hiển thị cho NTD) */}
-                             {isRecruiterViewing && (
-                                <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.5}}>
+                            {/* Card thông tin profile */}
+                            <ProfileHeaderCard profile={profile} />
+                            {/* Biểu đồ skills */}
+                            <SkillsRadarSection skills={skills} />
+                            {/* Nút Đánh giá Giả lập (chỉ hiển thị cho NTD) */}
+                            {isRecruiterViewing && (
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
                                     <button
-                                         onClick={handleOpenFakeEvaluationModal} // Mở modal đánh giá
-                                         className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-gray-900 transform hover:-translate-y-0.5" // Hiệu ứng hover nhẹ
+                                        onClick={handleOpenFakeEvaluationModal} // Mở modal đánh giá
+                                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 px-5 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-gray-900 transform hover:-translate-y-0.5" // Hiệu ứng hover nhẹ
                                     >
-                                         <ClipboardCheck className="w-5 h-5"/> Đánh giá Nhanh (AI Giả Lập)
+                                        <ClipboardCheck className="w-5 h-5" /> Đánh giá Nhanh (AI Giả Lập)
                                     </button>
                                 </motion.div>
                             )}
@@ -1410,26 +1410,25 @@ export default function ProfilePage() {
                             {/* Thanh Tabs Navigation (sticky) */}
                             <div className="border-b border-gray-700/80 mb-8 sticky top-[calc(theme(spacing.16)-1px)] sm:top-[calc(theme(spacing.18)-1px)] bg-gray-900/80 backdrop-blur-md z-30 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pb-px shadow-sm"> {/* Sticky với background mờ */}
                                 <nav className="-mb-px flex space-x-6 sm:space-x-8 overflow-x-auto scrollbar-hide" aria-label="Profile Tabs">
-                                    {tabs.map(tab => (
+                                    {tabs?.map(tab => (
                                         <button
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id)} // Chuyển tab khi click
-                                            className={`whitespace-nowrap pt-4 pb-3 px-1 border-b-2 font-semibold text-sm transition-all duration-200 focus:outline-none flex items-center gap-2 group relative ${
-                                                 activeTab === tab.id
-                                                     ? 'border-blue-500 text-blue-400' // Style khi active
-                                                     : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500/50' // Style khi inactive/hover
-                                            }`}
+                                            className={`whitespace-nowrap pt-4 pb-3 px-1 border-b-2 font-semibold text-sm transition-all duration-200 focus:outline-none flex items-center gap-2 group relative ${activeTab === tab.id
+                                                    ? 'border-blue-500 text-blue-400' // Style khi active
+                                                    : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500/50' // Style khi inactive/hover
+                                                }`}
                                             aria-current={activeTab === tab.id ? 'page' : undefined} // Accessibility
                                         >
                                             <tab.icon className={`w-4 h-4 transition-colors ${activeTab === tab.id ? 'text-blue-400' : 'text-gray-500 group-hover:text-gray-300'}`} />
                                             {tab.label}
                                             {/* Hiệu ứng gạch chân chạy theo tab active */}
-                                             {activeTab === tab.id && (
+                                            {activeTab === tab.id && (
                                                 <motion.div
-                                                     className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-blue-500 rounded-t-full"
-                                                     layoutId="profileTabUnderline" // ID để framer-motion biết cần animate giữa các tab
-                                                     transition={{ type: 'spring', stiffness: 350, damping: 30 }} // Animation mượt
-                                                 />
+                                                    className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-blue-500 rounded-t-full"
+                                                    layoutId="profileTabUnderline" // ID để framer-motion biết cần animate giữa các tab
+                                                    transition={{ type: 'spring', stiffness: 350, damping: 30 }} // Animation mượt
+                                                />
                                             )}
                                         </button>
                                     ))}
@@ -1457,35 +1456,35 @@ export default function ProfilePage() {
             <AnimatePresence>
                 {/* Modal Phân tích Repo */}
                 {selectedRepo && (
-                     <AnalysisResultModal
-                         repo={selectedRepo}
-                         onClose={closeAnalysisModal}
-                         analysisResult={analysisResult}
-                         isAnalyzing={isAnalyzing}
-                         analysisError={analysisError}
-                         onRetry={() => triggerAnalysis(selectedRepo)} // Cho phép thử lại
-                         isOwner={isOwner} // Truyền isOwner để biết có hiển thị nút Retry không
-                     />
-                 )}
-                 {/* Modal Thêm/Sửa Item (Kinh nghiệm/Học vấn) */}
-                 {modalOpen && (
-                     <ProfileItemModal
-                         item={editingItem}
-                         onSave={handleSaveItem}
-                         onClose={closeItemModal}
-                         type={modalType}
-                         isLoading={isSaving} // Truyền trạng thái loading vào modal
-                     />
-                 )}
-                  {/* Modal Đánh giá Giả lập (của Recruiter) */}
-                   {isEvaluationModalOpen && profileData && ( // Chỉ hiển thị nếu modal flag là true và có profileData
-                     <FakeEvaluationModal
-                         student={profileData} // Truyền toàn bộ profileData (bao gồm profile, skills, repos...)
-                         onClose={handleCloseFakeEvaluationModal}
-                     />
-                 )}
+                    <AnalysisResultModal
+                        repo={selectedRepo}
+                        onClose={closeAnalysisModal}
+                        analysisResult={analysisResult}
+                        isAnalyzing={isAnalyzing}
+                        analysisError={analysisError}
+                        onRetry={() => triggerAnalysis(selectedRepo)} // Cho phép thử lại
+                        isOwner={isOwner} // Truyền isOwner để biết có hiển thị nút Retry không
+                    />
+                )}
+                {/* Modal Thêm/Sửa Item (Kinh nghiệm/Học vấn) */}
+                {modalOpen && (
+                    <ProfileItemModal
+                        item={editingItem}
+                        onSave={handleSaveItem}
+                        onClose={closeItemModal}
+                        type={modalType}
+                        isLoading={isSaving} // Truyền trạng thái loading vào modal
+                    />
+                )}
+                {/* Modal Đánh giá Giả lập (của Recruiter) */}
+                {isEvaluationModalOpen && profileData && ( // Chỉ hiển thị nếu modal flag là true và có profileData
+                    <FakeEvaluationModal
+                        student={profileData} // Truyền toàn bộ profileData (bao gồm profile, skills, repos...)
+                        onClose={handleCloseFakeEvaluationModal}
+                    />
+                )}
             </AnimatePresence>
-             {/* CSS cho scrollbar (tùy chọn, đặt ở cuối hoặc trong index.css) */}
+            {/* CSS cho scrollbar (tùy chọn, đặt ở cuối hoặc trong index.css) */}
             <style jsx global>{`
                  .styled-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
                  .styled-scrollbar::-webkit-scrollbar-track { background: transparent; }

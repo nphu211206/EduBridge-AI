@@ -77,11 +77,11 @@ const RetakeRegistration = () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/academic/semesters`);
         if (response.data.success) {
-          const currentSemesters = response.data.data.filter(sem => sem.IsCurrent || sem.Status === 'Upcoming');
+          const currentSemesters = response.data.data?.filter(sem => sem.IsCurrent || sem.Status === 'Upcoming');
           setSemesters(currentSemesters);
           
           // Set default semester if available
-          if (currentSemesters.length > 0) {
+          if (currentSemesters?.length > 0) {
             setSelectedSemester(currentSemesters[0].SemesterID.toString());
           }
         }
@@ -110,8 +110,8 @@ const RetakeRegistration = () => {
           
           // Build class options map
           const options = {};
-          response.data.data.forEach(course => {
-            if (course.classOptions && course.classOptions.length > 0) {
+          response.data.data?.forEach(course => {
+            if (course.classOptions && course.classOptions?.length > 0) {
               options[course.id] = course.classOptions;
             }
           });
@@ -133,7 +133,7 @@ const RetakeRegistration = () => {
 
   const handleCourseSelect = (courseId) => {
     if (selectedCourses.includes(courseId)) {
-      setSelectedCourses(selectedCourses.filter(id => id !== courseId));
+      setSelectedCourses(selectedCourses?.filter(id => id !== courseId));
     } else {
       setSelectedCourses([...selectedCourses, courseId]);
     }
@@ -144,7 +144,7 @@ const RetakeRegistration = () => {
   };
 
   const handleRegistration = async () => {
-    if (selectedCourses.length === 0 || !selectedSemester) {
+    if (selectedCourses?.length === 0 || !selectedSemester) {
       setRegistrationStatus({
         type: 'error',
         message: 'Vui lòng chọn ít nhất một môn học và học kỳ trước khi đăng ký.'
@@ -156,10 +156,10 @@ const RetakeRegistration = () => {
     
     try {
       // Register each selected course
-      const registrationPromises = selectedCourses.map(async (courseId) => {
+      const registrationPromises = selectedCourses?.map(async (courseId) => {
         const course = availableCourses.find(c => c.id === courseId);
         // Use the first available class option
-        if (!course.classOptions || course.classOptions.length === 0) {
+        if (!course.classOptions || course.classOptions?.length === 0) {
           throw new Error(`Không có lớp học nào khả dụng cho môn ${course.courseName}`);
         }
         
@@ -230,7 +230,7 @@ const RetakeRegistration = () => {
                 onChange={handleSemesterChange}
                 label="Học kỳ"
               >
-                {semesters.map(semester => (
+                {semesters?.map(semester => (
                   <MenuItem key={semester.SemesterID} value={semester.SemesterID.toString()}>
                     {semester.SemesterName} - {semester.AcademicYear}
                   </MenuItem>
@@ -248,7 +248,7 @@ const RetakeRegistration = () => {
               <Box display="flex" justifyContent="center" my={4}>
                 <CircularProgress />
               </Box>
-            ) : availableCourses.length === 0 ? (
+            ) : availableCourses?.length === 0 ? (
               <Alert severity="info">
                 Bạn không có môn học nào cần đăng ký học lại.
               </Alert>
@@ -267,7 +267,7 @@ const RetakeRegistration = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {availableCourses.map((course) => (
+                    {availableCourses?.map((course) => (
                       <TableRow 
                         key={course.id}
                         hover
@@ -312,7 +312,7 @@ const RetakeRegistration = () => {
               <Button
                 variant="contained"
                 color="primary"
-                disabled={selectedCourses.length === 0 || !selectedSemester || loading}
+                disabled={selectedCourses?.length === 0 || !selectedSemester || loading}
                 onClick={handleRegistration}
               >
                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Đăng ký học lại'}

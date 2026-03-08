@@ -212,7 +212,7 @@ const CompetitionDetail = () => {
       if (response.success) {
         toast.success('Competition started successfully');
         // Redirect to first problem or update UI
-        if (competition.problems && competition.problems.length > 0) {
+        if (competition.problems && competition.problems?.length > 0) {
           navigate(`/competitions/${id}/problems/${competition.problems[0].ProblemID}`);
         } else {
           // Refresh competition data
@@ -610,7 +610,7 @@ const CompetitionDetail = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {competition.problems.map((problem) => (
+                    {competition.problems?.map((problem) => (
                       <tr key={problem.ProblemID} className="hover:bg-gray-50 cursor-pointer" onClick={() => {
                         if (isMobile) {
                           toast.warning("Không thể làm bài trên thiết bị di động. Vui lòng sử dụng máy tính với trình duyệt Chrome.");
@@ -664,7 +664,7 @@ const CompetitionDetail = () => {
               <div className="text-center py-12">
                 <p className="text-gray-500">Không thể tải bảng xếp hạng</p>
               </div>
-            ) : scoreboard.participants.length === 0 ? (
+            ) : scoreboard.participants?.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500">Chưa có người tham gia</p>
               </div>
@@ -685,7 +685,7 @@ const CompetitionDetail = () => {
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Số bài đã giải
                       </th>
-                      {scoreboard.problems.map(problem => (
+                      {scoreboard.problems?.map(problem => (
                         <th key={problem.ProblemID} scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           {problem.Title.split(' ')[0]}
                         </th>
@@ -693,7 +693,7 @@ const CompetitionDetail = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {scoreboard.participants.map((participant) => (
+                    {scoreboard.participants?.map((participant) => (
                       <tr key={participant.ParticipantID}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {participant.rank}
@@ -719,7 +719,7 @@ const CompetitionDetail = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {participant.TotalProblemsSolved}
                         </td>
-                        {scoreboard.problems.map(problem => {
+                        {scoreboard.problems?.map(problem => {
                           const submission = participant.problems[problem.ProblemID];
                           return (
                             <td key={problem.ProblemID} className="px-6 py-4 whitespace-nowrap text-sm text-center">

@@ -93,11 +93,11 @@ const TuitionStatistics = () => {
           setSemesters(response.data);
           
           // Extract unique academic years
-          const years = [...new Set(response.data.map(sem => sem.AcademicYear))];
+          const years = [...new Set(response.data?.map(sem => sem.AcademicYear))];
           setAcademicYears(years);
           
           // Set default year to current year if available
-          if (years.length > 0) {
+          if (years?.length > 0) {
             setYearFilter(years[0]);
           }
         }
@@ -126,7 +126,7 @@ const TuitionStatistics = () => {
   }, [semesterFilter]);
 
   // Filter semesters based on selected academic year
-  const filteredSemesters = semesters.filter(
+  const filteredSemesters = semesters?.filter(
     sem => !yearFilter || sem.AcademicYear === yearFilter
   );
 
@@ -179,18 +179,18 @@ const TuitionStatistics = () => {
   const outstandingAmount = summary.TotalUnpaid ?? summary.outstandingAmount ?? 0;
   const paymentRate = summary.paymentRate ?? (totalAmount > 0 ? ((collectedAmount / totalAmount) * 100).toFixed(1) : 0);
   // Payment methods
-  const pieData = (raw.paymentMethods || (raw.data && raw.data.paymentMethods) || []).map(item => ({
+  const pieData = (raw.paymentMethods || (raw.data && raw.data.paymentMethods) || [])?.map(item => ({
     name: item.PaymentMethod || item.name,
     value: item.TotalAmount ?? item.value
   }));
   // Timeline data
-  const lineData = (raw.timeline || (raw.data && raw.data.monthlyCollection) || []).map(item => ({
+  const lineData = (raw.timeline || (raw.data && raw.data.monthlyCollection) || [])?.map(item => ({
     month: item.month || item.Month,
     amount: item.amount ?? item.TotalAmount
   }));
   
   // Program breakdown - filter by selected program if applicable
-  let barData = (raw.programs || (raw.data && raw.data.programBreakdown) || []).map(item => ({
+  let barData = (raw.programs || (raw.data && raw.data.programBreakdown) || [])?.map(item => ({
     program: item.program || item.ProgramName,
     students: item.students ?? item.InvoiceCount,
     totalAmount: item.totalAmount ?? item.TotalAmount,
@@ -200,7 +200,7 @@ const TuitionStatistics = () => {
   
   // Filter program data if a specific program is selected
   if (programFilter) {
-    barData = barData.filter(item => item.program === programFilter);
+    barData = barData?.filter(item => item.program === programFilter);
   }
 
   return (
@@ -272,7 +272,7 @@ const TuitionStatistics = () => {
                   label="Năm học"
                   onChange={(e) => setYearFilter(e.target.value)}
                 >
-                  {academicYears.map(year => (
+                  {academicYears?.map(year => (
                     <MenuItem key={year} value={year}>{year}</MenuItem>
                   ))}
                 </Select>
@@ -287,7 +287,7 @@ const TuitionStatistics = () => {
                   onChange={handleSemesterChange}
                 >
                   <MenuItem value="">Tất cả học kỳ</MenuItem>
-                  {filteredSemesters.map(sem => (
+                  {filteredSemesters?.map(sem => (
                     <MenuItem key={sem.SemesterID} value={sem.SemesterID}>
                       {sem.SemesterName}
                     </MenuItem>
@@ -304,7 +304,7 @@ const TuitionStatistics = () => {
                   onChange={handleProgramChange}
                 >
                   <MenuItem value="">Tất cả chương trình</MenuItem>
-                  {programs.map(program => (
+                  {programs?.map(program => (
                     <MenuItem key={program.ProgramID} value={program.ProgramName}>
                       {program.ProgramName}
                     </MenuItem>
@@ -322,7 +322,7 @@ const TuitionStatistics = () => {
             { label: 'Đã thu', value: collectedAmount, icon: <WalletIcon color="success" /> },
             { label: 'Còn lại', value: outstandingAmount, icon: <CreditCardIcon color="error" /> },
             { label: 'Tỉ lệ thu', value: `${paymentRate}%`, icon: <TrendingUpIcon color="primary" /> }
-          ].map(({ label, value, icon }, idx) => (
+          ]?.map(({ label, value, icon }, idx) => (
             <Grid key={idx} item xs={12} sm={6} md={3}>
               <Card sx={{ borderRadius: 2, boxShadow: '0 4px 12px 0 rgba(0,0,0,0.05)' }}>
                 <CardContent>
@@ -407,8 +407,8 @@ const TuitionStatistics = () => {
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    {pieData?.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS?.length]} />
                     ))}
                   </Pie>
                   <RechartsTooltip />
@@ -466,8 +466,8 @@ const TuitionStatistics = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {barData.length > 0 ? (
-                      barData.map((row) => (
+                    {barData?.length > 0 ? (
+                      barData?.map((row) => (
                         <TableRow key={row.program}>
                           <TableCell component="th" scope="row">
                             {row.program}

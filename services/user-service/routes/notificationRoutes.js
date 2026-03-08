@@ -14,18 +14,18 @@ const { authenticateToken } = require('../middleware/auth');
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.UserID;
-    
+
     const result = await pool.request()
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT TOP 50
           NotificationID, UserID, Type, Title, Content,
-          RelatedID, RelatedType, IsRead, CreatedAt, Priority
+          ReferenceID as RelatedID, ReferenceType as RelatedType, IsRead, CreatedAt, 'normal' as Priority
         FROM Notifications
         WHERE UserID = @userId
         ORDER BY CreatedAt DESC
       `);
-    
+
     return res.status(200).json({
       notifications: result.recordset
     });
@@ -39,7 +39,7 @@ router.get('/', authenticateToken, async (req, res) => {
 router.get('/unread-count', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.UserID;
-    
+
     const result = await pool.request()
       .input('userId', sql.BigInt, userId)
       .query(`
@@ -47,7 +47,7 @@ router.get('/unread-count', authenticateToken, async (req, res) => {
         FROM Notifications
         WHERE UserID = @userId AND IsRead = 0
       `);
-    
+
     return res.status(200).json({
       unreadCount: result.recordset[0].UnreadCount
     });
@@ -62,7 +62,7 @@ router.put('/:id/read', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.UserID;
     const notificationId = req.params.id;
-    
+
     await pool.request()
       .input('userId', sql.BigInt, userId)
       .input('notificationId', sql.BigInt, notificationId)
@@ -71,7 +71,7 @@ router.put('/:id/read', authenticateToken, async (req, res) => {
         SET IsRead = 1
         WHERE NotificationID = @notificationId AND UserID = @userId
       `);
-    
+
     return res.status(200).json({ message: 'Đã đánh dấu thông báo là đã đọc' });
   } catch (error) {
     console.error('Mark Read Error:', error);
@@ -83,7 +83,7 @@ router.put('/:id/read', authenticateToken, async (req, res) => {
 router.put('/read-all', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.UserID;
-    
+
     await pool.request()
       .input('userId', sql.BigInt, userId)
       .query(`
@@ -91,7 +91,7 @@ router.put('/read-all', authenticateToken, async (req, res) => {
         SET IsRead = 1
         WHERE UserID = @userId AND IsRead = 0
       `);
-    
+
     return res.status(200).json({ message: 'Đã đánh dấu tất cả thông báo là đã đọc' });
   } catch (error) {
     console.error('Mark All Read Error:', error);
@@ -104,7 +104,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.UserID;
     const notificationId = req.params.id;
-    
+
     await pool.request()
       .input('userId', sql.BigInt, userId)
       .input('notificationId', sql.BigInt, notificationId)
@@ -112,7 +112,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
         DELETE FROM Notifications
         WHERE NotificationID = @notificationId AND UserID = @userId
       `);
-    
+
     return res.status(200).json({ message: 'Đã xóa thông báo' });
   } catch (error) {
     console.error('Delete Notification Error:', error);
@@ -125,19 +125,19 @@ router.get('/type/:type', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.UserID;
     const type = req.params.type;
-    
+
     const result = await pool.request()
       .input('userId', sql.BigInt, userId)
       .input('type', sql.VarChar(50), type)
       .query(`
         SELECT 
           NotificationID, UserID, Type, Title, Content,
-          RelatedID, RelatedType, IsRead, CreatedAt, Priority
+          ReferenceID as RelatedID, ReferenceType as RelatedType, IsRead, CreatedAt, 'normal' as Priority
         FROM Notifications
         WHERE UserID = @userId AND Type = @type
         ORDER BY CreatedAt DESC
       `);
-    
+
     return res.status(200).json({
       notifications: result.recordset
     });

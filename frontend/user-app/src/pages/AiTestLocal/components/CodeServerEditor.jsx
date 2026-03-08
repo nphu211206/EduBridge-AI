@@ -291,7 +291,7 @@ class CampusLearningDemo {
   }
   
   createList(items) {
-    return items.map((item, index) => {
+    return items?.map((item, index) => {
       return \`Item \${index + 1}: \${item}\`;
     });
   }

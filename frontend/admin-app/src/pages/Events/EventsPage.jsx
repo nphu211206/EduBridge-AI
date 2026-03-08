@@ -7,12 +7,12 @@
 -----------------------------------------------------------------*/
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Card, Table, Space, Button, Dropdown, Modal, 
+import {
+  Card, Table, Space, Button, Dropdown, Modal,
   Tag, Typography, Input, message, Tooltip, Divider
 } from 'antd';
-import { 
-  PlusOutlined, EditOutlined, DeleteOutlined, 
+import {
+  PlusOutlined, EditOutlined, DeleteOutlined,
   EyeOutlined, MoreOutlined, SearchOutlined,
   FilterOutlined, ExclamationCircleOutlined,
   CalendarOutlined, EnvironmentOutlined, UserOutlined
@@ -29,17 +29,17 @@ const EventsPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [filteredEvents, setFilteredEvents] = useState([]);
-  
+
   useEffect(() => {
     fetchEvents();
   }, []);
-  
+
   useEffect(() => {
-    if (events.length > 0) {
+    if (events?.length > 0) {
       handleSearch(searchText);
     }
   }, [searchText, events]);
-  
+
   const fetchEvents = async () => {
     setLoading(true);
     try {
@@ -54,7 +54,7 @@ const EventsPage = () => {
   };
 
   const handleSearch = (value) => {
-    const filtered = events.filter(
+    const filtered = events?.filter(
       (event) =>
         event.Title?.toLowerCase().includes(value.toLowerCase()) ||
         event.Description?.toLowerCase().includes(value.toLowerCase()) ||
@@ -104,7 +104,7 @@ const EventsPage = () => {
       'DevOps': { color: 'gold', text: 'DevOps' },
       'Security': { color: 'red', text: 'Bảo mật' }
     };
-    
+
     return (
       <Tag color={categoryMap[category]?.color || 'default'}>
         {categoryMap[category]?.text || category}
@@ -119,7 +119,7 @@ const EventsPage = () => {
       'advanced': { color: 'error', text: 'Nâng cao' },
       'expert': { color: 'volcano', text: 'Chuyên gia' }
     };
-    
+
     return (
       <Tag color={difficultyMap[difficulty?.toLowerCase()]?.color || 'default'}>
         {difficultyMap[difficulty?.toLowerCase()]?.text || difficulty}
@@ -134,7 +134,7 @@ const EventsPage = () => {
       'completed': { color: 'warning', text: 'Đã kết thúc' },
       'cancelled': { color: 'error', text: 'Đã hủy' },
     };
-    
+
     return (
       <Tag color={statusMap[status?.toLowerCase()]?.color || 'default'}>
         {statusMap[status?.toLowerCase()]?.text || status}
@@ -144,15 +144,15 @@ const EventsPage = () => {
 
   const formatDateTime = (date, time) => {
     if (!date) return 'N/A';
-    
+
     try {
       const dateObj = new Date(date);
-      
+
       if (time) {
         const [hours, minutes] = time.split(':');
         dateObj.setHours(parseInt(hours, 10), parseInt(minutes, 10));
       }
-      
+
       return format(dateObj, 'dd/MM/yyyy HH:mm');
     } catch (error) {
       return 'N/A';
@@ -245,14 +245,17 @@ const EventsPage = () => {
       title: 'Địa điểm',
       dataIndex: 'Location',
       key: 'location',
-      render: (text) => (
-        <Tooltip title={text}>
-          <Space>
-            <EnvironmentOutlined />
-            {text.length > 20 ? `${text.substring(0, 20)}...` : text}
-          </Space>
-        </Tooltip>
-      ),
+      render: (text) => {
+        if (!text) return <Text type="secondary">Chưa cập nhật</Text>;
+        return (
+          <Tooltip title={text}>
+            <Space>
+              <EnvironmentOutlined />
+              {text?.length > 20 ? `${text.substring(0, 20)}...` : text}
+            </Space>
+          </Tooltip>
+        );
+      },
     },
     {
       title: 'Danh mục',
@@ -331,7 +334,7 @@ const EventsPage = () => {
           </Button>
         </Link>
       </div>
-      
+
       <Table
         columns={columns}
         dataSource={filteredEvents}

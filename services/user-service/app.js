@@ -6,7 +6,6 @@
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -18,8 +17,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const { authenticateToken } = require('./middleware/auth');
 const { runMigration: runSSHGPGMigration } = require('./utils/run-ssh-gpg-migration');
 
-// Load environment variables first
-dotenv.config();
+// Load environment variables from project root first
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 // Secure JWT configuration - Fail fast if not set
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'secret_key') {
@@ -84,7 +83,16 @@ setInterval(() => {
   // Clean up conversation cache
   if (app.locals.conversationCache) {
     let expiredCount = 0;
-    Object.keys(app.locals.conversationCache).forEach(key => {
+    const keys = Object.keys(app.locals.conversationCache);
+    
+    // Safety limit: if cache gets too big (>10000 entries), clear it entirely to prevent memory leak
+    if (keys.length > 10000) {
+      console.warn(`Memory warning: conversationCache has ${keys.length} entries. Clearing entirely.`);
+      app.locals.conversationCache = {};
+      return;
+    }
+    
+    keys.forEach(key => {
       const cacheEntry = app.locals.conversationCache[key];
       // Remove entries older than 15 minutes
       if (now - cacheEntry.timestamp > 15 * 60 * 1000) {
@@ -93,7 +101,7 @@ setInterval(() => {
       }
     });
     if (expiredCount > 0) {
-      console.log(`Removed ${expiredCount} expired conversation cache entries`);
+      console.log(`Removed ${expiredCount} expired conversation cache entries. Remaining: ${Object.keys(app.locals.conversationCache).length}`);
     }
   }
 }, 15 * 60 * 1000); // 15 minutes
@@ -101,7 +109,9 @@ setInterval(() => {
 // Middleware
 app.use(cors({
   origin: function (origin, callback) {
-    const allowedOrigins = ['http://localhost:3000', 'http://localhost:5004', 'http://localhost:5173'];
+    const allowedOrigins = process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+      : ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004'];
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -165,10 +175,31 @@ app.use((req, res, next) => {
   next();
 });
 
-// Cấu hình static files - di chuyển lên trước routes
+// Cấu hình static files
+// Public uploads (profile images, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/uploads/stories', express.static(path.join(__dirname, 'uploads/stories')));
-app.use('/uploads/chat', express.static(path.join(__dirname, 'uploads/chat')));
+
+// Protected uploads (requires authentication)
+// These routes will check for a valid token either in headers or via query param (for <img> tags)
+const serveProtectedFiles = (req, res, next) => {
+  // If request comes with auth header, use the standard middleware
+  if (req.headers.authorization) {
+    return authenticateToken(req, res, next);
+  }
+  
+  // For static assets accessed via URL/img tag, allow token in query param for convenience
+  // Note: For better security in production, signed URLs are preferred over query tokens
+  if (req.query.token) {
+    req.headers.authorization = `Bearer ${req.query.token}`;
+    return authenticateToken(req, res, next);
+  }
+  
+  // Deny access if no token
+  return res.status(401).json({ message: 'Unauthorized access to protected files' });
+};
+
+app.use('/uploads/stories', serveProtectedFiles, express.static(path.join(__dirname, 'uploads/stories')));
+app.use('/uploads/chat', serveProtectedFiles, express.static(path.join(__dirname, 'uploads/chat')));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -198,12 +229,8 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/unlock', unlockRoutes);
 app.use('/api/2fa', twoFARoutes);
 
-// Direct route handler for /calls/active to fix 404 error
-app.get('/calls/active', (req, res) => {
-  // Redirect to the proper endpoint
-  const callController = require('./controllers/callController');
-  return callController.getActiveCalls(req, res);
-});
+// The active calls endpoint has been moved directly inside callRoutes to use proper routing.
+// We removed the hardcoded override to allow standard middleware execution.
 
 // Log all registered routes for debugging
 console.log('Registered routes:');
@@ -234,12 +261,18 @@ app.get('/api/participants/:participantId/answers', (req, res) => {
   app._router.handle(req, res);
 });
 
-// Error handler
+// Handle 404 - must come before error handler
+app.use((req, res) => {
+  res.status(404).json({
+    message: 'Route not found'
+  });
+});
+
+// Error handler (4 args = Express error handler)
 app.use((err, req, res, next) => {
   console.error('=== ERROR HANDLER CAUGHT ===');
   console.error(err.stack || err);
 
-  // Log full error details including SQL errors and query information
   if (err.code === 'EREQUEST') {
     console.error('=== SQL ERROR DETAILS ===');
     console.error('SQL Error Number:', err.number);
@@ -257,13 +290,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     success: false,
     message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
-});
-
-// Handle 404
-app.use((req, res) => {
-  res.status(404).json({
-    message: 'Route not found'
   });
 });
 

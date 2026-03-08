@@ -60,14 +60,14 @@ export default function CompanyListPage() {
 
     const filteredCompanies = useMemo(() => {
         if (!searchTerm) return companies;
-        return companies.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        return companies?.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }, [searchTerm, companies]);
 
     return (
         <>
             <Helmet>
-                <title>Danh sách công ty | EduLedger AI</title>
-                <meta name="description" content="Khám phá và kết nối với hàng ngàn công ty công nghệ hàng đầu trên EduLedger AI." />
+                <title>Danh sách công ty | EduBridge AI</title>
+                <meta name="description" content="Khám phá và kết nối với hàng ngàn công ty công nghệ hàng đầu trên EduBridge AI." />
             </Helmet>
             <div className="bg-gray-900 min-h-screen text-white">
                 <div className="container mx-auto px-4 py-12">
@@ -77,7 +77,7 @@ export default function CompanyListPage() {
                         <div className="max-w-xl mx-auto mb-12">
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-4"><SearchIcon className="w-6 h-6 text-gray-400" /></span>
-                                <input 
+                                <input
                                     type="text"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -88,21 +88,21 @@ export default function CompanyListPage() {
                         </div>
                     </motion.div>
 
-                    {isLoading ? <div className="flex justify-center py-20"><Spinner/></div> :
-                     error ? <ErrorMessage message={error}/> :
-                     (
-                        <motion.div 
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                            initial="hidden"
-                            animate="visible"
-                            variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-                        >
-                            {filteredCompanies.length > 0 ? 
-                                filteredCompanies.map(c => <CompanyCard key={c.id} company={c} />) :
-                                <div className="md:col-span-2 lg:col-span-3"><EmptyState icon={<BriefcaseIcon className="w-16 h-16"/>} title="Không tìm thấy công ty" message="Không có công ty nào phù hợp với từ khóa tìm kiếm của bạn."/></div>
-                            }
-                        </motion.div>
-                     )
+                    {isLoading ? <div className="flex justify-center py-20"><Spinner /></div> :
+                        error ? <ErrorMessage message={error} /> :
+                            (
+                                <motion.div
+                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+                                >
+                                    {filteredCompanies?.length > 0 ?
+                                        filteredCompanies?.map(c => <CompanyCard key={c.id} company={c} />) :
+                                        <div className="md:col-span-2 lg:col-span-3"><EmptyState icon={<BriefcaseIcon className="w-16 h-16" />} title="Không tìm thấy công ty" message="Không có công ty nào phù hợp với từ khóa tìm kiếm của bạn." /></div>
+                                    }
+                                </motion.div>
+                            )
                     }
                 </div>
             </div>

@@ -75,8 +75,8 @@ const InterviewResultDetailModal = ({ resultData, onClose }) => {
                         {/* Cột 2: So sánh Side-by-Side */}
                         <div className="w-full md:w-2/3 flex-grow p-6 overflow-y-auto styled-scrollbar space-y-5">
                             <h3 className="text-lg font-semibold text-gray-200">Chi tiết Bài làm ({answersWithGrading?.length || 0} câu)</h3>
-                            {answersWithGrading && answersWithGrading.length > 0 ? (
-                                answersWithGrading.map((item, index) => (
+                            {answersWithGrading && answersWithGrading?.length > 0 ? (
+                                answersWithGrading?.map((item, index) => (
                                     <motion.div 
                                         key={item.questionId} 
                                         initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: index * 0.1}}

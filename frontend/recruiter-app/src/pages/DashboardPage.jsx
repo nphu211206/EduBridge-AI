@@ -53,20 +53,20 @@ const SkillsRadarChart = ({ skills }) => {
     const sortedSkills = useMemo(() => skills ? [...skills].sort((a, b) => (a.skill_name || '').localeCompare(b.skill_name || '')) : [], [skills]);
     
     // Kiểm tra skills có phải là mảng, có phần tử và có đủ 3 phần tử không
-    const isValidSkillsData = Array.isArray(sortedSkills) && sortedSkills.length >= 3;
+    const isValidSkillsData = Array.isArray(sortedSkills) && sortedSkills?.length >= 3;
 
-    if (!sortedSkills || sortedSkills.length === 0) {
+    if (!sortedSkills || sortedSkills?.length === 0) {
         return <p className="text-gray-500 text-center italic text-sm py-10">Chưa có dữ liệu kỹ năng. Hãy phân tích một dự án để bắt đầu.</p>;
     }
 
     // Nếu có skills nhưng ít hơn 3
-    if (sortedSkills.length > 0 && sortedSkills.length < 3) {
+    if (sortedSkills?.length > 0 && sortedSkills?.length < 3) {
          return (
              <div className="text-center py-10">
                   {/* 3. SỬ DỤNG Icon 'Award' ĐÃ IMPORT ĐÚNG */}
                   <Award className="w-10 h-10 text-gray-600 mx-auto mb-3" strokeWidth={1.5}/>
                   <p className="text-gray-500 italic text-sm">Cần ít nhất 3 kỹ năng được xác thực để vẽ biểu đồ năng lực.</p>
-                  <p className="text-xs text-gray-600 mt-1">(Hiện tại có: {sortedSkills.length})</p>
+                  <p className="text-xs text-gray-600 mt-1">(Hiện tại có: {sortedSkills?.length})</p>
              </div>
          );
     }
@@ -105,21 +105,21 @@ const AnalysisResultCard = ({ result }) => (
                 <div className="bg-gray-800 p-4 rounded-lg">
                     <h4 className="font-semibold text-green-400 mb-2">Điểm mạnh</h4>
                     <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
-                        {Array.isArray(result.strengths) && result.strengths.length > 0 ? result.strengths.map((item, i) => <li key={i}>{item}</li>) : <li>Không có.</li>}
+                        {Array.isArray(result.strengths) && result.strengths?.length > 0 ? result.strengths?.map((item, i) => <li key={i}>{item}</li>) : <li>Không có.</li>}
                     </ul>
                 </div>
                 <div className="bg-gray-800 p-4 rounded-lg">
                     <h4 className="font-semibold text-yellow-400 mb-2">Cần cải thiện</h4>
                     <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
-                        {Array.isArray(result.weaknesses) && result.weaknesses.length > 0 ? result.weaknesses.map((item, i) => <li key={i}>{item}</li>) : <li>Không có.</li>}
+                        {Array.isArray(result.weaknesses) && result.weaknesses?.length > 0 ? result.weaknesses?.map((item, i) => <li key={i}>{item}</li>) : <li>Không có.</li>}
                     </ul>
                 </div>
             </div>
         </div>
         <h4 className="font-semibold text-white mb-2">Các kỹ năng đã xác thực</h4>
         <div className="flex flex-wrap gap-2">
-            {Array.isArray(result.detected_skills) && result.detected_skills.length > 0 ? (
-                result.detected_skills.map((skill, i) => (
+            {Array.isArray(result.detected_skills) && result.detected_skills?.length > 0 ? (
+                result.detected_skills?.map((skill, i) => (
                     <div key={i} className="bg-blue-900 text-blue-300 text-xs font-semibold px-3 py-1 rounded-full flex items-center">
                         {skill.skill_name}
                         <span className="ml-2 bg-blue-400 text-gray-900 text-xs font-bold rounded-full px-2 py-0.5">{skill.score}</span>
@@ -141,7 +141,7 @@ const AiAnalysisTab = ({ repos, onAnalyze, analyzingRepoId, analysisResult, anal
             <h2 className="text-2xl font-bold mb-2 text-white">Dự án GitHub của bạn</h2>
             <p className="text-gray-400 mb-6">Chọn một dự án để AI của chúng tôi phân tích và xác thực kỹ năng.</p>
             <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-                {Array.isArray(repos) && repos.length > 0 ? repos.map(repo => (
+                {Array.isArray(repos) && repos?.length > 0 ? repos?.map(repo => (
                     <div key={repo.id} className="bg-gray-700 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center transition hover:bg-gray-600 hover:shadow-md">
                         <div>
                             <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-400 hover:underline">{repo.full_name}</a>
@@ -199,7 +199,7 @@ const ApplicationTrackingTab = ({ applications, isLoading }) => {
 
     if (isLoading) return <div className="flex justify-center py-20"><Spinner /></div>;
     
-    if (!Array.isArray(applications) || applications.length === 0) {
+    if (!Array.isArray(applications) || applications?.length === 0) {
         return <EmptyState 
             icon={BriefcaseIcon} 
             title="Chưa có hoạt động ứng tuyển" 
@@ -228,7 +228,7 @@ const ApplicationTrackingTab = ({ applications, isLoading }) => {
                     </thead>
                     <motion.tbody layout>
                         <AnimatePresence>
-                        {applications.map(app => {
+                        {applications?.map(app => {
                             // Lấy thông tin trạng thái "đẳng cấp"
                             const statusInfo = getStatusBadge(app.status);
                             
@@ -409,7 +409,7 @@ export default function DashboardPage() {
                 <main className="lg:col-span-2">
                     <div className="border-b border-gray-700 mb-6">
                         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                            {tabs.map(tab => (
+                            {tabs?.map(tab => (
                                 <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`${activeTab === tab.id ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors`}>
                                     {tab.label}
                                 </button>

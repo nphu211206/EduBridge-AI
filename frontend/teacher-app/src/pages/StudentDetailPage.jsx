@@ -143,7 +143,7 @@ const StudentDetailPage = () => {
                 <BookOpenIcon className="w-6 h-6 mx-auto text-primary-500 mb-1" />
                 <p className="text-sm text-gray-600">Bài học đã hoàn thành</p>
                 <p className="text-xl font-semibold">
-                  {progress?.filter(p => p.LessonStatus === 'completed').length || 0}
+                  {progress?.filter(p => p.LessonStatus === 'completed')?.length || 0}
                 </p>
               </div>
               
@@ -187,7 +187,7 @@ const StudentDetailPage = () => {
               <div>
                 {enrollments?.length > 0 ? (
                   <div className="space-y-4">
-                    {enrollments.map(enrollment => (
+                    {enrollments?.map(enrollment => (
                       <div key={enrollment.EnrollmentID} className="border border-gray-200 rounded-lg overflow-hidden">
                         <div className="md:flex">
                           <div className="md:w-1/3 bg-gray-50">
@@ -269,7 +269,7 @@ const StudentDetailPage = () => {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {progress.map((item, index) => (
+                        {progress?.map((item, index) => (
                           <tr key={`${item.LessonID}-${index}`}>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm font-medium text-gray-900">{item.LessonTitle}</div>

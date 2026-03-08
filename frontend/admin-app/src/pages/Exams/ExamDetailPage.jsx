@@ -56,7 +56,7 @@ const ExamDetailPage = () => {
         const questionsData = await getExamQuestions(id);
         if (questionsData && Array.isArray(questionsData)) {
           setQuestions(questionsData);
-          console.log(`Đã tải ${questionsData.length} câu hỏi của bài thi`);
+          console.log(`Đã tải ${questionsData?.length} câu hỏi của bài thi`);
         } else {
           console.log('Không có dữ liệu câu hỏi từ API');
           setQuestions([]);
@@ -85,7 +85,7 @@ const ExamDetailPage = () => {
           });
           
           setParticipants(participants);
-          console.log(`Đã tải ${participants.length} người tham gia bài thi`);
+          console.log(`Đã tải ${participants?.length} người tham gia bài thi`);
         } else {
           console.log('Không có dữ liệu người tham gia từ API');
           setParticipants([]);
@@ -402,7 +402,7 @@ const ExamDetailPage = () => {
               <Descriptions.Item label="Thời gian làm bài">{exam.Duration} phút</Descriptions.Item>
               <Descriptions.Item label="Tổng điểm">{exam.TotalPoints || 100}</Descriptions.Item>
               <Descriptions.Item label="Điểm đạt">{exam.PassingScore || 60}</Descriptions.Item>
-              <Descriptions.Item label="Số câu hỏi">{questions.length || exam.QuestionCount || 0}</Descriptions.Item>
+              <Descriptions.Item label="Số câu hỏi">{questions?.length || exam.QuestionCount || 0}</Descriptions.Item>
               <Descriptions.Item label="Độ khó">{getDifficultyTag(exam.Difficulty)}</Descriptions.Item>
               <Descriptions.Item label="Khóa học">{exam.CourseTitle || 'Chưa gán khóa học'}</Descriptions.Item>
               <Descriptions.Item label="Trạng thái">{getStatusTag(exam.Status)}</Descriptions.Item>
@@ -419,7 +419,7 @@ const ExamDetailPage = () => {
               <Card>
                 <Statistic
                   title="Số lượng câu hỏi"
-                  value={questions.length || exam.QuestionCount || 0}
+                  value={questions?.length || exam.QuestionCount || 0}
                   prefix={<QuestionCircleOutlined />}
                 />
               </Card>
@@ -447,7 +447,7 @@ const ExamDetailPage = () => {
               <Card>
                 <Statistic
                   title="Số người tham gia"
-                  value={participants.length}
+                  value={participants?.length}
                   prefix={<TeamOutlined />}
                 />
               </Card>
@@ -518,7 +518,7 @@ const ExamDetailPage = () => {
             >
               <TabPane tab={<span><QuestionCircleOutlined /> Câu hỏi</span>} key="1">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                  <Title level={4}>Danh sách câu hỏi ({questions.length})</Title>
+                  <Title level={4}>Danh sách câu hỏi ({questions?.length})</Title>
                   <Link to={`/exams/edit/${id}`}>
                     <Button 
                       type="primary" 
@@ -566,7 +566,7 @@ const ExamDetailPage = () => {
               
               <TabPane tab={<span><TeamOutlined /> Người tham gia</span>} key="3">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                  <Title level={4}>Danh sách người tham gia ({participants.length})</Title>
+                  <Title level={4}>Danh sách người tham gia ({participants?.length})</Title>
                   <Button 
                     icon={<ReloadOutlined />} 
                     onClick={fetchExamDetails}

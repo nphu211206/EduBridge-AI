@@ -32,7 +32,7 @@ const CompanyCard = ({ company }) => (
         <p className="mt-4 text-sm text-gray-400 line-clamp-4">{company.companyBio || "Công ty chưa cập nhật mô tả."}</p>
     </div>
 );
-const JobDetailSkeleton = () => ( <div className="animate-pulse"> <div className="h-10 bg-gray-700 rounded w-3/4 mb-4"></div> <div className="h-6 bg-gray-700 rounded w-1/2 mb-8"></div> <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> <div className="lg:col-span-2 space-y-6"> <div className="h-48 bg-gray-800 rounded-xl"></div> <div className="h-32 bg-gray-800 rounded-xl"></div> </div> <div className="lg:col-span-1 space-y-6"> <div className="h-32 bg-gray-800 rounded-xl"></div> <div className="h-24 bg-gray-800 rounded-xl"></div> </div> </div> </div> );
+const JobDetailSkeleton = () => (<div className="animate-pulse"> <div className="h-10 bg-gray-700 rounded w-3/4 mb-4"></div> <div className="h-6 bg-gray-700 rounded w-1/2 mb-8"></div> <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> <div className="lg:col-span-2 space-y-6"> <div className="h-48 bg-gray-800 rounded-xl"></div> <div className="h-32 bg-gray-800 rounded-xl"></div> </div> <div className="lg:col-span-1 space-y-6"> <div className="h-32 bg-gray-800 rounded-xl"></div> <div className="h-24 bg-gray-800 rounded-xl"></div> </div> </div> </div>);
 
 // --- COMPONENT CHÍNH ---
 export default function JobDetailPage() {
@@ -42,7 +42,7 @@ export default function JobDetailPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [applyingJob, setApplyingJob] = useState(null);
-    const [appliedJobs, setAppliedJobs] = useState(new Set()); 
+    const [appliedJobs, setAppliedJobs] = useState(new Set());
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -51,7 +51,7 @@ export default function JobDetailPage() {
             try {
                 const data = await getJobById(id);
                 setJob(data);
-            } catch (err) { setError('Không tìm thấy tin tuyển dụng hoặc đã có lỗi xảy ra.'); } 
+            } catch (err) { setError('Không tìm thấy tin tuyển dụng hoặc đã có lỗi xảy ra.'); }
             finally { setIsLoading(false); }
         };
         fetchJob();
@@ -72,16 +72,16 @@ export default function JobDetailPage() {
 
     return (
         <>
-            <Helmet><title>{`${job.title} tại ${job.companyName} | EduLedger AI`}</title></Helmet>
+            <Helmet><title>{`${job.title} tại ${job.companyName} | EduBridge AI`}</title></Helmet>
             <div className="bg-gray-900 text-white min-h-screen py-12">
                 <div className="container mx-auto px-6">
                     <div className="bg-gray-800 p-8 rounded-xl border border-gray-700 mb-8">
                         <h1 className="text-4xl font-bold text-white">{job.title}</h1>
                         <p className="text-xl text-gray-300 mt-2">{job.companyName}</p>
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-gray-400 mt-4">
-                            <span className="flex items-center gap-2"><BriefcaseIcon className="w-5 h-5"/> {job.jobType}</span>
-                            <span className="flex items-center gap-2"><MapPinIcon className="w-5 h-5"/> {job.location}</span>
-                            <span className="flex items-center gap-2"><DollarSignIcon className="w-5 h-5"/> {job.salary}</span>
+                            <span className="flex items-center gap-2"><BriefcaseIcon className="w-5 h-5" /> {job.jobType}</span>
+                            <span className="flex items-center gap-2"><MapPinIcon className="w-5 h-5" /> {job.location}</span>
+                            <span className="flex items-center gap-2"><DollarSignIcon className="w-5 h-5" /> {job.salary}</span>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -92,19 +92,19 @@ export default function JobDetailPage() {
                             </div>
                             <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
                                 <h2 className="text-2xl font-bold text-white mb-4">Các kỹ năng yêu cầu</h2>
-                                <div className="flex flex-wrap gap-3">{job.skills.map(skill => ( <span key={skill} className="bg-blue-900 text-blue-300 font-semibold px-4 py-2 rounded-full text-sm">{skill}</span> ))}</div>
+                                <div className="flex flex-wrap gap-3">{job.skills?.map(skill => (<span key={skill} className="bg-blue-900 text-blue-300 font-semibold px-4 py-2 rounded-full text-sm">{skill}</span>))}</div>
                             </div>
                         </div>
                         <div className="lg:col-span-1 space-y-6 sticky top-24 self-start">
                             <div className="grid grid-cols-1 gap-4">
                                 <button onClick={() => handleApplyClick(job)} disabled={appliedJobs.has(job.id)} className="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg text-lg disabled:bg-gray-400 disabled:cursor-not-allowed">{appliedJobs.has(job.id) ? 'Đã ứng tuyển' : 'Ứng tuyển ngay'}</button>
-                                <button className="w-full bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600 transition flex items-center justify-center gap-2"><ShareIcon className="w-5 h-5"/> Chia sẻ</button>
+                                <button className="w-full bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600 transition flex items-center justify-center gap-2"><ShareIcon className="w-5 h-5" /> Chia sẻ</button>
                             </div>
                             <CompanyCard company={job} />
-                            {job.relatedJobs && job.relatedJobs.length > 0 && (
+                            {job.relatedJobs && job.relatedJobs?.length > 0 && (
                                 <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
                                     <h3 className="text-lg font-bold text-white mb-4">Việc làm liên quan</h3>
-                                    <div className="space-y-4">{job.relatedJobs.map(related => ( <Link key={related.id} to={`/jobs/${related.id}`} className="block hover:bg-gray-700 p-3 rounded-lg"><p className="font-semibold text-white truncate">{related.title}</p><p className="text-sm text-gray-400">{related.companyName}</p></Link> ))}</div>
+                                    <div className="space-y-4">{job.relatedJobs?.map(related => (<Link key={related.id} to={`/jobs/${related.id}`} className="block hover:bg-gray-700 p-3 rounded-lg"><p className="font-semibold text-white truncate">{related.title}</p><p className="text-sm text-gray-400">{related.companyName}</p></Link>))}</div>
                                 </div>
                             )}
                         </div>

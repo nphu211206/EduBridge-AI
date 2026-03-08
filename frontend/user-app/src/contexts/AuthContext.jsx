@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     try {
       const savedUser = localStorage.getItem('user');
       const token = localStorage.getItem('token');
-      if (savedUser && token && token.length > 10) {
+      if (savedUser && token && token?.length > 10) {
         const parsed = JSON.parse(savedUser);
         return { ...parsed, token, id: parsed.id || parsed.UserID || parsed.userId };
       }
@@ -63,7 +63,7 @@ export function AuthProvider({ children }) {
       const token = localStorage.getItem('token');
       if (!token) return false;
 
-      const response = await axios.get('http://localhost:5001/api/auth/me', {
+      const response = await axios.get('http://127.0.0.1:5001/api/auth/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
     if (savedUser && token) {
       try {
         // Validate token format
-        if (token.length < 10) {
+        if (token?.length < 10) {
           console.error('Invalid token format found in localStorage');
           clearAuthData();
           setLoading(false);
@@ -150,7 +150,7 @@ export function AuthProvider({ children }) {
       setAuthError(null);
       setLoading(true);
       
-      const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
+      const response = await axios.post('http://127.0.0.1:5001/api/auth/login', { email, password });
       
       // Handle 2FA challenge from server
       if (response.data.twoFaRequired) {
@@ -168,7 +168,7 @@ export function AuthProvider({ children }) {
         const token = response.data.token;
         
         // Validate token
-        if (token.length < 10) {
+        if (token?.length < 10) {
           throw new Error('Invalid token received from server');
         }
         
@@ -263,7 +263,7 @@ export function AuthProvider({ children }) {
       }
       
       // Get API URL from env or use default
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001';
       const response = await axios.post(`${API_BASE_URL}/api/auth/google`, { token });
       
       console.log('Google login response received:', response.status);
@@ -272,7 +272,7 @@ export function AuthProvider({ children }) {
         const token = response.data.token;
         
         // Validate token
-        if (token.length < 10) {
+        if (token?.length < 10) {
           throw new Error('Invalid token received from server');
         }
         
@@ -331,13 +331,13 @@ export function AuthProvider({ children }) {
       setAuthError(null);
       setLoading(true);
       
-      const response = await axios.post('http://localhost:5001/api/auth/facebook', { accessToken });
+      const response = await axios.post('http://127.0.0.1:5001/api/auth/facebook', { accessToken });
       
       if (response.data && response.data.token) {
         const token = response.data.token;
         
         // Validate token
-        if (token.length < 10) {
+        if (token?.length < 10) {
           throw new Error('Invalid token received from server');
         }
         
@@ -385,7 +385,7 @@ export function AuthProvider({ children }) {
       const endpoint = provider === 'google' ? 'connect/google' : 'connect/facebook';
       const payload = provider === 'google' ? { token } : { accessToken: token };
       
-      const response = await axios.post(`http://localhost:5001/api/auth/oauth/${endpoint}`, payload, {
+      const response = await axios.post(`http://127.0.0.1:5001/api/auth/oauth/${endpoint}`, payload, {
         headers: { Authorization: `Bearer ${currentUser.token}` }
       });
       
@@ -409,7 +409,7 @@ export function AuthProvider({ children }) {
       setAuthError(null);
       setLoading(true);
       
-      const response = await axios.delete(`http://localhost:5001/api/auth/oauth/disconnect/${provider}`, {
+      const response = await axios.delete(`http://127.0.0.1:5001/api/auth/oauth/disconnect/${provider}`, {
         headers: { Authorization: `Bearer ${currentUser.token}` }
       });
       
@@ -430,7 +430,7 @@ export function AuthProvider({ children }) {
 
   const getOAuthConnections = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/auth/oauth/connections', {
+      const response = await axios.get('http://127.0.0.1:5001/api/auth/oauth/connections', {
         headers: { Authorization: `Bearer ${currentUser.token}` }
       });
       
@@ -451,7 +451,7 @@ export function AuthProvider({ children }) {
     try {
       setAuthError(null);
       setLoading(true);
-      const response = await axios.post('http://localhost:5001/api/auth/login-2fa', { otp }, {
+      const response = await axios.post('http://127.0.0.1:5001/api/auth/login-2fa', { otp }, {
         headers: { Authorization: `Bearer ${tempToken}` }
       });
       
@@ -498,7 +498,7 @@ export function AuthProvider({ children }) {
       setAuthError(null);
       setLoading(true);
       
-      const response = await axios.post('http://localhost:5001/api/auth/register', userData);
+      const response = await axios.post('http://127.0.0.1:5001/api/auth/register', userData);
       
       if (response.data && response.data.success) {
         return { success: true, message: response.data.message };
@@ -521,7 +521,7 @@ export function AuthProvider({ children }) {
       // Call logout API if needed
       const token = localStorage.getItem('token');
       if (token) {
-        await axios.post('http://localhost:5001/api/auth/logout', {}, {
+        await axios.post('http://127.0.0.1:5001/api/auth/logout', {}, {
           headers: { Authorization: `Bearer ${token}` }
         }).catch(err => console.log('Logout API error:', err));
       }
@@ -542,13 +542,13 @@ export function AuthProvider({ children }) {
       }
       
       // Validate token
-      if (token.length < 10) {
+      if (token?.length < 10) {
         console.error('Invalid token format in checkAuth');
         clearAuthData();
         return false;
       }
       
-      const response = await axios.get('http://localhost:5001/api/auth/check', {
+      const response = await axios.get('http://127.0.0.1:5001/api/auth/check', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -616,7 +616,7 @@ export function AuthProvider({ children }) {
         return false;
       }
       
-      const response = await axios.post('http://localhost:5001/api/auth/refresh-token', {
+      const response = await axios.post('http://127.0.0.1:5001/api/auth/refresh-token', {
         refreshToken: refreshTokenValue
       });
       

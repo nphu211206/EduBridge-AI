@@ -27,11 +27,11 @@ export default function Footer() {
         <footer className="bg-gray-800 border-t border-gray-700 text-gray-400 mt-auto">
             <div className="container mx-auto px-6 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                    
+
                     <div className="col-span-1 lg:col-span-2">
                         <Link to="/" className="text-2xl font-bold text-white">
                             <span className="text-blue-500">Edu</span>
-                            <span className="text-purple-500">Ledger</span> AI
+                            <span className="text-purple-500">Bridge</span> AI
                         </Link>
                         <p className="mt-4 text-sm max-w-xs">
                             Nền tảng xác thực năng lực, kiến tạo sự nghiệp. Thay đổi cách nhà tuyển dụng nhìn nhận giá trị thật của bạn.
@@ -54,7 +54,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h3 className="font-semibold text-white tracking-wider uppercase">Về EduLedger</h3>
+                        <h3 className="font-semibold text-white tracking-wider uppercase">Về EduBridge</h3>
                         <ul className="mt-4 space-y-2 text-sm">
                             <li><Link to="/about" className="hover:text-white transition-colors">Về chúng tôi</Link></li>
                             <li><Link to="/blog" className="hover:text-white transition-colors">Blog công nghệ</Link></li>
@@ -76,7 +76,7 @@ export default function Footer() {
 
             <div className="bg-gray-900 py-4">
                 <div className="container mx-auto px-6 text-center text-sm text-gray-500">
-                    &copy; {new Date().getFullYear()} EduLedger AI. All rights reserved. Nền tảng vì cộng đồng sinh viên công nghệ.
+                    &copy; {new Date().getFullYear()} EduBridge AI. All rights reserved. Nền tảng vì cộng đồng sinh viên công nghệ.
                 </div>
             </div>
         </footer>

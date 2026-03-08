@@ -121,7 +121,7 @@ const ExamSchedule = () => {
         if (currentSemester) {
           setSelectedSemesterId(currentSemester.SemesterID.toString());
           fetchExamSchedule(currentUser.id, currentSemester.SemesterID);
-        } else if (response.data.data.length > 0) {
+        } else if (response.data.data?.length > 0) {
           // If no current semester, use the first one
           setSelectedSemesterId(response.data.data[0].SemesterID.toString());
           fetchExamSchedule(currentUser.id, response.data.data[0].SemesterID);
@@ -205,11 +205,11 @@ const ExamSchedule = () => {
     content += `Sinh viên: ${currentUser.FullName}\n`;
     content += `Mã số sinh viên: ${currentUser.Username}\n\n`;
     content += `Thời gian thi: ${semesterInfo.examPeriod?.start} - ${semesterInfo.examPeriod?.end}\n`;
-    content += `Số môn thi: ${currentExams.length}\n\n`;
+    content += `Số môn thi: ${currentExams?.length}\n\n`;
     content += "DANH SÁCH CÁC MÔN THI\n";
     content += "=======================================================\n";
     
-    currentExams.forEach((exam, index) => {
+    currentExams?.forEach((exam, index) => {
       content += `${index + 1}. ${exam.courseName} (${exam.courseCode})\n`;
       content += `   Ngày thi: ${exam.examDate}\n`;
       content += `   Giờ thi: ${exam.examTime}\n`;
@@ -289,7 +289,7 @@ const ExamSchedule = () => {
             onChange={handleSemesterChange}
             label="Học kỳ"
           >
-            {semesters.map((semester) => (
+            {semesters?.map((semester) => (
               <MenuItem key={semester.SemesterID} value={semester.SemesterID.toString()}>
                 {semester.SemesterName} {semester.AcademicYear} {semester.IsCurrent ? "(Hiện tại)" : ""}
               </MenuItem>
@@ -311,7 +311,7 @@ const ExamSchedule = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="body1">
-                    <strong>Số môn thi:</strong> {currentExams.length}
+                    <strong>Số môn thi:</strong> {currentExams?.length}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -324,7 +324,7 @@ const ExamSchedule = () => {
           </Card>
         )}
 
-        {currentExams.length > 0 ? (
+        {currentExams?.length > 0 ? (
           <>
             <TableContainer component={Paper} sx={styles.tableContainer}>
               <Table>
@@ -340,7 +340,7 @@ const ExamSchedule = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {currentExams.map((exam) => (
+                  {currentExams?.map((exam) => (
                     <TableRow key={exam.id}>
                       <TableCell>{exam.courseCode}</TableCell>
                       <TableCell>{exam.courseName}</TableCell>

@@ -66,7 +66,7 @@ const Sidebar = () => {
       
       <nav className="mt-6">
         <ul>
-          {navItems.map((item) => (
+          {navItems?.map((item) => (
             <li key={item.name} className="px-4 py-2">
               <Link
                 to={item.path}

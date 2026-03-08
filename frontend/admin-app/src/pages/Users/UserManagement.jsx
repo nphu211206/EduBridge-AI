@@ -7,14 +7,14 @@
 -----------------------------------------------------------------*/
 import React, { useState, useEffect } from 'react';
 import {
-  Card, Table, Space, Button, Dropdown, Modal, 
+  Card, Table, Space, Button, Dropdown, Modal,
   Tag, Typography, Input, message, Tooltip, Divider,
   Row, Col, Statistic, Select, Form, Avatar,
   Tabs, Switch, Menu, Radio, Segmented, Empty, Spin,
   Alert
 } from 'antd';
 import {
-  UserAddOutlined, EditOutlined, LockOutlined, 
+  UserAddOutlined, EditOutlined, LockOutlined,
   EyeOutlined, MoreOutlined, SearchOutlined,
   FilterOutlined, ExclamationCircleOutlined,
   TeamOutlined, UserOutlined, ReloadOutlined,
@@ -43,7 +43,7 @@ const UserManagement = () => {
     locked: 0,
     admins: 0
   });
-  
+
   // UI states
   const [loading, setLoading] = useState(false);
   const [loadingStates, setLoadingStates] = useState({
@@ -56,7 +56,7 @@ const UserManagement = () => {
   const [filterSchool, setFilterSchool] = useState('all');
   const [activeTab, setActiveTab] = useState('all');
   const [viewMode, setViewMode] = useState('table');
-  
+
   // Detail and action states
   const [selectedUser, setSelectedUser] = useState(null);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
@@ -67,43 +67,43 @@ const UserManagement = () => {
   const [lockReason, setLockReason] = useState('');
   const [newRole, setNewRole] = useState('');
   const [editUserForm] = Form.useForm();
-  
+
   // Password reset state
   const [passwordResetModalVisible, setPasswordResetModalVisible] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [isPasswordResetLoading, setIsPasswordResetLoading] = useState(false);
-  
+
   // Load users on component mount
   useEffect(() => {
     fetchUsers();
   }, []);
-  
+
   // Apply filters when data or search/filters change
   useEffect(() => {
-    if (users.length > 0) {
+    if (users?.length > 0) {
       handleFiltering();
     }
   }, [searchText, filterStatus, filterRole, filterSchool, activeTab, users]);
-  
+
   const fetchUsers = async () => {
     try {
       setLoadingStates(prev => ({ ...prev, table: true }));
       const response = await usersAPI.getUsers();
-      
+
       // Ensure consistent data format
-      const userData = Array.isArray(response.data) ? response.data : 
-                       response.data?.users ? response.data.users : [];
-      
+      const userData = Array.isArray(response.data) ? response.data :
+        response.data?.users ? response.data.users : [];
+
       console.log('Users API response:', response);
       setUsers(userData);
       setFilteredUsers(userData);
-      
+
       // Calculate stats
-      const totalUsers = userData.length;
-      const activeUsers = userData.filter(user => user.AccountStatus === 'ACTIVE').length;
-      const lockedUsers = userData.filter(user => user.AccountStatus === 'LOCKED').length;
-      const adminUsers = userData.filter(user => user.Role === 'ADMIN').length;
-      
+      const totalUsers = userData?.length;
+      const activeUsers = userData?.filter(user => user.AccountStatus === 'ACTIVE')?.length;
+      const lockedUsers = userData?.filter(user => user.AccountStatus === 'LOCKED')?.length;
+      const adminUsers = userData?.filter(user => user.Role === 'ADMIN')?.length;
+
       setStats({
         total: totalUsers,
         active: activeUsers,
@@ -113,13 +113,13 @@ const UserManagement = () => {
     } catch (err) {
       console.error('Failed to fetch users:', err);
       message.error('Không thể tải danh sách người dùng');
-      
+
       // Hiển thị dữ liệu mẫu khi API lỗi
       const mockUsers = [
         {
           UserID: 1,
           Username: 'admin',
-          Email: 'admin@CampusLearning.edu.vn',
+          Email: 'admin@EduBridge.edu.vn',
           FullName: 'Quản trị viên',
           Role: 'ADMIN',
           AccountStatus: 'ACTIVE',
@@ -129,7 +129,7 @@ const UserManagement = () => {
         {
           UserID: 2,
           Username: 'teacher1',
-          Email: 'teacher1@CampusLearning.edu.vn',
+          Email: 'teacher1@EduBridge.edu.vn',
           FullName: 'Giáo viên 1',
           Role: 'TEACHER',
           AccountStatus: 'ACTIVE',
@@ -139,7 +139,7 @@ const UserManagement = () => {
         {
           UserID: 3,
           Username: 'student1',
-          Email: 'student1@CampusLearning.edu.vn',
+          Email: 'student1@EduBridge.edu.vn',
           FullName: 'Học sinh 1',
           Role: 'STUDENT',
           AccountStatus: 'ACTIVE',
@@ -147,66 +147,66 @@ const UserManagement = () => {
           LastLoginAt: null
         }
       ];
-      
+
       setUsers(mockUsers);
       setFilteredUsers(mockUsers);
       setStats({
-        total: mockUsers.length,
-        active: mockUsers.filter(user => user.AccountStatus === 'ACTIVE').length,
+        total: mockUsers?.length,
+        active: mockUsers?.filter(user => user.AccountStatus === 'ACTIVE')?.length,
         locked: 0,
-        admins: mockUsers.filter(user => user.Role === 'ADMIN').length
+        admins: mockUsers?.filter(user => user.Role === 'ADMIN')?.length
       });
     } finally {
       setLoadingStates(prev => ({ ...prev, table: false }));
     }
   };
-  
+
   // Handle combined filtering
   const handleFiltering = () => {
-    if (!Array.isArray(users) || users.length === 0) {
+    if (!Array.isArray(users) || users?.length === 0) {
       setFilteredUsers([]);
       return;
     }
-    
+
     let filtered = [...users];
-    
+
     // Apply tab filter
     if (activeTab === 'active') {
-      filtered = filtered.filter(user => user.AccountStatus === 'ACTIVE');
+      filtered = filtered?.filter(user => user.AccountStatus === 'ACTIVE');
     } else if (activeTab === 'locked') {
-      filtered = filtered.filter(user => user.AccountStatus === 'LOCKED');
+      filtered = filtered?.filter(user => user.AccountStatus === 'LOCKED');
     } else if (activeTab === 'admin') {
-      filtered = filtered.filter(user => user.Role === 'ADMIN');
+      filtered = filtered?.filter(user => user.Role === 'ADMIN');
     }
-    
+
     // Apply search text filter
     if (searchText) {
-      filtered = filtered.filter(
+      filtered = filtered?.filter(
         (user) =>
           (user.Username && user.Username.toLowerCase().includes(searchText.toLowerCase())) ||
           (user.Email && user.Email.toLowerCase().includes(searchText.toLowerCase())) ||
           (user.FullName && user.FullName.toLowerCase().includes(searchText.toLowerCase()))
       );
     }
-    
+
     // Apply status filter
     if (filterStatus !== 'all') {
-      filtered = filtered.filter(user => user.AccountStatus === filterStatus);
+      filtered = filtered?.filter(user => user.AccountStatus === filterStatus);
     }
-    
+
     // Apply role filter
     if (filterRole !== 'all') {
-      filtered = filtered.filter(user => user.Role === filterRole);
+      filtered = filtered?.filter(user => user.Role === filterRole);
     }
-    
+
     // Apply school filter
     if (filterSchool !== 'all') {
-      filtered = filtered.filter(user => user.School === filterSchool);
+      filtered = filtered?.filter(user => user.School === filterSchool);
     }
-    
+
     setFilteredUsers(filtered);
   };
-  
+
   // Reset all filters
   const resetFilters = () => {
     setSearchText('');
@@ -215,38 +215,38 @@ const UserManagement = () => {
     setFilterSchool('all');
     setActiveTab('all');
   };
-  
+
   // Show user details
   const showUserDetails = (user) => {
     setSelectedUser(user);
     setDetailModalVisible(true);
   };
-  
+
   // Open lock dialog
   const openLockDialog = (user) => {
     setSelectedUser(user);
     setLockDialogOpen(true);
   };
-  
+
   // Close lock dialog
   const closeLockDialog = () => {
     setLockDialogOpen(false);
     setLockDuration(24);
     setLockReason('');
   };
-  
+
   // Open role dialog
   const openRoleDialog = (user) => {
     setSelectedUser(user);
     setNewRole(user.Role);
     setRoleDialogOpen(true);
   };
-  
+
   // Close role dialog
   const closeRoleDialog = () => {
     setRoleDialogOpen(false);
   };
-  
+
   // Edit user functionality
   const openEditUserModal = (user) => {
     setSelectedUser(user);
@@ -258,29 +258,29 @@ const UserManagement = () => {
     });
     setEditUserModalVisible(true);
   };
-  
+
   const closeEditUserModal = () => {
     setEditUserModalVisible(false);
     editUserForm.resetFields();
   };
-  
+
   const handleUpdateUser = async () => {
     try {
       const values = await editUserForm.validateFields();
       await usersAPI.updateUser(selectedUser.UserID, values);
-      
+
       // Update local state for immediate UI feedback
-      setUsers(prevUsers => 
-        prevUsers.map(user => 
+      setUsers(prevUsers =>
+        prevUsers?.map(user =>
           user.UserID === selectedUser.UserID
             ? { ...user, FullName: values.fullName, Email: values.email, School: values.school, Bio: values.bio }
             : user
         )
       );
-      
+
       message.success('Cập nhật thông tin người dùng thành công');
       closeEditUserModal();
-      
+
       // Also update the selected user for detail modal
       setSelectedUser(prev => ({
         ...prev,
@@ -294,34 +294,34 @@ const UserManagement = () => {
       message.error('Không thể cập nhật thông tin người dùng');
     }
   };
-  
+
   // Handle role change
   const handleRoleChange = async () => {
     if (!selectedUser || !newRole) return;
-    
+
     try {
       // Sử dụng đúng endpoint API để cập nhật vai trò
       await usersAPI.updateUserRole(selectedUser.UserID, newRole);
-      
+
       // Update local state for immediate UI feedback
-      setUsers(prevUsers => 
-        prevUsers.map(user => 
+      setUsers(prevUsers =>
+        prevUsers?.map(user =>
           user.UserID === selectedUser.UserID
             ? { ...user, Role: newRole }
             : user
         )
       );
-      
+
       message.success('Cập nhật vai trò người dùng thành công');
       closeRoleDialog();
     } catch (err) {
       console.error('Failed to update user role:', err);
       message.error('Không thể cập nhật vai trò người dùng: ' + (err.response?.data?.message || err.message));
-      
+
       // Vẫn cập nhật UI nếu API response cho thấy việc cập nhật đã thành công
       if (err.response?.data?.success) {
-        setUsers(prevUsers => 
-          prevUsers.map(user => 
+        setUsers(prevUsers =>
+          prevUsers?.map(user =>
             user.UserID === selectedUser.UserID
               ? { ...user, Role: newRole }
               : user
@@ -331,23 +331,23 @@ const UserManagement = () => {
       }
     }
   };
-  
+
   // Handle lock user
   const handleLockUser = async () => {
     if (!selectedUser) return;
-    
+
     try {
       await usersAPI.lockUser(selectedUser.UserID, lockDuration);
-      
+
       // Update local state for immediate UI feedback
-      setUsers(prevUsers => 
-        prevUsers.map(user => 
+      setUsers(prevUsers =>
+        prevUsers?.map(user =>
           user.UserID === selectedUser.UserID
             ? { ...user, AccountStatus: 'LOCKED' }
             : user
         )
       );
-      
+
       message.success('Khóa tài khoản người dùng thành công');
       closeLockDialog();
     } catch (err) {
@@ -355,41 +355,41 @@ const UserManagement = () => {
       message.error('Không thể khóa tài khoản người dùng');
     }
   };
-  
+
   // Handle unlock user
   const handleUnlockUser = async (user) => {
     try {
       await usersAPI.unlockUser(user.UserID);
-      
+
       // Update local state for immediate UI feedback
-      setUsers(prevUsers => 
-        prevUsers.map(u => 
+      setUsers(prevUsers =>
+        prevUsers?.map(u =>
           u.UserID === user.UserID
             ? { ...u, AccountStatus: 'ACTIVE' }
             : u
         )
       );
-      
+
       message.success('Mở khóa tài khoản người dùng thành công');
     } catch (err) {
       console.error('Failed to unlock user:', err);
       message.error('Không thể mở khóa tài khoản người dùng');
     }
   };
-  
+
   // Export users
   const handleExportUsers = async () => {
     try {
       setLoadingStates(prev => ({ ...prev, exporting: true }));
       message.loading({ content: 'Đang xuất dữ liệu người dùng...', key: 'exportUsers' });
-      
+
       // Format the CSV data with BOM for UTF-8
       // Adding BOM (Byte Order Mark) to ensure proper UTF-8 encoding
       let csvContent = '\uFEFF';
       csvContent += 'ID,Username,Email,Full Name,School,Role,Status,Created Date,Last Login\n';
-      
+
       // Add user data rows
-      filteredUsers.forEach(user => {
+      filteredUsers?.forEach(user => {
         const userDataRow = [
           user.UserID || '',
           user.Username || '',
@@ -400,15 +400,15 @@ const UserManagement = () => {
           user.AccountStatus || '',
           user.CreatedAt ? formatDate(user.CreatedAt) : '',
           user.LastLoginAt ? formatDate(user.LastLoginAt) : 'Chưa đăng nhập'
-        ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
-        
+        ]?.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
+
         csvContent += userDataRow + '\n';
       });
-      
+
       // Create a blob with the CSV data using UTF-8 encoding
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = window.URL.createObjectURL(blob);
-      
+
       // Create download link
       const link = document.createElement('a');
       link.href = url;
@@ -417,19 +417,19 @@ const UserManagement = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      
+
       message.success({ content: 'Xuất danh sách người dùng thành công', key: 'exportUsers' });
     } catch (error) {
       console.error('Failed to export users:', error);
-      message.error({ 
-        content: 'Không thể xuất danh sách người dùng', 
-        key: 'exportUsers' 
+      message.error({
+        content: 'Không thể xuất danh sách người dùng',
+        key: 'exportUsers'
       });
     } finally {
       setLoadingStates(prev => ({ ...prev, exporting: false }));
     }
   };
-  
+
   // Format date for display
   const formatDate = (dateString) => {
     try {
@@ -438,7 +438,7 @@ const UserManagement = () => {
       return dateString;
     }
   };
-  
+
   // Helper functions for rendering
   const getRoleTag = (role) => {
     const roleColors = {
@@ -446,55 +446,55 @@ const UserManagement = () => {
       'TEACHER': 'blue',
       'STUDENT': 'default'
     };
-    
+
     return (
       <Tag color={roleColors[role] || 'default'}>
         {role || 'Chưa xác định'}
       </Tag>
     );
   };
-  
+
   const getStatusTag = (status) => {
     const statusColors = {
       'ACTIVE': 'success',
       'LOCKED': 'error',
       'INACTIVE': 'warning'
     };
-    
+
     const statusText = {
       'ACTIVE': 'Hoạt động',
       'LOCKED': 'Bị khóa',
       'INACTIVE': 'Không hoạt động'
     };
-    
+
     return (
       <Tag color={statusColors[status] || 'default'}>
         {statusText[status] || status || 'Chưa xác định'}
       </Tag>
     );
   };
-  
+
   // Open password reset modal
   const openPasswordResetModal = (user) => {
     setSelectedUser(user);
     setPasswordResetModalVisible(true);
     setNewPassword('');
   };
-  
+
   // Close password reset modal
   const closePasswordResetModal = () => {
     setPasswordResetModalVisible(false);
     setNewPassword('');
   };
-  
+
   // Handle password reset
   const handlePasswordReset = async () => {
     if (!selectedUser) return;
-    
+
     try {
       setIsPasswordResetLoading(true);
       const response = await usersAPI.resetPassword(selectedUser.UserID);
-      
+
       if (response.data && response.data.newPassword) {
         setNewPassword(response.data.newPassword);
         message.success('Đặt lại mật khẩu thành công');
@@ -508,7 +508,7 @@ const UserManagement = () => {
       setIsPasswordResetLoading(false);
     }
   };
-  
+
   // Copy password to clipboard
   const copyPasswordToClipboard = () => {
     if (newPassword) {
@@ -521,7 +521,7 @@ const UserManagement = () => {
         });
     }
   };
-  
+
   // Generate actions dropdown menu
   const getActionMenu = (user) => {
     const items = [
@@ -542,7 +542,7 @@ const UserManagement = () => {
         danger: true
       }
     ];
-    
+
     // Add lock/unlock action based on current status
     if (user.AccountStatus === 'LOCKED') {
       items.push({
@@ -558,7 +558,7 @@ const UserManagement = () => {
         disabled: user.Role === 'ADMIN'
       });
     }
-    
+
     return {
       items,
       onClick: ({ key }) => {
@@ -591,7 +591,7 @@ const UserManagement = () => {
       }
     });
   };
-  
+
   // Table columns configuration
   const columns = [
     {
@@ -605,11 +605,11 @@ const UserManagement = () => {
       key: 'user',
       render: (_, user) => (
         <Space>
-          <Avatar 
-            style={{ 
-              backgroundColor: 
-                user.Role === 'ADMIN' ? '#f5222d' : 
-                user.Role === 'TEACHER' ? '#1890ff' : '#d9d9d9'
+          <Avatar
+            style={{
+              backgroundColor:
+                user.Role === 'ADMIN' ? '#f5222d' :
+                  user.Role === 'TEACHER' ? '#1890ff' : '#d9d9d9'
             }}
           >
             {user.FullName ? user.FullName[0] : user.Username ? user.Username[0] : 'U'}
@@ -706,21 +706,21 @@ const UserManagement = () => {
       key: 'action',
       render: (_, user) => (
         <Space size="small">
-          <Button 
-            icon={<EyeOutlined />} 
+          <Button
+            icon={<EyeOutlined />}
             size="small"
             onClick={() => showUserDetails(user)}
           />
           {user.AccountStatus === 'LOCKED' ? (
-            <Button 
-              icon={<UnlockOutlined />} 
+            <Button
+              icon={<UnlockOutlined />}
               size="small"
               type="primary"
               onClick={() => handleUnlockUser(user)}
             />
           ) : (
-            <Button 
-              icon={<LockOutlined />} 
+            <Button
+              icon={<LockOutlined />}
               size="small"
               danger
               disabled={user.Role === 'ADMIN'}
@@ -734,12 +734,12 @@ const UserManagement = () => {
       )
     }
   ];
-  
+
   // Tab change handler
   const handleTabChange = (key) => {
     setActiveTab(key);
   };
-  
+
   const tabItems = [
     {
       key: 'all',
@@ -777,8 +777,8 @@ const UserManagement = () => {
 
   // Render user card for grid view
   const renderUserCard = (user) => (
-    <Card 
-      hoverable 
+    <Card
+      hoverable
       style={{ marginBottom: 16 }}
       actions={[
         <Tooltip title="Xem chi tiết">
@@ -793,8 +793,8 @@ const UserManagement = () => {
           </Tooltip>
         ) : (
           <Tooltip title="Khóa tài khoản">
-            <LockOutlined 
-              key="lock" 
+            <LockOutlined
+              key="lock"
               onClick={() => openLockDialog(user)}
               style={{ color: user.Role === 'ADMIN' ? '#d9d9d9' : '' }}
             />
@@ -806,12 +806,12 @@ const UserManagement = () => {
       ]}
     >
       <div style={{ textAlign: 'center', marginBottom: 16 }}>
-        <Avatar 
+        <Avatar
           size={64}
-          style={{ 
-            backgroundColor: 
-              user.Role === 'ADMIN' ? '#f5222d' : 
-              user.Role === 'TEACHER' ? '#1890ff' : '#d9d9d9'
+          style={{
+            backgroundColor:
+              user.Role === 'ADMIN' ? '#f5222d' :
+                user.Role === 'TEACHER' ? '#1890ff' : '#d9d9d9'
           }}
         >
           {user.FullName ? user.FullName[0] : user.Username ? user.Username[0] : 'U'}
@@ -843,7 +843,7 @@ const UserManagement = () => {
       </div>
     </Card>
   );
-  
+
   // Get unique schools for filter
   const getUniqueSchools = () => {
     const schools = users
@@ -851,12 +851,12 @@ const UserManagement = () => {
       .filter(school => school) // Remove null/undefined values
       .filter((school, index, self) => self.indexOf(school) === index) // Get unique values
       .sort();
-    
+
     return schools;
   };
-  
+
   return (
-    <MainCard 
+    <MainCard
       title={
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <TeamOutlined style={{ marginRight: 8, fontSize: '20px' }} />
@@ -865,15 +865,15 @@ const UserManagement = () => {
       }
       extra={
         <Space>
-          <Button 
+          <Button
             icon={<ExportOutlined />}
             onClick={handleExportUsers}
             loading={loadingStates.exporting}
           >
             Xuất danh sách
-            </Button>
-          <Button 
-            type="primary" 
+          </Button>
+          <Button
+            type="primary"
             icon={<UserAddOutlined />}
           >
             Thêm người dùng
@@ -943,9 +943,9 @@ const UserManagement = () => {
           </Card>
         </Col>
       </Row>
-      
+
       {/* Tabs */}
-      <Card 
+      <Card
         style={{ marginBottom: 16 }}
         bodyStyle={{ padding: '12px 24px' }}
         bordered={false}
@@ -953,10 +953,10 @@ const UserManagement = () => {
       >
         <Tabs activeKey={activeTab} onChange={handleTabChange} items={tabItems} />
       </Card>
-      
+
       {/* Filters Row */}
-      <Card 
-        style={{ marginBottom: 16 }} 
+      <Card
+        style={{ marginBottom: 16 }}
         bodyStyle={{ padding: 16 }}
         bordered={false}
         className="hover-shadow"
@@ -1007,7 +1007,7 @@ const UserManagement = () => {
               optionFilterProp="children"
             >
               <Option value="all">Tất cả trường</Option>
-              {getUniqueSchools().map(school => (
+              {getUniqueSchools()?.map(school => (
                 <Option key={school} value={school}>{school}</Option>
               ))}
             </Select>
@@ -1047,7 +1047,7 @@ const UserManagement = () => {
           </Col>
         </Row>
       </Card>
-      
+
       {/* Users Data */}
       {loadingStates.table ? (
         <div style={{ textAlign: 'center', padding: '50px 0' }}>
@@ -1067,7 +1067,7 @@ const UserManagement = () => {
             }}
             locale={{
               emptyText: (
-                <Empty 
+                <Empty
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description="Không có người dùng nào"
                 />
@@ -1077,8 +1077,8 @@ const UserManagement = () => {
         </Card>
       ) : (
         <Row gutter={16}>
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map(user => (
+          {filteredUsers?.length > 0 ? (
+            filteredUsers?.map(user => (
               <Col xs={24} sm={12} md={8} lg={6} key={user.UserID}>
                 {renderUserCard(user)}
               </Col>
@@ -1086,10 +1086,10 @@ const UserManagement = () => {
           ) : (
             <Col span={24}>
               <Card bordered={false} style={{ textAlign: 'center', padding: '30px 0' }} className="hover-shadow">
-                <Empty 
+                <Empty
                   description="Không tìm thấy người dùng nào"
                 />
-                <Button 
+                <Button
                   style={{ marginTop: 16 }}
                   onClick={resetFilters}
                 >
@@ -1100,7 +1100,7 @@ const UserManagement = () => {
           )}
         </Row>
       )}
-      
+
       {/* User Detail Modal */}
       <Modal
         title="Chi tiết người dùng"
@@ -1152,16 +1152,16 @@ const UserManagement = () => {
           <div>
             <Row gutter={[16, 16]}>
               <Col span={24} style={{ textAlign: 'center', marginBottom: 20 }}>
-                      <Avatar 
+                <Avatar
                   size={80}
-                  style={{ 
-                          backgroundColor: 
-                      selectedUser.Role === 'ADMIN' ? '#f5222d' : 
-                      selectedUser.Role === 'TEACHER' ? '#1890ff' : '#d9d9d9'
-                        }}
-                      >
+                  style={{
+                    backgroundColor:
+                      selectedUser.Role === 'ADMIN' ? '#f5222d' :
+                        selectedUser.Role === 'TEACHER' ? '#1890ff' : '#d9d9d9'
+                  }}
+                >
                   {selectedUser.FullName ? selectedUser.FullName[0] : selectedUser.Username ? selectedUser.Username[0] : 'U'}
-                      </Avatar>
+                </Avatar>
                 <div style={{ marginTop: 8 }}>
                   <Title level={4}>{selectedUser.FullName || selectedUser.Username || 'Người dùng'}</Title>
                   <Space>
@@ -1170,7 +1170,7 @@ const UserManagement = () => {
                   </Space>
                 </div>
               </Col>
-              
+
               <Col span={12}>
                 <Title level={5}>Thông tin người dùng</Title>
                 <div style={{ marginBottom: 8 }}>
@@ -1198,7 +1198,7 @@ const UserManagement = () => {
                   </div>
                 </div>
               </Col>
-              
+
               <Col span={12}>
                 <Title level={5}>Lịch sử và trạng thái</Title>
                 <div style={{ marginBottom: 8 }}>
@@ -1220,28 +1220,28 @@ const UserManagement = () => {
                   </div>
                 </div>
               </Col>
-              
+
               <Col span={24}>
                 <Divider />
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button 
+                  <Button
                     icon={<EditOutlined />}
-                        onClick={() => {
+                    onClick={() => {
                       setDetailModalVisible(false);
                       openEditUserModal(selectedUser);
-                        }}
-                      >
+                    }}
+                  >
                     Chỉnh sửa thông tin
-                      </Button>
-                      <Button 
+                  </Button>
+                  <Button
                     icon={<SafetyCertificateOutlined />}
-                        onClick={() => {
+                    onClick={() => {
                       setDetailModalVisible(false);
                       openRoleDialog(selectedUser);
-                        }}
-                      >
+                    }}
+                  >
                     Thay đổi vai trò
-                      </Button>
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -1252,7 +1252,7 @@ const UserManagement = () => {
           </div>
         )}
       </Modal>
-      
+
       {/* Lock User Modal */}
       <Modal
         title="Khóa tài khoản người dùng"
@@ -1269,7 +1269,7 @@ const UserManagement = () => {
                 Bạn đang khóa tài khoản của: <Text strong>{selectedUser.FullName || selectedUser.Username}</Text>
               </Text>
             </div>
-            
+
             <Form.Item label="Thời hạn khóa">
               <Select
                 value={lockDuration}
@@ -1284,19 +1284,19 @@ const UserManagement = () => {
                 <Option value={0}>Vĩnh viễn</Option>
               </Select>
             </Form.Item>
-            
+
             <Form.Item label="Lý do khóa tài khoản">
-              <Input.TextArea 
+              <Input.TextArea
                 rows={4}
-              value={lockReason}
-              onChange={(e) => setLockReason(e.target.value)}
+                value={lockReason}
+                onChange={(e) => setLockReason(e.target.value)}
                 placeholder="Nhập lý do khóa tài khoản..."
               />
             </Form.Item>
           </Form>
         )}
       </Modal>
-      
+
       {/* Change Role Modal */}
       <Modal
         title="Thay đổi vai trò người dùng"
@@ -1312,22 +1312,22 @@ const UserManagement = () => {
                 Thay đổi vai trò cho: <Text strong>{selectedUser.FullName || selectedUser.Username}</Text>
               </Text>
             </div>
-            
+
             <Form.Item label="Vai trò">
-            <Select
-              value={newRole}
+              <Select
+                value={newRole}
                 onChange={(value) => setNewRole(value)}
                 style={{ width: '100%' }}
               >
                 <Option value="STUDENT">Học sinh</Option>
                 <Option value="TEACHER">Giáo viên</Option>
                 <Option value="ADMIN">Admin</Option>
-            </Select>
+              </Select>
             </Form.Item>
           </Form>
         )}
       </Modal>
-      
+
       {/* Edit User Modal */}
       <Modal
         title="Chỉnh sửa thông tin người dùng"
@@ -1338,16 +1338,16 @@ const UserManagement = () => {
       >
         {selectedUser && (
           <Form form={editUserForm} layout="vertical">
-            <Form.Item 
-              label="Họ và tên" 
+            <Form.Item
+              label="Họ và tên"
               name="fullName"
               rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
             >
               <Input placeholder="Nhập họ và tên" />
             </Form.Item>
-            
-            <Form.Item 
-              label="Email" 
+
+            <Form.Item
+              label="Email"
               name="email"
               rules={[
                 { required: true, message: 'Vui lòng nhập email' },
@@ -1356,16 +1356,16 @@ const UserManagement = () => {
             >
               <Input placeholder="Nhập email" />
             </Form.Item>
-            
-            <Form.Item 
-              label="Trường học" 
+
+            <Form.Item
+              label="Trường học"
               name="school"
             >
               <Input placeholder="Nhập tên trường học" />
             </Form.Item>
-            
-            <Form.Item 
-              label="Giới thiệu" 
+
+            <Form.Item
+              label="Giới thiệu"
               name="bio"
             >
               <Input.TextArea rows={4} placeholder="Nhập thông tin giới thiệu" />
@@ -1373,7 +1373,7 @@ const UserManagement = () => {
           </Form>
         )}
       </Modal>
-      
+
       {/* Password Reset Modal */}
       <Modal
         title="Đặt lại mật khẩu người dùng"
@@ -1384,10 +1384,10 @@ const UserManagement = () => {
             Đóng
           </Button>,
           !newPassword && (
-            <Button 
-              key="reset" 
-              type="primary" 
-              danger 
+            <Button
+              key="reset"
+              type="primary"
+              danger
               onClick={handlePasswordReset}
               loading={isPasswordResetLoading}
             >
@@ -1403,7 +1403,7 @@ const UserManagement = () => {
                 Bạn đang đặt lại mật khẩu cho tài khoản: <Text strong>{selectedUser.FullName || selectedUser.Username}</Text>
               </Text>
             </div>
-            
+
             {!newPassword ? (
               <div style={{ marginTop: 24 }}>
                 <Alert
@@ -1423,17 +1423,17 @@ const UserManagement = () => {
                   showIcon
                   style={{ marginBottom: 16 }}
                 />
-                <div style={{ 
+                <div style={{
                   padding: '12px 16px',
                   background: '#f5f5f5',
                   borderRadius: 4,
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  marginTop: 16 
+                  marginTop: 16
                 }}>
                   <Text copyable={false} strong>{newPassword}</Text>
-                  <Button 
+                  <Button
                     icon={<CopyOutlined />}
                     onClick={copyPasswordToClipboard}
                     type="primary"
@@ -1446,7 +1446,7 @@ const UserManagement = () => {
           </div>
         )}
       </Modal>
-      
+
       <style jsx global>{`
         .hover-shadow {
           transition: all 0.3s;

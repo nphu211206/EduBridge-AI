@@ -90,7 +90,7 @@ export class CallService {
    * Remove all listeners
    */
   removeListeners() {
-    this.listeners.forEach(listener => {
+    this.listeners?.forEach(listener => {
       this.socket.off(listener.event, listener.handler);
     });
     this.listeners = [];
@@ -123,7 +123,7 @@ export class CallService {
         .filter(p => p.UserID !== this.userId)
         .map(p => p.UserID);
 
-      if (participantIds.length === 0) {
+      if (participantIds?.length === 0) {
         throw new Error('No participants to call');
       }
 

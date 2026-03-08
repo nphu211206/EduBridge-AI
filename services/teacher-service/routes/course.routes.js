@@ -17,69 +17,69 @@ router.get('/', async (req, res) => {
   try {
     const { search, status, category, page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
-    
+
     const pool = await poolPromise;
     const request = pool.request()
       .input('teacherId', sql.BigInt, req.user.UserID)
       .input('offset', sql.Int, offset)
       .input('limit', sql.Int, parseInt(limit));
-    
+
     let query = `
       SELECT 
-        c.CourseID, c.Title, c.Description, c.Category,
-        c.Status, c.CreatedAt, c.UpdatedAt, c.ImageUrl,
+        c.CourseID, c.Title, c.Description, c.CategoryID as Category,
+        c.Status, c.CreatedAt, c.UpdatedAt, c.ThumbnailUrl,
         (SELECT COUNT(*) FROM CourseEnrollments WHERE CourseID = c.CourseID) as EnrollmentsCount,
         (SELECT COUNT(*) FROM CourseModules WHERE CourseID = c.CourseID) as ModulesCount
       FROM Courses c
       WHERE c.InstructorID = @teacherId AND c.DeletedAt IS NULL
     `;
-    
+
     const countQuery = `
       SELECT COUNT(*) as TotalCount
       FROM Courses c
       WHERE c.InstructorID = @teacherId AND c.DeletedAt IS NULL
     `;
-    
+
     // Add filters if provided
     if (search) {
       request.input('search', sql.NVarChar(100), `%${search}%`);
       query += ` AND (c.Title LIKE @search OR c.Description LIKE @search)`;
       countQuery += ` AND (c.Title LIKE @search OR c.Description LIKE @search)`;
     }
-    
+
     if (status) {
       request.input('status', sql.VarChar(20), status);
       query += ` AND c.Status = @status`;
       countQuery += ` AND c.Status = @status`;
     }
-    
+
     if (category) {
-      request.input('category', sql.VarChar(50), category);
-      query += ` AND c.Category = @category`;
-      countQuery += ` AND c.Category = @category`;
+      request.input('categoryId', sql.BigInt, category);
+      query += ` AND c.CategoryID = @categoryId`;
+      countQuery += ` AND c.CategoryID = @categoryId`;
     }
-    
+
     // Finalize query with pagination
     query += `
       ORDER BY c.CreatedAt DESC
       OFFSET @offset ROWS
       FETCH NEXT @limit ROWS ONLY
     `;
-    
+
     // Get courses with pagination
     const result = await request.query(query);
-    
+
     // Get total count for pagination
     const countResult = await pool.request()
       .input('teacherId', sql.BigInt, req.user.UserID)
       .input('search', sql.NVarChar(100), search ? `%${search}%` : null)
       .input('status', sql.VarChar(20), status || null)
-      .input('category', sql.VarChar(50), category || null)
+      .input('categoryId', sql.BigInt, category || null)
       .query(countQuery);
-    
+
     const totalCount = countResult.recordset[0].TotalCount;
     const totalPages = Math.ceil(totalCount / limit);
-    
+
     return res.status(200).json({
       courses: result.recordset,
       pagination: {
@@ -100,7 +100,7 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this course
     const accessCheck = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -112,18 +112,18 @@ router.get('/:id', async (req, res) => {
         AND InstructorID = @teacherId 
         AND DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset[0].HasAccess === 0) {
       return res.status(403).json({ message: 'You do not have access to this course' });
     }
-    
+
     // Get course details
     const courseResult = await pool.request()
       .input('courseId', sql.BigInt, id)
       .query(`
         SELECT 
-          c.CourseID, c.Title, c.Description, c.Category,
-          c.Status, c.CreatedAt, c.UpdatedAt, c.ImageUrl,
+          c.CourseID, c.Title, c.Description, c.CategoryID as Category,
+          c.Status, c.CreatedAt, c.UpdatedAt, c.ThumbnailUrl,
           c.Requirements, c.Objectives, c.Level, c.Duration,
           u.FullName as CreatorName, u.Email as CreatorEmail,
           (SELECT COUNT(*) FROM CourseEnrollments WHERE CourseID = c.CourseID) as EnrollmentsCount,
@@ -133,13 +133,13 @@ router.get('/:id', async (req, res) => {
         LEFT JOIN Users u ON c.InstructorID = u.UserID
         WHERE c.CourseID = @courseId AND c.DeletedAt IS NULL
       `);
-    
+
     if (courseResult.recordset.length === 0) {
       return res.status(404).json({ message: 'Course not found' });
     }
-    
+
     const course = courseResult.recordset[0];
-    
+
     // Get modules
     const modulesResult = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -152,7 +152,7 @@ router.get('/:id', async (req, res) => {
         WHERE m.CourseID = @courseId
         ORDER BY m.OrderIndex
       `);
-    
+
     // Get recent enrollments
     const enrollmentsResult = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -165,7 +165,7 @@ router.get('/:id', async (req, res) => {
         WHERE ce.CourseID = @courseId
         ORDER BY ce.EnrolledAt DESC
       `);
-    
+
     // Get recent announcements - Can't query if this table doesn't exist
     let announcements = [];
     try {
@@ -185,7 +185,7 @@ router.get('/:id', async (req, res) => {
       // Table might not exist, ignore
       console.log('Announcements table might not exist:', e.message);
     }
-    
+
     return res.status(200).json({
       course,
       modules: modulesResult.recordset,
@@ -203,13 +203,13 @@ router.post('/:id/modules', async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description } = req.body;
-    
+
     if (!title) {
       return res.status(400).json({ message: 'Module title is required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this course
     const accessCheck = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -221,11 +221,11 @@ router.post('/:id/modules', async (req, res) => {
         AND InstructorID = @teacherId 
         AND DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset[0].HasAccess === 0) {
       return res.status(403).json({ message: 'You do not have access to this course' });
     }
-    
+
     // Get the next order index
     const orderIndexResult = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -234,9 +234,9 @@ router.post('/:id/modules', async (req, res) => {
         FROM CourseModules
         WHERE CourseID = @courseId
       `);
-    
+
     const orderIndex = orderIndexResult.recordset[0].NextOrderIndex;
-    
+
     // Create module
     const result = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -249,9 +249,9 @@ router.post('/:id/modules', async (req, res) => {
         OUTPUT INSERTED.ModuleID
         VALUES (@courseId, @title, @description, @orderIndex, @createdAt)
       `);
-    
+
     const moduleId = result.recordset[0].ModuleID;
-    
+
     // Update course last update time
     await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -261,7 +261,7 @@ router.post('/:id/modules', async (req, res) => {
         SET UpdatedAt = @updatedAt
         WHERE CourseID = @courseId
       `);
-    
+
     return res.status(201).json({
       message: 'Module created successfully',
       moduleId
@@ -277,13 +277,13 @@ router.put('/modules/:moduleId', async (req, res) => {
   try {
     const { moduleId } = req.params;
     const { title, description, orderIndex } = req.body;
-    
+
     if (!title && !description && orderIndex === undefined) {
       return res.status(400).json({ message: 'At least one field to update is required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this module
     const accessCheck = await pool.request()
       .input('moduleId', sql.BigInt, moduleId)
@@ -296,32 +296,32 @@ router.put('/modules/:moduleId', async (req, res) => {
         AND (c.InstructorID = @teacherId) 
         AND c.DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to update this module' });
     }
-    
+
     const courseId = accessCheck.recordset[0].CourseID;
-    
+
     // Build update query
     let updateQuery = 'UPDATE CourseModules SET ';
     const updateValues = [];
-    
+
     if (title) {
       updateValues.push('Title = @title');
     }
-    
+
     if (description !== undefined) {
       updateValues.push('Description = @description');
     }
-    
+
     if (orderIndex !== undefined) {
       updateValues.push('OrderIndex = @orderIndex');
     }
-    
+
     updateQuery += updateValues.join(', ');
     updateQuery += ' WHERE ModuleID = @moduleId';
-    
+
     // Update module
     await pool.request()
       .input('moduleId', sql.BigInt, moduleId)
@@ -329,7 +329,7 @@ router.put('/modules/:moduleId', async (req, res) => {
       .input('description', sql.NVarChar(500), description)
       .input('orderIndex', sql.Int, orderIndex)
       .query(updateQuery);
-    
+
     // Update course last update time
     await pool.request()
       .input('courseId', sql.BigInt, courseId)
@@ -339,7 +339,7 @@ router.put('/modules/:moduleId', async (req, res) => {
         SET UpdatedAt = @updatedAt
         WHERE CourseID = @courseId
       `);
-    
+
     return res.status(200).json({
       message: 'Module updated successfully'
     });
@@ -354,13 +354,13 @@ router.post('/modules/:moduleId/lessons', async (req, res) => {
   try {
     const { moduleId } = req.params;
     const { title, content, type = 'text', duration, orderIndex } = req.body;
-    
+
     if (!title || !content) {
       return res.status(400).json({ message: 'Lesson title and content are required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this module
     const accessCheck = await pool.request()
       .input('moduleId', sql.BigInt, moduleId)
@@ -373,16 +373,16 @@ router.post('/modules/:moduleId/lessons', async (req, res) => {
         AND (c.InstructorID = @teacherId) 
         AND c.DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this module' });
     }
-    
+
     const courseId = accessCheck.recordset[0].CourseID;
-    
+
     // Get the next order index if not provided
     let lessonOrderIndex = orderIndex;
-    
+
     if (lessonOrderIndex === undefined) {
       const orderIndexResult = await pool.request()
         .input('moduleId', sql.BigInt, moduleId)
@@ -391,10 +391,10 @@ router.post('/modules/:moduleId/lessons', async (req, res) => {
           FROM CourseLessons
           WHERE ModuleID = @moduleId
         `);
-      
+
       lessonOrderIndex = orderIndexResult.recordset[0].NextOrderIndex;
     }
-    
+
     // Create lesson
     const result = await pool.request()
       .input('moduleId', sql.BigInt, moduleId)
@@ -409,9 +409,9 @@ router.post('/modules/:moduleId/lessons', async (req, res) => {
         OUTPUT INSERTED.LessonID
         VALUES (@moduleId, @title, @content, @type, @duration, @orderIndex, @createdAt)
       `);
-    
+
     const lessonId = result.recordset[0].LessonID;
-    
+
     // Update course last update time
     await pool.request()
       .input('courseId', sql.BigInt, courseId)
@@ -421,7 +421,7 @@ router.post('/modules/:moduleId/lessons', async (req, res) => {
         SET UpdatedAt = @updatedAt
         WHERE CourseID = @courseId
       `);
-    
+
     return res.status(201).json({
       message: 'Lesson created successfully',
       lessonId
@@ -437,13 +437,13 @@ router.put('/lessons/:lessonId', async (req, res) => {
   try {
     const { lessonId } = req.params;
     const { title, content, type, duration, orderIndex } = req.body;
-    
+
     if (!title && !content && !type && !duration && orderIndex === undefined) {
       return res.status(400).json({ message: 'At least one field to update is required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this lesson
     const accessCheck = await pool.request()
       .input('lessonId', sql.BigInt, lessonId)
@@ -457,42 +457,42 @@ router.put('/lessons/:lessonId', async (req, res) => {
         AND (c.InstructorID = @teacherId) 
         AND c.DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to update this lesson' });
     }
-    
+
     const courseId = accessCheck.recordset[0].CourseID;
-    
+
     // Build update query
     let updateQuery = 'UPDATE CourseLessons SET ';
     const updateValues = [];
-    
+
     if (title) {
       updateValues.push('Title = @title');
     }
-    
+
     if (content) {
       updateValues.push('Content = @content');
     }
-    
+
     if (type) {
       updateValues.push('Type = @type');
     }
-    
+
     if (duration) {
       updateValues.push('Duration = @duration');
     }
-    
+
     if (orderIndex !== undefined) {
       updateValues.push('OrderIndex = @orderIndex');
     }
-    
+
     updateValues.push('UpdatedAt = @updatedAt');
-    
+
     updateQuery += updateValues.join(', ');
     updateQuery += ' WHERE LessonID = @lessonId';
-    
+
     // Update lesson
     await pool.request()
       .input('lessonId', sql.BigInt, lessonId)
@@ -503,7 +503,7 @@ router.put('/lessons/:lessonId', async (req, res) => {
       .input('orderIndex', sql.Int, orderIndex)
       .input('updatedAt', sql.DateTime, new Date())
       .query(updateQuery);
-    
+
     // Update course last update time
     await pool.request()
       .input('courseId', sql.BigInt, courseId)
@@ -513,7 +513,7 @@ router.put('/lessons/:lessonId', async (req, res) => {
         SET UpdatedAt = @updatedAt
         WHERE CourseID = @courseId
       `);
-    
+
     return res.status(200).json({
       message: 'Lesson updated successfully'
     });
@@ -528,7 +528,7 @@ router.get('/modules/:moduleId/lessons', async (req, res) => {
   try {
     const { moduleId } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this module
     const accessCheck = await pool.request()
       .input('moduleId', sql.BigInt, moduleId)
@@ -541,11 +541,11 @@ router.get('/modules/:moduleId/lessons', async (req, res) => {
         AND (c.InstructorID = @teacherId) 
         AND c.DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this module' });
     }
-    
+
     // Get lessons for the module
     const result = await pool.request()
       .input('moduleId', sql.BigInt, moduleId)
@@ -558,10 +558,10 @@ router.get('/modules/:moduleId/lessons', async (req, res) => {
         WHERE ModuleID = @moduleId
         ORDER BY OrderIndex
       `);
-    
+
     // Get coding exercises for these lessons
     const lessonIds = result.recordset.map(lesson => lesson.LessonID);
-    
+
     let exercises = [];
     if (lessonIds.length > 0) {
       const exercisesResult = await pool.request()
@@ -572,10 +572,10 @@ router.get('/modules/:moduleId/lessons', async (req, res) => {
           FROM CodingExercises
           WHERE LessonID IN (SELECT value FROM STRING_SPLIT(@lessonIds, ','))
         `);
-      
+
       exercises = exercisesResult.recordset;
     }
-    
+
     // Add exercises to their corresponding lessons
     const lessonsWithExercises = result.recordset.map(lesson => {
       const lessonExercises = exercises.filter(ex => ex.LessonID === lesson.LessonID);
@@ -584,7 +584,7 @@ router.get('/modules/:moduleId/lessons', async (req, res) => {
         exercises: lessonExercises
       };
     });
-    
+
     return res.status(200).json({
       moduleId,
       lessons: lessonsWithExercises
@@ -601,9 +601,9 @@ router.get('/:id/enrollments', async (req, res) => {
     const { id } = req.params;
     const { search, status, page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this course
     const accessCheck = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -615,40 +615,40 @@ router.get('/:id/enrollments', async (req, res) => {
         AND (InstructorID = @teacherId) 
         AND DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset[0].HasAccess === 0) {
       return res.status(403).json({ message: 'You do not have access to this course' });
     }
-    
+
     const request = pool.request()
       .input('courseId', sql.BigInt, id)
       .input('offset', sql.Int, offset)
       .input('limit', sql.Int, parseInt(limit));
-    
+
     let query = `
       SELECT 
         ce.EnrollmentID, ce.UserID, ce.EnrolledAt as EnrollmentDate, 
         ce.CompletedAt as CompletionDate, ce.Progress, ce.LastAccessedLessonID as LastAccessedAt,
-        u.FullName, u.Email, u.ImageUrl, u.Status as UserStatus
+        u.FullName, u.Email, u.ThumbnailUrl, u.Status as UserStatus
       FROM CourseEnrollments ce
       JOIN Users u ON ce.UserID = u.UserID
       WHERE ce.CourseID = @courseId
     `;
-    
+
     const countQuery = `
       SELECT COUNT(*) as TotalCount
       FROM CourseEnrollments ce
       JOIN Users u ON ce.UserID = u.UserID
       WHERE ce.CourseID = @courseId
     `;
-    
+
     // Add filters if provided
     if (search) {
       request.input('search', sql.NVarChar(100), `%${search}%`);
       query += ` AND (u.FullName LIKE @search OR u.Email LIKE @search)`;
       countQuery += ` AND (u.FullName LIKE @search OR u.Email LIKE @search)`;
     }
-    
+
     if (status === 'completed') {
       query += ` AND ce.CompletedAt IS NOT NULL`;
       countQuery += ` AND ce.CompletedAt IS NOT NULL`;
@@ -659,26 +659,26 @@ router.get('/:id/enrollments', async (req, res) => {
       query += ` AND ce.Progress = 0`;
       countQuery += ` AND ce.Progress = 0`;
     }
-    
+
     // Finalize query with pagination
     query += `
       ORDER BY ce.EnrolledAt DESC
       OFFSET @offset ROWS
       FETCH NEXT @limit ROWS ONLY
     `;
-    
+
     // Get enrollments with pagination
     const result = await request.query(query);
-    
+
     // Get total count for pagination
     const countResult = await pool.request()
       .input('courseId', sql.BigInt, id)
       .input('search', sql.NVarChar(100), search ? `%${search}%` : null)
       .query(countQuery);
-    
+
     const totalCount = countResult.recordset[0].TotalCount;
     const totalPages = Math.ceil(totalCount / limit);
-    
+
     // Get enrollment statistics
     const statsResult = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -692,7 +692,7 @@ router.get('/:id/enrollments', async (req, res) => {
         FROM CourseEnrollments
         WHERE CourseID = @courseId
       `);
-    
+
     return res.status(200).json({
       enrollments: result.recordset,
       statistics: statsResult.recordset[0],
@@ -713,18 +713,18 @@ router.get('/:id/enrollments', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { 
-      title, description, shortDescription, level, 
-      category, subCategory, requirements, objectives, 
+    const {
+      title, description, shortDescription, level,
+      category, subCategory, requirements, objectives,
       price, discountPrice, imageUrl, videoUrl, duration
     } = req.body;
-    
+
     if (!title && !description) {
       return res.status(400).json({ message: 'At least title or description is required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this course
     const accessCheck = await pool.request()
       .input('courseId', sql.BigInt, id)
@@ -736,30 +736,30 @@ router.put('/:id', async (req, res) => {
         AND InstructorID = @teacherId 
         AND DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset[0].HasAccess === 0) {
       return res.status(403).json({ message: 'You do not have access to update this course' });
     }
-    
+
     // Build update query
     let updateQuery = 'UPDATE Courses SET UpdatedAt = @updatedAt';
-    
+
     if (title) updateQuery += ', Title = @title';
     if (description) updateQuery += ', Description = @description';
     if (shortDescription) updateQuery += ', ShortDescription = @shortDescription';
     if (level) updateQuery += ', Level = @level';
-    if (category) updateQuery += ', Category = @category';
+    if (category) updateQuery += ', CategoryID = @categoryId';
     if (subCategory) updateQuery += ', SubCategory = @subCategory';
     if (requirements) updateQuery += ', Requirements = @requirements';
     if (objectives) updateQuery += ', Objectives = @objectives';
     if (price !== undefined) updateQuery += ', Price = @price';
     if (discountPrice !== undefined) updateQuery += ', DiscountPrice = @discountPrice';
-    if (imageUrl) updateQuery += ', ImageUrl = @imageUrl';
+    if (imageUrl) updateQuery += ', ThumbnailUrl = @imageUrl';
     if (videoUrl) updateQuery += ', VideoUrl = @videoUrl';
     if (duration) updateQuery += ', Duration = @duration';
-    
+
     updateQuery += ' WHERE CourseID = @courseId AND InstructorID = @teacherId';
-    
+
     // Update course
     const request = pool.request()
       .input('courseId', sql.BigInt, id)
@@ -769,7 +769,7 @@ router.put('/:id', async (req, res) => {
       .input('description', sql.NVarChar('max'), description)
       .input('shortDescription', sql.NVarChar(500), shortDescription)
       .input('level', sql.VarChar(20), level)
-      .input('category', sql.VarChar(50), category)
+      .input('categoryId', sql.BigInt, category)
       .input('subCategory', sql.VarChar(50), subCategory)
       .input('requirements', sql.NVarChar('max'), requirements)
       .input('objectives', sql.NVarChar('max'), objectives)
@@ -778,14 +778,14 @@ router.put('/:id', async (req, res) => {
       .input('imageUrl', sql.VarChar(255), imageUrl)
       .input('videoUrl', sql.VarChar(255), videoUrl)
       .input('duration', sql.Int, duration);
-    
+
     const result = await request.query(updateQuery);
-    
+
     if (result.rowsAffected[0] === 0) {
       return res.status(404).json({ message: 'Course not found or you do not have permission to update it' });
     }
-    
-    return res.status(200).json({ 
+
+    return res.status(200).json({
       message: 'Course updated successfully',
       courseId: id
     });
@@ -800,7 +800,7 @@ router.get('/lessons/:lessonId', async (req, res) => {
   try {
     const { lessonId } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this lesson
     const accessCheck = await pool.request()
       .input('lessonId', sql.BigInt, lessonId)
@@ -814,11 +814,11 @@ router.get('/lessons/:lessonId', async (req, res) => {
         AND (c.InstructorID = @teacherId) 
         AND c.DeletedAt IS NULL
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this lesson' });
     }
-    
+
     // Get lesson details
     const lessonResult = await pool.request()
       .input('lessonId', sql.BigInt, lessonId)
@@ -830,13 +830,13 @@ router.get('/lessons/:lessonId', async (req, res) => {
         FROM CourseLessons l
         WHERE l.LessonID = @lessonId
       `);
-    
+
     if (lessonResult.recordset.length === 0) {
       return res.status(404).json({ message: 'Lesson not found' });
     }
-    
+
     const lesson = lessonResult.recordset[0];
-    
+
     // Get coding exercises if this is a coding lesson
     let exercises = [];
     if (lesson.Type === 'coding') {
@@ -848,10 +848,10 @@ router.get('/lessons/:lessonId', async (req, res) => {
           FROM CodingExercises
           WHERE LessonID = @lessonId
         `);
-      
+
       exercises = exercisesResult.recordset;
     }
-    
+
     return res.status(200).json({
       lesson: {
         ...lesson,

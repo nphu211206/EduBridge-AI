@@ -304,12 +304,12 @@ const normaliseAndTokenise = (text) => {
   // Remove punctuation/symbols
   processed = processed.replace(/[^a-z0-9\s]+/g, ' ');
   // Split & filter
-  return processed.split(/\s+/).filter(t => t && !VIETNAMESE_STOPWORDS.has(t));
+  return processed.split(/\s+/)?.filter(t => t && !VIETNAMESE_STOPWORDS.has(t));
 };
 
 /** Count how many keywords appear in answer (accent-insensitive phrase search) */
 const countKeywordsMatchedLocally = (answer, keywords) => {
-  if (!answer || !Array.isArray(keywords) || keywords.length === 0) return 0;
+  if (!answer || !Array.isArray(keywords) || keywords?.length === 0) return 0;
   const answerNorm = normaliseAndTokenise(answer).join(' ');
   let hit = 0;
   for (const kw of keywords) {
@@ -330,7 +330,7 @@ export const compareAnswerLocally = (userAnswer, templateContent, keywords = [])
     return {
       totalSimilarity: 0,
       keywordsMatched: 0,
-      totalKeywords: keywords.length,
+      totalKeywords: keywords?.length,
       contentSimilarity: 0
     };
   }
@@ -342,7 +342,7 @@ export const compareAnswerLocally = (userAnswer, templateContent, keywords = [])
   const templateTokenSet = new Set(templateTokensArr);
 
   // --- Keyword score ----------------------------------------------------
-  const totalKeywords = keywords.length;
+  const totalKeywords = keywords?.length;
   let keywordsMatched = 0;
   if (totalKeywords > 0) {
     for (const kw of keywords) {
@@ -357,7 +357,7 @@ export const compareAnswerLocally = (userAnswer, templateContent, keywords = [])
 
   // --- Content similarity: proportion of template tokens present in answer (recall) ----
   let common = 0;
-  templateTokenSet.forEach(tok => {
+  templateTokenSet?.forEach(tok => {
     if (answerTokenSet.has(tok)) common++;
   });
   const contentSimilarity = templateTokenSet.size > 0 ? (common / templateTokenSet.size) * 100 : 0;

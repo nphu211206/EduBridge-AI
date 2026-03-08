@@ -14,7 +14,7 @@ let requestsQueue = [];
 
 // Function to process queued requests
 const processRequestsQueue = (token) => {
-  requestsQueue.forEach(({ config, resolve, reject }) => {
+  requestsQueue?.forEach(({ config, resolve, reject }) => {
     // Apply new token to each queued request
     config.headers.Authorization = `Bearer ${token}`;
     // Retry the request with new token
@@ -25,7 +25,7 @@ const processRequestsQueue = (token) => {
 };
 
 const axiosClient = axios.create({
-  baseURL: process.env.VITE_API_URL || 'http://localhost:5001/api',
+  baseURL: process.env.VITE_API_URL || 'http://127.0.0.1:5001/api',
   headers: {
     'Content-Type': 'application/json'
   },
@@ -74,7 +74,7 @@ const refreshToken = async () => {
     }
     
     // Make request to refresh token endpoint
-    const response = await axios.post('http://localhost:5001/api/auth/refresh-token', {
+    const response = await axios.post('http://127.0.0.1:5001/api/auth/refresh-token', {
       refreshToken: refreshTokenValue
     });
     
@@ -212,6 +212,6 @@ axiosClient.interceptors.response.use(
 );
 
 // Export the API URL for direct use in other files
-export const API_URL = process.env.VITE_API_URL || 'http://localhost:5001';
+export const API_URL = process.env.VITE_API_URL || 'http://127.0.0.1:5001';
 
 export default axiosClient; 

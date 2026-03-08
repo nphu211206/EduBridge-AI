@@ -6,7 +6,7 @@
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
 const sql = require('mssql');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
 
 const dbHostString = process.env.DB_SERVER || 'localhost';
 let serverName = dbHostString;
@@ -20,7 +20,7 @@ if (dbHostString.includes('\\')) {
 
 const config = {
   server: serverName,
-  port: parseInt(process.env.DB_PORT || '1433'),
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : undefined,
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -28,7 +28,7 @@ const config = {
     encrypt: process.env.NODE_ENV === 'production',
     trustServerCertificate: true,
     enableArithAbort: true,
-    instanceName: instanceName
+    instanceName: instanceName || process.env.DB_INSTANCE_NAME || undefined
   },
   connectionTimeout: 30000,
   requestTimeout: 30000,

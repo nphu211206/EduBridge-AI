@@ -8,7 +8,7 @@
 import axios from 'axios';
 
 // Get the API URL from environment variables or use the default
-const apiUrl = import.meta?.env?.VITE_API_URL || 'http://localhost:5002/api';
+const apiUrl = import.meta?.env?.VITE_API_URL || 'http://127.0.0.1:5002/api';
 
 const adminApi = axios.create({
   baseURL: apiUrl,
@@ -26,7 +26,7 @@ let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue?.forEach(prom => {
     if (error) {
       prom.reject(error);
     } else {

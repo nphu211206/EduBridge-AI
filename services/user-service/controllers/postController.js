@@ -12,10 +12,10 @@ const fs = require('fs');
 // Create a new post
 exports.createPost = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { content, type = 'regular', visibility = 'public', location } = req.body;
-    const userId = req.user.UserID;
+    const userId = req.user.id;
     const files = req.files;
 
     await transaction.begin();
@@ -24,33 +24,36 @@ exports.createPost = async (req, res) => {
     const postResult = await transaction.request()
       .input('userId', sql.BigInt, userId)
       .input('content', sql.NVarChar(sql.MAX), content)
-      .input('type', sql.VarChar(20), type)
+
       .input('visibility', sql.VarChar(20), visibility)
-      .input('location', sql.NVarChar(255), location)
+
       .query(`
         INSERT INTO Posts (
-          UserID, Content, Type, Visibility, Location,
-          CreatedAt, UpdatedAt, LikesCount, CommentsCount, SharesCount, ReportsCount
+          AuthorID, Content, Visibility,
+          IsPinned, LikeCount, CommentCount, ShareCount, ViewCount,
+          CreatedAt, UpdatedAt
         )
         OUTPUT INSERTED.PostID
         VALUES (
-          @userId, @content, @type, @visibility, @location,
-          GETDATE(), GETDATE(), 0, 0, 0, 0
+          @userId, @content, @visibility,
+          0, 0, 0, 0, 0,
+          GETDATE(), GETDATE()
         )
       `);
 
     const postId = postResult.recordset[0].PostID;
 
-    // Insert media files
+    // Insert media files - Bỏ qua vì bảng PostMedia không tồn tại. Tạm thời không lưu Media liên kết với bài.
+    /*
     if (files && files.length > 0) {
       for (const file of files) {
         const isVideo = file.mimetype.startsWith('video/');
         const mediaType = isVideo ? 'video' : 'image';
-        
+
         // Đảm bảo đường dẫn file được lưu dưới dạng chuẩn hóa
         // Bỏ "uploads/" ở đầu nếu có để tránh trùng lặp
         const mediaUrl = file.path.replace(/^uploads\//, '');
-        
+
         await transaction.request()
           .input('postId', sql.BigInt, postId)
           .input('mediaUrl', sql.VarChar(255), mediaUrl)
@@ -71,6 +74,7 @@ exports.createPost = async (req, res) => {
           `);
       }
     }
+    */
 
     await transaction.commit();
 
@@ -98,30 +102,29 @@ exports.getPosts = async (req, res) => {
   try {
     const { page = 1, limit = 10, type, visibility } = req.query;
     const offset = (page - 1) * limit;
-    const userId = req.user?.UserID || null;
+    const userId = req.user?.AuthorID || null;
 
     let query = `
       SELECT 
         p.PostID,
-        p.UserID,
+        p.AuthorID,
         p.Content,
-        p.Type,
+        
         p.Visibility,
-        p.Location,
         p.CreatedAt,
         p.UpdatedAt,
-        p.LikesCount,
-        p.CommentsCount,
-        p.SharesCount,
+        p.LikeCount,
+        p.CommentCount,
+        p.ShareCount,
         u.Username,
         u.FullName,
-        u.Image as UserImage,
+        u.AvatarUrl as UserImage,
         CASE WHEN @userId IS NOT NULL AND EXISTS (
           SELECT 1 FROM PostLikes 
-          WHERE PostID = p.PostID AND UserID = @userId
+          WHERE PostID = p.PostID AND AuthorID = @userId
         ) THEN 1 ELSE 0 END as IsLiked
       FROM Posts p
-      INNER JOIN Users u ON p.UserID = u.UserID
+      INNER JOIN Users u ON p.AuthorID = u.UserID
       WHERE p.DeletedAt IS NULL
     `;
 
@@ -160,6 +163,7 @@ exports.getPosts = async (req, res) => {
 
     // Lấy media cho mỗi post
     const posts = await Promise.all(result.recordset.map(async (post) => {
+      /* Bỏ qua PostMedia - Bảng không tồn tại
       const mediaResult = await pool.request()
         .input('postId', sql.BigInt, post.PostID)
         .query(`
@@ -175,8 +179,10 @@ exports.getPosts = async (req, res) => {
           FROM PostMedia 
           WHERE PostID = @postId
         `);
+      */
 
-      // Lấy tags cho post
+      // Lấy tags cho post (Bỏ qua vì bảng không tồn tại)
+      /*
       const tagsResult = await pool.request()
         .input('postId', sql.BigInt, post.PostID)
         .query(`
@@ -185,11 +191,12 @@ exports.getPosts = async (req, res) => {
           INNER JOIN PostTags pt ON t.TagID = pt.TagID
           WHERE pt.PostID = @postId
         `);
-      
+      */
+
       return {
         ...post,
-        media: mediaResult.recordset,
-        tags: tagsResult.recordset
+        media: [], // mediaResult.recordset,
+        tags: [] // tagsResult.recordset
       };
     }));
 
@@ -215,7 +222,7 @@ exports.getPosts = async (req, res) => {
 exports.getPost = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user?.UserID || null;
+    const userId = req.user?.AuthorID || null;
 
     const result = await pool.request()
       .input('postId', sql.BigInt, id)
@@ -223,25 +230,24 @@ exports.getPost = async (req, res) => {
       .query(`
         SELECT 
           p.PostID,
-          p.UserID,
+          p.AuthorID,
           p.Content,
-          p.Type,
+          
           p.Visibility,
-          p.Location,
           p.CreatedAt,
           p.UpdatedAt,
-          p.LikesCount,
-          p.CommentsCount,
-          p.SharesCount,
+          p.LikeCount,
+          p.CommentCount,
+          p.ShareCount,
           u.Username,
           u.FullName,
-          u.Image as UserImage,
+          u.AvatarUrl as UserImage,
           CASE WHEN @userId IS NOT NULL AND EXISTS (
             SELECT 1 FROM PostLikes 
-            WHERE PostID = p.PostID AND UserID = @userId
+            WHERE PostID = p.PostID AND AuthorID = @userId
           ) THEN 1 ELSE 0 END as IsLiked
         FROM Posts p
-        INNER JOIN Users u ON p.UserID = u.UserID
+        INNER JOIN Users u ON p.AuthorID = u.UserID
         WHERE p.PostID = @postId AND p.DeletedAt IS NULL
       `);
 
@@ -252,14 +258,17 @@ exports.getPost = async (req, res) => {
     const post = result.recordset[0];
 
     // Lấy media của post
+    /* Bỏ qua vì bảng không tồn tại
     const mediaResult = await pool.request()
       .input('postId', sql.BigInt, id)
       .query(`
         SELECT * FROM PostMedia 
         WHERE PostID = @postId
       `);
+    */
 
-    // Lấy tags của post
+    // Lấy tags của post (Bỏ qua vì bảng PostTags không tồn tại)
+    /*
     const tagsResult = await pool.request()
       .input('postId', sql.BigInt, id)
       .query(`
@@ -268,11 +277,12 @@ exports.getPost = async (req, res) => {
         INNER JOIN PostTags pt ON t.TagID = pt.TagID
         WHERE pt.PostID = @postId
       `);
+    */
 
     res.json({
       ...post,
-      media: mediaResult.recordset,
-      tags: tagsResult.recordset
+      media: [], // mediaResult.recordset,
+      tags: [] // tagsResult.recordset
     });
 
   } catch (error) {
@@ -287,52 +297,51 @@ exports.getPost = async (req, res) => {
 // Update a post
 exports.updatePost = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { id } = req.params;
     let { content, visibility, location } = req.body;
-    const userId = req.user.UserID;
+    const userId = req.user.AuthorID;
 
     // Ensure visibility and location are null if not provided
     visibility = visibility === undefined ? null : visibility;
     location = location === undefined ? null : location;
-    
+
     await transaction.begin();
-    
+
     // Check if post exists and belongs to user
     const checkResult = await transaction.request()
       .input('postId', sql.BigInt, id)
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM Posts
-        WHERE PostID = @postId AND UserID = @userId AND DeletedAt IS NULL
+        WHERE PostID = @postId AND AuthorID = @userId AND DeletedAt IS NULL
       `);
-      
+
     if (checkResult.recordset.length === 0) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Không tìm thấy bài viết hoặc không có quyền chỉnh sửa' });
     }
-    
+
     // Update the post, preserving existing visibility/location if null
     await transaction.request()
       .input('postId', sql.BigInt, id)
       .input('userId', sql.BigInt, userId)
       .input('content', sql.NVarChar(sql.MAX), content)
       .input('visibility', sql.VarChar(20), visibility)
-      .input('location', sql.NVarChar(255), location)
+
       .query(`
         UPDATE Posts
         SET Content = @content,
             Visibility = COALESCE(@visibility, Visibility),
-            Location = COALESCE(@location, Location),
             UpdatedAt = GETDATE()
-        WHERE PostID = @postId AND UserID = @userId
+        WHERE PostID = @postId AND AuthorID = @userId
       `);
-      
+
     await transaction.commit();
-    
+
     res.json({ message: 'Cập nhật bài viết thành công' });
-    
+
   } catch (error) {
     await transaction.rollback();
     console.error('Update post error:', error);
@@ -346,27 +355,27 @@ exports.updatePost = async (req, res) => {
 // Delete a post
 exports.deletePost = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { id } = req.params;
-    const userId = req.user.UserID;
-    
+    const userId = req.user.AuthorID;
+
     await transaction.begin();
-    
+
     // Check if post exists and belongs to user
     const checkResult = await transaction.request()
       .input('postId', sql.BigInt, id)
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM Posts
-        WHERE PostID = @postId AND UserID = @userId AND DeletedAt IS NULL
+        WHERE PostID = @postId AND AuthorID = @userId AND DeletedAt IS NULL
       `);
-      
+
     if (checkResult.recordset.length === 0) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Không tìm thấy bài viết hoặc không có quyền xóa' });
     }
-    
+
     // Soft delete the post
     await transaction.request()
       .input('postId', sql.BigInt, id)
@@ -375,11 +384,11 @@ exports.deletePost = async (req, res) => {
         SET DeletedAt = GETDATE()
         WHERE PostID = @postId
       `);
-      
+
     await transaction.commit();
-    
+
     res.json({ message: 'Xóa bài viết thành công' });
-    
+
   } catch (error) {
     await transaction.rollback();
     console.error('Delete post error:', error);
@@ -393,10 +402,10 @@ exports.deletePost = async (req, res) => {
 // Like/Unlike a post
 exports.likePost = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { postId } = req.params;
-    const userId = req.user.UserID;
+    const userId = req.user.AuthorID;
 
     await transaction.begin();
 
@@ -406,7 +415,7 @@ exports.likePost = async (req, res) => {
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM PostLikes
-        WHERE PostID = @postId AND UserID = @userId
+        WHERE PostID = @postId AND AuthorID = @userId
       `);
 
     if (checkResult.recordset.length > 0) {
@@ -416,10 +425,10 @@ exports.likePost = async (req, res) => {
         .input('userId', sql.BigInt, userId)
         .query(`
           DELETE FROM PostLikes
-          WHERE PostID = @postId AND UserID = @userId;
+          WHERE PostID = @postId AND AuthorID = @userId;
 
           UPDATE Posts
-          SET LikesCount = LikesCount - 1
+          SET LikeCount = LikeCount - 1
           WHERE PostID = @postId;
         `);
     } else {
@@ -428,37 +437,37 @@ exports.likePost = async (req, res) => {
         .input('postId', sql.BigInt, postId)
         .input('userId', sql.BigInt, userId)
         .query(`
-          INSERT INTO PostLikes (PostID, UserID)
+          INSERT INTO PostLikes (PostID, AuthorID)
           VALUES (@postId, @userId);
 
           UPDATE Posts
-          SET LikesCount = LikesCount + 1
+          SET LikeCount = LikeCount + 1
           WHERE PostID = @postId;
         `);
-      
+
       // Get post owner to create notification
       const postOwnerResult = await transaction.request()
         .input('postId', sql.BigInt, postId)
         .query(`
-          SELECT UserID, Content FROM Posts
+          SELECT AuthorID, Content FROM Posts
           WHERE PostID = @postId
         `);
-      
+
       if (postOwnerResult.recordset.length > 0) {
-        const postOwnerId = postOwnerResult.recordset[0].UserID;
+        const postOwnerId = postOwnerResult.recordset[0].AuthorID;
         const postContent = postOwnerResult.recordset[0].Content;
         const shortContent = postContent.length > 30 ? postContent.substring(0, 30) + '...' : postContent;
-        
+
         // Get user info for notification
         const userResult = await transaction.request()
           .input('userId', sql.BigInt, userId)
           .query(`
             SELECT FullName FROM Users
-            WHERE UserID = @userId
+            WHERE AuthorID = @userId
           `);
-        
+
         const userName = userResult.recordset.length > 0 ? userResult.recordset[0].FullName : 'Người dùng';
-        
+
         // Don't notify if user likes their own post
         if (postOwnerId !== userId) {
           // Create notification for post owner
@@ -470,8 +479,8 @@ exports.likePost = async (req, res) => {
             .input('relatedId', sql.BigInt, postId)
             .input('relatedType', sql.VarChar(50), 'Posts')
             .query(`
-              INSERT INTO Notifications (UserID, Type, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
-              VALUES (@ownerId, @type, @title, @content, @relatedId, @relatedType, 0, GETDATE())
+              INSERT INTO Notifications (AuthorID, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
+              VALUES (@ownerId, @title, @content, @relatedId, @relatedType, 0, GETDATE())
             `);
         }
       }
@@ -496,7 +505,7 @@ exports.getPostsByUserId = async (req, res) => {
     const { userId } = req.params;
     const { page = 1, limit = 5 } = req.query;
     const offset = (page - 1) * limit;
-    const currentUserId = req.user?.UserID || null;
+    const currentUserId = req.user?.AuthorID || null;
 
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
@@ -505,26 +514,25 @@ exports.getPostsByUserId = async (req, res) => {
     let query = `
       SELECT 
         p.PostID,
-        p.UserID,
+        p.AuthorID,
         p.Content,
-        p.Type,
+        
         p.Visibility,
-        p.Location,
         p.CreatedAt,
         p.UpdatedAt,
-        p.LikesCount,
-        p.CommentsCount,
-        p.SharesCount,
+        p.LikeCount,
+        p.CommentCount,
+        p.ShareCount,
         u.Username,
         u.FullName,
-        u.Image as UserImage,
+        u.AvatarUrl as UserImage,
         CASE WHEN @currentUserId IS NOT NULL AND EXISTS (
           SELECT 1 FROM PostLikes 
-          WHERE PostID = p.PostID AND UserID = @currentUserId
+          WHERE PostID = p.PostID AND AuthorID = @currentUserId
         ) THEN 1 ELSE 0 END as IsLiked
       FROM Posts p
-      INNER JOIN Users u ON p.UserID = u.UserID
-      WHERE p.DeletedAt IS NULL AND p.UserID = @userId
+      INNER JOIN Users u ON p.AuthorID = u.UserID
+      WHERE p.DeletedAt IS NULL AND p.AuthorID = @userId
     `;
 
     const params = [
@@ -556,13 +564,14 @@ exports.getPostsByUserId = async (req, res) => {
       .query(`
         SELECT COUNT(*) as total
         FROM Posts
-        WHERE DeletedAt IS NULL AND UserID = @userId
+        WHERE DeletedAt IS NULL AND AuthorID = @userId
       `);
-    
+
     const total = countResult.recordset[0].total;
 
     // Get media for each post
     const posts = await Promise.all(result.recordset.map(async (post) => {
+      /* Bỏ qua
       const mediaResult = await pool.request()
         .input('postId', sql.BigInt, post.PostID)
         .query(`
@@ -588,11 +597,12 @@ exports.getPostsByUserId = async (req, res) => {
           INNER JOIN PostTags pt ON t.TagID = pt.TagID
           WHERE pt.PostID = @postId
         `);
-      
+      */
+
       return {
         ...post,
-        media: mediaResult.recordset,
-        tags: tagsResult.recordset
+        media: [], // mediaResult.recordset,
+        tags: [] // tagsResult.recordset
       };
     }));
 
@@ -618,56 +628,56 @@ exports.getPostsByUserId = async (req, res) => {
 // Add a comment to a post
 exports.addComment = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { postId } = req.params;
     const { content, parentCommentId } = req.body;
-    const userId = req.user.UserID;
-    
+    const userId = req.user.AuthorID;
+
     if (!content || content.trim() === '') {
       return res.status(400).json({ message: 'Nội dung bình luận không được để trống' });
     }
-    
+
     await transaction.begin();
-    
+
     // Check if post exists
     const postCheck = await transaction.request()
       .input('postId', sql.BigInt, postId)
       .query(`
-        SELECT UserID, Content FROM Posts
+        SELECT AuthorID, Content FROM Posts
         WHERE PostID = @postId AND DeletedAt IS NULL
       `);
-      
+
     if (postCheck.recordset.length === 0) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Không tìm thấy bài viết' });
     }
-    
-    const postOwnerId = postCheck.recordset[0].UserID;
+
+    const postOwnerId = postCheck.recordset[0].AuthorID;
     const postContent = postCheck.recordset[0].Content;
     const shortPostContent = postContent.length > 30 ? postContent.substring(0, 30) + '...' : postContent;
-    
+
     // Check parent comment if provided
     if (parentCommentId) {
       const parentCheck = await transaction.request()
         .input('commentId', sql.BigInt, parentCommentId)
         .input('postId', sql.BigInt, postId)
         .query(`
-          SELECT c.UserID, u.FullName FROM Comments c
-          JOIN Users u ON c.UserID = u.UserID
+          SELECT c.AuthorID, u.FullName FROM Comments c
+          JOIN Users u ON c.AuthorID = u.UserID
           WHERE c.CommentID = @commentId AND c.PostID = @postId AND c.DeletedAt IS NULL
         `);
-        
+
       if (parentCheck.recordset.length === 0) {
         await transaction.rollback();
         return res.status(404).json({ message: 'Không tìm thấy bình luận cha' });
       }
-      
+
       // Parent comment owner info
-      const parentCommentOwnerId = parentCheck.recordset[0].UserID;
+      const parentCommentOwnerId = parentCheck.recordset[0].AuthorID;
       const parentCommentOwnerName = parentCheck.recordset[0].FullName;
     }
-    
+
     // Insert comment
     const result = await transaction.request()
       .input('postId', sql.BigInt, postId)
@@ -676,8 +686,8 @@ exports.addComment = async (req, res) => {
       .input('content', sql.NVarChar(sql.MAX), content)
       .query(`
         INSERT INTO Comments (
-          PostID, UserID, ParentCommentID, Content,
-          LikesCount, RepliesCount, CreatedAt, UpdatedAt
+          PostID, AuthorID, ParentCommentID, Content,
+          LikeCount, RepliesCount, CreatedAt, UpdatedAt
         )
         OUTPUT INSERTED.CommentID
         VALUES (
@@ -685,18 +695,18 @@ exports.addComment = async (req, res) => {
           0, 0, GETDATE(), GETDATE()
         )
       `);
-      
+
     const commentId = result.recordset[0].CommentID;
-    
+
     // Update post comment count
     await transaction.request()
       .input('postId', sql.BigInt, postId)
       .query(`
         UPDATE Posts
-        SET CommentsCount = CommentsCount + 1
+        SET CommentCount = CommentCount + 1
         WHERE PostID = @postId
       `);
-      
+
     // Update parent comment replies count if applicable
     if (parentCommentId) {
       await transaction.request()
@@ -707,17 +717,17 @@ exports.addComment = async (req, res) => {
           WHERE CommentID = @parentCommentId
         `);
     }
-    
+
     // Get user info for notifications
     const userResult = await transaction.request()
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT FullName FROM Users
-        WHERE UserID = @userId
+        WHERE AuthorID = @userId
       `);
-    
+
     const userName = userResult.recordset[0].FullName;
-    
+
     // Create notification for post owner if commenter is not the post owner
     if (postOwnerId !== userId) {
       await transaction.request()
@@ -728,24 +738,24 @@ exports.addComment = async (req, res) => {
         .input('relatedId', sql.BigInt, postId)
         .input('relatedType', sql.VarChar(50), 'Posts')
         .query(`
-          INSERT INTO Notifications (UserID, Type, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
-          VALUES (@ownerId, @type, @title, @content, @relatedId, @relatedType, 0, GETDATE())
+          INSERT INTO Notifications (AuthorID, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
+          VALUES (@ownerId, @title, @content, @relatedId, @relatedType, 0, GETDATE())
         `);
     }
-    
+
     // Create notification for parent comment owner if this is a reply
     if (parentCommentId) {
       const parentCommentResult = await transaction.request()
         .input('commentId', sql.BigInt, parentCommentId)
         .query(`
-          SELECT c.UserID, u.FullName FROM Comments c
-          JOIN Users u ON c.UserID = u.UserID 
+          SELECT c.AuthorID, u.FullName FROM Comments c
+          JOIN Users u ON c.AuthorID = u.UserID 
           WHERE c.CommentID = @commentId
         `);
-      
+
       if (parentCommentResult.recordset.length > 0) {
-        const parentCommentOwnerId = parentCommentResult.recordset[0].UserID;
-        
+        const parentCommentOwnerId = parentCommentResult.recordset[0].AuthorID;
+
         // Don't notify if user replies to their own comment
         if (parentCommentOwnerId !== userId) {
           await transaction.request()
@@ -756,13 +766,13 @@ exports.addComment = async (req, res) => {
             .input('relatedId', sql.BigInt, commentId)
             .input('relatedType', sql.VarChar(50), 'Comments')
             .query(`
-              INSERT INTO Notifications (UserID, Type, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
-              VALUES (@ownerId, @type, @title, @content, @relatedId, @relatedType, 0, GETDATE())
+              INSERT INTO Notifications (AuthorID, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
+              VALUES (@ownerId, @title, @content, @relatedId, @relatedType, 0, GETDATE())
             `);
         }
       }
     }
-    
+
     // Get the inserted comment with user info
     const commentResult = await transaction.request()
       .input('commentId', sql.BigInt, commentId)
@@ -770,29 +780,29 @@ exports.addComment = async (req, res) => {
         SELECT 
           c.CommentID,
           c.PostID,
-          c.UserID,
+          c.AuthorID,
           c.ParentCommentID,
           c.Content,
-          c.LikesCount,
+          c.LikeCount,
           c.RepliesCount,
           c.CreatedAt,
           c.UpdatedAt,
           c.IsEdited,
           u.Username,
           u.FullName,
-          u.Image as UserImage
+          u.AvatarUrl as UserImage
         FROM Comments c
-        INNER JOIN Users u ON c.UserID = u.UserID
+        INNER JOIN Users u ON c.AuthorID = u.UserID
         WHERE c.CommentID = @commentId
       `);
-      
+
     await transaction.commit();
-    
+
     res.status(201).json({
       message: 'Thêm bình luận thành công',
       comment: commentResult.recordset[0]
     });
-    
+
   } catch (error) {
     await transaction.rollback();
     console.error('Add comment error:', error);
@@ -809,13 +819,13 @@ exports.getComments = async (req, res) => {
     const { postId } = req.params;
     const { page = 1, limit = 10, parentId = null } = req.query;
     const offset = (page - 1) * limit;
-    const userId = req.user?.UserID || null;
-    
+    const userId = req.user?.AuthorID || null;
+
     // Validate postId
     if (!postId) {
       return res.status(400).json({ message: 'ID bài viết không hợp lệ' });
     }
-    
+
     // Check if post exists
     const postCheck = await pool.request()
       .input('postId', sql.BigInt, postId)
@@ -823,66 +833,65 @@ exports.getComments = async (req, res) => {
         SELECT 1 FROM Posts
         WHERE PostID = @postId AND DeletedAt IS NULL
       `);
-      
+
     if (postCheck.recordset.length === 0) {
       return res.status(404).json({ message: 'Không tìm thấy bài viết' });
     }
-    
+
     // Build query based on whether we want root comments or replies
     let whereClause;
     if (parentId === null) {
-      whereClause = `c.ParentCommentID IS NULL`;
+      whereClause = `c.ParentID IS NULL`;
     } else {
-      whereClause = `c.ParentCommentID = @parentId`;
+      whereClause = `c.ParentID = @parentId`;
     }
-    
+
     const query = `
       SELECT 
         c.CommentID,
         c.PostID,
-        c.UserID,
-        c.ParentCommentID,
+        c.AuthorID,
+        c.ParentID as ParentCommentID,
         c.Content,
-        c.LikesCount,
-        c.RepliesCount,
+        c.LikeCount,
+        c.ReplyCount as RepliesCount,
         c.CreatedAt,
         c.UpdatedAt,
-        c.IsEdited,
         u.Username,
         u.FullName,
-        u.Image as UserImage,
+        u.AvatarUrl as UserImage,
         CASE WHEN @userId IS NOT NULL AND EXISTS (
           SELECT 1 FROM CommentLikes 
-          WHERE CommentID = c.CommentID AND UserID = @userId
+          WHERE CommentID = c.CommentID AND AuthorID = @userId
         ) THEN 1 ELSE 0 END as IsLiked,
         (
           SELECT COUNT(*) FROM Comments 
-          WHERE PostID = @postId AND DeletedAt IS NULL
+          WHERE PostID = @postId
         ) as TotalCount
       FROM Comments c
-      INNER JOIN Users u ON c.UserID = u.UserID
-      WHERE c.PostID = @postId AND ${whereClause} AND c.DeletedAt IS NULL
+      INNER JOIN Users u ON c.AuthorID = u.UserID
+      WHERE c.PostID = @postId AND ${whereClause}
       ORDER BY c.CreatedAt DESC
       OFFSET @offset ROWS
       FETCH NEXT @limit ROWS ONLY
     `;
-    
+
     const request = pool.request()
       .input('postId', sql.BigInt, postId)
       .input('userId', sql.BigInt, userId)
       .input('offset', sql.Int, offset)
       .input('limit', sql.Int, parseInt(limit));
-    
+
     // Add parentId param if getting replies
     if (parentId !== null) {
       request.input('parentId', sql.BigInt, parentId);
     }
-    
+
     const result = await request.query(query);
-    
+
     // Get total count
     const totalCount = result.recordset.length > 0 ? result.recordset[0].TotalCount : 0;
-    
+
     // Format timestamps
     const comments = result.recordset.map(comment => ({
       ...comment,
@@ -890,7 +899,7 @@ exports.getComments = async (req, res) => {
       UpdatedAt: comment.UpdatedAt ? comment.UpdatedAt.toISOString() : null,
       TotalCount: undefined // Remove from individual comment objects
     }));
-    
+
     res.json({
       comments,
       pagination: {
@@ -900,7 +909,7 @@ exports.getComments = async (req, res) => {
         totalPages: Math.ceil(totalCount / parseInt(limit))
       }
     });
-    
+
   } catch (error) {
     console.error('Get comments error:', error);
     res.status(500).json({
@@ -913,44 +922,44 @@ exports.getComments = async (req, res) => {
 // Like/Unlike a comment
 exports.likeComment = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { commentId } = req.params;
-    const userId = req.user.UserID;
-    
+    const userId = req.user.AuthorID;
+
     await transaction.begin();
-    
+
     // Check if comment exists
     const commentCheck = await transaction.request()
       .input('commentId', sql.BigInt, commentId)
       .query(`
-        SELECT c.CommentID, c.PostID, c.UserID, c.Content, p.Content as PostContent 
+        SELECT c.CommentID, c.PostID, c.AuthorID, c.Content, p.Content as PostContent 
         FROM Comments c
         JOIN Posts p ON c.PostID = p.PostID
         WHERE c.CommentID = @commentId AND c.DeletedAt IS NULL
       `);
-      
+
     if (commentCheck.recordset.length === 0) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Không tìm thấy bình luận' });
     }
-    
+
     const comment = commentCheck.recordset[0];
-    const commentOwnerId = comment.UserID;
+    const commentOwnerId = comment.AuthorID;
     const commentContent = comment.Content;
     const shortCommentContent = commentContent.length > 30 ? commentContent.substring(0, 30) + '...' : commentContent;
     const postContent = comment.PostContent;
     const shortPostContent = postContent.length > 30 ? postContent.substring(0, 30) + '...' : postContent;
-    
+
     // Check if already liked
     const likeCheck = await transaction.request()
       .input('commentId', sql.BigInt, commentId)
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM CommentLikes
-        WHERE CommentID = @commentId AND UserID = @userId
+        WHERE CommentID = @commentId AND AuthorID = @userId
       `);
-      
+
     if (likeCheck.recordset.length > 0) {
       // Unlike
       await transaction.request()
@@ -958,10 +967,10 @@ exports.likeComment = async (req, res) => {
         .input('userId', sql.BigInt, userId)
         .query(`
           DELETE FROM CommentLikes
-          WHERE CommentID = @commentId AND UserID = @userId;
+          WHERE CommentID = @commentId AND AuthorID = @userId;
           
           UPDATE Comments
-          SET LikesCount = LikesCount - 1
+          SET LikeCount = LikeCount - 1
           WHERE CommentID = @commentId;
         `);
     } else {
@@ -970,24 +979,24 @@ exports.likeComment = async (req, res) => {
         .input('commentId', sql.BigInt, commentId)
         .input('userId', sql.BigInt, userId)
         .query(`
-          INSERT INTO CommentLikes (CommentID, UserID)
+          INSERT INTO CommentLikes (CommentID, AuthorID)
           VALUES (@commentId, @userId);
           
           UPDATE Comments
-          SET LikesCount = LikesCount + 1
+          SET LikeCount = LikeCount + 1
           WHERE CommentID = @commentId;
         `);
-      
+
       // Get user info for notification
       const userResult = await transaction.request()
         .input('userId', sql.BigInt, userId)
         .query(`
           SELECT FullName FROM Users
-          WHERE UserID = @userId
+          WHERE AuthorID = @userId
         `);
-      
+
       const userName = userResult.recordset.length > 0 ? userResult.recordset[0].FullName : 'Người dùng';
-      
+
       // Don't notify if user likes their own comment
       if (commentOwnerId !== userId) {
         // Create notification for comment owner
@@ -999,16 +1008,16 @@ exports.likeComment = async (req, res) => {
           .input('relatedId', sql.BigInt, commentId)
           .input('relatedType', sql.VarChar(50), 'Comments')
           .query(`
-            INSERT INTO Notifications (UserID, Type, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
-            VALUES (@ownerId, @type, @title, @content, @relatedId, @relatedType, 0, GETDATE())
+            INSERT INTO Notifications (AuthorID, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
+            VALUES (@ownerId, @title, @content, @relatedId, @relatedType, 0, GETDATE())
           `);
       }
     }
-    
+
     await transaction.commit();
-    
+
     res.json({ message: 'Thành công' });
-    
+
   } catch (error) {
     await transaction.rollback();
     console.error('Like comment error:', error);
@@ -1022,31 +1031,31 @@ exports.likeComment = async (req, res) => {
 // Delete a comment
 exports.deleteComment = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { commentId } = req.params;
-    const userId = req.user.UserID;
-    
+    const userId = req.user.AuthorID;
+
     await transaction.begin();
-    
+
     // Check if comment exists and belongs to user
     const comment = await transaction.request()
       .input('commentId', sql.BigInt, commentId)
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT PostID, ParentCommentID FROM Comments
-        WHERE CommentID = @commentId AND UserID = @userId AND DeletedAt IS NULL
+        WHERE CommentID = @commentId AND AuthorID = @userId AND DeletedAt IS NULL
       `);
-      
+
     if (comment.recordset.length === 0) {
       await transaction.rollback();
-      return res.status(404).json({ 
-        message: 'Không tìm thấy bình luận hoặc bạn không có quyền xóa' 
+      return res.status(404).json({
+        message: 'Không tìm thấy bình luận hoặc bạn không có quyền xóa'
       });
     }
-    
+
     const { PostID, ParentCommentID } = comment.recordset[0];
-    
+
     // Soft delete the comment
     await transaction.request()
       .input('commentId', sql.BigInt, commentId)
@@ -1055,16 +1064,16 @@ exports.deleteComment = async (req, res) => {
         SET DeletedAt = GETDATE(), IsDeleted = 1
         WHERE CommentID = @commentId
       `);
-    
+
     // Update post comment count
     await transaction.request()
       .input('postId', sql.BigInt, PostID)
       .query(`
         UPDATE Posts
-        SET CommentsCount = CommentsCount - 1
+        SET CommentCount = CommentCount - 1
         WHERE PostID = @postId
       `);
-    
+
     // Update parent comment replies count if applicable
     if (ParentCommentID) {
       await transaction.request()
@@ -1075,11 +1084,11 @@ exports.deleteComment = async (req, res) => {
           WHERE CommentID = @parentCommentId
         `);
     }
-    
+
     await transaction.commit();
-    
+
     res.json({ message: 'Xóa bình luận thành công' });
-    
+
   } catch (error) {
     await transaction.rollback();
     console.error('Delete comment error:', error);
@@ -1093,11 +1102,11 @@ exports.deleteComment = async (req, res) => {
 // Share a post
 exports.sharePost = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { postId } = req.params;
     const { shareType = 'link', sharePlatform } = req.body;
-    const userId = req.user.UserID;
+    const userId = req.user.AuthorID;
 
     await transaction.begin();
 
@@ -1105,27 +1114,27 @@ exports.sharePost = async (req, res) => {
     const postResult = await transaction.request()
       .input('postId', sql.BigInt, postId)
       .query(`
-        SELECT PostID, UserID, Content, Visibility
+        SELECT PostID, AuthorID, Content, Visibility
         FROM Posts
         WHERE PostID = @postId AND DeletedAt IS NULL
       `);
 
     if (postResult.recordset.length === 0) {
       await transaction.rollback();
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Bài viết không tồn tại hoặc đã bị xóa' 
+      return res.status(404).json({
+        success: false,
+        message: 'Bài viết không tồn tại hoặc đã bị xóa'
       });
     }
 
     const post = postResult.recordset[0];
 
     // Check if post is visible to the user
-    if (post.Visibility === 'private' && post.UserID !== userId) {
+    if (post.Visibility === 'private' && post.AuthorID !== userId) {
       await transaction.rollback();
-      return res.status(403).json({ 
-        success: false, 
-        message: 'Bạn không có quyền chia sẻ bài viết này' 
+      return res.status(403).json({
+        success: false,
+        message: 'Bạn không có quyền chia sẻ bài viết này'
       });
     }
 
@@ -1137,7 +1146,7 @@ exports.sharePost = async (req, res) => {
       .input('sharePlatform', sql.VarChar(50), sharePlatform)
       .query(`
         INSERT INTO PostShares (
-          PostID, UserID, ShareType, SharePlatform, CreatedAt
+          PostID, AuthorID, ShareType, SharePlatform, CreatedAt
         )
         VALUES (
           @postId, @userId, @shareType, @sharePlatform, GETDATE()
@@ -1149,7 +1158,7 @@ exports.sharePost = async (req, res) => {
       .input('postId', sql.BigInt, postId)
       .query(`
         UPDATE Posts
-        SET SharesCount = SharesCount + 1,
+        SET ShareCount = ShareCount + 1,
             UpdatedAt = GETDATE()
         WHERE PostID = @postId
       `);
@@ -1164,14 +1173,14 @@ exports.sharePost = async (req, res) => {
         postId,
         shareType,
         sharePlatform,
-        shareCount: post.SharesCount + 1
+        shareCount: post.ShareCount + 1
       }
     });
   } catch (error) {
     await transaction.rollback();
     console.error('Share post error:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Đã xảy ra lỗi khi chia sẻ bài viết',
       error: error.message
     });
@@ -1181,42 +1190,42 @@ exports.sharePost = async (req, res) => {
 // Add media to an existing post
 exports.addPostMedia = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { id } = req.params;
-    const userId = req.user.UserID;
+    const userId = req.user.AuthorID;
     const files = req.files;
-    
+
     if (!files || files.length === 0) {
       return res.status(400).json({ message: 'Không có tệp nào được tải lên' });
     }
-    
+
     await transaction.begin();
-    
+
     // Check if post exists and belongs to user
     const checkResult = await transaction.request()
       .input('postId', sql.BigInt, id)
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM Posts
-        WHERE PostID = @postId AND UserID = @userId AND DeletedAt IS NULL
+        WHERE PostID = @postId AND AuthorID = @userId AND DeletedAt IS NULL
       `);
-      
+
     if (checkResult.recordset.length === 0) {
       await transaction.rollback();
       // Delete uploaded files
       files.forEach(file => fs.unlinkSync(file.path));
       return res.status(404).json({ message: 'Không tìm thấy bài viết hoặc không có quyền chỉnh sửa' });
     }
-    
+
     // Insert media files
     for (const file of files) {
       const isVideo = file.mimetype.startsWith('video/');
       const mediaType = isVideo ? 'video' : 'image';
-      
+
       // Đảm bảo đường dẫn file được lưu dưới dạng chuẩn hóa
       const mediaUrl = file.path.replace(/^uploads\//, '');
-      
+
       await transaction.request()
         .input('postId', sql.BigInt, id)
         .input('mediaUrl', sql.VarChar(255), mediaUrl)
@@ -1236,7 +1245,7 @@ exports.addPostMedia = async (req, res) => {
           )
         `);
     }
-    
+
     // Update post's UpdatedAt timestamp
     await transaction.request()
       .input('postId', sql.BigInt, id)
@@ -1245,9 +1254,9 @@ exports.addPostMedia = async (req, res) => {
         SET UpdatedAt = GETDATE()
         WHERE PostID = @postId
       `);
-    
+
     await transaction.commit();
-    
+
     // Get updated media list
     const mediaResult = await pool.request()
       .input('postId', sql.BigInt, id)
@@ -1255,12 +1264,12 @@ exports.addPostMedia = async (req, res) => {
         SELECT * FROM PostMedia 
         WHERE PostID = @postId
       `);
-    
+
     res.status(201).json({
       message: 'Thêm media vào bài viết thành công',
       media: mediaResult.recordset
     });
-    
+
   } catch (error) {
     await transaction.rollback();
     // Delete uploaded files if error
@@ -1278,27 +1287,27 @@ exports.addPostMedia = async (req, res) => {
 // Delete media from a post
 exports.deletePostMedia = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { postId, mediaId } = req.params;
-    const userId = req.user.UserID;
-    
+    const userId = req.user.AuthorID;
+
     await transaction.begin();
-    
+
     // Check if post exists and belongs to user
     const checkResult = await transaction.request()
       .input('postId', sql.BigInt, postId)
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM Posts
-        WHERE PostID = @postId AND UserID = @userId AND DeletedAt IS NULL
+        WHERE PostID = @postId AND AuthorID = @userId AND DeletedAt IS NULL
       `);
-      
+
     if (checkResult.recordset.length === 0) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Không tìm thấy bài viết hoặc không có quyền chỉnh sửa' });
     }
-    
+
     // Get media file path before deletion
     const mediaResult = await transaction.request()
       .input('mediaId', sql.BigInt, mediaId)
@@ -1307,14 +1316,14 @@ exports.deletePostMedia = async (req, res) => {
         SELECT MediaUrl FROM PostMedia
         WHERE MediaID = @mediaId AND PostID = @postId
       `);
-    
+
     if (mediaResult.recordset.length === 0) {
       await transaction.rollback();
       return res.status(404).json({ message: 'Không tìm thấy media hoặc media không thuộc bài viết này' });
     }
-    
+
     const mediaUrl = mediaResult.recordset[0].MediaUrl;
-    
+
     // Delete media from database
     await transaction.request()
       .input('mediaId', sql.BigInt, mediaId)
@@ -1323,7 +1332,7 @@ exports.deletePostMedia = async (req, res) => {
         DELETE FROM PostMedia
         WHERE MediaID = @mediaId AND PostID = @postId
       `);
-    
+
     // Update post's UpdatedAt timestamp
     await transaction.request()
       .input('postId', sql.BigInt, postId)
@@ -1332,9 +1341,9 @@ exports.deletePostMedia = async (req, res) => {
         SET UpdatedAt = GETDATE()
         WHERE PostID = @postId
       `);
-    
+
     await transaction.commit();
-    
+
     // Delete file from disk
     try {
       const filePath = `uploads/${mediaUrl.replace(/^uploads\//, '')}`;
@@ -1345,9 +1354,9 @@ exports.deletePostMedia = async (req, res) => {
       console.error('Error deleting file:', fileError);
       // Continue even if file deletion fails
     }
-    
+
     res.json({ message: 'Xóa media khỏi bài viết thành công' });
-    
+
   } catch (error) {
     await transaction.rollback();
     console.error('Delete post media error:', error);
@@ -1361,10 +1370,10 @@ exports.deletePostMedia = async (req, res) => {
 // Toggle bookmark for a post
 exports.toggleBookmark = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { postId } = req.params;
-    const userId = req.user.UserID;
+    const userId = req.user.AuthorID;
 
     await transaction.begin();
 
@@ -1374,7 +1383,7 @@ exports.toggleBookmark = async (req, res) => {
       .input('userId', sql.BigInt, userId)
       .query(`
         SELECT 1 FROM PostBookmarks
-        WHERE PostID = @postId AND UserID = @userId
+        WHERE PostID = @postId AND AuthorID = @userId
       `);
 
     if (checkResult.recordset.length > 0) {
@@ -1384,7 +1393,7 @@ exports.toggleBookmark = async (req, res) => {
         .input('userId', sql.BigInt, userId)
         .query(`
           DELETE FROM PostBookmarks
-          WHERE PostID = @postId AND UserID = @userId;
+          WHERE PostID = @postId AND AuthorID = @userId;
 
           UPDATE Posts
           SET BookmarksCount = CASE WHEN BookmarksCount > 0 THEN BookmarksCount - 1 ELSE 0 END
@@ -1396,7 +1405,7 @@ exports.toggleBookmark = async (req, res) => {
         .input('postId', sql.BigInt, postId)
         .input('userId', sql.BigInt, userId)
         .query(`
-          INSERT INTO PostBookmarks (PostID, UserID, CreatedAt)
+          INSERT INTO PostBookmarks (PostID, AuthorID, CreatedAt)
           VALUES (@postId, @userId, GETDATE());
 
           UPDATE Posts
@@ -1406,7 +1415,7 @@ exports.toggleBookmark = async (req, res) => {
     }
 
     await transaction.commit();
-    res.json({ 
+    res.json({
       success: true,
       message: 'Bookmark status updated successfully',
       isBookmarked: checkResult.recordset.length === 0 // true if newly bookmarked, false if removed
@@ -1426,40 +1435,40 @@ exports.toggleBookmark = async (req, res) => {
 // Get bookmarked posts for current user
 exports.getBookmarkedPosts = async (req, res) => {
   try {
-    const userId = req.user.UserID;
+    const userId = req.user.AuthorID;
     const { page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
 
     const query = `
       SELECT 
         p.PostID,
-        p.UserID,
+        p.AuthorID,
         p.Content,
-        p.Type,
+        
         p.Visibility,
-        p.Location,
+       ,
         p.CreatedAt,
         p.UpdatedAt,
-        p.LikesCount,
-        p.CommentsCount,
-        p.SharesCount,
+        p.LikeCount,
+        p.CommentCount,
+        p.ShareCount,
         u.Username,
         u.FullName,
-        u.Image as UserImage,
+        u.AvatarUrl as UserImage,
         1 as IsBookmarked, -- Always 1 since these are bookmarked posts
         CASE WHEN EXISTS (
           SELECT 1 FROM PostLikes 
-          WHERE PostID = p.PostID AND UserID = @userId
+          WHERE PostID = p.PostID AND AuthorID = @userId
         ) THEN 1 ELSE 0 END as IsLiked,
         bmkCount.TotalCount as TotalCount
       FROM Posts p
-      INNER JOIN Users u ON p.UserID = u.UserID
+      INNER JOIN Users u ON p.AuthorID = u.UserID
       INNER JOIN PostBookmarks b ON p.PostID = b.PostID
       -- subquery for total bookmarks count
       CROSS APPLY (
-        SELECT COUNT(*) as TotalCount FROM PostBookmarks WHERE UserID = @userId
+        SELECT COUNT(*) as TotalCount FROM PostBookmarks WHERE AuthorID = @userId
       ) bmkCount
-      WHERE b.UserID = @userId AND p.DeletedAt IS NULL
+      WHERE b.AuthorID = @userId AND p.DeletedAt IS NULL
       ORDER BY b.CreatedAt DESC
       OFFSET @offset ROWS
       FETCH NEXT @limit ROWS ONLY

@@ -161,7 +161,7 @@ const AcademicResults = () => {
       'Điểm Chữ', 'Trạng Thái', 'Ngày Cập Nhật'
     ];
     
-    const rows = data.map(item => [
+    const rows = data?.map(item => [
       item.StudentCode || '',
       item.StudentName || '',
       item.SemesterName || item.Semester || '',
@@ -176,7 +176,7 @@ const AcademicResults = () => {
     ]);
     
     return [headers, ...rows]
-      .map(row => row.map(value => `"${value}"`).join(','))
+      .map(row => row?.map(value => `"${value}"`).join(','))
       .join('\n');
   };
   
@@ -287,7 +287,7 @@ const AcademicResults = () => {
                 onChange={(e) => setSemester(e.target.value)}
               >
                 <MenuItem key="all-semesters" value="">Tất cả học kỳ</MenuItem>
-                {semesters.map((sem) => (
+                {semesters?.map((sem) => (
                   <MenuItem key={sem.SemesterID || `semester-${sem.id}`} value={sem.SemesterID || sem.id}>
                     {sem.SemesterName || sem.name}
                   </MenuItem>
@@ -304,7 +304,7 @@ const AcademicResults = () => {
                 onChange={(e) => setProgram(e.target.value)}
               >
                 <MenuItem key="all-programs" value="">Tất cả chương trình</MenuItem>
-                {programs.map((prog) => (
+                {programs?.map((prog) => (
                   <MenuItem key={prog.ProgramID || prog.id || `program-${prog.name}`} value={prog.ProgramID || prog.id}>
                     {prog.ProgramName || prog.name}
                   </MenuItem>
@@ -321,7 +321,7 @@ const AcademicResults = () => {
                 onChange={(e) => setSubject(e.target.value)}
               >
                 <MenuItem key="all-subjects" value="">Tất cả môn học</MenuItem>
-                {subjects.map((subj) => (
+                {subjects?.map((subj) => (
                   <MenuItem key={subj.SubjectID || subj.id || `subject-${subj.name}`} value={subj.SubjectID || subj.id}>
                     {subj.SubjectName || subj.name}
                   </MenuItem>
@@ -388,12 +388,12 @@ const AcademicResults = () => {
                   <CircularProgress size={24} sx={{ my: 2 }} />
                 </TableCell>
               </TableRow>
-            ) : paginatedResults.length === 0 ? (
+            ) : paginatedResults?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={11} align="center">Không tìm thấy kết quả</TableCell>
               </TableRow>
             ) : (
-              paginatedResults.map((result) => (
+              paginatedResults?.map((result) => (
                 <TableRow key={result.ResultID || `result-${result.StudentID || result.UserID}-${result.SubjectID}`}>
                   <TableCell>{result.StudentCode}</TableCell>
                   <TableCell>{result.StudentName || result.FullName}</TableCell>
@@ -446,7 +446,7 @@ const AcademicResults = () => {
         </Table>
         <TablePagination
           component="div"
-          count={filteredResults.length}
+          count={filteredResults?.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}

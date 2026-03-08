@@ -131,7 +131,7 @@ const CreateExamPage = () => {
       type: 'essay',
       content: '',
       points: 10,
-      orderIndex: questions.length + 2,
+      orderIndex: questions?.length + 2,
       options: null,
       correctAnswer: null,
       explanation: null
@@ -155,7 +155,7 @@ const CreateExamPage = () => {
       // Xử lý khi chuyển từ bước thông tin sang bước câu hỏi
       // Cần tạo bài thi trước
       handleCreateExam();
-    } else if (activeStep === steps.length - 1) {
+    } else if (activeStep === steps?.length - 1) {
       // Xử lý hoàn thành bài thi
       handleFinish();
     } else {
@@ -204,8 +204,8 @@ const CreateExamPage = () => {
       
       // Add essay template for essay exams
       if (examData.type === 'essay' || examData.type === 'mixed') {
-        const essayTemplateQuestions = questions.filter(q => q.type === 'essay');
-        if (essayTemplateQuestions.length > 0) {
+        const essayTemplateQuestions = questions?.filter(q => q.type === 'essay');
+        if (essayTemplateQuestions?.length > 0) {
           const templateData = {
             content: essayData.content,
             keywords: essayData.keywords,

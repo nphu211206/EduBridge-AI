@@ -49,12 +49,12 @@ const Reports = () => {
   }, [activeStatus]);
 
   useEffect(() => {
-    if (reports.length > 0) {
+    if (reports?.length > 0) {
       let filtered = [...reports];
       
       // Filter based on search term
       if (searchTerm) {
-        filtered = filtered.filter(report => 
+        filtered = filtered?.filter(report => 
           report.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           report.Content.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -62,7 +62,7 @@ const Reports = () => {
       
       // Filter based on status
       if (activeStatus !== 'all') {
-        filtered = filtered.filter(report => report.Status.toLowerCase() === activeStatus.toLowerCase());
+        filtered = filtered?.filter(report => report.Status.toLowerCase() === activeStatus.toLowerCase());
       }
       
       setFilteredReports(filtered);
@@ -387,7 +387,7 @@ const Reports = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {filteredReports.map((report) => (
+            {filteredReports?.map((report) => (
               <div 
                 key={report.ReportID}
                 className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300"
@@ -434,7 +434,7 @@ const Reports = () => {
             ))}
 
             {/* Empty State */}
-            {filteredReports.length === 0 && (
+            {filteredReports?.length === 0 && (
               <div className="col-span-full py-8 sm:py-12 text-center">
                 <div className="bg-white rounded-xl p-6 sm:p-8 max-w-md mx-auto shadow-sm">
                   <div className="bg-gray-50 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mx-auto mb-4">

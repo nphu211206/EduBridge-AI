@@ -111,7 +111,7 @@ const Package = () => {
   // Handle delete package
   const handleDeletePackage = (packageId) => {
     // Filter out the deleted package
-    const updatedPackages = packages.filter(pkg => pkg.id !== packageId);
+    const updatedPackages = packages?.filter(pkg => pkg.id !== packageId);
     setPackages(updatedPackages);
     
     // Show success message
@@ -121,7 +121,7 @@ const Package = () => {
   // Filter packages by registry
   const filteredPackages = activeRegistry === 'all' 
     ? packages 
-    : packages.filter(pkg => pkg.registry === activeRegistry);
+    : packages?.filter(pkg => pkg.registry === activeRegistry);
   
   return (
     <div>
@@ -222,9 +222,9 @@ const Package = () => {
             </button>
           </div>
           
-          {filteredPackages.length > 0 ? (
+          {filteredPackages?.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {filteredPackages.map((pkg) => (
+              {filteredPackages?.map((pkg) => (
                 <div key={pkg.id} className="p-5">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -261,7 +261,7 @@ const Package = () => {
                       </div>
                       
                       <div className="mt-2 flex flex-wrap gap-1">
-                        {pkg.tags.map((tag, index) => (
+                        {pkg.tags?.map((tag, index) => (
                           <span key={index} className="inline-flex items-center bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded">
                             <TagIcon className="h-3 w-3 mr-1" />
                             {tag}

@@ -207,7 +207,7 @@ const ClassSchedule = () => {
   
   // Helper function to get schedule for a specific day
   const getScheduleForDay = (day) => {
-    return scheduleData.filter(schedule => schedule.day === day);
+    return scheduleData?.filter(schedule => schedule.day === day);
   };
   
   // Helper function to check if time slot has a class
@@ -224,7 +224,7 @@ const ClassSchedule = () => {
     const colors = ['primary', 'secondary', 'success', 'error', 'info', 'warning'];
     // Simple hash function to determine color based on courseCode
     const hashCode = courseCode.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return colors[hashCode % colors.length];
+    return colors[hashCode % colors?.length];
   };
   
   // Loading state
@@ -324,7 +324,7 @@ const ClassSchedule = () => {
                     label="Học kỳ"
                     onChange={handleSemesterChange}
                   >
-                    {semesters.map((semester) => (
+                    {semesters?.map((semester) => (
                       <MenuItem key={semester.id} value={semester.id}>
                         {semester.name} {semester.isCurrent ? '(Hiện tại)' : ''}
                       </MenuItem>
@@ -441,7 +441,7 @@ const ClassSchedule = () => {
                     >
                       <Typography variant="subtitle2" fontWeight={600}>Thời gian</Typography>
                     </TableCell>
-                    {daysOfWeek.map((day) => (
+                    {daysOfWeek?.map((day) => (
                       <TableCell 
                         key={day} 
                         align="center"
@@ -473,7 +473,7 @@ const ClassSchedule = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {timeSlots.map((timeSlot, index) => (
+                  {timeSlots?.map((timeSlot, index) => (
                     <TableRow key={timeSlot.id} sx={{ backgroundColor: index % 2 === 0 ? 'rgba(0, 0, 0, 0.01)' : 'transparent' }}>
                       <TableCell 
                         sx={{ 
@@ -490,7 +490,7 @@ const ClassSchedule = () => {
                           <Typography variant="caption" fontWeight={500}>{timeSlot.end}</Typography>
                         </Box>
                       </TableCell>
-                      {daysOfWeek.map((day) => {
+                      {daysOfWeek?.map((day) => {
                         const classInfo = getClassForTimeSlot(day, timeSlot);
                         return (
                           <TableCell 
@@ -571,7 +571,7 @@ const ClassSchedule = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {scheduleData.map((schedule, index) => (
+                  {scheduleData?.map((schedule, index) => (
                     <TableRow 
                       key={schedule.id}
                       hover

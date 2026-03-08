@@ -197,9 +197,9 @@ export const initializeVNPayElements = () => {
 export const monitorVNPayScripts = () => {
   // Create a MutationObserver to watch for VNPay scripts being added
   const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
+    mutations?.forEach((mutation) => {
       if (mutation.addedNodes) {
-        mutation.addedNodes.forEach((node) => {
+        mutation.addedNodes?.forEach((node) => {
           if (node.nodeName === 'SCRIPT' && 
               (node.src.includes('vnpay') || 
                node.src.includes('custom.min.js'))) {

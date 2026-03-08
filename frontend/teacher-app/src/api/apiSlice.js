@@ -9,7 +9,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout } from '../store/slices/authSlice';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:5003/api/v1/',
+  baseUrl: 'http://127.0.0.1:5003/api/v1/',
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem('teacherToken') || getState().auth.token;
     

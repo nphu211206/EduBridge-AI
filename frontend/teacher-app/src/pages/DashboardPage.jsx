@@ -101,7 +101,7 @@ const DashboardPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {statsCards.map((card) => (
+        {statsCards?.map((card) => (
           <Link
             key={card.title}
             to={card.link}
@@ -128,7 +128,7 @@ const DashboardPage = () => {
           </div>
           {courseData?.courses?.length ? (
             <div className="space-y-4">
-              {courseData.courses.map((course) => (
+              {courseData.courses?.map((course) => (
                 <Link
                   key={course.CourseID}
                   to={`/courses/${course.CourseID}`}
@@ -172,7 +172,7 @@ const DashboardPage = () => {
           </div>
           {assignmentData?.assignments?.length ? (
             <div className="space-y-4">
-              {assignmentData.assignments.map((assignment) => (
+              {assignmentData.assignments?.map((assignment) => (
                 <Link
                   key={assignment.AssignmentID}
                   to={`/assignments/${assignment.AssignmentID}`}

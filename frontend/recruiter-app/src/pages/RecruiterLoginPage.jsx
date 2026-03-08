@@ -8,7 +8,7 @@ const AuthGraphicPanel = () => (
     <div className="hidden lg:flex flex-col items-center justify-center bg-gray-800 p-12 text-white text-center">
         <h1 className="text-4xl font-bold">
             <span className="text-blue-400">Edu</span>
-            <span className="text-purple-400">Ledger</span> AI
+            <span className="text-purple-400">Bridge</span> AI
         </h1>
         <p className="mt-4 text-lg text-gray-300">Xưởng đúc tài năng công nghệ thế hệ mới.</p>
         <p className="mt-2 text-gray-400">Nơi năng lực được xác thực, không chỉ là lời nói.</p>
@@ -57,7 +57,7 @@ export default function RecruiterLoginPage() {
 
             const { token } = response.data;
             localStorage.setItem('token', token);
-            navigate('/recruiter/dashboard'); 
+            navigate('/recruiter/dashboard');
 
         } catch (err) {
             const message = err.response?.data?.message || 'Đã có lỗi không xác định xảy ra.';
@@ -103,7 +103,7 @@ export default function RecruiterLoginPage() {
                             required
                         />
                         <div>
-                            <button 
+                            <button
                                 type="submit"
                                 disabled={isLoading}
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed"

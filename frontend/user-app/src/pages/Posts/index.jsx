@@ -71,7 +71,7 @@ const Posts = () => {
       }
 
       // Update like status in the UI
-      setPosts(posts.map(post => {
+      setPosts(posts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -88,7 +88,7 @@ const Posts = () => {
 
   const handleComment = async (postId, change = 1) => {
     // Update comment count in UI
-    setPosts(posts.map(post => {
+    setPosts(posts?.map(post => {
       if (post.PostID === postId) {
         return {
           ...post,
@@ -114,7 +114,7 @@ const Posts = () => {
       }
       
       // Update bookmark status in UI
-      setPosts(posts.map(post => {
+      setPosts(posts?.map(post => {
         if (post.PostID === postId) {
           return {
             ...post,
@@ -159,7 +159,7 @@ const Posts = () => {
         <div className="flex items-center space-x-4">
           <FunnelIcon className="w-5 h-5 text-gray-400" />
           <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
+            {categories?.map(category => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
@@ -186,7 +186,7 @@ const Posts = () => {
         <div className="text-center py-10">
           <p className="text-red-600">Không thể tải bài viết: {error}</p>
         </div>
-      ) : posts.length === 0 ? (
+      ) : posts?.length === 0 ? (
         <div className="text-center py-10 bg-white rounded-xl shadow-sm">
           <p className="text-gray-600">Không có bài viết nào trong danh mục này.</p>
         </div>

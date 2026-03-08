@@ -1,0 +1,12 @@
+[
+  "EnrollmentID",
+  "CourseID",
+  "StudentID",
+  "EnrolledAt",
+  "Status",
+  "CompletedAt",
+  "ProgressPercent",
+  "LastAccessedAt",
+  "PaymentID",
+  "AccessUntil"
+]

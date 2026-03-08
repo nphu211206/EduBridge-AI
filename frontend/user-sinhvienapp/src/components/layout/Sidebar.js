@@ -312,7 +312,7 @@ const Sidebar = ({
   // Render menu item
   const renderMenuItem = (item, index) => {
     const isItemActive = isActive(item.path);
-    const hasChildren = item.children && item.children.length > 0;
+    const hasChildren = item.children && item.children?.length > 0;
     const isMenuOpen = item.key ? openMenus[item.key] : false;
     const isChildActive = hasChildren && item.children.some(child => isActive(child.path));
     const active = isItemActive || isChildActive;
@@ -351,7 +351,7 @@ const Sidebar = ({
           </ListItem>
           <Collapse in={isMenuOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {item.children.map((child, childIndex) => {
+              {item.children?.map((child, childIndex) => {
                 const isSubItemActive = isActive(child.path);
                 return (
                   <ListItemButton
@@ -518,7 +518,7 @@ const Sidebar = ({
             py: 0.5,
           }}
         >
-          {sidebarItems.map(renderMenuItem)}
+          {sidebarItems?.map(renderMenuItem)}
         </List>
       </Box>
       

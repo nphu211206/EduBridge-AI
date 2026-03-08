@@ -10,14 +10,16 @@ const { pool, sql } = require('../config/db');
 exports.getAllEvents = async (req, res) => {
   try {
     console.log('Received request for events with query:', req.query);
-    
+
     const { category, difficulty, status } = req.query;
     let query = `
       SELECT EventID, Title, Description, Category, 
              CONVERT(VARCHAR, EventDate, 23) as EventDate,
              CONVERT(VARCHAR, EventTime, 108) as EventTime,
-             Location, ImageUrl, MaxAttendees, CurrentAttendees,
-             Price, Organizer, Difficulty, Status
+             LocationAddress as Location, BannerUrl as ImageUrl, MaxAttendees,
+             (SELECT COUNT(*) FROM EventParticipants WHERE EventID = Events.EventID) as CurrentAttendees,
+             TicketPrice as Price, CreatedBy as Organizer, 'Beginner' as Difficulty, 
+             CASE WHEN EventDate >= GETDATE() THEN 'upcoming' ELSE 'past' END as Status
       FROM Events 
       WHERE DeletedAt IS NULL
     `;
@@ -32,7 +34,7 @@ exports.getAllEvents = async (req, res) => {
       params.push({ name: 'difficulty', value: difficulty });
     }
     if (status && status !== 'all') {
-      query += ` AND Status = @status`;
+      query += ` AND (CASE WHEN EventDate >= GETDATE() THEN 'upcoming' ELSE 'past' END) = @status`;
       params.push({ name: 'status', value: status });
     }
 
@@ -70,13 +72,14 @@ exports.getAllEvents = async (req, res) => {
 exports.getUpcomingEvents = async (req, res) => {
   try {
     const query = `
-      SELECT * FROM Events 
+      SELECT *, BannerUrl as ImageUrl, LocationAddress as Location, TicketPrice as Price,
+             (SELECT COUNT(*) FROM EventParticipants WHERE EventID = Events.EventID) as CurrentAttendees
+      FROM Events 
       WHERE DeletedAt IS NULL 
-      AND Status = 'upcoming'
       AND EventDate >= GETDATE()
       ORDER BY EventDate ASC
     `;
-    
+
     const result = await pool.request().query(query);
     res.json(result.recordset);
   } catch (error) {
@@ -91,12 +94,14 @@ exports.getUpcomingEvents = async (req, res) => {
 exports.getEventById = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // Get the base event details
     const eventResult = await pool.request()
       .input('id', sql.BigInt, id)
       .query(`
-        SELECT * FROM Events 
+        SELECT *, BannerUrl as ImageUrl, LocationAddress as Location, TicketPrice as Price,
+               (SELECT COUNT(*) FROM EventParticipants WHERE EventID = Events.EventID) as CurrentAttendees
+        FROM Events 
         WHERE EventID = @id AND DeletedAt IS NULL
       `);
 
@@ -106,47 +111,13 @@ exports.getEventById = async (req, res) => {
 
     const event = eventResult.recordset[0];
 
-    // Get event schedule
-    const scheduleResult = await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        SELECT * FROM EventSchedule
-        WHERE EventID = @id
-        ORDER BY StartTime ASC
-      `);
-    
-    // Get event prizes
-    const prizesResult = await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        SELECT * FROM EventPrizes
-        WHERE EventID = @id
-        ORDER BY Rank ASC
-      `);
-    
-    // Get programming languages
-    const languagesResult = await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        SELECT Language FROM EventProgrammingLanguages
-        WHERE EventID = @id
-      `);
-    
-    // Get technologies
-    const technologiesResult = await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        SELECT Technology FROM EventTechnologies
-        WHERE EventID = @id
-      `);
-
-    // Combine all data
+    // Bỏ qua các bảng không tồn tại trong DB hiện tại
     const completeEvent = {
       ...event,
-      schedule: scheduleResult.recordset,
-      prizes: prizesResult.recordset,
-      languages: languagesResult.recordset,
-      technologies: technologiesResult.recordset
+      schedule: [],
+      prizes: [],
+      languages: [],
+      technologies: []
     };
 
     res.json(completeEvent);
@@ -163,7 +134,7 @@ exports.registerEvent = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.userId;
-    
+
     // Log request data
     console.log('Event registration request:', {
       eventId: id,
@@ -178,10 +149,12 @@ exports.registerEvent = async (req, res) => {
     const eventResult = await pool.request()
       .input('id', sql.BigInt, id)
       .query(`
-        SELECT * FROM Events 
+        SELECT *,
+               (SELECT COUNT(*) FROM EventParticipants WHERE EventID = Events.EventID) as CurrentAttendees
+        FROM Events 
         WHERE EventID = @id 
         AND DeletedAt IS NULL
-        AND Status = 'upcoming'
+        AND EventDate >= GETDATE()
       `);
 
     const event = eventResult.recordset[0];
@@ -217,16 +190,7 @@ exports.registerEvent = async (req, res) => {
         VALUES (@eventId, @userId, @teamName, 'registered', 'pending', 'pending')
       `);
 
-    // Cập nhật số lượng người tham gia
-    await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        UPDATE Events 
-        SET CurrentAttendees = CurrentAttendees + 1
-        WHERE EventID = @id
-      `);
-
-    res.json({ 
+    res.json({
       success: true,
       message: 'Đăng ký sự kiện thành công',
       eventId: id,
@@ -269,15 +233,7 @@ exports.getEventParticipants = async (req, res) => {
 exports.getEventSchedule = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        SELECT * FROM EventSchedule
-        WHERE EventID = @id
-        ORDER BY StartTime ASC
-      `);
-
-    res.json(result.recordset);
+    res.json([]);
   } catch (error) {
     console.error('Error getting event schedule:', error);
     res.status(500).json({
@@ -357,7 +313,7 @@ exports.getEventAchievements = async (req, res) => {
       .input('id', sql.BigInt, id)
       .query(`
         SELECT a.AchievementID, a.Position, a.Points, a.BadgeType, a.AwardedAt,
-               u.UserID, u.Username, u.FullName, u.Image
+               u.UserID, u.Username, u.FullName, u.Avatar as Image
         FROM EventAchievements a
         JOIN Users u ON a.UserID = u.UserID
         WHERE a.EventID = @id
@@ -399,7 +355,7 @@ exports.cancelEventRegistration = async (req, res) => {
         SELECT * FROM Events 
         WHERE EventID = @id 
         AND DeletedAt IS NULL
-        AND Status = 'upcoming'
+        AND EventDate >= GETDATE()
       `);
 
     const event = eventResult.recordset[0];
@@ -414,15 +370,6 @@ exports.cancelEventRegistration = async (req, res) => {
       .query(`
         DELETE FROM EventParticipants 
         WHERE EventID = @eventId AND UserID = @userId
-      `);
-
-    // Cập nhật số lượng người tham gia
-    await pool.request()
-      .input('id', sql.BigInt, id)
-      .query(`
-        UPDATE Events 
-        SET CurrentAttendees = CurrentAttendees - 1
-        WHERE EventID = @id
       `);
 
     res.json({ message: 'Hủy đăng ký sự kiện thành công' });
@@ -452,18 +399,18 @@ exports.checkEventRegistration = async (req, res) => {
       `);
 
     const isRegistered = checkResult.recordset.length > 0;
-    
+
     // Thêm thông tin chi tiết về log để debug
     console.log('Registration check result:', {
       isRegistered,
       records: checkResult.recordset.length,
       userData: checkResult.recordset[0] || null
     });
-    
+
     // Trả về đúng định dạng kết quả mà frontend cần
-    res.json({ 
-      isRegistered, 
-      registrationInfo: isRegistered ? checkResult.recordset[0] : null 
+    res.json({
+      isRegistered,
+      registrationInfo: isRegistered ? checkResult.recordset[0] : null
     });
   } catch (error) {
     console.error('Error checking event registration:', error);

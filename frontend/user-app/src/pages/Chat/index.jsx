@@ -108,7 +108,7 @@ const Chat = () => {
       const { conversationId, message } = data;
       // Always update conversation list
       setConversations(prev =>
-        prev.map(conv =>
+        prev?.map(conv =>
           conv.ConversationID === conversationId
             ? {
                 ...conv,
@@ -132,7 +132,7 @@ const Chat = () => {
     const handleConversationUpdated = (data) => {
       const { conversationId, lastMessage } = data;
       setConversations(prev => 
-        prev.map(conv => 
+        prev?.map(conv => 
           conv.ConversationID === conversationId
             ? { ...conv, LastMessageAt: new Date(), lastMessage }
             : conv
@@ -331,7 +331,7 @@ const Chat = () => {
 
   // Search users
   const searchUsersHandler = async (query) => {
-    if (!query.trim() || query.length < 2) {
+    if (!query.trim() || query?.length < 2) {
       setSearchUsers([]);
       return;
     }
@@ -385,7 +385,7 @@ const Chat = () => {
 
   // Create group conversation
   const createGroupConversation = async () => {
-    if (!groupName.trim() || selectedUsers.length === 0) {
+    if (!groupName.trim() || selectedUsers?.length === 0) {
       toast.error('Vui lòng nhập tên nhóm và chọn thành viên');
         return;
       }
@@ -394,7 +394,7 @@ const Chat = () => {
       setCreatingGroup(true);
       const response = await chatApi.createConversation({
         title: groupName,
-        participants: selectedUsers.map(u => u.UserID),
+        participants: selectedUsers?.map(u => u.UserID),
         type: 'group'
       });
 
@@ -520,7 +520,7 @@ const Chat = () => {
   // Handle file selection
   const handleFileSelect = (event) => {
     const files = Array.from(event.target.files);
-    if (files.length > 0) {
+    if (files?.length > 0) {
       setSelectedFiles(files);
       setShowFilePreview(true);
     }
@@ -537,20 +537,20 @@ const Chat = () => {
   const handleFileDrop = (e) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
+    if (files?.length > 0) {
       setSelectedFiles(files);
     }
   };
 
   // Send selected files
   const sendFiles = async () => {
-    if (!currentConversation || selectedFiles.length === 0) return;
+    if (!currentConversation || selectedFiles?.length === 0) return;
 
     setUploadingFiles(true);
     setUploadProgress(0);
 
     try {
-      for (let i = 0; i < selectedFiles.length; i++) {
+      for (let i = 0; i < selectedFiles?.length; i++) {
         const file = selectedFiles[i];
         
         const response = await chatApi.sendFileMessage(
@@ -599,8 +599,8 @@ const Chat = () => {
 
   // Remove file from selection
   const removeFileFromSelection = (index) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
-    if (selectedFiles.length === 1) {
+    setSelectedFiles(prev => prev?.filter((_, i) => i !== index));
+    if (selectedFiles?.length === 1) {
       setShowFilePreview(false);
     }
   };
@@ -657,7 +657,7 @@ const Chat = () => {
   };
 
   // Filter conversations based on search
-  const filteredConversations = conversations.filter(conv =>
+  const filteredConversations = conversations?.filter(conv =>
     conv.Title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     conv.Participants?.some(p => 
       p.FullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -670,15 +670,15 @@ const Chat = () => {
     const typing = typingUsers[currentConversation?.ConversationID];
     if (!typing) return '';
     
-    const typingUsernames = Object.values(typing).filter(Boolean);
-    if (typingUsernames.length === 0) return '';
+    const typingUsernames = Object.values(typing)?.filter(Boolean);
+    if (typingUsernames?.length === 0) return '';
     
-    if (typingUsernames.length === 1) {
+    if (typingUsernames?.length === 1) {
       return `${typingUsernames[0]} đang gõ...`;
-    } else if (typingUsernames.length === 2) {
+    } else if (typingUsernames?.length === 2) {
       return `${typingUsernames[0]} và ${typingUsernames[1]} đang gõ...`;
     } else {
-      return `${typingUsernames.length} người đang gõ...`;
+      return `${typingUsernames?.length} người đang gõ...`;
     }
   };
 
@@ -750,11 +750,11 @@ const Chat = () => {
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="p-3 text-center text-gray-500 text-sm">Đang tải...</div>
-          ) : filteredConversations.length === 0 ? (
+          ) : filteredConversations?.length === 0 ? (
             <div className="p-3 text-center text-gray-500 text-sm">Không có cuộc trò chuyện nào</div>
           ) : (
             <div className="divide-y divide-gray-100">
-              {filteredConversations.map((conversation) => (
+              {filteredConversations?.map((conversation) => (
                 <div
                   key={conversation.ConversationID}
                   onClick={() => selectConversation(conversation)}
@@ -838,7 +838,7 @@ const Chat = () => {
 
             {/* Zalo-style Messages */}
             <div className="flex-1 overflow-y-auto p-4 bg-gray-100" onDragOver={e => e.preventDefault()} onDrop={handleFileDrop}>
-              {messages.map((message) => {
+              {messages?.map((message) => {
                 const currentUserId = user?.UserID ?? user?.id;
                 const isOwn = message.SenderID === currentUserId;
                 if (isOwn) {
@@ -951,10 +951,10 @@ const Chat = () => {
             <div className="max-h-60 overflow-y-auto">
               {searchingUsers ? (
                 <div className="text-center py-4 text-gray-500">Đang tìm kiếm...</div>
-              ) : searchUsers.length === 0 && userSearchTerm ? (
+              ) : searchUsers?.length === 0 && userSearchTerm ? (
                 <div className="text-center py-4 text-gray-500">Không tìm thấy người dùng</div>
               ) : (
-                searchUsers.map((user) => (
+                searchUsers?.map((user) => (
                   <div
                     key={user.UserID}
                     onClick={() => handleStartConversation(user)}
@@ -1019,20 +1019,20 @@ const Chat = () => {
             </div>
             
               {/* Selected Users */}
-              {selectedUsers.length > 0 && (
+              {selectedUsers?.length > 0 && (
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-2">
-                    Đã chọn ({selectedUsers.length})
+                    Đã chọn ({selectedUsers?.length})
                   </p>
                 <div className="flex flex-wrap gap-2">
-                    {selectedUsers.map((user) => (
+                    {selectedUsers?.map((user) => (
                       <span
                         key={user.UserID}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm"
                       >
                         {user.FullName}
                       <button
-                          onClick={() => setSelectedUsers(prev => prev.filter(u => u.UserID !== user.UserID))}
+                          onClick={() => setSelectedUsers(prev => prev?.filter(u => u.UserID !== user.UserID))}
                           className="text-blue-600 hover:text-blue-800"
                       >
                           <XMarkIcon className="w-3 h-3" />
@@ -1045,7 +1045,7 @@ const Chat = () => {
             
               {/* Search Results */}
               <div className="max-h-40 overflow-y-auto">
-                {searchUsers.filter(u => !selectedUsers.some(s => s.UserID === u.UserID)).map((user) => (
+                {searchUsers?.filter(u => !selectedUsers.some(s => s.UserID === u.UserID))?.map((user) => (
                   <div
                     key={user.UserID}
                     onClick={() => setSelectedUsers(prev => [...prev, user])}
@@ -1073,7 +1073,7 @@ const Chat = () => {
                 </button>
                 <button
                   onClick={createGroupConversation}
-                  disabled={!groupName.trim() || selectedUsers.length === 0 || creatingGroup}
+                  disabled={!groupName.trim() || selectedUsers?.length === 0 || creatingGroup}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
                 >
                   {creatingGroup ? 'Đang tạo...' : 'Tạo nhóm'}

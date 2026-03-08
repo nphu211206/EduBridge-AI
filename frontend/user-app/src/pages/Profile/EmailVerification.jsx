@@ -189,12 +189,12 @@ const EmailVerification = ({ onClose }) => {
   };
   
   const handleInputChange = (index, value) => {
-    if (value.length > 1) {
+    if (value?.length > 1) {
       // If pasting multiple digits, distribute them
       const digits = value.split('');
       const newOtp = [...otp];
       
-      for (let i = 0; i < digits.length && index + i < 6; i++) {
+      for (let i = 0; i < digits?.length && index + i < 6; i++) {
         if (/^\d$/.test(digits[i])) {
           newOtp[index + i] = digits[i];
         }
@@ -203,7 +203,7 @@ const EmailVerification = ({ onClose }) => {
       setOtp(newOtp);
       
       // Focus on next available input or last input
-      const nextIndex = Math.min(index + digits.length, 5);
+      const nextIndex = Math.min(index + digits?.length, 5);
       if (inputRefs.current[nextIndex]) {
         inputRefs.current[nextIndex].focus();
       }
@@ -301,7 +301,7 @@ const EmailVerification = ({ onClose }) => {
           </label>
           
           <div className="flex gap-2 justify-center" onPaste={handlePaste}>
-            {otp.map((digit, index) => (
+            {otp?.map((digit, index) => (
               <input
                 key={index}
                 type="text"

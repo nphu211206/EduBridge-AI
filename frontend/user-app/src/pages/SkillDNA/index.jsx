@@ -52,7 +52,7 @@ const SkillDNA = () => {
         ctx.clearRect(0, 0, W, H);
 
         const dims = Object.keys(data.dimensions);
-        const N = dims.length;
+        const N = dims?.length;
         if (N === 0) return;
 
         const angleStep = (2 * Math.PI) / N;
@@ -72,7 +72,7 @@ const SkillDNA = () => {
         }
 
         // Draw axes + labels
-        dims.forEach((dim, i) => {
+        dims?.forEach((dim, i) => {
             const angle = i * angleStep - Math.PI / 2;
 
             // Axis line
@@ -107,14 +107,14 @@ const SkillDNA = () => {
     };
 
     const drawPolygon = (ctx, cx, cy, R, dims, values, strokeColor, fillColor, dashed, glow = false) => {
-        const N = dims.length;
+        const N = dims?.length;
         const angleStep = (2 * Math.PI) / N;
 
         ctx.beginPath();
         if (dashed) ctx.setLineDash([6, 6]);
         else ctx.setLineDash([]);
 
-        dims.forEach((dim, i) => {
+        dims?.forEach((dim, i) => {
             const angle = i * angleStep - Math.PI / 2;
             const val = Math.min(100, values[dim] || 0);
             const r = (val / 100) * R;
@@ -144,7 +144,7 @@ const SkillDNA = () => {
 
         // Draw points if it's the main user polygon
         if (!dashed) {
-            dims.forEach((dim, i) => {
+            dims?.forEach((dim, i) => {
                 const angle = i * angleStep - Math.PI / 2;
                 const val = Math.min(100, values[dim] || 0);
                 const r = (val / 100) * R;
@@ -191,7 +191,7 @@ const SkillDNA = () => {
                     <div className="space-y-6">
                         <div className="animate-pulse bg-slate-800/30 rounded-3xl p-8 border border-slate-700/50 h-[500px]">
                             <div className="h-8 bg-slate-700/50 rounded w-1/3 mb-10"></div>
-                            {[1, 2, 3, 4, 5, 6].map(i => (
+                            {[1, 2, 3, 4, 5, 6]?.map(i => (
                                 <div key={i} className="mb-6">
                                     <div className="flex justify-between mb-2">
                                         <div className="h-4 bg-slate-700/50 rounded w-1/4"></div>
@@ -261,7 +261,7 @@ const SkillDNA = () => {
                             </h3>
 
                             <div className="space-y-6">
-                                {Object.entries(data.dimensions).map(([dim, score]) => {
+                                {Object.entries(data.dimensions)?.map(([dim, score]) => {
                                     const avg = data.platformAvg ? data.platformAvg[dim] || 0 : 0;
                                     const isAboveAvg = score >= avg;
 

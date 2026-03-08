@@ -8,6 +8,7 @@ const authService = require('../services/auth.service');
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
+const FRONTEND_URL = process.env.USER_APP_URL || 'http://localhost:3001';
 
 // Hàm này không đổi
 exports.getGithubAuthUrl = (req, res) => {
@@ -19,18 +20,18 @@ exports.getGithubAuthUrl = (req, res) => {
 // Hàm này không đổi
 exports.handleGithubCallback = async (req, res) => {
     const { code } = req.query;
-    if (!code) { return res.redirect(`http://localhost:3001/login-error?message=No_code_provided`); }
+    if (!code) { return res.redirect(`${FRONTEND_URL}/login-error?message=No_code_provided`); }
     try {
         const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', { client_id: GITHUB_CLIENT_ID, client_secret: GITHUB_CLIENT_SECRET, code }, { headers: { 'Accept': 'application/json' } });
         const accessToken = tokenResponse.data.access_token;
         if (!accessToken) throw new Error('Không nhận được access token từ GitHub.');
-        
+
         const userResponse = await axios.get('https://api.github.com/user', { headers: { 'Authorization': `token ${accessToken}` } });
         const githubUser = userResponse.data;
-        
+
         const pool = await poolPromise;
         let userResult = await pool.request().input('githubId', sql.BigInt, githubUser.id).query('SELECT * FROM Users WHERE githubId = @githubId');
-        
+
         let user;
         if (userResult.recordset.length > 0) {
             user = userResult.recordset[0];
@@ -43,27 +44,27 @@ exports.handleGithubCallback = async (req, res) => {
             user = newUserResult.recordset[0];
         }
 
-        const payload = { 
-            userId: user.id, 
+        const payload = {
+            userId: user.id,
             role: user.role,
             name: user.name, // Thêm name và avatar vào token
             avatarUrl: user.avatarUrl,
-            githubUsername: user.githubUsername 
+            githubUsername: user.githubUsername
         };
         const ourToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
-        
-        res.redirect(`http://localhost:3001/auth/github/callback?token=${ourToken}`);
+
+        res.redirect(`${FRONTEND_URL}/auth/github/callback?token=${ourToken}`);
 
     } catch (error) {
         console.error('Lỗi nghiêm trọng trong quá trình callback GitHub:', error);
-        res.redirect(`http://localhost:3001/login-error?message=${error.message}`);
+        res.redirect(`${FRONTEND_URL}/login-error?message=${error.message}`);
     }
 };
 
 // Hàm này không đổi
 exports.registerRecruiter = async (req, res) => {
     const { email, password, fullName, companyName } = req.body;
-    
+
     if (!email || !password || !fullName || !companyName) {
         return res.status(400).json({ message: 'Vui lòng điền đầy đủ tất cả các trường.' });
     }
@@ -111,7 +112,7 @@ exports.loginRecruiter = async (req, res) => {
             // Luôn trả về câu trả lời cho client
             return res.status(401).json({ message: 'Email hoặc mật khẩu không chính xác.' });
         }
-        
+
         // Nếu mật khẩu khớp, tạo JWT token
         const payload = {
             userId: user.id,

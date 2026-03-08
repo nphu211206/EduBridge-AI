@@ -1,0 +1,407 @@
+[
+  {
+    "TABLE_NAME": "NotificationSettings"
+  },
+  {
+    "TABLE_NAME": "CompetitionProblems"
+  },
+  {
+    "TABLE_NAME": "QuestionBanks"
+  },
+  {
+    "TABLE_NAME": "AIInterviewQuestions"
+  },
+  {
+    "TABLE_NAME": "Comments"
+  },
+  {
+    "TABLE_NAME": "JobEmbeddings"
+  },
+  {
+    "TABLE_NAME": "AuthRefreshTokens"
+  },
+  {
+    "TABLE_NAME": "LessonProgress"
+  },
+  {
+    "TABLE_NAME": "UserResumes"
+  },
+  {
+    "TABLE_NAME": "DataPrivacyConsents"
+  },
+  {
+    "TABLE_NAME": "Questions"
+  },
+  {
+    "TABLE_NAME": "CourseEmbeddings"
+  },
+  {
+    "TABLE_NAME": "TestCases"
+  },
+  {
+    "TABLE_NAME": "PasswordResets"
+  },
+  {
+    "TABLE_NAME": "Skills"
+  },
+  {
+    "TABLE_NAME": "Friendships"
+  },
+  {
+    "TABLE_NAME": "DeviceSessions"
+  },
+  {
+    "TABLE_NAME": "CourseReviews"
+  },
+  {
+    "TABLE_NAME": "AIPromptTemplates"
+  },
+  {
+    "TABLE_NAME": "EmailVerifications"
+  },
+  {
+    "TABLE_NAME": "CompetitionTeams"
+  },
+  {
+    "TABLE_NAME": "UserSkills"
+  },
+  {
+    "TABLE_NAME": "FeatureToggles"
+  },
+  {
+    "TABLE_NAME": "TwoFactorAuth"
+  },
+  {
+    "TABLE_NAME": "UserFollows"
+  },
+  {
+    "TABLE_NAME": "QuestionOptions"
+  },
+  {
+    "TABLE_NAME": "AITrainingLogs"
+  },
+  {
+    "TABLE_NAME": "CompetitionTeamMembers"
+  },
+  {
+    "TABLE_NAME": "CourseReviewHelpful"
+  },
+  {
+    "TABLE_NAME": "Projects"
+  },
+  {
+    "TABLE_NAME": "TalentPools"
+  },
+  {
+    "TABLE_NAME": "Exams"
+  },
+  {
+    "TABLE_NAME": "LoginHistory"
+  },
+  {
+    "TABLE_NAME": "Groups"
+  },
+  {
+    "TABLE_NAME": "TalentPoolCandidates"
+  },
+  {
+    "TABLE_NAME": "CompetitionRegistrations"
+  },
+  {
+    "TABLE_NAME": "CertificateTemplates"
+  },
+  {
+    "TABLE_NAME": "Schools"
+  },
+  {
+    "TABLE_NAME": "Reports"
+  },
+  {
+    "TABLE_NAME": "ProjectTags"
+  },
+  {
+    "TABLE_NAME": "CourseCertificates"
+  },
+  {
+    "TABLE_NAME": "InterviewPipelines"
+  },
+  {
+    "TABLE_NAME": "ProjectMedia"
+  },
+  {
+    "TABLE_NAME": "GroupMembers"
+  },
+  {
+    "TABLE_NAME": "EventParticipants"
+  },
+  {
+    "TABLE_NAME": "Departments"
+  },
+  {
+    "TABLE_NAME": "CompetitionSubmissions"
+  },
+  {
+    "TABLE_NAME": "PipelineStages"
+  },
+  {
+    "TABLE_NAME": "RegistrationAttempts"
+  },
+  {
+    "TABLE_NAME": "Majors"
+  },
+  {
+    "TABLE_NAME": "Achievements"
+  },
+  {
+    "TABLE_NAME": "ExamQuestions"
+  },
+  {
+    "TABLE_NAME": "LessonResources"
+  },
+  {
+    "TABLE_NAME": "ExamParticipants"
+  },
+  {
+    "TABLE_NAME": "Chats"
+  },
+  {
+    "TABLE_NAME": "UserAchievements"
+  },
+  {
+    "TABLE_NAME": "JobOffers"
+  },
+  {
+    "TABLE_NAME": "OAuthProviders"
+  },
+  {
+    "TABLE_NAME": "AITutorConversations"
+  },
+  {
+    "TABLE_NAME": "CompetitionLeaderboard"
+  },
+  {
+    "TABLE_NAME": "ExamSessions"
+  },
+  {
+    "TABLE_NAME": "ChatMembers"
+  },
+  {
+    "TABLE_NAME": "SubscriptionPlans"
+  },
+  {
+    "TABLE_NAME": "CompanyB2BSubscriptions"
+  },
+  {
+    "TABLE_NAME": "UserPointsLog"
+  },
+  {
+    "TABLE_NAME": "Categories"
+  },
+  {
+    "TABLE_NAME": "CompetitionAwards"
+  },
+  {
+    "TABLE_NAME": "ExamAnswers"
+  },
+  {
+    "TABLE_NAME": "AITutorMessages"
+  },
+  {
+    "TABLE_NAME": "UserSubscriptions"
+  },
+  {
+    "TABLE_NAME": "Messages"
+  },
+  {
+    "TABLE_NAME": "VirtualCurrencyTransactions"
+  },
+  {
+    "TABLE_NAME": "CourseDiscussions"
+  },
+  {
+    "TABLE_NAME": "JudgeQueue"
+  },
+  {
+    "TABLE_NAME": "ExamProctoring"
+  },
+  {
+    "TABLE_NAME": "Tags"
+  },
+  {
+    "TABLE_NAME": "VirtualStoreItems"
+  },
+  {
+    "TABLE_NAME": "Coupons"
+  },
+  {
+    "TABLE_NAME": "Roles"
+  },
+  {
+    "TABLE_NAME": "Courses"
+  },
+  {
+    "TABLE_NAME": "Notifications"
+  },
+  {
+    "TABLE_NAME": "CodeSnippets"
+  },
+  {
+    "TABLE_NAME": "GradingRubrics"
+  },
+  {
+    "TABLE_NAME": "UserInventory"
+  },
+  {
+    "TABLE_NAME": "DiscussionReplies"
+  },
+  {
+    "TABLE_NAME": "Users"
+  },
+  {
+    "TABLE_NAME": "UserEmails"
+  },
+  {
+    "TABLE_NAME": "Companies"
+  },
+  {
+    "TABLE_NAME": "Orders"
+  },
+  {
+    "TABLE_NAME": "RubricCriteria"
+  },
+  {
+    "TABLE_NAME": "SandboxEnvironments"
+  },
+  {
+    "TABLE_NAME": "FinalGrades"
+  },
+  {
+    "TABLE_NAME": "LearningLeaderboardSnapshots"
+  },
+  {
+    "TABLE_NAME": "DiscussionUpvotes"
+  },
+  {
+    "TABLE_NAME": "CompanyRecruiters"
+  },
+  {
+    "TABLE_NAME": "OrderDetails"
+  },
+  {
+    "TABLE_NAME": "CodeExecutions"
+  },
+  {
+    "TABLE_NAME": "MentorshipPrograms"
+  },
+  {
+    "TABLE_NAME": "Assignments"
+  },
+  {
+    "TABLE_NAME": "LiveSessions"
+  },
+  {
+    "TABLE_NAME": "CourseTags"
+  },
+  {
+    "TABLE_NAME": "Jobs"
+  },
+  {
+    "TABLE_NAME": "Payments"
+  },
+  {
+    "TABLE_NAME": "CollabSessions"
+  },
+  {
+    "TABLE_NAME": "MentorshipMatches"
+  },
+  {
+    "TABLE_NAME": "UserRoles"
+  },
+  {
+    "TABLE_NAME": "CourseModules"
+  },
+  {
+    "TABLE_NAME": "AssignmentSubmissions"
+  },
+  {
+    "TABLE_NAME": "LiveSessionAttendees"
+  },
+  {
+    "TABLE_NAME": "AppSettings"
+  },
+  {
+    "TABLE_NAME": "UserProfiles"
+  },
+  {
+    "TABLE_NAME": "CollabParticipants"
+  },
+  {
+    "TABLE_NAME": "MentorshipSessions"
+  },
+  {
+    "TABLE_NAME": "CourseFavorites"
+  },
+  {
+    "TABLE_NAME": "Lessons"
+  },
+  {
+    "TABLE_NAME": "ExamSchedules"
+  },
+  {
+    "TABLE_NAME": "AuditLogs"
+  },
+  {
+    "TABLE_NAME": "UserSettings"
+  },
+  {
+    "TABLE_NAME": "CourseAnnouncements"
+  },
+  {
+    "TABLE_NAME": "LessonQuizAttempts"
+  },
+  {
+    "TABLE_NAME": "Events"
+  },
+  {
+    "TABLE_NAME": "Posts"
+  },
+  {
+    "TABLE_NAME": "JobApplications"
+  },
+  {
+    "TABLE_NAME": "ErrorLogs"
+  },
+  {
+    "TABLE_NAME": "Competitions"
+  },
+  {
+    "TABLE_NAME": "LearningStreak"
+  },
+  {
+    "TABLE_NAME": "Feedbacks"
+  },
+  {
+    "TABLE_NAME": "LessonCodeContent"
+  },
+  {
+    "TABLE_NAME": "SystemSettings"
+  },
+  {
+    "TABLE_NAME": "AIInterviewSessions"
+  },
+  {
+    "TABLE_NAME": "PostLikes"
+  },
+  {
+    "TABLE_NAME": "CourseWatchHistory"
+  },
+  {
+    "TABLE_NAME": "EventTickets"
+  },
+  {
+    "TABLE_NAME": "CourseEnrollments"
+  },
+  {
+    "TABLE_NAME": "UserEmbeddings"
+  }
+]

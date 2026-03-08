@@ -109,7 +109,7 @@ const SemesterDetail = () => {
         const subjectsData = response.data || [];
         
         // Format subjects data
-        const formattedSubjects = subjectsData.map(subject => ({
+        const formattedSubjects = subjectsData?.map(subject => ({
           id: subject.SubjectID,
           code: subject.SubjectCode,
           name: subject.SubjectName,
@@ -358,7 +358,7 @@ const SemesterDetail = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
             <CircularProgress />
           </Box>
-        ) : semesterSubjects && semesterSubjects.length > 0 ? (
+        ) : semesterSubjects && semesterSubjects?.length > 0 ? (
           <TableContainer>
             <Table>
               <TableHead>
@@ -370,7 +370,7 @@ const SemesterDetail = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {semesterSubjects.map((subject) => (
+                {semesterSubjects?.map((subject) => (
                   <TableRow key={subject.id}>
                     <TableCell>{subject.code}</TableCell>
                     <TableCell>{subject.name}</TableCell>

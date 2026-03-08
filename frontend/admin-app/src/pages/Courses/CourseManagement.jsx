@@ -137,8 +137,8 @@ const CourseManagement = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {courses.length > 0 ? (
-                courses.map((course) => (
+              {courses?.length > 0 ? (
+                courses?.map((course) => (
                   <TableRow key={course.CourseID}>
                     <TableCell>{course.Title}</TableCell>
                     <TableCell>{course.Category}</TableCell>

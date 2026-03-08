@@ -64,7 +64,7 @@ const ForcedTwoFASetup = () => {
     try {
       setVerifying(true);
       
-      if (!verificationCode || verificationCode.length !== 6) {
+      if (!verificationCode || verificationCode?.length !== 6) {
         toast.error('Vui lòng nhập mã 6 số từ ứng dụng xác thực');
         setVerifying(false);
         return;
@@ -192,7 +192,7 @@ const ForcedTwoFASetup = () => {
         <Button 
           color="primary"
           onClick={handleVerifyCode}
-          disabled={verifying || verificationCode.length !== 6}
+          disabled={verifying || verificationCode?.length !== 6}
           isProcessing={verifying}
         >
           Xác nhận và hoàn tất thiết lập

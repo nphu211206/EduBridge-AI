@@ -39,7 +39,7 @@ const OtherCourses = () => {
     search: ''
   });
 
-  const filteredCourses = courses.filter(course => {
+  const filteredCourses = courses?.filter(course => {
     const matchesCategory = filters.category === 'all' || course.category === filters.category;
     const matchesLevel = filters.level === 'all' || course.level === filters.level;
     const matchesSearch = course.title.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -101,7 +101,7 @@ const OtherCourses = () => {
 
       {/* Course List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCourses.map((course) => (
+        {filteredCourses?.map((course) => (
           <div key={course.id} className="bg-white rounded-lg shadow overflow-hidden">
             <div className="h-48 bg-gray-200">
               {course.thumbnail && (
@@ -134,7 +134,7 @@ const OtherCourses = () => {
         ))}
       </div>
 
-      {filteredCourses.length === 0 && (
+      {filteredCourses?.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           Không tìm thấy khóa học nào phù hợp với điều kiện tìm kiếm
         </div>

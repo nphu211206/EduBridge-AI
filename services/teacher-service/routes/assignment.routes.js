@@ -16,12 +16,12 @@ const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = path.join(__dirname, '../uploads/assignments');
-    
+
     // Create directory if it doesn't exist
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
-    
+
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
@@ -44,11 +44,11 @@ router.get('/', async (req, res) => {
     const pool = await poolPromise;
     const request = pool.request()
       .input('teacherId', sql.BigInt, req.user.UserID);
-    
+
     let query = `
       SELECT 
-        a.AssignmentID, a.Title, a.Description, a.CourseID, a.TotalPoints, a.DueDate, 
-        a.CreatedAt, a.UpdatedAt,
+        a.AssignmentID, a.Title, a.Description, a.CourseID, a.MaxPoints as TotalPoints, a.DueDate, 
+        a.CreatedAt,
         c.Title as CourseName,
         (SELECT COUNT(*) FROM AssignmentSubmissions WHERE AssignmentID = a.AssignmentID) as SubmissionsCount,
         (SELECT COUNT(*) FROM CourseEnrollments WHERE CourseID = a.CourseID AND Status = 'active') as StudentsCount
@@ -56,21 +56,21 @@ router.get('/', async (req, res) => {
       JOIN Courses c ON a.CourseID = c.CourseID
       WHERE c.InstructorID = @teacherId
     `;
-    
+
     if (search) {
       request.input('search', sql.NVarChar, `%${search}%`);
       query += ` AND (a.Title LIKE @search OR a.Description LIKE @search)`;
     }
-    
+
     if (courseId) {
       request.input('courseId', sql.BigInt, courseId);
       query += ` AND a.CourseID = @courseId`;
     }
-    
+
     query += ` ORDER BY a.CreatedAt DESC`;
-    
+
     const result = await request.query(query);
-    
+
     res.json({
       assignments: result.recordset,
       totalCount: result.recordset.length
@@ -86,7 +86,7 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this assignment
     const accessCheck = await pool.request()
       .input('assignmentId', sql.BigInt, id)
@@ -98,11 +98,11 @@ router.get('/:id', async (req, res) => {
         WHERE a.AssignmentID = @assignmentId 
         AND c.InstructorID = @teacherId
         `);
-      
+
     if (accessCheck.recordset.length === 0) {
-        return res.status(403).json({ message: 'You do not have access to this assignment' });
-      }
-      
+      return res.status(403).json({ message: 'You do not have access to this assignment' });
+    }
+
     // Get assignment details
     const assignmentResult = await pool.request()
       .input('assignmentId', sql.BigInt, id)
@@ -116,11 +116,11 @@ router.get('/:id', async (req, res) => {
         JOIN Courses c ON a.CourseID = c.CourseID
         WHERE a.AssignmentID = @assignmentId
       `);
-    
+
     if (assignmentResult.recordset.length === 0) {
       return res.status(404).json({ message: 'Assignment not found' });
     }
-    
+
     // Get assignment files
     const filesResult = await pool.request()
       .input('assignmentId', sql.BigInt, id)
@@ -128,10 +128,10 @@ router.get('/:id', async (req, res) => {
         SELECT * FROM AssignmentFiles
         WHERE AssignmentID = @assignmentId
       `);
-    
+
     const assignment = assignmentResult.recordset[0];
     assignment.files = filesResult.recordset;
-    
+
     res.json(assignment);
   } catch (error) {
     console.error('Error getting assignment:', error);
@@ -144,13 +144,13 @@ router.post('/', upload.array('files', 5), async (req, res) => {
   try {
     const { title, description, courseId, dueDate, totalPoints } = req.body;
     const files = req.files || [];
-    
+
     if (!title || !courseId) {
       return res.status(400).json({ message: 'Title and courseId are required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this course
     const courseCheck = await pool.request()
       .input('courseId', sql.BigInt, courseId)
@@ -161,15 +161,15 @@ router.post('/', upload.array('files', 5), async (req, res) => {
         WHERE CourseID = @courseId 
         AND InstructorID = @teacherId
       `);
-    
+
     if (courseCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this course' });
     }
-    
+
     // Begin transaction
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
-    
+
     try {
       // Insert assignment
       const assignmentRequest = new sql.Request(transaction);
@@ -179,17 +179,17 @@ router.post('/', upload.array('files', 5), async (req, res) => {
         .input('courseId', sql.BigInt, courseId)
         .input('dueDate', sql.DateTime, dueDate ? new Date(dueDate) : null)
         .input('totalPoints', sql.Int, totalPoints || 100)
-        .input('createdBy', sql.BigInt, req.user.UserID);
-      
+        .input('teacherId', sql.BigInt, req.user.UserID);
+
       const insertResult = await assignmentRequest.query(`
-        INSERT INTO Assignments (Title, Description, CourseID, DueDate, TotalPoints, CreatedBy, CreatedAt, UpdatedAt)
-        VALUES (@title, @description, @courseId, @dueDate, @totalPoints, @createdBy, GETDATE(), GETDATE());
+        INSERT INTO Assignments (Title, Description, CourseID, DueDate, MaxPoints, TeacherID, CreatedAt)
+        VALUES (@title, @description, @courseId, @dueDate, @totalPoints, @teacherId, GETDATE());
         
         SELECT SCOPE_IDENTITY() AS AssignmentID;
       `);
-    
+
       const assignmentId = insertResult.recordset[0].AssignmentID;
-    
+
       // Insert files if any
       if (files.length > 0) {
         for (const file of files) {
@@ -200,15 +200,15 @@ router.post('/', upload.array('files', 5), async (req, res) => {
             .input('filePath', sql.NVarChar, file.path)
             .input('fileSize', sql.Int, file.size)
             .input('fileType', sql.NVarChar, file.mimetype)
-      .query(`
+            .query(`
               INSERT INTO AssignmentFiles (AssignmentID, FileName, FilePath, FileSize, FileType, UploadedAt)
               VALUES (@assignmentId, @fileName, @filePath, @fileSize, @fileType, GETDATE());
             `);
         }
       }
-      
+
       await transaction.commit();
-      
+
       res.status(201).json({
         message: 'Assignment created successfully',
         assignmentId: assignmentId
@@ -219,7 +219,7 @@ router.post('/', upload.array('files', 5), async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating assignment:', error);
-    
+
     // Delete uploaded files if any
     if (req.files && req.files.length > 0) {
       req.files.forEach(file => {
@@ -230,7 +230,7 @@ router.post('/', upload.array('files', 5), async (req, res) => {
         }
       });
     }
-    
+
     res.status(500).json({ message: 'Error creating assignment', error: error.message });
   }
 });
@@ -241,13 +241,13 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
     const { id } = req.params;
     const { title, description, courseId, dueDate, totalPoints } = req.body;
     const files = req.files || [];
-    
+
     if (!title) {
       return res.status(400).json({ message: 'Title is required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this assignment
     const accessCheck = await pool.request()
       .input('assignmentId', sql.BigInt, id)
@@ -259,11 +259,11 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
         WHERE a.AssignmentID = @assignmentId 
         AND c.InstructorID = @teacherId
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this assignment' });
     }
-    
+
     // Verify teacher has access to the target course if changing
     if (courseId) {
       const courseCheck = await pool.request()
@@ -275,16 +275,16 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
           WHERE CourseID = @courseId 
           AND InstructorID = @teacherId
         `);
-      
+
       if (courseCheck.recordset.length === 0) {
         return res.status(403).json({ message: 'You do not have access to this course' });
       }
-      }
-      
+    }
+
     // Begin transaction
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
-    
+
     try {
       // Update assignment
       const updateRequest = new sql.Request(transaction);
@@ -295,18 +295,17 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
         .input('courseId', sql.BigInt, courseId)
         .input('dueDate', sql.DateTime, dueDate ? new Date(dueDate) : null)
         .input('totalPoints', sql.Int, totalPoints || 100);
-      
+
       await updateRequest.query(`
         UPDATE Assignments
         SET Title = @title,
             Description = @description,
             CourseID = @courseId,
             DueDate = @dueDate,
-            TotalPoints = @totalPoints,
-            UpdatedAt = GETDATE()
+            MaxPoints = @totalPoints
         WHERE AssignmentID = @assignmentId;
         `);
-      
+
       // Add new files if any
       if (files.length > 0) {
         for (const file of files) {
@@ -317,15 +316,15 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
             .input('filePath', sql.NVarChar, file.path)
             .input('fileSize', sql.Int, file.size)
             .input('fileType', sql.NVarChar, file.mimetype)
-        .query(`
+            .query(`
               INSERT INTO AssignmentFiles (AssignmentID, FileName, FilePath, FileSize, FileType, UploadedAt)
               VALUES (@assignmentId, @fileName, @filePath, @fileSize, @fileType, GETDATE());
             `);
         }
       }
-      
+
       await transaction.commit();
-      
+
       res.json({
         message: 'Assignment updated successfully',
         assignmentId: id
@@ -336,7 +335,7 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
     }
   } catch (error) {
     console.error('Error updating assignment:', error);
-    
+
     // Delete uploaded files if any
     if (req.files && req.files.length > 0) {
       req.files.forEach(file => {
@@ -347,7 +346,7 @@ router.put('/:id', upload.array('files', 5), async (req, res) => {
         }
       });
     }
-    
+
     res.status(500).json({ message: 'Error updating assignment', error: error.message });
   }
 });
@@ -357,7 +356,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this assignment
     const accessCheck = await pool.request()
       .input('assignmentId', sql.BigInt, id)
@@ -369,15 +368,15 @@ router.delete('/:id', async (req, res) => {
         WHERE a.AssignmentID = @assignmentId 
         AND c.InstructorID = @teacherId
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this assignment' });
     }
-    
+
     // Begin transaction
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
-    
+
     try {
       // Get file paths to delete after transaction
       const filesRequest = new sql.Request(transaction);
@@ -386,9 +385,9 @@ router.delete('/:id', async (req, res) => {
         SELECT FilePath FROM AssignmentFiles
         WHERE AssignmentID = @assignmentId
       `);
-      
+
       const filePaths = filesResult.recordset.map(file => file.FilePath);
-      
+
       // Delete files from database
       const deleteFilesRequest = new sql.Request(transaction);
       deleteFilesRequest.input('assignmentId', sql.BigInt, id);
@@ -396,7 +395,7 @@ router.delete('/:id', async (req, res) => {
         DELETE FROM AssignmentFiles
         WHERE AssignmentID = @assignmentId
       `);
-      
+
       // Delete submissions (and related grades/feedback)
       const deleteSubmissionsRequest = new sql.Request(transaction);
       deleteSubmissionsRequest.input('assignmentId', sql.BigInt, id);
@@ -404,7 +403,7 @@ router.delete('/:id', async (req, res) => {
         DELETE FROM AssignmentSubmissions
         WHERE AssignmentID = @assignmentId
       `);
-      
+
       // Delete assignment
       const deleteAssignmentRequest = new sql.Request(transaction);
       deleteAssignmentRequest.input('assignmentId', sql.BigInt, id);
@@ -412,9 +411,9 @@ router.delete('/:id', async (req, res) => {
         DELETE FROM Assignments
         WHERE AssignmentID = @assignmentId
       `);
-      
+
       await transaction.commit();
-      
+
       // Delete physical files
       filePaths.forEach(filePath => {
         try {
@@ -425,7 +424,7 @@ router.delete('/:id', async (req, res) => {
           console.error('Error deleting file:', err);
         }
       });
-      
+
       res.json({ message: 'Assignment deleted successfully' });
     } catch (err) {
       await transaction.rollback();
@@ -442,37 +441,37 @@ router.get('/:id/submissions', async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this assignment
     const accessCheck = await pool.request()
       .input('assignmentId', sql.BigInt, id)
-        .input('teacherId', sql.BigInt, req.user.UserID)
-        .query(`
+      .input('teacherId', sql.BigInt, req.user.UserID)
+      .query(`
         SELECT a.AssignmentID
         FROM Assignments a
         JOIN Courses c ON a.CourseID = c.CourseID
         WHERE a.AssignmentID = @assignmentId 
         AND c.InstructorID = @teacherId
         `);
-      
+
     if (accessCheck.recordset.length === 0) {
-        return res.status(403).json({ message: 'You do not have access to this assignment' });
-      }
-      
+      return res.status(403).json({ message: 'You do not have access to this assignment' });
+    }
+
     // Get submissions
     const result = await pool.request()
       .input('assignmentId', sql.BigInt, id)
       .query(`
         SELECT 
-          s.SubmissionID, s.AssignmentID, s.UserID, s.SubmittedAt, s.Score, s.Feedback,
+          s.SubmissionID, s.AssignmentID, s.StudentID as UserID, s.CreatedAt as SubmittedAt, s.Score, s.Feedback,
           s.Status, s.GradedAt, s.GradedBy,
-          u.FullName, u.Email, u.Avatar
+          u.FullName, u.Email, NULL as Avatar
         FROM AssignmentSubmissions s
-        JOIN Users u ON s.UserID = u.UserID
+        JOIN Users u ON s.StudentID = u.UserID
         WHERE s.AssignmentID = @assignmentId
-        ORDER BY s.SubmittedAt DESC
+        ORDER BY s.CreatedAt DESC
       `);
-    
+
     res.json({
       submissions: result.recordset,
       totalCount: result.recordset.length
@@ -489,25 +488,25 @@ router.post('/:id/assign', async (req, res) => {
     const { id } = req.params;
     const { dueDate } = req.body;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this assignment
     const accessCheck = await pool.request()
       .input('assignmentId', sql.BigInt, id)
       .input('teacherId', sql.BigInt, req.user.UserID)
-        .query(`
+      .query(`
         SELECT a.AssignmentID, a.CourseID
         FROM Assignments a
         JOIN Courses c ON a.CourseID = c.CourseID
         WHERE a.AssignmentID = @assignmentId 
         AND c.InstructorID = @teacherId
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this assignment' });
     }
-    
+
     const courseId = accessCheck.recordset[0].CourseID;
-    
+
     // Update assignment due date if provided
     if (dueDate) {
       await pool.request()
@@ -520,7 +519,7 @@ router.post('/:id/assign', async (req, res) => {
           WHERE AssignmentID = @assignmentId
         `);
     }
-    
+
     // Get all active students in the course
     const studentsResult = await pool.request()
       .input('courseId', sql.BigInt, courseId)
@@ -530,29 +529,29 @@ router.post('/:id/assign', async (req, res) => {
         WHERE CourseID = @courseId
         AND Status = 'active'
       `);
-    
+
     const students = studentsResult.recordset;
-    
+
     if (students.length === 0) {
       return res.status(400).json({ message: 'No active students found in this course' });
     }
-    
+
     // Send notifications to all students
     for (const student of students) {
       // Create notification
-    await pool.request()
+      await pool.request()
         .input('userId', sql.BigInt, student.UserID)
         .input('type', sql.VarChar, 'assignment')
         .input('title', sql.NVarChar, 'New Assignment')
         .input('content', sql.NVarChar, `You have a new assignment to complete.`)
         .input('relatedId', sql.BigInt, id)
         .input('relatedType', sql.VarChar, 'assignment')
-      .query(`
+        .query(`
           INSERT INTO Notifications (UserID, Type, Title, Content, RelatedID, RelatedType, IsRead, CreatedAt)
           VALUES (@userId, @type, @title, @content, @relatedId, @relatedType, 0, GETDATE())
       `);
     }
-    
+
     res.json({
       message: 'Assignment assigned to students successfully',
       studentsCount: students.length
@@ -568,13 +567,13 @@ router.post('/submissions/:submissionId/grade', async (req, res) => {
   try {
     const { submissionId } = req.params;
     const { score, feedback } = req.body;
-    
+
     if (score === undefined) {
       return res.status(400).json({ message: 'Score is required' });
     }
-    
+
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this submission
     const accessCheck = await pool.request()
       .input('submissionId', sql.BigInt, submissionId)
@@ -587,11 +586,11 @@ router.post('/submissions/:submissionId/grade', async (req, res) => {
         WHERE s.SubmissionID = @submissionId 
         AND c.InstructorID = @teacherId
       `);
-    
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this submission' });
     }
-    
+
     // Update submission with grade
     await pool.request()
       .input('submissionId', sql.BigInt, submissionId)
@@ -607,20 +606,20 @@ router.post('/submissions/:submissionId/grade', async (req, res) => {
             Status = 'graded'
         WHERE SubmissionID = @submissionId
       `);
-    
+
     // Get student ID for notification
     const studentResult = await pool.request()
       .input('submissionId', sql.BigInt, submissionId)
       .query(`
-        SELECT UserID, AssignmentID
+        SELECT StudentID as UserID, AssignmentID
         FROM AssignmentSubmissions
         WHERE SubmissionID = @submissionId
       `);
-    
+
     if (studentResult.recordset.length > 0) {
       const studentId = studentResult.recordset[0].UserID;
       const assignmentId = studentResult.recordset[0].AssignmentID;
-      
+
       // Create notification for student
       await pool.request()
         .input('userId', sql.BigInt, studentId)
@@ -634,7 +633,7 @@ router.post('/submissions/:submissionId/grade', async (req, res) => {
           VALUES (@userId, @type, @title, @content, @relatedId, @relatedType, 0, GETDATE())
         `);
     }
-    
+
     res.json({
       message: 'Submission graded successfully',
       submissionId: submissionId
@@ -650,7 +649,7 @@ router.delete('/files/:fileId', async (req, res) => {
   try {
     const { fileId } = req.params;
     const pool = await poolPromise;
-    
+
     // Verify teacher has access to this file
     const accessCheck = await pool.request()
       .input('fileId', sql.BigInt, fileId)
@@ -663,26 +662,26 @@ router.delete('/files/:fileId', async (req, res) => {
         WHERE f.FileID = @fileId 
         AND c.InstructorID = @teacherId
         `);
-      
+
     if (accessCheck.recordset.length === 0) {
       return res.status(403).json({ message: 'You do not have access to this file' });
     }
-    
+
     const filePath = accessCheck.recordset[0].FilePath;
-        
+
     // Delete file from database
-        await pool.request()
+    await pool.request()
       .input('fileId', sql.BigInt, fileId)
-          .query(`
+      .query(`
         DELETE FROM AssignmentFiles
         WHERE FileID = @fileId
       `);
-    
+
     // Delete physical file
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-    
+
     res.json({ message: 'File deleted successfully' });
   } catch (error) {
     console.error('Error deleting file:', error);

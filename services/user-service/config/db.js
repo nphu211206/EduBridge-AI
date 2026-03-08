@@ -7,25 +7,32 @@
 -----------------------------------------------------------------*/
 const sql = require('mssql');
 const dotenv = require('dotenv');
+const path = require('path');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from project root
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+
+// Validate required environment variables
+if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_NAME) {
+  console.error('CRITICAL: DB_USER, DB_PASSWORD, and DB_NAME must be set in .env!');
+  process.exit(1);
+}
 
 // SQL Server configuration
 const sqlConfig = {
-  user: process.env.DB_USER || 'sa',
-  password: process.env.DB_PASSWORD || '123456aA@$',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   server: (process.env.DB_SERVER || 'localhost').split('\\')[0],
   port: parseInt(process.env.DB_PORT || '1433'),
-  database: process.env.DB_NAME || 'CampusLearning',
+  database: process.env.DB_NAME,
   options: {
     instanceName: (process.env.DB_SERVER || 'localhost').split('\\')[1],
     encrypt: false,
     enableArithAbort: true,
     trustServerCertificate: true,
-    useUTC: false, // Add this to avoid timezone issues
-    dateFormat: 'ymd', // Use ISO date format
-    datefirst: 7, // Sunday is the first day
+    useUTC: false,
+    dateFormat: 'ymd',
+    datefirst: 7,
     connectTimeout: 30000,
     requestTimeout: 30000
   },
@@ -44,7 +51,7 @@ const connectDB = async () => {
   try {
     await pool.connect();
     console.log('Database connected successfully');
-    
+
     // Fix date format issues by setting SQL Server to handle dates in a specific format
     await pool.request().query(`
       SET DATEFORMAT ymd;
@@ -61,7 +68,7 @@ const connectDB = async () => {
       SET CONCAT_NULL_YIELDS_NULL ON;
       SET QUOTED_IDENTIFIER ON;
     `);
-    
+
     return pool;
   } catch (err) {
     console.error('Error connecting to database:', err);
@@ -73,12 +80,12 @@ const connectDB = async () => {
 const query = async (queryText, params = {}) => {
   try {
     const request = pool.request();
-    
+
     // Add parameters to the request
     for (const [key, value] of Object.entries(params)) {
       request.input(key, value);
     }
-    
+
     const result = await request.query(queryText);
     return result.recordset;
   } catch (error) {
@@ -91,17 +98,17 @@ const query = async (queryText, params = {}) => {
 const transaction = async () => {
   const transaction = new sql.Transaction(pool);
   await transaction.begin();
-  
+
   return {
     query: async (queryText, params = {}) => {
       try {
         const request = new sql.Request(transaction);
-        
+
         // Add parameters to the request
         for (const [key, value] of Object.entries(params)) {
           request.input(key, value);
         }
-        
+
         const result = await request.query(queryText);
         return result.recordset;
       } catch (error) {

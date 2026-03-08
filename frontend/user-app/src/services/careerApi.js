@@ -24,9 +24,9 @@ export const CareerAPI = {
     // Jobs
     getJobs: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return fetch(`${CAREER_API_URL}/api/jobs?${qs}`, { headers: getHeaders() }).then(handleResponse);
+        return fetch(`${CAREER_API_URL}/api/public/jobs?${qs}`, { headers: getHeaders() }).then(handleResponse);
     },
-    getJob: (jobId) => fetch(`${CAREER_API_URL}/api/jobs/${jobId}`, { headers: getHeaders() }).then(handleResponse),
+    getJob: (jobId) => fetch(`${CAREER_API_URL}/api/public/jobs/${jobId}`, { headers: getHeaders() }).then(handleResponse),
     applyJob: (jobId, data) => fetch(`${CAREER_API_URL}/api/jobs/${jobId}/apply`, {
         method: 'POST', headers: getHeaders(), body: JSON.stringify(data),
     }).then(handleResponse),

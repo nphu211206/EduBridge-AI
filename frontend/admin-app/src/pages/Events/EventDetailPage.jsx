@@ -296,8 +296,8 @@ const EventDetailPage = () => {
                     Programming Languages
                   </Typography>
                   <Box sx={{ mb: 2 }}>
-                    {languages.length > 0 ? (
-                      languages.map((lang, index) => (
+                    {languages?.length > 0 ? (
+                      languages?.map((lang, index) => (
                         <Chip 
                           key={index} 
                           label={lang.Language} 
@@ -317,8 +317,8 @@ const EventDetailPage = () => {
                     Technologies
                   </Typography>
                   <Box>
-                    {technologies.length > 0 ? (
-                      technologies.map((tech, index) => (
+                    {technologies?.length > 0 ? (
+                      technologies?.map((tech, index) => (
                         <Chip 
                           key={index} 
                           label={tech.Technology} 
@@ -440,9 +440,9 @@ const EventDetailPage = () => {
                 Event Schedule
               </Typography>
               
-              {schedule.length > 0 ? (
+              {schedule?.length > 0 ? (
                 <List>
-                  {schedule.map((item, index) => (
+                  {schedule?.map((item, index) => (
                     <React.Fragment key={item.ScheduleID || index}>
                       <ListItem alignItems="flex-start">
                         <ListItemText
@@ -477,7 +477,7 @@ const EventDetailPage = () => {
                           }
                         />
                       </ListItem>
-                      {index < schedule.length - 1 && <Divider component="li" />}
+                      {index < schedule?.length - 1 && <Divider component="li" />}
                     </React.Fragment>
                   ))}
                 </List>
@@ -498,9 +498,9 @@ const EventDetailPage = () => {
                 Prizes
               </Typography>
               
-              {prizes.length > 0 ? (
+              {prizes?.length > 0 ? (
                 <Grid container spacing={3}>
-                  {prizes.map((prize, index) => (
+                  {prizes?.map((prize, index) => (
                     <Grid item xs={12} sm={6} md={4} key={prize.PrizeID || index}>
                       <Card sx={{ height: '100%' }}>
                         <CardContent>
@@ -542,8 +542,8 @@ const EventDetailPage = () => {
                 Programming Languages
               </Typography>
               <Box sx={{ mb: 4 }}>
-                {languages.length > 0 ? (
-                  languages.map((lang, index) => (
+                {languages?.length > 0 ? (
+                  languages?.map((lang, index) => (
                     <Chip 
                       key={index} 
                       label={lang.Language} 
@@ -564,8 +564,8 @@ const EventDetailPage = () => {
                 Technologies
               </Typography>
               <Box>
-                {technologies.length > 0 ? (
-                  technologies.map((tech, index) => (
+                {technologies?.length > 0 ? (
+                  technologies?.map((tech, index) => (
                     <Chip 
                       key={index} 
                       label={tech.Technology} 

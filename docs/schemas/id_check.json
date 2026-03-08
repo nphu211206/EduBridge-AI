@@ -1,0 +1,142 @@
+[
+  {
+    "TableName": "Courses",
+    "name": "CourseID",
+    "is_identity": true
+  },
+  {
+    "TableName": "Courses",
+    "name": "TeacherID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Courses",
+    "name": "CategoryID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Courses",
+    "name": "PreviewVideoUrl",
+    "is_identity": false
+  },
+  {
+    "TableName": "Courses",
+    "name": "InstructorID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Jobs",
+    "name": "JobID",
+    "is_identity": true
+  },
+  {
+    "TableName": "Jobs",
+    "name": "CompanyID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Jobs",
+    "name": "RecruiterID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Jobs",
+    "name": "PipelineID",
+    "is_identity": false
+  },
+  {
+    "TableName": "CourseModules",
+    "name": "ModuleID",
+    "is_identity": true
+  },
+  {
+    "TableName": "CourseModules",
+    "name": "CourseID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Lessons",
+    "name": "LessonID",
+    "is_identity": true
+  },
+  {
+    "TableName": "Lessons",
+    "name": "ModuleID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Lessons",
+    "name": "CourseID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Lessons",
+    "name": "VideoUrl",
+    "is_identity": false
+  },
+  {
+    "TableName": "Lessons",
+    "name": "VideoDuration",
+    "is_identity": false
+  },
+  {
+    "TableName": "Lessons",
+    "name": "VideoProvider",
+    "is_identity": false
+  },
+  {
+    "TableName": "Events",
+    "name": "EventID",
+    "is_identity": true
+  },
+  {
+    "TableName": "Events",
+    "name": "OrganizerID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Events",
+    "name": "SchoolID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Events",
+    "name": "CompanyID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Posts",
+    "name": "PostID",
+    "is_identity": true
+  },
+  {
+    "TableName": "Posts",
+    "name": "AuthorID",
+    "is_identity": false
+  },
+  {
+    "TableName": "Posts",
+    "name": "GroupID",
+    "is_identity": false
+  },
+  {
+    "TableName": "CourseEnrollments",
+    "name": "EnrollmentID",
+    "is_identity": true
+  },
+  {
+    "TableName": "CourseEnrollments",
+    "name": "CourseID",
+    "is_identity": false
+  },
+  {
+    "TableName": "CourseEnrollments",
+    "name": "StudentID",
+    "is_identity": false
+  },
+  {
+    "TableName": "CourseEnrollments",
+    "name": "PaymentID",
+    "is_identity": false
+  }
+]

@@ -114,7 +114,7 @@ const GraduationRegistration = () => {
       graduationRequirements.currentGpa >= graduationRequirements.gpaRequired &&
       graduationRequirements.compulsoryCoursesCompleted >= graduationRequirements.compulsoryCoursesRequired &&
       (graduationRequirements.electiveCoursesCompleted + 
-        graduationRequirements.outstandingCourses.filter(c => c.status === 'In Progress').length
+        graduationRequirements.outstandingCourses?.filter(c => c.status === 'In Progress')?.length
       ) >= graduationRequirements.electiveCoursesRequired;
     
     setEligibleForGraduation(eligible);
@@ -160,7 +160,7 @@ const GraduationRegistration = () => {
       type: 'success',
       message: 'Đăng ký xét tốt nghiệp thành công. Hồ sơ của bạn đang được xét duyệt.'
     });
-    setActiveStep(steps.length);
+    setActiveStep(steps?.length);
   };
 
   const getStepContent = (step) => {
@@ -222,7 +222,7 @@ const GraduationRegistration = () => {
                   </Typography>
                   
                   <List dense>
-                    {graduationData.outstandingCourses.map((course) => (
+                    {graduationData.outstandingCourses?.map((course) => (
                       <ListItem key={course.id}>
                         <ListItemText
                           primary={`${course.code} - ${course.name} (${course.credits} tín chỉ)`}
@@ -434,14 +434,14 @@ const GraduationRegistration = () => {
         </Box>
 
         <Stepper activeStep={activeStep} sx={styles.stepper}>
-          {steps.map((label) => (
+          {steps?.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
 
-        {activeStep === steps.length ? (
+        {activeStep === steps?.length ? (
           <Box>
             <Typography variant="h6" gutterBottom>
               Đăng ký hoàn tất!
@@ -467,14 +467,14 @@ const GraduationRegistration = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={activeStep === steps.length - 1 ? handleSubmit : handleNext}
+                onClick={activeStep === steps?.length - 1 ? handleSubmit : handleNext}
                 disabled={
                   (activeStep === 0 && !eligibleForGraduation) ||
                   (activeStep === 1 && (!selectedTerm || !contactInfo.phone || !contactInfo.email || !contactInfo.address)) ||
                   (activeStep === 2 && !confirmChecked)
                 }
               >
-                {activeStep === steps.length - 1 ? 'Xác nhận đăng ký' : 'Tiếp theo'}
+                {activeStep === steps?.length - 1 ? 'Xác nhận đăng ký' : 'Tiếp theo'}
               </Button>
             </Box>
           </Box>

@@ -56,7 +56,7 @@ const JobsFilter = ({ onFilterChange }) => {
     const handleJobTypeChange = (e) => {
         const { value, checked } = e.target;
         setSelectedJobTypes(prev =>
-            checked ? [...prev, value] : prev.filter(type => type !== value)
+            checked ? [...prev, value] : prev?.filter(type => type !== value)
         );
     };
 
@@ -102,7 +102,7 @@ const JobsFilter = ({ onFilterChange }) => {
             <div className="mb-6 border-t pt-4">
                 <h4 className="font-semibold mb-2 text-gray-800 flex items-center"><Briefcase className="h-5 w-5 mr-2 text-gray-600"/>Loại công việc</h4>
                 <div className="space-y-2">
-                    {JOB_TYPES.map(type => (
+                    {JOB_TYPES?.map(type => (
                         <div key={type} className="flex items-center">
                             <input
                                 id={type}
@@ -128,7 +128,7 @@ const JobsFilter = ({ onFilterChange }) => {
                     onChange={handleSalaryChange}
                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    {SALARY_RANGES.map(range => (
+                    {SALARY_RANGES?.map(range => (
                         <option key={range} value={range}>{range}</option>
                     ))}
                 </select>

@@ -34,7 +34,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             pageNumbers.push(totalPages); // Luôn hiển thị trang cuối
         }
 
-        return pageNumbers.map((page, index) =>
+        return pageNumbers?.map((page, index) =>
             page === '...' ? (
                 <span key={`ellipsis-${index}`} className="px-4 py-2 text-gray-500">
                      <MoreHorizontal className="h-5 w-5" />

@@ -14,30 +14,30 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [login, { isLoading }] = useLoginMutation();
-  
+
   // Lấy URL trả về từ location state hoặc từ localStorage hoặc mặc định là dashboard
-  const redirectPath = localStorage.getItem('auth_redirect') || 
-                     location.state?.from?.pathname || 
-                     '/dashboard';
-  
+  const redirectPath = localStorage.getItem('auth_redirect') ||
+    location.state?.from?.pathname ||
+    '/dashboard';
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.password) {
       toast.error('Email và mật khẩu là bắt buộc');
       return;
     }
-    
+
     try {
       const result = await login(formData).unwrap();
       // Chỉ chuyển hướng khi nhận được phản hồi thành công
@@ -45,7 +45,7 @@ const LoginForm = () => {
         // Clear stored redirect path
         const redirectTo = redirectPath;
         localStorage.removeItem('auth_redirect');
-        
+
         // Độ trễ nhỏ để cho phép cập nhật trạng thái
         setTimeout(() => {
           navigate(redirectTo, { replace: true });
@@ -56,7 +56,7 @@ const LoginForm = () => {
       console.log('Lỗi đăng nhập:', error);
     }
   };
-  
+
   return (
     <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
       <div className="text-center mb-8">
@@ -76,14 +76,14 @@ const LoginForm = () => {
               </div>
             </div>
             <span className="mt-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-800">
-              CampusLearning
+              EduBridge AI
             </span>
           </div>
         </div>
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Chào mừng trở lại</h1>
         <p className="text-gray-600">Đăng nhập vào tài khoản giáo viên của bạn</p>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium text-gray-700 block">Email</label>
@@ -105,7 +105,7 @@ const LoginForm = () => {
             />
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex justify-between">
             <label htmlFor="password" className="text-sm font-medium text-gray-700 block">Mật khẩu</label>
@@ -129,7 +129,7 @@ const LoginForm = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center">
           <input
             id="remember_me"
@@ -141,7 +141,7 @@ const LoginForm = () => {
             Ghi nhớ đăng nhập
           </label>
         </div>
-        
+
         <button
           type="submit"
           className="w-full flex justify-center items-center px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors duration-200 ease-in-out"
@@ -156,7 +156,7 @@ const LoginForm = () => {
           {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
         </button>
       </form>
-      
+
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-600">
           Chưa có tài khoản? <a href="#" className="text-blue-600 hover:underline font-medium">Liên hệ quản trị viên</a>

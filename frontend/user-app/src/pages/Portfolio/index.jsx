@@ -72,7 +72,7 @@ const Portfolio = () => {
             formData.append('description', newItem.description);
             formData.append('itemType', newItem.itemType);
             formData.append('externalUrl', newItem.externalUrl);
-            formData.append('tags', JSON.stringify(newItem.tags.split(',').map(t => t.trim()).filter(Boolean)));
+            formData.append('tags', JSON.stringify(newItem.tags.split(',')?.map(t => t.trim())?.filter(Boolean)));
             if (itemFile) formData.append('file', itemFile);
 
             await PortfolioAPI.addItem(formData);
@@ -147,7 +147,7 @@ const Portfolio = () => {
                                 <textarea value={editData.bio} onChange={e => setEditData(p => ({ ...p, bio: e.target.value }))} placeholder="Giới thiệu bản thân..." className="edit-textarea" rows={3} />
                                 <select value={editData.fieldCategory} onChange={e => setEditData(p => ({ ...p, fieldCategory: e.target.value }))} className="edit-select">
                                     <option value="">Chọn lĩnh vực...</option>
-                                    {APP_CONFIG.fieldCategories.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                                    {APP_CONFIG.fieldCategories?.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                                 </select>
                                 <div className="edit-actions">
                                     <button onClick={handleSaveProfile} className="btn-save">Lưu</button>
@@ -188,7 +188,7 @@ const Portfolio = () => {
                         {aiSummary.careerSuggestions && (
                             <div className="career-suggestions">
                                 <strong>💡 Gợi ý nghề nghiệp:</strong>
-                                {aiSummary.careerSuggestions.map((s, i) => <span key={i} className="suggestion-tag">{s}</span>)}
+                                {aiSummary.careerSuggestions?.map((s, i) => <span key={i} className="suggestion-tag">{s}</span>)}
                             </div>
                         )}
                     </div>
@@ -225,7 +225,7 @@ const Portfolio = () => {
                                         <input value={newItem.title} onChange={e => setNewItem(p => ({ ...p, title: e.target.value }))} placeholder="Tiêu đề *" className="modal-input" required />
                                         <textarea value={newItem.description} onChange={e => setNewItem(p => ({ ...p, description: e.target.value }))} placeholder="Mô tả..." className="modal-input" rows={3} />
                                         <select value={newItem.itemType} onChange={e => setNewItem(p => ({ ...p, itemType: e.target.value }))} className="modal-input">
-                                            {APP_CONFIG.portfolioItemTypes.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                            {APP_CONFIG.portfolioItemTypes?.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                                         </select>
                                         <input value={newItem.externalUrl} onChange={e => setNewItem(p => ({ ...p, externalUrl: e.target.value }))} placeholder="URL (GitHub, Behance, link khác...)" className="modal-input" />
                                         <input value={newItem.tags} onChange={e => setNewItem(p => ({ ...p, tags: e.target.value }))} placeholder="Tags (phân cách bằng dấu phẩy)" className="modal-input" />
@@ -239,7 +239,7 @@ const Portfolio = () => {
                             </div>
                         )}
 
-                        {(!items || items.length === 0) ? (
+                        {(!items || items?.length === 0) ? (
                             <div className="empty-state">
                                 <span className="empty-icon-large">📁</span>
                                 <h3>Chưa có tác phẩm nào</h3>
@@ -247,7 +247,7 @@ const Portfolio = () => {
                             </div>
                         ) : (
                             <div className="items-grid">
-                                {items.map(item => {
+                                {items?.map(item => {
                                     const evaluation = item.AiEvaluation ? JSON.parse(item.AiEvaluation) : null;
                                     const typeConfig = APP_CONFIG.portfolioItemTypes.find(t => t.value === item.ItemType);
                                     return (
@@ -268,7 +268,7 @@ const Portfolio = () => {
                                                 {item.ExternalUrl && <a href={item.ExternalUrl} target="_blank" rel="noopener noreferrer" className="item-link">🔗 Xem liên kết</a>}
                                                 {item.Tags && (
                                                     <div className="item-tags">
-                                                        {JSON.parse(item.Tags || '[]').map((tag, i) => <span key={i} className="tag">{tag}</span>)}
+                                                        {JSON.parse(item.Tags || '[]')?.map((tag, i) => <span key={i} className="tag">{tag}</span>)}
                                                     </div>
                                                 )}
                                                 <div className="item-actions">
@@ -287,7 +287,7 @@ const Portfolio = () => {
                 {/* Skills Tab */}
                 {tab === 'skills' && (
                     <div className="skills-tab">
-                        {(!skills || skills.length === 0) ? (
+                        {(!skills || skills?.length === 0) ? (
                             <div className="empty-state">
                                 <span className="empty-icon-large">⚡</span>
                                 <h3>Chưa có kỹ năng</h3>
@@ -295,7 +295,7 @@ const Portfolio = () => {
                             </div>
                         ) : (
                             <div className="skills-grid">
-                                {skills.map(skill => (
+                                {skills?.map(skill => (
                                     <div key={skill.UserSkillID} className="skill-card">
                                         <div className="skill-icon">{skill.Icon || '📌'}</div>
                                         <div className="skill-info">
@@ -327,7 +327,7 @@ const Portfolio = () => {
                                     <h3>🔗 Kết nối nền tảng bên ngoài</h3>
                                     <select value={connectForm.platform} onChange={e => setConnectForm(p => ({ ...p, platform: e.target.value }))} className="modal-input">
                                         <option value="">Chọn nền tảng...</option>
-                                        {platforms.map(p => <option key={p.name} value={p.name}>{p.icon} {p.name} — {p.description}</option>)}
+                                        {platforms?.map(p => <option key={p.name} value={p.name}>{p.icon} {p.name} — {p.description}</option>)}
                                     </select>
                                     <input value={connectForm.profileUrl} onChange={e => setConnectForm(p => ({ ...p, profileUrl: e.target.value }))} placeholder="URL profile (VD: https://github.com/username)" className="modal-input" />
                                     <div className="modal-actions">
@@ -338,7 +338,7 @@ const Portfolio = () => {
                             </div>
                         )}
 
-                        {(!externalProfiles || externalProfiles.length === 0) ? (
+                        {(!externalProfiles || externalProfiles?.length === 0) ? (
                             <div className="empty-state">
                                 <span className="empty-icon-large">🔗</span>
                                 <h3>Chưa kết nối nền tảng nào</h3>
@@ -346,7 +346,7 @@ const Portfolio = () => {
                             </div>
                         ) : (
                             <div className="external-grid">
-                                {externalProfiles.map(ep => (
+                                {externalProfiles?.map(ep => (
                                     <div key={ep.ProfileID} className="external-card">
                                         <div className="external-header">
                                             <span className="platform-icon">{getPlatformIcon(ep.Platform)}</span>

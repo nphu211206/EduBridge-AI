@@ -539,11 +539,11 @@ const CourseDetail = () => {
                 <p className="text-gray-500">Chưa có mô tả chi tiết cho khóa học này.</p>
               )}
               
-              {course.Requirements && (Array.isArray(course.Requirements) ? course.Requirements.length > 0 : false) && (
+              {course.Requirements && (Array.isArray(course.Requirements) ? course.Requirements?.length > 0 : false) && (
                 <div className="mt-8">
                   <h3 className="text-lg font-bold mb-3">Yêu cầu</h3>
                   <ul className="list-disc pl-5 space-y-2">
-                    {course.Requirements.map((req, index) => (
+                    {course.Requirements?.map((req, index) => (
                       <li key={index} className="text-gray-700">{req}</li>
                     ))}
                   </ul>
@@ -556,10 +556,10 @@ const CourseDetail = () => {
                   {typeof course.Objectives === 'string' ? (
                     // If Objectives is a string (HTML content), render it directly
                     <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: course.Objectives }} />
-                  ) : Array.isArray(course.Objectives) && course.Objectives.length > 0 ? (
+                  ) : Array.isArray(course.Objectives) && course.Objectives?.length > 0 ? (
                     // If Objectives is an array, map over it
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {course.Objectives.map((obj, index) => (
+                      {course.Objectives?.map((obj, index) => (
                         <li key={index} className="flex items-start">
                           <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
@@ -580,9 +580,9 @@ const CourseDetail = () => {
             <div>
               <h2 className="text-xl font-bold mb-4">Nội dung khóa học</h2>
               
-              {course.Modules && course.Modules.length > 0 ? (
+              {course.Modules && course.Modules?.length > 0 ? (
                 <div className="space-y-4">
-                  {course.Modules.map((module, moduleIndex) => (
+                  {course.Modules?.map((module, moduleIndex) => (
                     <div key={module.ModuleID || moduleIndex} className="border rounded-2xl overflow-hidden">
                       <div className="bg-gray-50 p-4 flex justify-between items-center">
                         <h3 className="font-medium">{module.Title}</h3>
@@ -591,9 +591,9 @@ const CourseDetail = () => {
                         </div>
                       </div>
                       
-                      {module.Lessons && module.Lessons.length > 0 && (
+                      {module.Lessons && module.Lessons?.length > 0 && (
                         <div className="divide-y">
-                          {module.Lessons.map((lesson, lessonIndex) => (
+                          {module.Lessons?.map((lesson, lessonIndex) => (
                             <div 
                               key={lesson.LessonID || lessonIndex} 
                               className="p-4 pl-6 flex items-center hover:bg-gray-50 cursor-pointer"
@@ -702,7 +702,7 @@ const CourseDetail = () => {
                 <div className="flex justify-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
-              ) : paymentHistory.length > 0 ? (
+              ) : paymentHistory?.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                     <thead>
@@ -715,7 +715,7 @@ const CourseDetail = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {paymentHistory.map((payment) => (
+                      {paymentHistory?.map((payment) => (
                         <tr key={payment.TransactionID} className="hover:bg-gray-50">
                           <td className="py-3 px-4 whitespace-nowrap text-sm font-medium text-gray-900">{payment.TransactionCode || 'N/A'}</td>
                           <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-700">

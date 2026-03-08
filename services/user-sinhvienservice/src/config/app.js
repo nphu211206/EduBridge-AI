@@ -6,7 +6,7 @@
 * Apache 2.0 License - Copyright 2025 Quyen Nguyen Duc
 -----------------------------------------------------------------*/
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ path: require('path').resolve(__dirname, '../../../../.env') });
 
 module.exports = {
   port: process.env.PORT || 5008,

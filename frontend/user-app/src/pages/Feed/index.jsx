@@ -38,7 +38,7 @@ const Feed = () => {
         setPosts(prev => [...prev, ...data]);
       }
 
-      setHasMore(data.length === 10); // Assuming limit is 10
+      setHasMore(data?.length === 10); // Assuming limit is 10
     } catch (error) {
       console.error('Fetch posts error:', error);
       // Show error notification
@@ -66,7 +66,7 @@ const Feed = () => {
       }
 
       setPosts(prev => 
-        prev.map(post => 
+        prev?.map(post => 
           post.PostID === postId 
             ? { 
                 ...post, 
@@ -91,7 +91,7 @@ const Feed = () => {
       <Box sx={{ py: 2 }}>
         <CreatePost onPostCreated={handlePostCreated} />
 
-        {posts.map(post => (
+        {posts?.map(post => (
           <PostCard
             key={post.PostID}
             post={post}

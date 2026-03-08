@@ -225,7 +225,7 @@ const ModuleDetail = () => {
                 {module.Duration ? `${module.Duration} phút` : 'N/A'}
               </Descriptions.Item>
               <Descriptions.Item label="Số bài học">
-                {lessons.length}
+                {lessons?.length}
               </Descriptions.Item>
               <Descriptions.Item label="Ngày tạo">
                 {module.CreatedAt ? new Date(module.CreatedAt).toLocaleDateString('vi-VN') : 'N/A'}
@@ -242,7 +242,7 @@ const ModuleDetail = () => {
         <Col span={24}>
           <Card>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <Title level={4}>Danh sách bài học ({lessons.length})</Title>
+              <Title level={4}>Danh sách bài học ({lessons?.length})</Title>
               <Button 
                 type="primary" 
                 icon={<FileTextOutlined />}

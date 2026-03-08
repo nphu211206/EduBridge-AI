@@ -12,18 +12,18 @@ const { poolPromise, sql } = require('../config/database');
 router.get('/stats', async (req, res) => {
   try {
     const pool = await poolPromise;
-    
+
     // Get user stats
     const userStats = await pool.request().query(`
       SELECT 
         COUNT(*) as totalUsers,
-        SUM(CASE WHEN Status = 'active' THEN 1 ELSE 0 END) as activeUsers,
+        SUM(CASE WHEN AccountStatus = 'ACTIVE' THEN 1 ELSE 0 END) as activeUsers,
         SUM(CASE WHEN DATEDIFF(day, CreatedAt, GETDATE()) <= 30 THEN 1 ELSE 0 END) as newUsers,
-        SUM(CASE WHEN DATEDIFF(day, LastLoginAt, GETDATE()) <= 7 THEN 1 ELSE 0 END) as recentActiveUsers
+        SUM(CASE WHEN LastLoginAt IS NOT NULL AND DATEDIFF(day, LastLoginAt, GETDATE()) <= 7 THEN 1 ELSE 0 END) as recentActiveUsers
       FROM Users
-      WHERE 1=1
+      WHERE DeletedAt IS NULL
     `);
-    
+
     // Get course stats
     const courseStats = await pool.request().query(`
       SELECT 
@@ -32,9 +32,9 @@ router.get('/stats', async (req, res) => {
         (SELECT COUNT(*) FROM CourseEnrollments) as totalEnrollments,
         (SELECT COUNT(DISTINCT CourseID) FROM CourseEnrollments) as coursesWithEnrollments
       FROM Courses
-      WHERE 1=1
+      WHERE DeletedAt IS NULL
     `);
-    
+
     // Get event stats
     const eventStats = await pool.request().query(`
       SELECT 
@@ -43,9 +43,9 @@ router.get('/stats', async (req, res) => {
         SUM(CASE WHEN EventDate < GETDATE() THEN 1 ELSE 0 END) as pastEvents,
         (SELECT COUNT(*) FROM EventParticipants) as totalParticipants
       FROM Events
-      WHERE 1=1
+      WHERE DeletedAt IS NULL
     `);
-    
+
     // Get exam stats
     const examStats = await pool.request().query(`
       SELECT 
@@ -54,19 +54,20 @@ router.get('/stats', async (req, res) => {
         SUM(CASE WHEN EndTime < GETDATE() THEN 1 ELSE 0 END) as completedExams,
         (SELECT COUNT(*) FROM ExamParticipants) as totalParticipants
       FROM Exams
-      WHERE 1=1
+      WHERE DeletedAt IS NULL
     `);
-    
+
     // Get report stats
     const reportStats = await pool.request().query(`
       SELECT 
         COUNT(*) as totalReports,
-        SUM(CASE WHEN Status = 'pending' THEN 1 ELSE 0 END) as pendingReports,
-        SUM(CASE WHEN Status = 'resolved' THEN 1 ELSE 0 END) as resolvedReports,
-        SUM(CASE WHEN Status = 'rejected' THEN 1 ELSE 0 END) as rejectedReports
+        SUM(CASE WHEN Status = 'PENDING' OR Status = 'pending' THEN 1 ELSE 0 END) as pendingReports,
+        SUM(CASE WHEN Status = 'RESOLVED' OR Status = 'resolved' THEN 1 ELSE 0 END) as resolvedReports,
+        SUM(CASE WHEN Status = 'REJECTED' OR Status = 'rejected' THEN 1 ELSE 0 END) as rejectedReports
       FROM Reports
+      WHERE DeletedAt IS NULL
     `);
-    
+
     // Get monthly registration trend (last 6 months)
     const registrationTrend = await pool.request().query(`
       SELECT 
@@ -78,7 +79,7 @@ router.get('/stats', async (req, res) => {
       GROUP BY YEAR(CreatedAt), MONTH(CreatedAt)
       ORDER BY Year, Month
     `);
-    
+
     // Get monthly course enrollments (last 6 months)
     const enrollmentTrend = await pool.request().query(`
       SELECT 
@@ -90,7 +91,7 @@ router.get('/stats', async (req, res) => {
       GROUP BY YEAR(EnrolledAt), MONTH(EnrolledAt)
       ORDER BY Year, Month
     `);
-    
+
     // Get user roles distribution
     const rolesDistribution = await pool.request().query(`
       SELECT 
@@ -100,7 +101,7 @@ router.get('/stats', async (req, res) => {
       GROUP BY Role
       ORDER BY Count DESC
     `);
-    
+
     // Get popular courses (top 5 by enrollment)
     const popularCourses = await pool.request().query(`
       SELECT TOP 5
@@ -113,7 +114,7 @@ router.get('/stats', async (req, res) => {
       GROUP BY c.CourseID, c.Title, c.Category
       ORDER BY EnrollmentCount DESC
     `);
-    
+
     return res.status(200).json({
       userStats: userStats.recordset[0],
       courseStats: courseStats.recordset[0],
@@ -127,7 +128,7 @@ router.get('/stats', async (req, res) => {
     });
   } catch (error) {
     console.error('Dashboard Stats Error:', error);
-    
+
     // Return mock data on error
     const mockData = {
       userStats: {
@@ -190,7 +191,7 @@ router.get('/stats', async (req, res) => {
         { CourseID: 5, Title: 'Database Design', Category: 'Database', EnrollmentCount: 25 }
       ]
     };
-    
+
     return res.status(200).json(mockData);
   }
 });
@@ -201,9 +202,9 @@ router.get('/charts/:chartType', async (req, res) => {
     const { chartType } = req.params;
     const { timeRange } = req.query; // Options: week, month, quarter, year
     const pool = await poolPromise;
-    
+
     let timeFilter;
-    switch(timeRange) {
+    switch (timeRange) {
       case 'week':
         timeFilter = 'DATEADD(week, -1, GETDATE())';
         break;
@@ -217,9 +218,9 @@ router.get('/charts/:chartType', async (req, res) => {
       default:
         timeFilter = 'DATEADD(month, -1, GETDATE())';
     }
-    
+
     let query;
-    switch(chartType) {
+    switch (chartType) {
       case 'user-registrations':
         query = `
           SELECT 
@@ -231,7 +232,7 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Date
         `;
         break;
-        
+
       case 'course-enrollments':
         query = `
           SELECT 
@@ -243,7 +244,7 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Date
         `;
         break;
-        
+
       case 'event-registrations':
         query = `
           SELECT 
@@ -255,7 +256,7 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Date
         `;
         break;
-        
+
       case 'course-completions':
         query = `
           SELECT 
@@ -269,7 +270,7 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Date
         `;
         break;
-        
+
       case 'exam-participants':
         query = `
           SELECT 
@@ -281,7 +282,7 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Date
         `;
         break;
-        
+
       case 'reports-by-type':
         query = `
           SELECT 
@@ -293,7 +294,7 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Count DESC
         `;
         break;
-        
+
       case 'user-logins':
         query = `
           SELECT 
@@ -305,13 +306,13 @@ router.get('/charts/:chartType', async (req, res) => {
           ORDER BY Date
         `;
         break;
-        
+
       default:
         return res.status(400).json({ message: 'Invalid chart type' });
     }
-    
+
     const result = await pool.request().query(query);
-    
+
     return res.status(200).json({
       chartType,
       timeRange,
@@ -327,7 +328,7 @@ router.get('/charts/:chartType', async (req, res) => {
 router.get('/activities', async (req, res) => {
   try {
     const pool = await poolPromise;
-    
+
     // Get recent activities (last 20)
     const recentActivities = await pool.request().query(`
       SELECT TOP 20
@@ -368,7 +369,7 @@ router.get('/activities', async (req, res) => {
       
       ORDER BY timestamp DESC
     `);
-    
+
     // Check if we got data, if not return mock data
     if (!recentActivities.recordset || recentActivities.recordset.length === 0) {
       const mockActivities = [
@@ -399,11 +400,11 @@ router.get('/activities', async (req, res) => {
       ];
       return res.status(200).json(mockActivities);
     }
-    
+
     return res.status(200).json(recentActivities.recordset);
   } catch (error) {
     console.error('Dashboard Activities Error:', error);
-    
+
     // Return mock data on error
     const mockActivities = [
       {
@@ -439,7 +440,7 @@ router.get('/activities', async (req, res) => {
 router.get('/notifications', async (req, res) => {
   try {
     const pool = await poolPromise;
-    
+
     // Get system notifications
     const notifications = await pool.request().query(`
       SELECT TOP 10
@@ -480,7 +481,7 @@ router.get('/notifications', async (req, res) => {
       
       ORDER BY timestamp DESC
     `);
-    
+
     // Check if we got data, if not return mock data
     if (!notifications.recordset || notifications.recordset.length === 0) {
       const mockNotifications = [
@@ -511,11 +512,11 @@ router.get('/notifications', async (req, res) => {
       ];
       return res.status(200).json(mockNotifications);
     }
-    
+
     return res.status(200).json(notifications.recordset);
   } catch (error) {
     console.error('Dashboard Notifications Error:', error);
-    
+
     // Return mock data on error
     const mockNotifications = [
       {
