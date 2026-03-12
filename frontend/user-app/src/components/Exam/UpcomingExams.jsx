@@ -7,23 +7,21 @@
 -----------------------------------------------------------------*/
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Box, 
-  Typography, 
-  Card, 
-  CardContent, 
-  Grid, 
-  Button, 
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  Button,
   CircularProgress,
   Alert,
   AlertTitle,
   Divider
 } from '@mui/material';
-import { 
-  CalendarMonth, 
-  AccessTime,
-  ArrowForward
-} from '@mui/icons-material';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import AccessTime from '@mui/icons-material/AccessTime';
+import ArrowForward from '@mui/icons-material/ArrowForward';
 import { getUpcomingExams } from '../../api/examApi';
 import { format, differenceInDays, differenceInHours } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -55,16 +53,16 @@ const UpcomingExams = () => {
     const now = new Date();
     const examTime = new Date(startTime);
     const days = differenceInDays(examTime, now);
-    
+
     if (days > 0) {
       return `${days} ngày nữa`;
     }
-    
+
     const hours = differenceInHours(examTime, now);
     if (hours > 0) {
       return `${hours} giờ nữa`;
     }
-    
+
     return 'Sắp bắt đầu';
   };
 
@@ -95,7 +93,7 @@ const UpcomingExams = () => {
       <Typography variant="h4" gutterBottom>
         Kỳ thi sắp diễn ra
       </Typography>
-      
+
       {exams?.length === 0 ? (
         <Alert severity="info" sx={{ mt: 2 }}>
           <AlertTitle>Không có kỳ thi nào sắp diễn ra</AlertTitle>
@@ -105,9 +103,9 @@ const UpcomingExams = () => {
         <Grid container spacing={3} sx={{ mt: 1 }}>
           {exams?.map((exam) => (
             <Grid item xs={12} key={exam.ExamID}>
-              <Card 
-                sx={{ 
-                  display: 'flex', 
+              <Card
+                sx={{
+                  display: 'flex',
                   flexDirection: { xs: 'column', sm: 'row' },
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   '&:hover': {
@@ -116,12 +114,12 @@ const UpcomingExams = () => {
                   }
                 }}
               >
-                <Box 
-                  sx={{ 
-                    width: { xs: '100%', sm: '200px' }, 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    justifyContent: 'center', 
+                <Box
+                  sx={{
+                    width: { xs: '100%', sm: '200px' },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                     alignItems: 'center',
                     p: 2,
                     bgcolor: 'primary.light',
@@ -139,24 +137,24 @@ const UpcomingExams = () => {
                     {getTimeUntil(exam.StartTime)}
                   </Typography>
                 </Box>
-                
+
                 <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
                 <Divider sx={{ display: { xs: 'block', sm: 'none' } }} />
-                
+
                 <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <Box>
                     <Typography variant="h6" component="div">
                       {exam.Title}
                     </Typography>
-                    
+
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
-                      {exam.Description ? 
-                        (exam.Description?.length > 150 ? 
-                          `${exam.Description.substring(0, 150)}...` : 
-                          exam.Description) : 
+                      {exam.Description ?
+                        (exam.Description?.length > 150 ?
+                          `${exam.Description.substring(0, 150)}...` :
+                          exam.Description) :
                         'Không có mô tả'}
                     </Typography>
-                    
+
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={6}>
                         <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
@@ -164,25 +162,25 @@ const UpcomingExams = () => {
                           Thời gian: {exam.Duration} phút
                         </Typography>
                       </Grid>
-                      
+
                       <Grid item xs={12} sm={6}>
                         <Typography variant="body2">
                           Loại: {
-                            exam.Type === 'essay' ? 'Tự luận' : 
-                            exam.Type === 'multiple_choice' ? 'Trắc nghiệm' : 
-                            exam.Type === 'coding' ? 'Lập trình' : 
-                            'Hỗn hợp'
+                            exam.Type === 'essay' ? 'Tự luận' :
+                              exam.Type === 'multiple_choice' ? 'Trắc nghiệm' :
+                                exam.Type === 'coding' ? 'Lập trình' :
+                                  'Hỗn hợp'
                           }
                         </Typography>
                       </Grid>
                     </Grid>
                   </Box>
-                  
+
                   <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button 
-                      component={Link} 
+                    <Button
+                      component={Link}
                       to={`/exams/${exam.ExamID}`}
-                      variant="contained" 
+                      variant="contained"
                       color="primary"
                       endIcon={<ArrowForward />}
                       size="small"
@@ -196,7 +194,7 @@ const UpcomingExams = () => {
           ))}
         </Grid>
       )}
-      
+
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <Button
           component={Link}

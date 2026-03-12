@@ -7,14 +7,14 @@
 -----------------------------------------------------------------*/
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  Grid, 
-  Button, 
-  Chip, 
-  Divider, 
+import {
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  Button,
+  Chip,
+  Divider,
   CircularProgress,
   Alert,
   List,
@@ -30,26 +30,24 @@ import {
   TableCell,
   TableRow
 } from '@mui/material';
-import { 
-  CalendarMonth, 
-  Timer, 
-  School, 
-  SportsScore, 
-  ArrowBack,
-  ArrowForward,
-  AssignmentTurnedIn,
-  CheckCircle,
-  ErrorOutline,
-  Info,
-  Launch,
-  HelpOutline,
-  GppGood,
-  MonetizationOn,
-  Star,
-  People,
-  AccessTime,
-  History
-} from '@mui/icons-material';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import Timer from '@mui/icons-material/Timer';
+import School from '@mui/icons-material/School';
+import SportsScore from '@mui/icons-material/SportsScore';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import Info from '@mui/icons-material/Info';
+import Launch from '@mui/icons-material/Launch';
+import HelpOutline from '@mui/icons-material/HelpOutline';
+import GppGood from '@mui/icons-material/GppGood';
+import MonetizationOn from '@mui/icons-material/MonetizationOn';
+import Star from '@mui/icons-material/Star';
+import People from '@mui/icons-material/People';
+import AccessTime from '@mui/icons-material/AccessTime';
+import History from '@mui/icons-material/History';
 import { getExamById, registerForExam } from '../../api/examApi';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -120,17 +118,17 @@ const ExamDetails = () => {
     try {
       setLoading(true);
       const response = await getExamById(examId);
-      
+
       // If AllowRetakes is null or undefined, default to false for backward compatibility
       const examData = {
         ...response.data,
         AllowRetakes: response.data.AllowRetakes ?? false,
         MaxRetakes: response.data.MaxRetakes ?? 0
       };
-      
+
       setExam(examData);
       setError(null);
-      
+
       // After getting general exam details, try to fetch attempt history if user is registered
       if (examData.IsRegistered) {
         try {
@@ -138,7 +136,7 @@ const ExamDetails = () => {
           if (attemptsResponse.data.success) {
             // Update exam with attempt information
             setExam(prev => ({
-              ...prev, 
+              ...prev,
               attempts: attemptsResponse.data.data.attempts,
               attemptsUsed: attemptsResponse.data.data.attemptsUsed,
               attemptsRemaining: attemptsResponse.data.data.attemptsRemaining
@@ -164,8 +162,8 @@ const ExamDetails = () => {
       setExam({ ...exam, IsRegistered: true });
     } catch (err) {
       console.error('Error registering for exam:', err);
-      if (err.response?.status === 400 && 
-          err.response?.data?.message === 'Already registered for this exam') {
+      if (err.response?.status === 400 &&
+        err.response?.data?.message === 'Already registered for this exam') {
         setExam({ ...exam, IsRegistered: true });
       } else {
         alert('Đăng ký không thành công: ' + (err.response?.data?.message || 'Vui lòng thử lại sau.'));
@@ -184,24 +182,24 @@ const ExamDetails = () => {
 
   const getStatusInfo = (startTime, endTime) => {
     if (!startTime || !endTime) return { text: 'Chưa xác định', color: examTheme.colors.neutral };
-    
+
     const now = new Date();
     const start = new Date(startTime);
     const end = new Date(endTime);
 
     if (now < start) {
-      return { 
-        text: 'Sắp diễn ra', 
+      return {
+        text: 'Sắp diễn ra',
         color: examTheme.colors.info
       };
     } else if (now >= start && now <= end) {
-      return { 
-        text: 'Đang diễn ra', 
+      return {
+        text: 'Đang diễn ra',
         color: examTheme.colors.success
       };
     } else {
-      return { 
-        text: 'Đã kết thúc', 
+      return {
+        text: 'Đã kết thúc',
         color: examTheme.colors.neutral
       };
     }
@@ -217,10 +215,10 @@ const ExamDetails = () => {
 
   if (loading) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         minHeight: '100vh',
         background: examTheme.colors.background
       }}>
@@ -297,13 +295,13 @@ const ExamDetails = () => {
           background: examTheme.colors.background
         }}
       >
-        <Paper 
-          elevation={0} 
-          sx={{ 
+        <Paper
+          elevation={0}
+          sx={{
             maxWidth: 500,
             width: '90%',
-            textAlign: 'center', 
-            p: 5, 
+            textAlign: 'center',
+            p: 5,
             borderRadius: 4,
             boxShadow: examTheme.shadows.card,
             backgroundColor: '#fff',
@@ -311,7 +309,7 @@ const ExamDetails = () => {
             overflow: 'hidden'
           }}
         >
-          <Box sx={{ 
+          <Box sx={{
             position: 'absolute',
             top: 0,
             left: 0,
@@ -319,25 +317,25 @@ const ExamDetails = () => {
             height: 8,
             backgroundColor: examTheme.colors.danger
           }} />
-          
+
           <ErrorOutline sx={{ fontSize: 70, color: examTheme.colors.danger, mb: 2 }} />
-          
+
           <Typography variant="h5" sx={{ fontWeight: 700, color: examTheme.colors.text.primary, mb: 1 }}>
             {error || 'Không tìm thấy thông tin kỳ thi'}
           </Typography>
-          
+
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
             Không thể tải thông tin chi tiết. Vui lòng thử lại sau hoặc quay lại danh sách kỳ thi.
           </Typography>
-          
+
           <Stack direction="row" spacing={2} justifyContent="center">
             <Button
               variant="outlined"
               startIcon={<ArrowBack />}
               onClick={() => navigate('/exams')}
-              sx={{ 
+              sx={{
                 px: 3,
-                py: 1.2, 
+                py: 1.2,
                 borderRadius: 3,
                 textTransform: 'none',
                 fontWeight: 600,
@@ -350,13 +348,13 @@ const ExamDetails = () => {
             >
               Quay lại danh sách
             </Button>
-            
-            <Button 
-              variant="contained" 
-              onClick={fetchExamDetails} 
-              sx={{ 
+
+            <Button
+              variant="contained"
+              onClick={fetchExamDetails}
+              sx={{
                 px: 3,
-                py: 1.2, 
+                py: 1.2,
                 borderRadius: 3,
                 textTransform: 'none',
                 fontWeight: 600,
@@ -421,7 +419,7 @@ const ExamDetails = () => {
         </Paper>
 
         {/* Tabs Section */}
-        <Paper 
+        <Paper
           elevation={0}
           sx={{
             borderRadius: 4,
@@ -509,10 +507,10 @@ const ExamDetails = () => {
                   {exam.Description || 'Không có mô tả chi tiết cho kỳ thi này.'}
                 </Typography>
 
-                <Alert 
-                  severity="info" 
-                  sx={{ 
-                    mb: 4, 
+                <Alert
+                  severity="info"
+                  sx={{
+                    mb: 4,
                     borderRadius: 2,
                     '.MuiAlert-icon': {
                       color: examTheme.colors.info
@@ -536,7 +534,7 @@ const ExamDetails = () => {
                     <ListItemIcon>
                       <CheckCircle sx={{ color: examTheme.colors.success }} />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Làm bài trong thời gian quy định"
                       secondary="Bài thi sẽ tự động nộp khi hết thời gian"
                       primaryTypographyProps={{ fontWeight: 600 }}
@@ -547,7 +545,7 @@ const ExamDetails = () => {
                     <ListItemIcon>
                       <CheckCircle sx={{ color: examTheme.colors.success }} />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Không tham khảo tài liệu trái phép"
                       secondary="Trừ khi đề bài cho phép sử dụng tài liệu"
                       primaryTypographyProps={{ fontWeight: 600 }}
@@ -558,7 +556,7 @@ const ExamDetails = () => {
                     <ListItemIcon>
                       <CheckCircle sx={{ color: examTheme.colors.success }} />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Không thoát khỏi chế độ toàn màn hình"
                       secondary="Hệ thống có thể ghi nhận các hành vi vi phạm"
                       primaryTypographyProps={{ fontWeight: 600 }}
@@ -569,7 +567,7 @@ const ExamDetails = () => {
                     <ListItemIcon>
                       <CheckCircle sx={{ color: examTheme.colors.success }} />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Lưu bài thường xuyên"
                       secondary="Nhấn nút lưu bài định kỳ để tránh mất dữ liệu"
                       primaryTypographyProps={{ fontWeight: 600 }}
@@ -590,7 +588,7 @@ const ExamDetails = () => {
                     <ListItemIcon>
                       <HelpOutline sx={{ color: examTheme.colors.info }} />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Số lượng câu hỏi"
                       secondary={`${exam.QuestionCount || 'Chưa xác định'} câu hỏi`}
                       primaryTypographyProps={{ fontWeight: 600 }}
@@ -601,7 +599,7 @@ const ExamDetails = () => {
                     <ListItemIcon>
                       <GppGood sx={{ color: examTheme.colors.info }} />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary="Loại hình thi"
                       secondary="Trắc nghiệm trực tuyến"
                       primaryTypographyProps={{ fontWeight: 600 }}
@@ -613,7 +611,7 @@ const ExamDetails = () => {
                       <ListItemIcon>
                         <MonetizationOn sx={{ color: examTheme.colors.info }} />
                       </ListItemIcon>
-                      <ListItemText 
+                      <ListItemText
                         primary="Phí tham gia"
                         secondary={`${exam.Price} đồng`}
                         primaryTypographyProps={{ fontWeight: 600 }}
@@ -630,11 +628,11 @@ const ExamDetails = () => {
                 <Typography variant="h5" sx={{ fontWeight: 700, mb: 4 }}>
                   Lịch sử thi và số lần thử
                 </Typography>
-                
+
                 <Box mb={4}>
                   <Typography variant="body1" sx={{ mb: 2 }}>
                     <strong>Chính sách thi lại:</strong> {exam.AllowRetakes ? (
-                      exam.MaxRetakes > 0 ? 
+                      exam.MaxRetakes > 0 ?
                         `Được phép thi lại tối đa ${exam.MaxRetakes + 1} lần` :
                         'Được phép thi lại không giới hạn số lần'
                     ) : (
@@ -647,7 +645,7 @@ const ExamDetails = () => {
                       <strong>Số lần đã thi:</strong> {exam.attemptsUsed} {exam.attemptsRemaining && `(còn ${exam.attemptsRemaining === 'unlimited' ? 'không giới hạn' : exam.attemptsRemaining} lượt)`}
                     </Typography>
                   )}
-                  
+
                   {exam.attempts && exam.attempts?.length > 0 ? (
                     <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
                       <Table>
@@ -688,7 +686,7 @@ const ExamDetails = () => {
                     <Alert severity="info">Bạn chưa tham gia kỳ thi này</Alert>
                   )}
                 </Box>
-                
+
                 <Stack direction="row" spacing={2}>
                   <Button
                     component={Link}
@@ -699,19 +697,19 @@ const ExamDetails = () => {
                   >
                     Xem chi tiết lịch sử thi
                   </Button>
-                  
+
                   {exam.IsRegistered && exam.AllowRetakes && status.text !== 'Đã kết thúc' &&
                     (exam.attemptsRemaining === 'unlimited' || exam.attemptsRemaining > 0) && (
-                    <Button
-                      onClick={handleRegister}
-                      variant="contained"
-                      color="primary"
-                      disabled={registering}
-                      startIcon={registering ? <CircularProgress size={20} /> : null}
-                    >
-                      {registering ? 'Đang đăng ký...' : 'Đăng ký thi lại'}
-                    </Button>
-                  )}
+                      <Button
+                        onClick={handleRegister}
+                        variant="contained"
+                        color="primary"
+                        disabled={registering}
+                        startIcon={registering ? <CircularProgress size={20} /> : null}
+                      >
+                        {registering ? 'Đang đăng ký...' : 'Đăng ký thi lại'}
+                      </Button>
+                    )}
                 </Stack>
               </Box>
             )}

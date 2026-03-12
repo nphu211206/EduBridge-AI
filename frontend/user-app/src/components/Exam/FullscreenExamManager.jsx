@@ -7,14 +7,14 @@
 -----------------------------------------------------------------*/
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   Box, Button, Alert, AlertTitle, Typography, Modal, CircularProgress,
   Paper, Fade, Backdrop, Grow, useTheme
 } from '@mui/material';
-import { 
-  Fullscreen, FullscreenExit, Warning as WarningIcon,
-  LockOutlined as LockIcon 
-} from '@mui/icons-material';
+import Fullscreen from '@mui/icons-material/Fullscreen';
+import FullscreenExit from '@mui/icons-material/FullscreenExit';
+import WarningIcon from '@mui/icons-material/Warning';
+import LockIcon from '@mui/icons-material/LockOutlined';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import axios from 'axios';
 
@@ -42,25 +42,25 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
     const handleFullscreenChange = () => {
       const isDocFullscreen = document.fullscreenElement !== null;
       setIsFullscreen(isDocFullscreen);
-      
+
       if (!isDocFullscreen && isFullscreen) {
         // User exited fullscreen - this is treated as cheating
         setExitCount(prev => prev + 1);
         setShowWarning(true);
-        
+
         // Log the fullscreen exit to the server
         logFullscreenExit();
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-    
+
     // Set initial fullscreen state
     if (!isFullscreen && fullscreenRef.current) {
       // Try to enter fullscreen on component mount
       enterFullscreen();
     }
-    
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
@@ -86,22 +86,22 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
   // Log fullscreen exit as cheating
   const logFullscreenExit = async () => {
     if (!participantId) return;
-    
+
     try {
       const response = await axios.post(`/api/exams/${participantId}/fullscreen-exit`);
-      
+
       if (response.data.cheatingDetected) {
         // Set state to show cheating detected modal
         setCheatingDetected(true);
-        
+
         // Notify parent component about cheating detection
         if (onCheatingDetected) {
           onCheatingDetected();
         }
-        
+
         // Start countdown for automatic redirect
         setRedirectCountdown(5);
-        
+
         // If redirectTo is provided, use it
         if (response.data.redirectTo) {
           setTimeout(() => {
@@ -125,7 +125,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
   // Log fullscreen return
   const logFullscreenReturn = async () => {
     if (!participantId) return;
-    
+
     try {
       await axios.post(`/api/exams/${participantId}/fullscreen-return`);
     } catch (error) {
@@ -160,7 +160,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
   // Render cheating detected modal
   if (cheatingDetected) {
     return (
-      <Box 
+      <Box
         ref={fullscreenRef}
         sx={{
           position: 'relative',
@@ -168,7 +168,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
           bgcolor: '#f8f9fa'
         }}
       >
-        <Modal 
+        <Modal
           open={true}
           closeAfterTransition
           BackdropComponent={Backdrop}
@@ -179,7 +179,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
           <Fade in={true}>
             <Paper
               elevation={24}
-              sx={{ 
+              sx={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
@@ -194,7 +194,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
                 overflow: 'hidden'
               }}
             >
-              <Box 
+              <Box
                 sx={{
                   position: 'absolute',
                   top: 0,
@@ -204,11 +204,11 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
                   bgcolor: 'error.main'
                 }}
               />
-              
-              <ErrorOutlineIcon 
-                color="error" 
-                sx={{ 
-                  fontSize: 80, 
+
+              <ErrorOutlineIcon
+                color="error"
+                sx={{
+                  fontSize: 80,
                   mb: 2,
                   animation: 'pulse 1.5s infinite',
                   '@keyframes pulse': {
@@ -216,23 +216,23 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
                     '50%': { opacity: 1, transform: 'scale(1.05)' },
                     '100%': { opacity: 0.7, transform: 'scale(0.95)' },
                   }
-                }} 
+                }}
               />
-              
+
               <Typography variant="h4" component="h2" color="error" fontWeight="bold" gutterBottom>
                 Gian lận phát hiện
               </Typography>
-              
+
               <Typography variant="body1" sx={{ mb: 3, fontSize: '1.1rem' }}>
                 Thoát khỏi chế độ toàn màn hình không được phép trong quá trình thi.
                 Bài thi của bạn đã bị kết thúc và đánh dấu là không hợp lệ.
               </Typography>
-              
-              <Box 
-                sx={{ 
-                  mt: 4, 
-                  p: 2, 
-                  bgcolor: 'error.light', 
+
+              <Box
+                sx={{
+                  mt: 4,
+                  p: 2,
+                  bgcolor: 'error.light',
                   borderRadius: 1,
                   display: 'flex',
                   alignItems: 'center',
@@ -246,21 +246,21 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
                 <Typography variant="body2" sx={{ color: 'error.dark' }}>
                   Tự động chuyển hướng sau {redirectCountdown} giây
                 </Typography>
-                <CircularProgress 
-                  variant="determinate" 
-                  value={(5 - redirectCountdown) / 5 * 100} 
-                  color="error" 
-                  size={40} 
+                <CircularProgress
+                  variant="determinate"
+                  value={(5 - redirectCountdown) / 5 * 100}
+                  color="error"
+                  size={40}
                   thickness={4}
-                  sx={{ mt: 2 }} 
+                  sx={{ mt: 2 }}
                 />
               </Box>
             </Paper>
           </Fade>
         </Modal>
-        <Box 
-          sx={{ 
-            opacity: 0.4, 
+        <Box
+          sx={{
+            opacity: 0.4,
             filter: 'blur(2px)',
             pointerEvents: 'none'
           }}
@@ -272,9 +272,9 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
   }
 
   return (
-    <Box 
-      ref={fullscreenRef} 
-      sx={{ 
+    <Box
+      ref={fullscreenRef}
+      sx={{
         minHeight: isFullscreen ? '100vh' : 'auto',
         width: '100%',
         bgcolor: isFullscreen ? '#f8f9fa' : 'transparent',
@@ -286,11 +286,11 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
       }}
     >
       <Grow in={showWarning && !isFullscreen}>
-        <Alert 
-          severity="error" 
+        <Alert
+          severity="error"
           variant="filled"
           icon={<WarningIcon fontSize="large" />}
-          sx={{ 
+          sx={{
             mb: 3,
             borderRadius: 2,
             boxShadow: 3,
@@ -305,7 +305,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
           <AlertTitle sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
             Cảnh báo: Gian lận phát hiện!
           </AlertTitle>
-          
+
           <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'center' }}>
             <Box sx={{ flex: 1 }}>
               <Typography variant="body1" fontWeight="bold" sx={{ mb: 1 }}>
@@ -315,15 +315,15 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
                 Bài thi của bạn sẽ bị đánh dấu là không hợp lệ và bạn sẽ tự động được chuyển đến trang kết quả.
               </Typography>
             </Box>
-            
-            <Button 
-              variant="contained" 
-              size="large" 
+
+            <Button
+              variant="contained"
+              size="large"
               color="inherit"
               onClick={enterFullscreen}
               startIcon={<Fullscreen />}
-              sx={{ 
-                bgcolor: 'white', 
+              sx={{
+                bgcolor: 'white',
                 color: 'error.main',
                 fontWeight: 'bold',
                 px: 3,
@@ -341,8 +341,8 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
       </Grow>
 
       {isFullscreen && (
-        <Box 
-          sx={{ 
+        <Box
+          sx={{
             position: 'fixed',
             top: 0,
             left: 0,
@@ -354,11 +354,11 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
         />
       )}
 
-      <Box 
-        sx={{ 
-          position: 'absolute', 
-          top: 20, 
-          right: 20, 
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
           zIndex: 100,
           display: 'flex',
           alignItems: 'center',
@@ -367,11 +367,11 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
       >
         {isFullscreen && (
           <Fade in={isFullscreen}>
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                mr: 2, 
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                mr: 2,
                 bgcolor: 'rgba(25, 118, 210, 0.1)',
                 color: 'primary.main',
                 py: 0.5,
@@ -386,7 +386,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
             </Box>
           </Fade>
         )}
-        
+
         <Button
           variant={isFullscreen ? "outlined" : "contained"}
           size="medium"
@@ -394,7 +394,7 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
           startIcon={isFullscreen ? <FullscreenExit /> : <Fullscreen />}
           onClick={isFullscreen ? exitFullscreen : enterFullscreen}
           disabled={cheatingDetected}
-          sx={{ 
+          sx={{
             borderRadius: 3,
             fontWeight: 'bold',
             boxShadow: isFullscreen ? 0 : 3
@@ -404,9 +404,9 @@ const FullscreenExamManager = ({ participantId, onCheatingDetected, children }) 
         </Button>
       </Box>
 
-      <Paper 
+      <Paper
         elevation={isFullscreen ? 4 : 0}
-        sx={{ 
+        sx={{
           maxWidth: isFullscreen ? 1200 : '100%',
           mx: 'auto',
           my: isFullscreen ? 4 : 0,

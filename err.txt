@@ -1,0 +1,1 @@
+{"message":"Đã có lỗi xảy ra khi đăng ký","error":"Violation of UNIQUE KEY constraint 'UQ__Users__7E06781201B022F6'. Cannot insert duplicate key in object 'dbo.Users'. The duplicate key value is (<NULL>)."}

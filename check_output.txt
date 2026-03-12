@@ -1,0 +1,22 @@
+﻿=== NOT NULL columns ===
+UserID : int (NO DEFAULT) 
+Username : nvarchar (NO DEFAULT) 
+Email : nvarchar (NO DEFAULT) 
+Password : nvarchar (NO DEFAULT) 
+PasswordSalt : nvarchar (NO DEFAULT) 
+FirstName : nvarchar (NO DEFAULT) 
+LastName : nvarchar (NO DEFAULT) 
+IsEmailVerified : bit (default: ((0))) 
+IsPhoneVerified : bit (default: ((0))) 
+IsActive : bit (default: ((1))) 
+IsBanned : bit (default: ((0))) 
+OnlineStatus : nvarchar (default: ('Offline')) 
+TotalPoints : int (default: ((0))) 
+Level : int (default: ((1))) 
+CreatedAt : datetime2 (default: (getdate())) 
+UpdatedAt : datetime2 (default: (getdate())) 
+EduCoinsBalance : int (default: ((0))) 
+
+=== INSERT TEST ===
+FAILED: Cannot insert the value NULL into column 'PasswordSalt', table 'EduBridgeAI_Enterprise.dbo.Users'; column does not allow nulls. INSERT fails.
+Number: 515

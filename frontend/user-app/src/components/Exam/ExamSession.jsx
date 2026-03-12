@@ -37,18 +37,16 @@ import {
   Tabs,
   Tab
 } from '@mui/material';
-import {
-  Timer,
-  Warning,
-  FullscreenExit,
-  Fullscreen,
-  Check,
-  Person,
-  CheckCircle,
-  Cancel,
-  ArrowBack,
-  Save
-} from '@mui/icons-material';
+import Timer from '@mui/icons-material/Timer';
+import Warning from '@mui/icons-material/Warning';
+import FullscreenExit from '@mui/icons-material/FullscreenExit';
+import Fullscreen from '@mui/icons-material/Fullscreen';
+import Check from '@mui/icons-material/Check';
+import Person from '@mui/icons-material/Person';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Cancel from '@mui/icons-material/Cancel';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import Save from '@mui/icons-material/Save';
 import {
   getExamById,
   startExam,
@@ -91,7 +89,7 @@ const ExamSession = () => {
   const [showResults, setShowResults] = useState(false);
   const [showGradingProgress, setShowGradingProgress] = useState(false);
   const [gradingProgress, setGradingProgress] = useState({ current: 0, total: 0, message: 'Chuẩn bị chấm điểm...' });
-  
+
   // Add tab switching detection state
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [tabSwitchWarningShown, setTabSwitchWarningShown] = useState(false);
@@ -100,7 +98,7 @@ const ExamSession = () => {
     fullscreenExit: 0
   });
   const MAX_TAB_SWITCHES = 3; // Maximum allowed tab switches before severe penalty
-  
+
   // Use our fullscreen hook with our ref
   const { isFullscreen: fullscreenState, enterFullscreen, exitFullscreen, toggleFullscreen: toggleFullscreenState } = useFullscreen(fullscreenRef);
 
@@ -114,7 +112,7 @@ const ExamSession = () => {
     const initExam = async () => {
       try {
         setLoading(true);
-        
+
         // Get user information with retry mechanism
         const fetchUserInfo = async (retries = 3) => {
           try {
@@ -148,14 +146,14 @@ const ExamSession = () => {
             }
           }
         }
-        
+
         // Get exam details
         const examResponse = await getExamById(examId);
-        
+
         if (!examResponse.success) {
           throw new Error(examResponse.message || 'Failed to load exam');
         }
-        
+
         // Deduplicate questions (in case API returns duplicates)
         const uniqueQuestionsMap = new Map();
         examResponse.data.questions?.forEach(q => {
@@ -169,23 +167,23 @@ const ExamSession = () => {
         };
 
         setExam(uniqueExamData);
-        
+
         // Start exam session
         setStartingExam(true);
         const startResponse = await startExam(examId);
-        
+
         if (!startResponse.success) {
           throw new Error(startResponse.message || 'Failed to start exam');
         }
-        
+
         setParticipantId(startResponse.participantId);
-        
+
         // Initialize answers object
         const initialAnswers = {};
         examResponse.data.questions?.forEach(q => {
           initialAnswers[q.QuestionID] = '';
         });
-        
+
         // Attempt to load existing answers for this participant
         try {
           console.log("Attempting to load existing answers for participant:", startResponse.participantId);
@@ -196,13 +194,13 @@ const ExamSession = () => {
               'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
             }
           });
-          
+
           if (userAnswersResponse.ok) {
             const userAnswersData = await userAnswersResponse.json();
-            
+
             if (userAnswersData && userAnswersData.answers && userAnswersData.answers?.length > 0) {
               console.log("Found existing answers:", userAnswersData.answers?.length);
-              
+
               // Update initialAnswers with saved values
               userAnswersData.answers?.forEach(savedAnswer => {
                 if (savedAnswer.QuestionID && savedAnswer.Answer) {
@@ -215,7 +213,7 @@ const ExamSession = () => {
             }
           } else {
             console.warn("Could not retrieve existing answers:", userAnswersResponse.status);
-            
+
             // Try alternative API format if first attempt fails
             try {
               const altResponse = await fetch(`/api/participants/${startResponse.participantId}/answers`, {
@@ -225,7 +223,7 @@ const ExamSession = () => {
                   'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
               });
-              
+
               if (altResponse.ok) {
                 const altData = await altResponse.json();
                 if (altData && altData.answers && altData.answers?.length > 0) {
@@ -244,18 +242,18 @@ const ExamSession = () => {
           console.error("Error loading existing answers:", error);
           // Continue with empty answers - this is not fatal
         }
-        
+
         // Set the answers state with initial values (empty or loaded from server)
         setAnswers(initialAnswers);
-        
+
         // Set timer
         setTimeLeft(examResponse.data.Duration * 60); // Convert minutes to seconds
       } catch (err) {
         console.error('Error initializing exam:', err);
-        
+
         // Create specific user-friendly message based on error type
         let errorMessage = 'Không thể khởi tạo kỳ thi';
-        
+
         if (err.response) {
           if (err.response.status === 401) {
             errorMessage = 'Vui lòng đăng nhập lại để tiếp tục';
@@ -271,7 +269,7 @@ const ExamSession = () => {
         } else if (err.message) {
           errorMessage = err.message;
         }
-        
+
         setError(`${errorMessage}. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.`);
       } finally {
         setLoading(false);
@@ -338,7 +336,7 @@ const ExamSession = () => {
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
     document.addEventListener('mozfullscreenchange', handleFullscreenChange);
     document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-    
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
@@ -365,7 +363,7 @@ const ExamSession = () => {
           console.error('Auto fullscreen error:', error);
         }
       }, 500); // Small delay of 500ms
-      
+
       return () => clearTimeout(fullscreenTimer);
     }
   }, [exam, participantId, isFullscreen, loading]);
@@ -378,9 +376,9 @@ const ExamSession = () => {
         attemptFullscreen();
       }
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
@@ -389,7 +387,7 @@ const ExamSession = () => {
   // Function to attempt entering fullscreen with better browser compatibility
   const attemptFullscreen = () => {
     if (!fullscreenRef.current) return;
-    
+
     try {
       enterFullscreen();
     } catch (error) {
@@ -400,10 +398,10 @@ const ExamSession = () => {
   // Format user name function
   const formatUserName = () => {
     if (!userData) return 'Không có thông tin';
-    
+
     const name = userData.fullName || userData.FullName || userData.username || userData.Username || userData.name || '';
     const id = userData.id || userData.UserID || userData.userId || userData.studentId || '';
-    
+
     if (name && id) {
       return `${name} (ID: ${id})`;
     } else if (name) {
@@ -419,7 +417,7 @@ const ExamSession = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    
+
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
@@ -445,7 +443,7 @@ const ExamSession = () => {
     const questionId = currentQuestion.QuestionID;
     // Create a unique key for this specific answer
     const answerKey = `${participantId}_${questionId}`;
-    
+
     // Check if we're already at max retries for this question
     if (retryCount[answerKey] >= MAX_RETRIES) {
       console.log(`Max retries reached for question ${questionId}, skipping save`);
@@ -455,34 +453,34 @@ const ExamSession = () => {
     try {
       setSubmitting(true);
       await submitAnswer(participantId, questionId, answers[questionId]);
-      
+
       // Reset retry count on success
-      setRetryCount(prev => ({...prev, [answerKey]: 0}));
-      
+      setRetryCount(prev => ({ ...prev, [answerKey]: 0 }));
+
       // Show a brief success indicator in the UI state
       setSaveSuccess(true);
       // Hide the success indicator after 2 seconds
       setTimeout(() => {
         setSaveSuccess(false);
       }, 2000);
-      
+
     } catch (err) {
       console.error('Error saving answer:', err);
-      
+
       // Check if this is a database constraint error (shouldn't retry these)
       const errorMessage = err.message || '';
-      const isConstraintError = 
-        errorMessage.includes('CHECK constraint') || 
+      const isConstraintError =
+        errorMessage.includes('CHECK constraint') ||
         errorMessage.includes('conflicted with the');
-      
+
       // Don't retry database constraint errors
       if (!isConstraintError && !err._isRetry) {
         // Increment retry count
         setRetryCount(prev => ({
-          ...prev, 
+          ...prev,
           [answerKey]: (prev[answerKey] || 0) + 1
         }));
-        
+
         // Wait longer between retries to avoid overwhelming the server
         setTimeout(() => {
           // Mark the error as a retry attempt
@@ -516,18 +514,18 @@ const ExamSession = () => {
     try {
       setIsGrading(true);
       setConfirmEnd(false);
-      
+
       console.log("Starting exam submission process");
-      
+
       // Apply any penalties before submitting
       const penaltyDetails = {
         tabSwitches: tabSwitchCount,
         fullscreenExits: fullscreenExitCount,
         totalPenaltyPercentage: (penalties.tabSwitch * 5) + (penalties.fullscreenExit * 3)
       };
-      
+
       console.log("Applying penalties:", penaltyDetails);
-      
+
       // Show grading progress dialog immediately when submit button is clicked
       setGradingProgress({
         current: 0,
@@ -535,7 +533,7 @@ const ExamSession = () => {
         message: 'Đang chuẩn bị nộp bài thi...'
       });
       setShowGradingProgress(true);
-      
+
       // Handle missing exam data with recovery attempt
       if (!exam || !exam.questions) {
         console.warn("Exam data missing or incomplete, attempting to retrieve it");
@@ -549,7 +547,7 @@ const ExamSession = () => {
           console.error("Failed to retrieve exam data:", err);
         }
       }
-      
+
       // Handle missing participantId with recovery attempt
       if (!participantId) {
         console.warn("ParticipantID missing, attempting to retrieve it");
@@ -563,30 +561,30 @@ const ExamSession = () => {
           console.error("Failed to retrieve participantId:", err);
         }
       }
-      
+
       // Final check after recovery attempts
       const finalParticipantId = participantId || sessionStorage.getItem('examParticipantId');
-      
+
       // Save all answers before submitting, not just the current one
       try {
         setGradingProgress(prev => ({
           ...prev,
           message: 'Đang lưu tất cả các câu trả lời...'
         }));
-        
+
         // Save answers for all questions
         const questions = exam?.questions || [];
         for (let i = 0; i < questions?.length; i++) {
           const question = questions[i];
           const questionId = question.QuestionID;
           const answerValue = answers[questionId];
-          
+
           // Skip if no answer
           if (!answerValue || answerValue.trim() === '') {
             console.log(`No answer to save for question ${questionId}`);
             continue;
           }
-          
+
           try {
             await submitAnswer(finalParticipantId, questionId, answerValue);
             console.log(`Successfully saved answer for question ${questionId}`);
@@ -606,24 +604,24 @@ const ExamSession = () => {
         total: (exam?.questions?.length || 1) + 1,
         message: 'Đang nộp bài thi...'
       });
-      
+
       // First, submit/complete the exam
       let completeResult = null;
       try {
         // Short delay to make it feel like processing is happening
         await new Promise(resolve => setTimeout(resolve, 500));
-        
+
         setGradingProgress(prev => ({
           ...prev,
           message: 'Đang gửi bài thi lên hệ thống...'
         }));
-        
+
         // Submit the exam - use fallback ID if needed
         if (finalParticipantId) {
           // Include penalty information with submission
           completeResult = await completeExam(
-            finalParticipantId, 
-            examId, 
+            finalParticipantId,
+            examId,
             {
               tabSwitches: tabSwitchCount,
               fullscreenExits: fullscreenExitCount,
@@ -639,39 +637,39 @@ const ExamSession = () => {
               const evaluation = completeResult.evaluationDetails.find(
                 e => e.questionId.toString() === question.QuestionID.toString()
               );
-              
+
               return {
                 question: question.Content,
                 answer: answers[question.QuestionID] || '',
                 score: evaluation ? evaluation.score : 0,
-                feedback: evaluation?.status === 'success' ? 'Câu trả lời được chấm bởi AI.' : 
-                          evaluation?.status === 'fallback_used' ? 'Câu trả lời được chấm bằng phương pháp thay thế.' : 
-                          evaluation?.status === 'no_answer' ? 'Không có câu trả lời.' : 
-                          'Không thể chấm điểm câu này.',
+                feedback: evaluation?.status === 'success' ? 'Câu trả lời được chấm bởi AI.' :
+                  evaluation?.status === 'fallback_used' ? 'Câu trả lời được chấm bằng phương pháp thay thế.' :
+                    evaluation?.status === 'no_answer' ? 'Không có câu trả lời.' :
+                      'Không thể chấm điểm câu này.',
                 similarity: Math.round((evaluation?.score / evaluation?.maxPoints) * 100) || 0
               };
             });
-            
+
             // Calculate final score - use the direct sum
             const totalScore = feedbacks.reduce((sum, feedback) => sum + feedback.score, 0);
-            
+
             // Apply penalties immediately to the score
             const penaltyPercentage = (penalties.tabSwitch * 5) + (penalties.fullscreenExit * 3);
             const penaltyMultiplier = Math.max(0, (100 - penaltyPercentage) / 100);
             const finalScore = totalScore * penaltyMultiplier;
-            
+
             console.log(`Original score: ${totalScore}, Penalty: ${penaltyPercentage}%, Final score: ${finalScore}`);
-            
+
             // Update progress to 100% first
             setGradingProgress(prev => ({
               ...prev,
               current: prev.total,
               message: 'Đã hoàn thành chấm điểm.'
             }));
-            
+
             // Short delay before transitioning from progress to results
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
+
             // Set score and show results in one update cycle to reduce flickering
             setScore({
               total: finalScore,
@@ -682,7 +680,7 @@ const ExamSession = () => {
             });
             setShowGradingProgress(false);
             setShowResults(true);
-            
+
             // Determine the appropriate redirect URL
             let redirectUrl = null;
             if (completeResult && completeResult.redirectTo) {
@@ -691,10 +689,10 @@ const ExamSession = () => {
               // Fallback redirect if API didn't provide one
               redirectUrl = `/exams/results/${finalParticipantId}`;
             }
-            
+
             // Setup timer to exit fullscreen after showing results
             setupExitFullscreenTimer(finalParticipantId, redirectUrl);
-            
+
             console.log("Skipping manual grading since server already provided scores");
             return;
           }
@@ -703,17 +701,17 @@ const ExamSession = () => {
           console.error("No participantId available for exam completion");
           throw new Error("Thiếu ID người tham gia");
         }
-        
+
         // Update progress
         setGradingProgress(prev => ({
           ...prev,
           current: 1,
           message: 'Đã nộp bài thi thành công. Bắt đầu chấm điểm...'
         }));
-        
+
         // Another short delay before starting grading
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
       } catch (completeError) {
         console.error('Error completing exam:', completeError);
         // Show error but continue with grading if possible
@@ -723,47 +721,47 @@ const ExamSession = () => {
         }));
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      
+
       // Now, proceed with grading each answer - prepare array to collect all feedbacks
       let totalScore = 0;
       let feedbacks = [];
-      
+
       // Use a safe reference to exam questions
       const questions = exam?.questions || [];
-      
+
       // Prepare for grading
       setGradingProgress(prev => ({
         ...prev,
         message: 'Hệ thống đang so sánh bài làm với đáp án mẫu. Vui lòng chờ...'
       }));
-      
+
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Grade each answer - collect all promises to process them in parallel
       const gradingPromises = questions?.map(async (question, i) => {
         try {
           const answer = answers[question.QuestionID] || '';
-          
+
           // Update progress (shared state across promises)
           setGradingProgress(prev => ({
             ...prev,
             current: i + 1,
             message: `Đang chấm điểm câu ${i + 1}/${questions?.length}...`
           }));
-          
+
           console.log(`Grading question ${question.QuestionID} with answer length: ${answer?.length}`);
-          
+
           try {
             // Use the compareAnswer function from examApi instead of direct fetch
             const result = await compareAnswer(examId, question.QuestionID, answer, finalParticipantId);
-            
+
             if (!result.success) {
               console.error(`Error grading question ${question.QuestionID}:`, result.message);
               throw new Error(result.message || 'Lỗi khi chấm điểm câu hỏi');
             }
 
             console.log(`Question ${question.QuestionID} graded with score: ${result.data.score}`);
-            
+
             return {
               question: question.Content,
               answer: answer,
@@ -773,7 +771,7 @@ const ExamSession = () => {
             };
           } catch (gradeError) {
             console.error(`Error grading via API, using fallback method:`, gradeError);
-            
+
             // Fallback: use local similarity comparison
             const localSim = compareAnswerLocally(
               answer,
@@ -803,7 +801,7 @@ const ExamSession = () => {
         } catch (questionError) {
           console.error(`Error processing question ${question?.QuestionID}:`, questionError);
           return {
-            question: question?.Content || `Câu hỏi ${i+1}`,
+            question: question?.Content || `Câu hỏi ${i + 1}`,
             answer: answers[question?.QuestionID] || '',
             score: 0,
             feedback: 'Lỗi khi chấm điểm câu hỏi này',
@@ -811,7 +809,7 @@ const ExamSession = () => {
           };
         }
       });
-      
+
       // Wait for all grading to finish
       try {
         feedbacks = await Promise.all(gradingPromises);
@@ -819,23 +817,23 @@ const ExamSession = () => {
       } catch (err) {
         console.error("Error during parallel grading:", err);
       }
-      
+
       // Final processing - update UI once with all results to reduce flickering
       setGradingProgress(prev => ({
         ...prev,
         current: prev.total,
         message: 'Đã hoàn thành chấm điểm.'
       }));
-      
+
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Apply penalties immediately to the score
       const penaltyPercentage = (penalties.tabSwitch * 5) + (penalties.fullscreenExit * 3);
       const penaltyMultiplier = Math.max(0, (100 - penaltyPercentage) / 100);
       const finalScore = totalScore * penaltyMultiplier;
-      
+
       console.log(`Original score: ${totalScore}, Penalty: ${penaltyPercentage}%, Final score: ${finalScore}`);
-      
+
       // Update UI all at once to reduce flickering
       setScore({
         total: finalScore,
@@ -844,15 +842,15 @@ const ExamSession = () => {
         penaltyPercentage: penaltyPercentage,
         feedbacks: feedbacks
       });
-      
+
       // IMPORTANT: Submit the final score to the server to make sure it's saved
       // This ensures the score is available in ExamHistory
       try {
         // Even if we already called completeExam before, call it again with the final calculated score
         // to ensure the score is updated in the database
         await completeExam(
-          finalParticipantId, 
-          examId, 
+          finalParticipantId,
+          examId,
           {
             tabSwitches: tabSwitchCount,
             fullscreenExits: fullscreenExitCount,
@@ -866,15 +864,15 @@ const ExamSession = () => {
             }))
           }
         );
-        
+
         console.log(`Final score ${finalScore} successfully submitted to server`);
       } catch (err) {
         console.error('Error submitting final score to server:', err);
       }
-      
+
       setShowGradingProgress(false);
       setShowResults(true);
-      
+
       // Determine the appropriate redirect URL
       let redirectUrl = null;
       if (completeResult && completeResult.redirectTo) {
@@ -883,21 +881,21 @@ const ExamSession = () => {
         // Fallback redirect if API didn't provide one
         redirectUrl = `/exams/results/${finalParticipantId}`;
       }
-      
+
       // Setup timer to exit fullscreen after showing results
       setupExitFullscreenTimer(finalParticipantId, redirectUrl);
-      
+
     } catch (err) {
       console.error('Error submitting exam:', err);
       let errorMessage = 'Lỗi khi nộp bài thi. Hệ thống vẫn sẽ cố gắng hoàn thành quá trình.';
-      
+
       // Get more specific error message if available
       if (err.response && err.response.data && err.response.data.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       // Show error but don't hide grading progress - try to continue
       toast.error(errorMessage, {
         position: "top-right",
@@ -907,7 +905,7 @@ const ExamSession = () => {
         pauseOnHover: true,
         draggable: true
       });
-      
+
       // Try to show results anyway with estimated scores if we have enough data
       if (!showResults) {
         const questions = exam?.questions || [];
@@ -932,16 +930,16 @@ const ExamSession = () => {
             const localScore = Number(((localSim.totalSimilarity / 100) * maxPts).toFixed(2));
 
             return {
-              question: q.Content || `Câu hỏi ${i+1}`,
+              question: q.Content || `Câu hỏi ${i + 1}`,
               answer: answers[q.QuestionID] || '',
               score: localScore,
               feedback: 'Điểm tạm tính dựa trên so sánh nội dung khi hệ thống gặp sự cố.',
               similarity: localSim.totalSimilarity
             };
           });
-          
+
           const avgScore = estimatedFeedbacks.reduce((sum, f) => sum + f.score, 0) / estimatedFeedbacks?.length;
-          
+
           setScore({
             total: avgScore,
             originalScore: avgScore,
@@ -949,7 +947,7 @@ const ExamSession = () => {
             penaltyPercentage: 0,
             feedbacks: estimatedFeedbacks
           });
-          
+
           setShowGradingProgress(false);
           setShowResults(true);
         }
@@ -968,7 +966,7 @@ const ExamSession = () => {
   // Function to exit fullscreen after grading is complete
   const setupExitFullscreenTimer = (participantId, redirectUrl) => {
     console.log("Setting up 30-second timer to exit fullscreen mode");
-    
+
     // Set a 30-second timer to exit fullscreen mode
     const exitFullscreenTimer = setTimeout(() => {
       console.log("30 seconds elapsed after grading, exiting fullscreen mode");
@@ -978,7 +976,7 @@ const ExamSession = () => {
             .then(() => {
               console.log("Successfully exited fullscreen mode after grading");
               setIsFullscreen(false);
-              
+
               // Don't navigate away automatically
             })
             .catch(error => {
@@ -989,7 +987,7 @@ const ExamSession = () => {
         }
       }
     }, 30000); // 30 seconds
-    
+
     // Save the timer ID to clear it if needed
     timerRef.current = exitFullscreenTimer;
   };
@@ -1002,29 +1000,29 @@ const ExamSession = () => {
   // Function to get progress percentage
   const getProgressPercentage = () => {
     if (!exam || !exam.questions || exam.questions?.length === 0) return 0;
-    
+
     const answeredCount = exam.questions.reduce((count, question) => {
       return count + (isQuestionAnswered(question.QuestionID) ? 1 : 0);
     }, 0);
-    
+
     return Math.round((answeredCount / exam.questions?.length) * 100);
   };
 
   // Set up tab switch detector
   useEffect(() => {
     if (!participantId) return; // Only track when exam has started
-    
+
     const handleVisibilityChange = async () => {
       if (document.visibilityState === 'hidden') {
         // User switched away from the tab or minimized browser
         setTabSwitchCount(prev => prev + 1);
-        
+
         // Apply penalty for tab switching
         setPenalties(prev => ({
           ...prev,
           tabSwitch: prev.tabSwitch + 1
         }));
-        
+
         // Log the tab switch event to the server
         try {
           await fetch('/api/exams/monitoring-logs', {
@@ -1045,10 +1043,10 @@ const ExamSession = () => {
         } catch (error) {
           console.error('Failed to log tab switch:', error);
         }
-        
+
         // Show warning when user returns to the tab
         setTabSwitchWarningShown(true);
-        
+
         // Auto-submit after too many violations
         if (tabSwitchCount + 1 >= MAX_TAB_SWITCHES && !isGrading) {
           toast.error('Quá nhiều lần chuyển tab/cửa sổ. Bài thi sẽ tự động nộp sau 30 giây!', {
@@ -1059,7 +1057,7 @@ const ExamSession = () => {
             pauseOnHover: false,
             draggable: false
           });
-          
+
           // Set a 30-second timer to auto-submit
           setTimeout(() => {
             if (!isGrading) {
@@ -1072,17 +1070,17 @@ const ExamSession = () => {
         attemptFullscreen();
       }
     };
-    
+
     const handleWindowBlur = async () => {
       // User switched to another application
       setTabSwitchCount(prev => prev + 1);
-      
+
       // Apply penalty for switching applications
       setPenalties(prev => ({
         ...prev,
         tabSwitch: prev.tabSwitch + 1
       }));
-      
+
       // Log the window blur event
       try {
         await fetch('/api/exams/monitoring-logs', {
@@ -1103,10 +1101,10 @@ const ExamSession = () => {
       } catch (error) {
         console.error('Failed to log window blur:', error);
       }
-      
+
       // Show warning when user returns focus
       setTabSwitchWarningShown(true);
-      
+
       // Auto-submit after too many violations
       if (tabSwitchCount + 1 >= MAX_TAB_SWITCHES && !isGrading) {
         toast.error('Quá nhiều lần chuyển ứng dụng. Bài thi sẽ tự động nộp sau 30 giây!', {
@@ -1117,7 +1115,7 @@ const ExamSession = () => {
           pauseOnHover: false,
           draggable: false
         });
-        
+
         // Set a 30-second timer to auto-submit
         setTimeout(() => {
           if (!isGrading) {
@@ -1126,10 +1124,10 @@ const ExamSession = () => {
         }, 30000);
       }
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('blur', handleWindowBlur);
-    
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('blur', handleWindowBlur);
@@ -1153,7 +1151,7 @@ const ExamSession = () => {
         overflow: 'auto'
       }}
     >
-      <Box sx={{ 
+      <Box sx={{
         bgcolor: 'primary.main',
         color: 'white',
         p: 2,
@@ -1162,13 +1160,13 @@ const ExamSession = () => {
         alignItems: 'center'
       }}>
         <Typography variant="h5">Kết quả bài thi</Typography>
-        <IconButton 
+        <IconButton
           onClick={() => {
             // Always exit fullscreen before leaving the session page
             if (isFullscreen && document.exitFullscreen) {
               try {
                 document.exitFullscreen();
-              } catch(e) {}
+              } catch (e) { }
             }
 
             // Navigate to dedicated results page
@@ -1189,13 +1187,13 @@ const ExamSession = () => {
           <Typography variant="h6" gutterBottom>
             Tổng điểm: {score?.total ? score.total.toFixed(1) : '0'}/10
           </Typography>
-          
+
           {score?.penaltyApplied && (
-            <Box sx={{ 
-              mt: 1, 
-              mb: 3, 
-              p: 2, 
-              bgcolor: 'error.light', 
+            <Box sx={{
+              mt: 1,
+              mb: 3,
+              p: 2,
+              bgcolor: 'error.light',
               borderRadius: 1,
               color: 'error.contrastText'
             }}>
@@ -1225,16 +1223,16 @@ const ExamSession = () => {
               </Box>
             </Box>
           )}
-          
+
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-              Chi tiết từng câu: 
-              <Box sx={{ 
-                ml: 1, 
-                px: 1.5, 
-                py: 0.5, 
-                bgcolor: '#e3f2fd', 
-                borderRadius: 1, 
+              Chi tiết từng câu:
+              <Box sx={{
+                ml: 1,
+                px: 1.5,
+                py: 0.5,
+                bgcolor: '#e3f2fd',
+                borderRadius: 1,
                 fontSize: '0.875rem',
                 color: '#1976d2'
               }}>
@@ -1246,10 +1244,10 @@ const ExamSession = () => {
                 <Typography variant="subtitle2" gutterBottom>
                   Câu {index + 1}: {feedback?.score?.toFixed(1) || '0'} điểm
                 </Typography>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  mt: 1, 
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mt: 1,
                   mb: 1,
                   bgcolor: '#f5f5f5',
                   p: 1.5,
@@ -1261,8 +1259,8 @@ const ExamSession = () => {
                     <strong>Độ tương đồng với đáp án:</strong>
                   </Typography>
                   <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-                    <Box sx={{ 
-                      width: '100%', 
+                    <Box sx={{
+                      width: '100%',
                       bgcolor: '#e0e0e0',
                       height: 12,
                       borderRadius: 5,
@@ -1271,16 +1269,16 @@ const ExamSession = () => {
                     }}>
                       <Box sx={{
                         width: `${Number(feedback.similarity || 0).toFixed(1)}%`,
-                        bgcolor: Number(feedback.similarity || 0) > 70 ? 'success.main' : 
-                                Number(feedback.similarity || 0) > 40 ? 'warning.main' : 'error.main',
+                        bgcolor: Number(feedback.similarity || 0) > 70 ? 'success.main' :
+                          Number(feedback.similarity || 0) > 40 ? 'warning.main' : 'error.main',
                         height: '100%',
                         borderRadius: 5
                       }} />
                     </Box>
-                    <Typography variant="body2" sx={{ 
+                    <Typography variant="body2" sx={{
                       fontSize: '1.1rem',
-                      color: Number(feedback.similarity || 0) > 70 ? 'success.main' : 
-                             Number(feedback.similarity || 0) > 40 ? 'warning.main' : 'error.main',
+                      color: Number(feedback.similarity || 0) > 70 ? 'success.main' :
+                        Number(feedback.similarity || 0) > 40 ? 'warning.main' : 'error.main',
                       fontWeight: 'bold',
                       minWidth: '60px',
                       textAlign: 'right'
@@ -1304,7 +1302,7 @@ const ExamSession = () => {
             if (isFullscreen && document.exitFullscreen) {
               try {
                 document.exitFullscreen();
-              } catch(e) {}
+              } catch (e) { }
             }
 
             // Navigate to dedicated results page
@@ -1344,10 +1342,10 @@ const ExamSession = () => {
         backdropFilter: 'blur(10px)'
       }}
     >
-      <Paper 
-        elevation={4} 
-        sx={{ 
-          width: '90%', 
+      <Paper
+        elevation={4}
+        sx={{
+          width: '90%',
           maxWidth: '600px',
           overflow: 'hidden',
           borderRadius: 2
@@ -1360,17 +1358,17 @@ const ExamSession = () => {
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <CircularProgress size={80} thickness={5} />
           </Box>
-          
+
           <Typography variant="h5" gutterBottom align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
             Vui lòng chờ trong ít phút
           </Typography>
-          
+
           <Typography variant="body1" align="center" sx={{ mb: 3 }}>
             Hệ thống đang chấm điểm bài thi của bạn bằng cách so sánh với đáp án mẫu. Quá trình này có thể mất vài phút.
           </Typography>
-          
-          <Box sx={{ 
-            width: '100%', 
+
+          <Box sx={{
+            width: '100%',
             bgcolor: 'background.paper',
             borderRadius: 1,
             p: 2,
@@ -1378,10 +1376,10 @@ const ExamSession = () => {
             borderColor: 'divider'
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ 
-                width: 6, 
-                height: 6, 
-                borderRadius: '50%', 
+              <Box sx={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
                 bgcolor: 'success.main',
                 mr: 1,
                 animation: 'pulse 1.5s infinite',
@@ -1395,11 +1393,11 @@ const ExamSession = () => {
                 {gradingProgress.message}
               </Typography>
             </Box>
-            
+
             {gradingProgress.total > 0 && (
               <>
-                <Box sx={{ 
-                  width: '100%', 
+                <Box sx={{
+                  width: '100%',
                   bgcolor: '#e0e0e0',
                   height: 10,
                   borderRadius: 5,
@@ -1414,7 +1412,7 @@ const ExamSession = () => {
                     transition: 'width 0.5s ease-in-out'
                   }} />
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
                   <Typography variant="body2" color="text.secondary">
                     {`Câu ${gradingProgress.current}/${gradingProgress.total - 1}`}
@@ -1426,13 +1424,13 @@ const ExamSession = () => {
               </>
             )}
           </Box>
-          
+
           <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
             <Typography variant="body2" align="center" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
               Hệ thống đang so sánh câu trả lời của bạn với các đáp án trong cơ sở dữ liệu, kiểm tra từ khóa quan trọng và tính toán độ tương đồng để đưa ra điểm số chính xác.
             </Typography>
           </Box>
-          
+
           <Box sx={{ mt: 3, p: 2, bgcolor: '#e3f2fd', borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <FullscreenExit sx={{ color: '#2196f3', mr: 1 }} />
             <Typography variant="body2" sx={{ color: '#2196f3', fontWeight: 'medium' }}>
@@ -1496,8 +1494,8 @@ const ExamSession = () => {
   const currentQuestion = exam.questions[currentQuestionIndex];
 
   return (
-    <Box ref={fullscreenRef} sx={{ 
-      minHeight: '100vh', 
+    <Box ref={fullscreenRef} sx={{
+      minHeight: '100vh',
       bgcolor: isFullscreen ? '#f5f5f5' : 'inherit',
       p: isFullscreen ? 1.5 : 2,
       display: 'flex',
@@ -1551,10 +1549,10 @@ const ExamSession = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              p: 1, 
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              p: 1,
               bgcolor: timeLeft < 300 ? 'error.light' : timeLeft < 600 ? 'warning.light' : 'primary.light',
               color: 'white',
               borderRadius: 1,
@@ -1583,15 +1581,15 @@ const ExamSession = () => {
         </Grid>
       </Paper>
 
-      <Box sx={{ 
-        display: 'flex', 
-        flexGrow: 1, 
+      <Box sx={{
+        display: 'flex',
+        flexGrow: 1,
         flexDirection: { xs: 'column', md: 'row' },
         height: isFullscreen ? 'calc(100vh - 130px)' : 'inherit',
         overflow: 'hidden'
       }}>
-        <Box sx={{ 
-          width: { xs: '100%', md: '25%' }, 
+        <Box sx={{
+          width: { xs: '100%', md: '25%' },
           pr: { xs: 0, md: 2 },
           mb: { xs: 2, md: 0 },
           display: 'flex',
@@ -1599,8 +1597,8 @@ const ExamSession = () => {
           height: isFullscreen ? '100%' : 'inherit',
           overflow: 'hidden'
         }}>
-          <Paper elevation={3} sx={{ 
-            p: 2, 
+          <Paper elevation={3} sx={{
+            p: 2,
             mb: 2,
             flexGrow: 0,
             display: 'flex',
@@ -1614,7 +1612,7 @@ const ExamSession = () => {
               Danh sách câu hỏi
             </Typography>
             <Divider sx={{ mb: 1 }} />
-            
+
             <Box sx={{ overflow: 'auto', flexGrow: 1 }}>
               <List dense>
                 {exam.questions?.map((question, index) => (
@@ -1637,7 +1635,7 @@ const ExamSession = () => {
                         }
                       }}
                     >
-                      <ListItemText 
+                      <ListItemText
                         primary={`Câu ${index + 1}`}
                         secondary={`${answers[question.QuestionID] ? 'Đã trả lời' : 'Chưa trả lời'}`}
                         primaryTypographyProps={{
@@ -1655,27 +1653,27 @@ const ExamSession = () => {
               </List>
             </Box>
           </Paper>
-          
-          <Paper elevation={3} sx={{ 
-            p: 2, 
-            mb: 2, 
+
+          <Paper elevation={3} sx={{
+            p: 2,
+            mb: 2,
             flexGrow: 1,
             display: 'flex',
             flexDirection: 'column',
-            maxHeight: isFullscreen ? 'calc(100% - 250px)' : '300px', 
-            overflow: 'auto', 
-            borderRadius: isFullscreen ? 1 : 2 
+            maxHeight: isFullscreen ? 'calc(100% - 250px)' : '300px',
+            overflow: 'auto',
+            borderRadius: isFullscreen ? 1 : 2
           }}>
             <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'medium' }}>
               Thông tin kỳ thi
             </Typography>
             <Divider sx={{ mb: 1 }} />
-            
+
             {userData && (
-              <Box sx={{ 
-                mb: 1.5, 
-                p: 1.5, 
-                bgcolor: 'background.paper', 
+              <Box sx={{
+                mb: 1.5,
+                p: 1.5,
+                bgcolor: 'background.paper',
                 borderRadius: 1,
                 border: '1px solid',
                 borderColor: 'primary.light',
@@ -1686,8 +1684,8 @@ const ExamSession = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <Box sx={{ 
-                      display: 'flex', 
+                    <Box sx={{
+                      display: 'flex',
                       flexDirection: 'column',
                       p: 1,
                       bgcolor: 'background.default',
@@ -1702,8 +1700,8 @@ const ExamSession = () => {
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Box sx={{ 
-                      display: 'flex', 
+                    <Box sx={{
+                      display: 'flex',
                       flexDirection: 'column',
                       p: 1,
                       bgcolor: 'background.default',
@@ -1720,23 +1718,23 @@ const ExamSession = () => {
                 </Grid>
               </Box>
             )}
-            
+
             <Typography variant="body2" sx={{ mb: 1 }}>
               <strong>Thời gian:</strong> {exam.Duration} phút
             </Typography>
-            
+
             <Typography variant="body2" sx={{ mb: 1 }}>
               <strong>Tổng số câu hỏi:</strong> {exam.questions?.length}
             </Typography>
-            
+
             <Typography variant="body2" sx={{ mb: 1 }}>
               <strong>Điểm đạt:</strong> {exam.PassingScore}/{exam.TotalPoints}
             </Typography>
-            
+
             <Typography variant="body2" sx={{ mb: 1 }}>
               <strong>Loại kỳ thi:</strong> {exam.Type === 'essay' ? 'Tự luận' : exam.Type === 'multiple_choice' ? 'Trắc nghiệm' : exam.Type}
             </Typography>
-            
+
             {exam.Instructions && (
               <>
                 <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
@@ -1748,7 +1746,7 @@ const ExamSession = () => {
               </>
             )}
           </Paper>
-          
+
           {isFullscreen && (
             <Button
               variant="contained"
@@ -1767,9 +1765,9 @@ const ExamSession = () => {
               size="large"
               fullWidth
               disabled={submitting || isGrading} // Disable when submitting or grading
-              sx={{ 
-                py: 1.5, 
-                borderRadius: 1, 
+              sx={{
+                py: 1.5,
+                borderRadius: 1,
                 backgroundColor: 'error.main',
                 '&:hover': {
                   backgroundColor: 'error.dark',
@@ -1808,14 +1806,14 @@ const ExamSession = () => {
             </Button>
           )}
         </Box>
-        
-        <Box sx={{ 
+
+        <Box sx={{
           width: { xs: '100%', md: '75%' },
           height: isFullscreen ? '100%' : 'inherit',
           display: 'flex'
         }}>
-          <Paper elevation={3} sx={{ 
-            p: 3, 
+          <Paper elevation={3} sx={{
+            p: 3,
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -1828,23 +1826,23 @@ const ExamSession = () => {
                   Câu hỏi {currentQuestionIndex + 1}/{exam.questions?.length}
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
-                
+
                 <Box sx={{ mb: 3, overflow: 'auto', maxHeight: isFullscreen ? '20vh' : '180px' }}>
                   <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
                     {currentQuestion?.Content || 'Không có nội dung câu hỏi'}
                   </Typography>
                 </Box>
-                
+
                 <Typography variant="subtitle2" sx={{ mb: 1 }}>
                   Câu trả lời của bạn:
                 </Typography>
-                
-                <Box sx={{ 
-                  flexGrow: 1, 
-                  display: 'flex', 
+
+                <Box sx={{
+                  flexGrow: 1,
+                  display: 'flex',
                   flexDirection: 'column',
                   minHeight: isFullscreen ? 'calc(65vh - 100px)' : '400px',
-                  mb: 2 
+                  mb: 2
                 }}>
                   <TextField
                     fullWidth
@@ -1855,7 +1853,7 @@ const ExamSession = () => {
                     value={answers[currentQuestion?.QuestionID] || ''}
                     onChange={(e) => handleAnswerChange(currentQuestion?.QuestionID, e.target.value)}
                     disabled={submitting}
-                    sx={{ 
+                    sx={{
                       flexGrow: 1,
                       height: '100%',
                       '& .MuiOutlinedInput-root': {
@@ -1873,7 +1871,7 @@ const ExamSession = () => {
                     }}
                   />
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto' }}>
                   <Button
                     variant="outlined"
@@ -1883,7 +1881,7 @@ const ExamSession = () => {
                   >
                     Câu trước
                   </Button>
-                  
+
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Button
                       variant="contained"
@@ -1896,10 +1894,10 @@ const ExamSession = () => {
                       {submitting ? 'Đang lưu...' : saveSuccess ? 'Đã lưu' : 'Lưu câu trả lời'}
                     </Button>
                     {saveSuccess && (
-                      <Typography 
-                        variant="caption" 
-                        sx={{ 
-                          ml: 1, 
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          ml: 1,
                           color: 'success.main',
                           animation: 'fadeIn 0.3s ease-in',
                           '@keyframes fadeIn': {
@@ -1912,7 +1910,7 @@ const ExamSession = () => {
                       </Typography>
                     )}
                   </Box>
-                  
+
                   <Button
                     variant="outlined"
                     onClick={() => handleNavigateQuestion(Math.min(exam.questions?.length - 1, currentQuestionIndex + 1))}
@@ -1924,9 +1922,9 @@ const ExamSession = () => {
                 </Box>
               </>
             ) : (
-              <Box sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
@@ -1948,7 +1946,7 @@ const ExamSession = () => {
           </Paper>
         </Box>
       </Box>
-      
+
       <ResultsDialog />
       <GradingProgressDialog />
     </Box>

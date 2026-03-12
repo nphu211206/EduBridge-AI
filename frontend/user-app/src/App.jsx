@@ -68,6 +68,8 @@ import Achievements from './pages/Achievements';
 import TeamBuilder from './pages/TeamBuilder';
 import Insights from './pages/Insights';
 
+import LandingHub from './pages/LandingHub';
+
 // Custom CSS for toast notifications
 import './toast-custom.css';
 
@@ -172,13 +174,13 @@ function App() {
               />
             ))}
 
-            {/* Root route */}
+            {/* Root route - Landing Hub */}
             <Route
               path="/"
               element={
                 localStorage.getItem('token') ?
                   <Navigate to="/home" replace /> :
-                  <Navigate to="/login" replace />
+                  <LandingHub />
               }
             />
 
@@ -194,7 +196,7 @@ function App() {
               element={
                 localStorage.getItem('token') ?
                   <Navigate to="/home" replace /> :
-                  <Navigate to="/login" replace />
+                  <LandingHub />
               }
             />
           </Routes>

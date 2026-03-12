@@ -71,13 +71,13 @@ exports.register = async (req, res) => {
     if (checkResult.recordset.length > 0) {
       const existing = checkResult.recordset[0];
       if (existing.Username === username) {
-        return res.status(400).json({ 
-          message: 'Tên đăng nhập đã tồn tại' 
+        return res.status(400).json({
+          message: 'Tên đăng nhập đã tồn tại'
         });
       }
       if (existing.Email === email) {
-        return res.status(400).json({ 
-          message: 'Email đã được sử dụng' 
+        return res.status(400).json({
+          message: 'Email đã được sử dụng'
         });
       }
     }
@@ -85,33 +85,67 @@ exports.register = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Insert new user
+    let finalDob = null;
+    if (dateOfBirth && dateOfBirth.trim() !== '') {
+      // Handle both YYYY-MM-DD and DD/MM/YYYY
+      let dateString = dateOfBirth.trim();
+      if (dateString.includes('/')) {
+        const parts = dateString.split('/');
+        if (parts.length === 3 && parts[0].length <= 2) {
+          dateString = `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert to YYYY-MM-DD
+        }
+      }
+      const parsedDate = new Date(dateString);
+      if (!isNaN(parsedDate.getTime())) {
+        finalDob = parsedDate;
+      }
+    }
+
+    // Split fullName into FirstName and LastName
+    let firstName = fullName || '';
+    let lastName = '';
+    if (fullName && fullName.includes(' ')) {
+      const spaceIdx = fullName.indexOf(' ');
+      firstName = fullName.substring(0, spaceIdx);
+      lastName = fullName.substring(spaceIdx + 1);
+    }
+
+    // Generate a unique ReferralCode (e.g. 8-character random string)
+    const referralCode = require('crypto').randomBytes(4).toString('hex').toUpperCase();
+
+    // Insert new user (FullName is a computed column from FirstName + LastName)
+    // PasswordSalt: bcrypt embeds salt in first 29 chars of hash
+    const passwordSalt = hashedPassword.substring(0, 29);
     const insertResult = await pool.request()
-      .input('username', sql.VarChar, username)
-      .input('email', sql.VarChar, email)
-      .input('password', sql.VarChar, hashedPassword)
-      .input('fullName', sql.NVarChar, fullName)
-      .input('dateOfBirth', sql.Date, dateOfBirth || null)
+      .input('username', sql.NVarChar, username)
+      .input('email', sql.NVarChar, email)
+      .input('password', sql.NVarChar, hashedPassword)
+      .input('passwordSalt', sql.NVarChar, passwordSalt)
+      .input('firstName', sql.NVarChar, firstName)
+      .input('lastName', sql.NVarChar, lastName)
+      .input('dateOfBirth', sql.Date, finalDob)
       .input('school', sql.NVarChar, school || null)
+      .input('referralCode', sql.NVarChar, referralCode)
       .query(`
         INSERT INTO Users (
-          Username, Email, Password, FullName,
-          DateOfBirth, School, Role, Status,
-          AccountStatus, Provider, EmailVerified,
-          CreatedAt, UpdatedAt
+          Username, Email, Password, PasswordSalt, FirstName, LastName,
+          DateOfBirth, School, Role, OnlineStatus,
+          AccountStatus, RegistrationSource, IsEmailVerified,
+          ReferralCode, CreatedAt, UpdatedAt
         )
         OUTPUT INSERTED.UserID
         VALUES (
-          @username, @email, @password, @fullName,
-          @dateOfBirth, @school, 'STUDENT', 'OFFLINE',
+          @username, @email, @password, @passwordSalt, @firstName, @lastName,
+          @dateOfBirth, @school, 'STUDENT', 'Offline',
           'ACTIVE', 'local', 0,
-          GETDATE(), GETDATE()
+          @referralCode, GETDATE(), GETDATE()
         )
       `);
 
     const userId = insertResult.recordset[0].UserID;
 
     res.status(201).json({
+      success: true,
       message: 'Đăng ký thành công',
       user: {
         id: userId,
@@ -132,7 +166,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const transaction = new sql.Transaction(pool);
-  
+
   try {
     const { email, password } = req.body;
     const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
@@ -151,14 +185,14 @@ exports.login = async (req, res) => {
     const ipBlocking = await securityService.checkIPBlocking(ipAddress);
     if (ipBlocking.isBlocked) {
       await securityService.recordLoginAttempt(
-        ipAddress, 
-        email, 
-        null, 
-        false, 
-        userAgent, 
+        ipAddress,
+        email,
+        null,
+        false,
+        userAgent,
         'IP blocked due to multiple failed attempts'
       );
-      
+
       await transaction.rollback();
       return res.status(429).json({
         message: `IP address đã bị chặn tạm thời do có ${ipBlocking.failedCount} lần đăng nhập thất bại trong ${ipBlocking.timeWindow} phút. Vui lòng thử lại sau.`,
@@ -167,20 +201,20 @@ exports.login = async (req, res) => {
       });
     }
 
-    // First try to find user by primary email in Users table
+    // First try to find user by primary email or username in Users table
     let result = await transaction.request()
-      .input('email', sql.VarChar, email)
+      .input('emailOrUsername', sql.VarChar, email)
       .query(`
         SELECT UserID, Username, Email, Password, FullName, Role, Status, AccountStatus, HasPasskey, TwoFAEnabled
         FROM Users
-        WHERE Email = @email
+        WHERE (Email = @emailOrUsername OR Username = @emailOrUsername)
         AND DeletedAt IS NULL
       `);
 
     let user = result.recordset[0];
-    
+
     // If not found by primary email, check for verified secondary emails
-    if (!user) {
+    if (!user && email.includes('@')) {
       const secondaryEmailResult = await transaction.request()
         .input('email', sql.VarChar, email)
         .query(`
@@ -191,20 +225,20 @@ exports.login = async (req, res) => {
           AND ue.IsVerified = 1
           AND u.DeletedAt IS NULL
         `);
-        
+
       if (secondaryEmailResult.recordset.length > 0) {
         user = secondaryEmailResult.recordset[0];
       } else {
         // Record failed attempt for non-existent email
         await securityService.recordLoginAttempt(
-          ipAddress, 
-          email, 
-          null, 
-          false, 
-          userAgent, 
+          ipAddress,
+          email,
+          null,
+          false,
+          userAgent,
           'Email not found'
         );
-        
+
         await transaction.rollback();
         return res.status(401).json({
           message: 'Email hoặc mật khẩu không chính xác'
@@ -216,14 +250,14 @@ exports.login = async (req, res) => {
     const lockStatus = await securityService.isAccountLocked(user.UserID);
     if (lockStatus.isLocked) {
       await securityService.recordLoginAttempt(
-        ipAddress, 
-        email, 
-        user.UserID, 
-        false, 
-        userAgent, 
+        ipAddress,
+        email,
+        user.UserID,
+        false,
+        userAgent,
         'Account is locked'
       );
-      
+
       await transaction.rollback();
       return res.status(423).json({
         message: `Tài khoản đã bị khóa tạm thời đến ${new Date(lockStatus.lockedUntil).toLocaleString('vi-VN')}. Lý do: ${lockStatus.reason}`,
@@ -236,17 +270,17 @@ exports.login = async (req, res) => {
     // Check if account is suspended or deleted
     if (user.AccountStatus !== 'ACTIVE') {
       await securityService.recordLoginAttempt(
-        ipAddress, 
-        email, 
-        user.UserID, 
-        false, 
-        userAgent, 
+        ipAddress,
+        email,
+        user.UserID,
+        false,
+        userAgent,
         `Account status: ${user.AccountStatus}`
       );
-      
+
       await transaction.rollback();
       return res.status(403).json({
-        message: user.AccountStatus === 'SUSPENDED' 
+        message: user.AccountStatus === 'SUSPENDED'
           ? 'Tài khoản đã bị tạm ngưng. Vui lòng liên hệ quản trị viên.'
           : 'Tài khoản không khả dụng.'
       });
@@ -256,24 +290,24 @@ exports.login = async (req, res) => {
     const isValidPassword = await bcrypt.compare(password, user.Password);
     if (!isValidPassword) {
       console.log(`[DEBUG] Invalid password for user: ${email}`);
-      
+
       // Record failed attempt
       await securityService.recordLoginAttempt(
-        ipAddress, 
-        email, 
-        user.UserID, 
-        false, 
-        userAgent, 
+        ipAddress,
+        email,
+        user.UserID,
+        false,
+        userAgent,
         'Invalid password'
       );
 
       // Check if account should be locked due to failed attempts
       const lockCheck = await securityService.checkAccountLocking(email);
       console.log(`[DEBUG] Lock check result:`, lockCheck);
-      
+
       if (lockCheck.shouldLock) {
         console.log(`[DEBUG] Locking account for user: ${email} due to ${lockCheck.failedCount} failed attempts`);
-        
+
         // Lock the account and set RequireTwoFA flag
         const lockResult = await pool.request()
           .input('userID', sql.BigInt, user.UserID)
@@ -290,15 +324,15 @@ exports.login = async (req, res) => {
                 RequireTwoFA = 1
             WHERE UserID = @userID
           `);
-        
+
         console.log(`[DEBUG] Lock result:`, lockResult);
-        
+
         if (lockResult.rowsAffected[0] > 0) {
           // Generate unlock token and send email
           const unlockTokenResult = await securityService.generateUnlockToken(user.UserID, ipAddress);
           if (unlockTokenResult.success) {
             const unlockUrl = `${process.env.FRONTEND_URL || 'http://localhost:5004'}/unlock-account?token=${unlockTokenResult.unlockToken}&email=${encodeURIComponent(email)}`;
-            
+
             // Send unlock email
             try {
               await sendAccountUnlockEmail(
@@ -313,7 +347,7 @@ exports.login = async (req, res) => {
               console.error('Failed to send unlock email:', emailError);
             }
           }
-          
+
           await transaction.rollback();
           return res.status(423).json({
             message: `Tài khoản đã bị khóa tạm thời do quá nhiều lần đăng nhập thất bại. Chúng tôi đã gửi hướng dẫn mở khóa qua email của bạn.`,
@@ -324,7 +358,7 @@ exports.login = async (req, res) => {
           });
         }
       }
-      
+
       await transaction.rollback();
       return res.status(401).json({
         message: 'Email hoặc mật khẩu không chính xác',
@@ -337,11 +371,11 @@ exports.login = async (req, res) => {
 
     // Record successful login attempt
     await securityService.recordLoginAttempt(
-      ipAddress, 
-      email, 
-      user.UserID, 
-      true, 
-      userAgent, 
+      ipAddress,
+      email,
+      user.UserID,
+      true,
+      userAgent,
       null
     );
 
@@ -352,10 +386,10 @@ exports.login = async (req, res) => {
         SELECT RequireTwoFA, TwoFAEnabled FROM Users 
         WHERE UserID = @userId
       `);
-    
+
     const userRequires2FA = userSettings.recordset[0]?.RequireTwoFA === true;
     const hasEnabled2FA = userSettings.recordset[0]?.TwoFAEnabled === true;
-    
+
     // If 2FA is required but not yet enabled, force the user to set it up
     if (userRequires2FA && !hasEnabled2FA) {
       await transaction.commit();
@@ -410,17 +444,17 @@ exports.login = async (req, res) => {
 
     // Generate access token
     const token = jwt.sign(
-      { 
+      {
         userId: user.UserID,
         role: user.Role
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
-    
+
     // Generate refresh token (longer expiration)
     const refreshToken = jwt.sign(
-      { 
+      {
         userId: user.UserID,
         role: user.Role,
         tokenType: 'refresh'
@@ -430,7 +464,7 @@ exports.login = async (req, res) => {
     );
 
     const hasPasskey = user.HasPasskey;
-    
+
     // Use the primary email in the response
     const responseEmail = user.PrimaryEmail || user.Email;
 
@@ -451,21 +485,21 @@ exports.login = async (req, res) => {
   } catch (error) {
     await transaction.rollback();
     console.error('Login Error:', error);
-    
+
     // Record system error
     try {
       await securityService.recordLoginAttempt(
-        req.ip || 'unknown', 
-        req.body.email || 'unknown', 
-        null, 
-        false, 
-        req.get('User-Agent') || 'unknown', 
+        req.ip || 'unknown',
+        req.body.email || 'unknown',
+        null,
+        false,
+        req.get('User-Agent') || 'unknown',
         `System error: ${error.message}`
       );
     } catch (recordError) {
       console.error('Failed to record login attempt:', recordError);
     }
-    
+
     res.status(500).json({
       message: 'Đã có lỗi xảy ra khi đăng nhập',
       error: error.message
@@ -500,11 +534,11 @@ exports.getMe = async (req, res) => {
   try {
     // Lấy UserID từ middleware auth đã xác thực
     const UserID = req.user.UserID;
-    
+
     // Ghi log để debug
     console.log('User from auth middleware:', req.user);
     console.log('UserID:', UserID);
-    
+
     // Query để lấy thông tin user
     const query = `
       SELECT 
@@ -544,9 +578,9 @@ exports.getMe = async (req, res) => {
 
   } catch (error) {
     console.error('Error in getMe:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Lỗi server',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -554,31 +588,31 @@ exports.getMe = async (req, res) => {
 exports.refreshToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
-    
+
     if (!refreshToken) {
-      return res.status(400).json({ 
-        message: 'Refresh token is required' 
+      return res.status(400).json({
+        message: 'Refresh token is required'
       });
     }
-    
+
     // Verify refresh token
     let decoded;
     try {
       decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
-      
+
       // Additional security check - ensure it's a refresh token
       if (!decoded.userId || decoded.tokenType !== 'refresh') {
-        return res.status(401).json({ 
-          message: 'Invalid refresh token' 
+        return res.status(401).json({
+          message: 'Invalid refresh token'
         });
       }
     } catch (error) {
       console.error('Token verification error:', error);
-      return res.status(401).json({ 
-        message: 'Invalid or expired refresh token' 
+      return res.status(401).json({
+        message: 'Invalid or expired refresh token'
       });
     }
-    
+
     // Verify user exists in the database
     const result = await pool.request()
       .input('userId', sql.BigInt, decoded.userId)
@@ -587,25 +621,25 @@ exports.refreshToken = async (req, res) => {
         FROM Users
         WHERE UserID = @userId
       `);
-    
+
     if (result.recordset.length === 0) {
-      return res.status(404).json({ 
-        message: 'User not found' 
+      return res.status(404).json({
+        message: 'User not found'
       });
     }
-    
+
     const user = result.recordset[0];
-    
+
     // Check if user account is active
     if (user.AccountStatus !== 'ACTIVE') {
-      return res.status(403).json({ 
-        message: 'Account is inactive or suspended' 
+      return res.status(403).json({
+        message: 'Account is inactive or suspended'
       });
     }
-    
+
     // Generate new access token (unchanged)
     const newToken = jwt.sign(
-      { 
+      {
         userId: user.UserID,
         username: user.Username,
         role: user.Role,
@@ -629,7 +663,7 @@ exports.refreshToken = async (req, res) => {
         role: user.Role
       }
     });
-    
+
   } catch (error) {
     console.error('Refresh Token Error:', error);
     res.status(500).json({
@@ -644,7 +678,7 @@ exports.checkAuth = async (req, res) => {
   try {
     // If this middleware succeeds, it means the token is valid
     // and req.user contains the decoded user information
-    
+
     // Return user data in response
     return res.json({
       success: true,
@@ -684,12 +718,12 @@ exports.forgotPassword = async (req, res) => {
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 3600000); // 1 hour
-    
+
     // Delete any existing OTP for this user
     await pool.request()
       .input('userId', sql.BigInt, userId)
       .query(`DELETE FROM PasswordResets WHERE UserID = @userId`);
-    
+
     // Store new OTP
     await pool.request()
       .input('userId', sql.BigInt, userId)
@@ -698,11 +732,11 @@ exports.forgotPassword = async (req, res) => {
       .query(
         `INSERT INTO PasswordResets (UserID, OTP, ExpiresAt) VALUES (@userId, @otp, @expiresAt)`
       );
-    
+
     // In a production environment, you would send this OTP via SMS or email
     // For now, we'll log it to the console for testing purposes
     console.log('Password reset OTP for user', email, ':', otp);
-    
+
     // Return success but don't include the OTP in the response
     res.json({ message: 'OTP sent to email', userId });
   } catch (error) {
@@ -715,11 +749,11 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     const { userId, otp, password } = req.body;
-    
+
     if (!userId || !otp || !password) {
       return res.status(400).json({ message: 'User ID, OTP, and password are all required' });
     }
-    
+
     // Verify OTP
     const otpResult = await pool.request()
       .input('userId', sql.BigInt, userId)
@@ -728,7 +762,7 @@ exports.resetPassword = async (req, res) => {
         `SELECT ResetID, ExpiresAt, AttemptCount, IsUsed FROM PasswordResets 
          WHERE UserID = @userId AND OTP = @otp`
       );
-    
+
     if (otpResult.recordset.length === 0) {
       // Increment attempt count for security tracking if we found any pending OTP for this user
       await pool.request()
@@ -739,27 +773,27 @@ exports.resetPassword = async (req, res) => {
         );
       return res.status(400).json({ message: 'Invalid OTP' });
     }
-    
+
     const resetEntry = otpResult.recordset[0];
-    
+
     // Check if OTP is expired
     if (new Date(resetEntry.ExpiresAt) < new Date()) {
       return res.status(400).json({ message: 'OTP has expired' });
     }
-    
+
     // Check if OTP has already been used
     if (resetEntry.IsUsed) {
       return res.status(400).json({ message: 'OTP has already been used' });
     }
-    
+
     // Check if too many attempts
     if (resetEntry.AttemptCount >= 5) {
       return res.status(400).json({ message: 'Too many attempts. Please request a new OTP.' });
     }
-    
+
     // Hash new password
     const hashedPassword = await bcrypt.hash(password, 12);
-    
+
     // Update user password
     await pool.request()
       .input('userId', sql.BigInt, userId)
@@ -767,14 +801,14 @@ exports.resetPassword = async (req, res) => {
       .query(
         `UPDATE Users SET Password = @password WHERE UserID = @userId`
       );
-      
+
     // Mark OTP as used
     await pool.request()
       .input('resetId', sql.Int, resetEntry.ResetID)
       .query(
         `UPDATE PasswordResets SET IsUsed = 1 WHERE ResetID = @resetId`
       );
-      
+
     res.json({ message: 'Password reset successful', success: true });
   } catch (error) {
     console.error('ResetPassword Error:', error);
@@ -786,11 +820,11 @@ exports.resetPassword = async (req, res) => {
 exports.verifyOTP = async (req, res) => {
   try {
     const { userId, otp } = req.body;
-    
+
     if (!userId || !otp) {
       return res.status(400).json({ message: 'User ID and OTP are required' });
     }
-    
+
     // Verify OTP
     const otpResult = await pool.request()
       .input('userId', sql.BigInt, userId)
@@ -799,7 +833,7 @@ exports.verifyOTP = async (req, res) => {
         `SELECT ResetID, ExpiresAt, AttemptCount, IsUsed FROM PasswordResets 
          WHERE UserID = @userId AND OTP = @otp`
       );
-    
+
     if (otpResult.recordset.length === 0) {
       // Increment attempt count for security tracking
       await pool.request()
@@ -810,27 +844,27 @@ exports.verifyOTP = async (req, res) => {
         );
       return res.status(400).json({ message: 'Invalid OTP', verified: false });
     }
-    
+
     const resetEntry = otpResult.recordset[0];
-    
+
     // Check if OTP is expired
     if (new Date(resetEntry.ExpiresAt) < new Date()) {
       return res.status(400).json({ message: 'OTP has expired', verified: false });
     }
-    
+
     // Check if OTP has already been used
     if (resetEntry.IsUsed) {
       return res.status(400).json({ message: 'OTP has already been used', verified: false });
     }
-    
+
     // Check if too many attempts
     if (resetEntry.AttemptCount >= 5) {
-      return res.status(400).json({ 
-        message: 'Too many attempts. Please request a new OTP.', 
-        verified: false 
+      return res.status(400).json({
+        message: 'Too many attempts. Please request a new OTP.',
+        verified: false
       });
     }
-    
+
     // OTP is valid, but we don't mark it as used yet
     // Update attempt count to track verification
     await pool.request()
@@ -838,18 +872,18 @@ exports.verifyOTP = async (req, res) => {
       .query(
         `UPDATE PasswordResets SET AttemptCount = AttemptCount + 1 WHERE ResetID = @resetId`
       );
-    
+
     // Return success
-    res.json({ 
-      message: 'OTP verified successfully', 
+    res.json({
+      message: 'OTP verified successfully',
       verified: true,
-      userId 
+      userId
     });
   } catch (error) {
     console.error('VerifyOTP Error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-}; 
+};
 
 /**
  * Request login OTP via email
@@ -953,7 +987,7 @@ exports.verifyLoginOtp = async (req, res) => {
     console.error('VerifyLoginOtp Error:', error);
     res.status(500).json({ message: 'Đã có lỗi xảy ra khi xác thực OTP', error: error.message });
   }
-}; 
+};
 
 // Add 2FA handlers
 /** Get 2FA status for current user */
@@ -1018,7 +1052,7 @@ exports.setup2Fa = async (req, res) => {
         light: '#ffffff'
       }
     });
-    
+
     res.json({ qrCodeUrl: qrCodeDataUrl, secret: secretBase32 });
   } catch (error) {
     console.error('Setup2Fa Error:', error);
@@ -1061,7 +1095,7 @@ exports.disable2Fa = async (req, res) => {
     console.error('Disable2Fa Error:', error);
     res.status(500).json({ message: 'Không thể vô hiệu hóa 2FA' });
   }
-}; 
+};
 
 /**
  * Complete login after 2FA verification

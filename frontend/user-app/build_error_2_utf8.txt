@@ -1,0 +1,78 @@
+﻿
+> user-app@1.0.0 build
+> vite build
+
+[36mvite v7.1.5 [32mbuilding for production...[36m[39m
+transforming...
+node.exe : Browserslist: 
+browsers data (caniuse-lite) 
+is 9 months old. Please run:
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Browser  
+  slist: b...ld. Please ru   
+ n::String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+  npx 
+update-browserslist-db@latest
+  Why you should do it 
+regularly: https://github.com
+/browserslist/update-db#readm
+e
+[32mΓ£ô[39m 3808 modules transformed.
+[31mΓ£ù[39m Build failed 
+in 8.31s
+[31merror during build:
+[31m[commonjs--resolver] 
+Could not load C:/Users/Admin
+/.gemini/antigravity/scratch/
+EduBridge-AI/frontend/user-ap
+p/node_modules/@mui/icons-mat
+erial/esm/ScreenShareTwoTone.
+js: EMFILE: too many open 
+files, open 'C:\Users\Admin\.
+gemini\antigravity\scratch\Ed
+uBridge-AI\frontend\user-app\
+node_modules\@mui\icons-mater
+ial\esm\ScreenShareTwoTone.js
+'[31m
+    at async open (node:inter
+nal/fs/promises:641:25)
+    at async Object.readFile 
+(node:internal/fs/promises:12
+45:14)
+    at async Object.handler (
+file:///C:/Users/Admin/.gemin
+i/antigravity/scratch/EduBrid
+ge-AI/frontend/user-app/node_
+modules/vite/dist/node/chunks
+/dep-M_KD0XSK.js:33969:21)
+    at async PluginDriver.hoo
+kFirstAndGetPlugin (file:///C
+:/Users/Admin/.gemini/antigra
+vity/scratch/EduBridge-AI/fro
+ntend/user-app/node_modules/r
+ollup/dist/es/shared/node-ent
+ry.js:22166:28)
+    at async file:///C:/Users
+/Admin/.gemini/antigravity/sc
+ratch/EduBridge-AI/frontend/u
+ser-app/node_modules/rollup/d
+ist/es/shared/node-entry.js:2
+1170:33
+    at async Queue.work (file
+:///C:/Users/Admin/.gemini/an
+tigravity/scratch/EduBridge-A
+I/frontend/user-app/node_modu
+les/rollup/dist/es/shared/nod
+e-entry.js:22394:32)[39m

@@ -25,15 +25,13 @@ import {
   Chip,
   LinearProgress
 } from '@mui/material';
-import {
-  ExpandMore,
-  Timer,
-  CheckCircle,
-  Cancel,
-  Psychology,
-  EmojiEvents,
-  School
-} from '@mui/icons-material';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Timer from '@mui/icons-material/Timer';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Cancel from '@mui/icons-material/Cancel';
+import Psychology from '@mui/icons-material/Psychology';
+import EmojiEvents from '@mui/icons-material/EmojiEvents';
+import School from '@mui/icons-material/School';
 import { getExamResults } from '../../api/examApi';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -50,11 +48,11 @@ const ExamResults = () => {
       try {
         setLoading(true);
         const response = await getExamResults(participantId);
-        
+
         if (!response.success) {
           throw new Error(response.message || 'Failed to load results');
         }
-        
+
         setResults(response.data);
         setError(null);
       } catch (err) {
@@ -139,14 +137,14 @@ const ExamResults = () => {
   // Format time spent
   const formatTimeSpent = (minutes) => {
     if (!minutes) return 'N/A';
-    
+
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    
+
     if (hours === 0) {
       return `${mins} phút`;
     }
-    
+
     return `${hours} giờ ${mins} phút`;
   };
 
@@ -163,18 +161,18 @@ const ExamResults = () => {
     >
       <Paper elevation={3} sx={{ p: 3, mb: 4, position: 'relative', overflow: 'hidden' }}>
         {/* Background element for aesthetic */}
-        <Box 
-          sx={{ 
-            position: 'absolute', 
-            top: 0, 
-            right: 0, 
-            width: '30%', 
-            height: '100%', 
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '30%',
+            height: '100%',
             background: isPassed ? 'linear-gradient(135deg, transparent, rgba(76, 175, 80, 0.1))' : 'linear-gradient(135deg, transparent, rgba(244, 67, 54, 0.1))',
-            zIndex: 0 
-          }} 
+            zIndex: 0
+          }}
         />
-        
+
         <Grid container spacing={3} sx={{ position: 'relative', zIndex: 1 }}>
           <Grid item xs={12} md={8}>
             <Typography variant="h4" gutterBottom>
@@ -183,27 +181,27 @@ const ExamResults = () => {
             <Typography variant="h6" color="text.secondary" gutterBottom>
               {participant.ExamTitle}
             </Typography>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-              <Chip 
-                icon={isPassed ? <CheckCircle /> : <Cancel />} 
-                label={isPassed ? 'Đạt' : 'Chưa đạt'} 
-                color={isPassed ? 'success' : 'error'} 
+              <Chip
+                icon={isPassed ? <CheckCircle /> : <Cancel />}
+                label={isPassed ? 'Đạt' : 'Chưa đạt'}
+                color={isPassed ? 'success' : 'error'}
                 sx={{ mr: 2 }}
               />
               <Typography variant="body2" color="text.secondary">
                 Hoàn thành vào: {
-                  participant.CompletedAt 
+                  participant.CompletedAt
                     ? format(new Date(participant.CompletedAt), 'HH:mm - dd/MM/yyyy', { locale: vi })
                     : 'N/A'
                 }
               </Typography>
             </Box>
           </Grid>
-          
+
           <Grid item xs={12} md={4}>
-            <Box sx={{ 
-              display: 'flex', 
+            <Box sx={{
+              display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
@@ -215,10 +213,10 @@ const ExamResults = () => {
                   value={(participant.Score / totalPoints) * 100} // Convert score to percentage for progress
                   size={120}
                   thickness={5}
-                  sx={{ 
-                    color: 
+                  sx={{
+                    color:
                       (participant.Score / totalPoints) * 100 >= 80 ? 'success.main' :
-                      (participant.Score / totalPoints) * 100 >= 60 ? 'primary.main' : 'error.main'
+                        (participant.Score / totalPoints) * 100 >= 60 ? 'primary.main' : 'error.main'
                   }}
                 />
                 <Box
@@ -245,7 +243,7 @@ const ExamResults = () => {
           </Grid>
         </Grid>
       </Paper>
-      
+
       <Grid container spacing={{ xs: 2, md: 4 }}>
         <Grid item xs={12} md={5} lg={4}>
           {/* Information Section */}
@@ -255,7 +253,7 @@ const ExamResults = () => {
                 Thông tin bài thi
               </Typography>
               <Divider sx={{ mb: 2 }} />
-              
+
               <Box sx={{ '& > div': { mb: 1.5 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Timer sx={{ mr: 1, color: 'primary.main' }} />
@@ -263,28 +261,28 @@ const ExamResults = () => {
                     <strong>Thời gian làm bài:</strong> {formatTimeSpent(participant.TimeSpent)}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <School sx={{ mr: 1, color: 'primary.main' }} />
                   <Typography variant="body2">
                     <strong>Số câu:</strong> {uniqueAnswers?.length}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CheckCircle sx={{ mr: 1, color: 'success.main' }} />
                   <Typography variant="body2">
                     <strong>Câu trả lời đúng:</strong> {uniqueAnswers?.filter(a => a.IsCorrect === 1)?.length}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Cancel sx={{ mr: 1, color: 'error.main' }} />
                   <Typography variant="body2">
                     <strong>Câu trả lời sai:</strong> {uniqueAnswers?.filter(a => a.IsCorrect === 0)?.length}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <EmojiEvents sx={{ mr: 1, color: 'warning.main' }} />
                   <Typography variant="body2">
@@ -294,7 +292,7 @@ const ExamResults = () => {
               </Box>
             </CardContent>
           </Card>
-          
+
           {/* Add Compare Answer Card */}
           <Card>
             <CardContent>
@@ -315,18 +313,18 @@ const ExamResults = () => {
             </CardContent>
           </Card>
         </Grid>
-        
+
         <Grid item xs={12} md={7} lg={8} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
           {/* Detailed answers have been disabled intentionally */}
           <Alert severity="warning" sx={{ mb: 3 }}>
             Chi tiết bài làm đã được ẩn theo yêu cầu.
           </Alert>
-          
+
           <Box sx={{ mt: 'auto', display: 'flex', justifyContent: 'center' }}>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              component={Link} 
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
               to="/exams"
             >
               Quay lại danh sách kỳ thi

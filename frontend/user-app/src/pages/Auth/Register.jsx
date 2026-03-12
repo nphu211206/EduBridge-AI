@@ -7,8 +7,8 @@
 -----------------------------------------------------------------*/
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-  EnvelopeIcon, 
+import {
+  EnvelopeIcon,
   LockClosedIcon,
   UserIcon,
   AcademicCapIcon,
@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Loading from '../../components/common/Loading';
 import About from '../../components/common/About';
-import axios from 'axios'; // Added axios import
+import axiosInstance from '../../utils/axiosInstance'; // Changed from generic axios
 import { toast } from 'react-toastify'; // Added toast import
 
 const Register = () => {
@@ -47,7 +47,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!acceptTerms) {
       setError('Vui lòng đồng ý với Điều khoản sử dụng và Chính sách bảo mật');
       return;
@@ -58,8 +58,12 @@ const Register = () => {
     setError(null); // Clear previous errors
 
     try {
-      const response = await axios.post('/api/auth/register', formData);
-      if (response.data.success) {
+      const payload = { ...formData };
+      if (!payload.dateOfBirth) {
+        delete payload.dateOfBirth;
+      }
+      const response = await axiosInstance.post('/auth/register', payload);
+      if (response.data && response.data.success) {
         toast.success('Đăng ký thành công! Vui lòng đăng nhập.');
         navigate('/login');
       }
@@ -286,11 +290,10 @@ const Register = () => {
                 <button
                   type="submit"
                   disabled={loading || !acceptTerms}
-                  className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white ${
-                    loading || !acceptTerms
-                      ? 'bg-blue-400 cursor-not-allowed' 
-                      : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors'
-                  }`}
+                  className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white ${loading || !acceptTerms
+                    ? 'bg-blue-400 cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors'
+                    }`}
                 >
                   {loading ? 'Đang xử lý...' : 'Đăng ký'}
                 </button>
